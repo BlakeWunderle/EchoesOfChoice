@@ -5,6 +5,8 @@ description: Run battle simulations for Echoes of Choice to test balance across 
 
 # Battle Simulator
 
+All paths are relative to the workspace root. The C# project lives at `EchoesOfChoice/`.
+
 Simulates every valid party composition against each battle. Difficulty follows a gradient from 90% player win rate (first battle) to 60% (finale), with +/- 3% tolerance per stage.
 
 ## Running Simulations
@@ -14,14 +16,11 @@ Simulates every valid party composition against each battle. Difficulty follows 
 Use `--auto` to dynamically calculate sims per combo based on party tier, targeting a **minimum of 200k total battles** per stage. This ensures statistically equivalent coverage regardless of tier.
 
 ```bash
-# Auto sims for a progression stage
-dotnet run --project BattleSimulator -- --auto --progression 2
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto --progression 2
 
-# Auto sims for all battles
-dotnet run --project BattleSimulator -- --auto --all
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto --all
 
-# Auto sims for a single battle
-dotnet run --project BattleSimulator -- --auto CityStreetBattle
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto CityStreetBattle
 ```
 
 ### Manual Mode
@@ -29,17 +28,13 @@ dotnet run --project BattleSimulator -- --auto CityStreetBattle
 Override with `--sims` when doing quick iteration or final validation.
 
 ```bash
-# Quick iteration (50 sims for fast direction)
-dotnet run --project BattleSimulator -- --sims 50 --progression 6
+dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 50 --progression 6
 
-# Validation pass (200 sims for confidence at higher tiers)
-dotnet run --project BattleSimulator -- --sims 200 --progression 6
+dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 200 --progression 6
 
-# List all battles with targets
-dotnet run --project BattleSimulator -- --list
+dotnet run --project EchoesOfChoice/BattleSimulator -- --list
 
-# Interactive menu
-dotnet run --project BattleSimulator
+dotnet run --project EchoesOfChoice/BattleSimulator
 ```
 
 ## Sim Counts by Tier
@@ -131,7 +126,7 @@ Single-stage runs (interactive menu, single battle CLI) use `Parallel.ForEach` a
 
 ## Tuning Workflow
 
-For the full iterative balance process (enemy tuning → power curve validation → class win rate banding), use the **balance-feedback-loop** skill for Progressions 0-6 and the **elemental-balance** skill for Progression 7. The guidance below covers individual simulation runs.
+For the full iterative balance process (enemy tuning -> power curve validation -> class win rate banding), use the **balance-feedback-loop** skill for Progressions 0-6 and the **elemental-balance** skill for Progression 7. The guidance below covers individual simulation runs.
 
 ### Progressive Approach (Important!)
 
@@ -146,13 +141,13 @@ For the full iterative balance process (enemy tuning → power curve validation 
    - **Validate**: Once close, run `--auto` or `--sims 200` to confirm PASS
 
 ### To make a battle easier (TOO HARD)
-- Lower enemy base stats in `CharacterClasses/Enemies/<EnemyName>.cs` (Health, PhysicalAttack, MagicAttack)
+- Lower enemy base stats in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs` (Health, PhysicalAttack, MagicAttack)
 - Reduce enemy ability Modifier values
 - Reduce growth rates in enemy `IncreaseLevel()`
 - Remove enemies from the battle
 
 ### To make a battle harder (TOO EASY)
-- Raise enemy base stats in `CharacterClasses/Enemies/<EnemyName>.cs`
+- Raise enemy base stats in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`
 - Increase enemy ability Modifier values
 - Increase growth rates in enemy `IncreaseLevel()`
 - Add stronger abilities or additional enemies
@@ -168,7 +163,7 @@ When interpreting CLASS BREAKDOWN results, use the **class-reference** skill to:
 
 For Progression 7, Seraph and Fiend appear in the class breakdown alongside player classes. Because every combo includes exactly one recruit, their win rates reflect overall balance impact rather than composition variance.
 
-## Battle → Enemy Mapping
+## Battle -> Enemy Mapping
 
 | Battle | Prog | Enemies | Format |
 |---|---|---|---|
@@ -196,16 +191,16 @@ For Progression 7, Seraph and Fiend appear in the class breakdown alongside play
 | ElementalBattle3 | 7 | AirElemental, WaterElemental | 4v2 |
 | ElementalBattle4 | 7 | AirElemental, FireElemental | 4v2 |
 
-Enemy files are in `CharacterClasses/Enemies/`. When tuning a battle, always check this table first to know which enemy files to modify and avoid name collisions (e.g., Shade is a Prog 2 enemy, not the same as the PortalBattle Fiendling).
+Enemy files are in `EchoesOfChoice/CharacterClasses/Enemies/`. When tuning a battle, always check this table first to know which enemy files to modify.
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `BattleSimulator/Program.cs` | CLI with `--auto`, `--sims`, `--progression`, interactive menu |
-| `BattleSimulator/SimulationRunner.cs` | Parallel simulation engine with `SimulateStage` (single) and `SimulateMultipleStages` (multi-stage flattened) |
-| `BattleSimulator/PartyComposer.cs` | Generates all valid party compositions per tier, including recruit variants |
-| `BattleSimulator/BattleStage.cs` | Defines all stages with target win rates and progression |
+| `EchoesOfChoice/BattleSimulator/Program.cs` | CLI with `--auto`, `--sims`, `--progression`, interactive menu |
+| `EchoesOfChoice/BattleSimulator/SimulationRunner.cs` | Parallel simulation engine with `SimulateStage` (single) and `SimulateMultipleStages` (multi-stage flattened) |
+| `EchoesOfChoice/BattleSimulator/PartyComposer.cs` | Generates all valid party compositions per tier, including recruit variants |
+| `EchoesOfChoice/BattleSimulator/BattleStage.cs` | Defines all stages with target win rates and progression |
 
 ## How It Works
 
@@ -221,7 +216,7 @@ Enemy files are in `CharacterClasses/Enemies/`. When tuning a battle, always che
 | Skill | When to Use |
 |-------|-------------|
 | **class-reference** | Map class names to upgrade trees, archetypes, and abilities; check sibling classes for tree-level analysis |
-| **balance-feedback-loop** | Full iterative balance pass for Prog 0-6 (enemy tuning → power curve → class banding) |
+| **balance-feedback-loop** | Full iterative balance pass for Prog 0-6 (enemy tuning -> power curve -> class banding) |
 | **elemental-balance** | Dedicated tuning pass for Prog 7 ElementalBattles (run after Prog 0-6 is balanced) |
 | **character-stat-tuning** | Detailed guidance for adjusting individual class stats, abilities, and growth |
 | **party-comp-balance** | Analyzing composition-level balance (spread, synergies, outlier combos) |

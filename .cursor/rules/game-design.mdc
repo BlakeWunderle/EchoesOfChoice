@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Echoes of Choice Tactical -- Design Decisions
 
-This is a tactical RPG built in Godot 4 with GDScript. It is a reimagining of the console-based RPG "Echoes of Choice" (C# project at ../EchoesOfChoice/) as a grid-based tactical game.
+This is a tactical RPG built in Godot 4 with GDScript. It is a reimagining of the console-based RPG "Echoes of Choice" (C# project at `EchoesOfChoice/`) as a grid-based tactical game. The tactical project lives at `EchoesOfChoiceTactical/`.
 
 ## Turn System
 
@@ -67,4 +67,4 @@ Placeholder sprites for now, iterate on art later.
 
 ## Class System
 
-52 player classes from the C# version. 4 base -> 16 Tier 1 -> 32 Tier 2 via upgrades. Each class has unique movement/jump/reaction values. The C# codebase at `../EchoesOfChoice/CharacterClasses/` is the reference for all stat values.
+52 player classes from the C# version. 4 base -> 16 Tier 1 -> 32 Tier 2 via upgrades. Each class has unique movement/jump/reaction values. The C# codebase at `EchoesOfChoice/CharacterClasses/` is the reference for all stat values.

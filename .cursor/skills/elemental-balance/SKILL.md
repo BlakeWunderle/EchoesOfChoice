@@ -5,6 +5,8 @@ description: Balance Elemental battles (Progression 7) in Echoes of Choice. Use 
 
 # Elemental Battle Balance
 
+All paths are relative to the workspace root. The C# project lives at `EchoesOfChoice/`.
+
 Dedicated tuning pass for Progression 7 (ElementalBattles 1-4). These are the finale — 4-member parties (3 player + 1 recruit) vs elemental bosses. Recruits shift the power level significantly compared to Prog 0-6, which is why these battles get their own skill.
 
 **Prerequisite:** Progressions 0-6 must be balanced first (use the balance-feedback-loop skill). Player class stats and growth rates should be locked before starting here.
@@ -59,11 +61,10 @@ Each battle has a fixed recruit pair. Every combo is tested with both recruits (
 ### Step 1: Sim all four battles
 
 ```bash
-# Quick scan
-dotnet run --project BattleSimulator -- --sims 50 ElementalBattle1
-dotnet run --project BattleSimulator -- --sims 50 ElementalBattle2
-dotnet run --project BattleSimulator -- --sims 50 ElementalBattle3
-dotnet run --project BattleSimulator -- --sims 50 ElementalBattle4
+dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 50 ElementalBattle1
+dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 50 ElementalBattle2
+dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 50 ElementalBattle3
+dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 50 ElementalBattle4
 ```
 
 ### Step 2: Check each battle against its target
@@ -82,10 +83,10 @@ Tune one battle at a time. Re-sim at `--sims 50` after each change.
 ### Step 4: Validate with --auto
 
 ```bash
-dotnet run --project BattleSimulator -- --auto ElementalBattle1
-dotnet run --project BattleSimulator -- --auto ElementalBattle2
-dotnet run --project BattleSimulator -- --auto ElementalBattle3
-dotnet run --project BattleSimulator -- --auto ElementalBattle4
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto ElementalBattle1
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto ElementalBattle2
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto ElementalBattle3
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto ElementalBattle4
 ```
 
 ### Step 5: Cross-battle recruit comparison
@@ -103,7 +104,6 @@ Each battle constructor applies flat adjustments after creating elementals. Adju
 
 **To make a battle easier:**
 ```csharp
-// In ElementalBattle<N>.cs constructor
 enemy.Health -= 20;
 enemy.MaxHealth -= 20;
 enemy.MagicAttack -= 3;
@@ -122,13 +122,13 @@ Only touch the elemental class constructors (`AirElemental.cs`, `WaterElemental.
 
 ### 4. Recruit tuning (secondary lever)
 
-Recruit stats are defined in `PartyComposer.cs` via `RecruitSpec`. Each spec has:
+Recruit stats are defined in `EchoesOfChoice/BattleSimulator/PartyComposer.cs` via `RecruitSpec`. Each spec has:
 - `LevelUps`: how many `IncreaseLevel()` calls the recruit gets
 - `healthAdj`, `magicAttackAdj`, `physicalAttackAdj`: flat stat tweaks post-creation
 
 If one battle's recruits are making the fight too easy/hard relative to the others, adjust the recruit spec rather than the elemental enemies.
 
-**Do not change recruit class files** (`CharacterClasses/Enemies/Seraph.cs`, etc.) to fix a single battle — those are shared definitions. Use the `RecruitSpec` adjustments instead.
+**Do not change recruit class files** (`EchoesOfChoice/CharacterClasses/Enemies/Seraph.cs`, etc.) to fix a single battle — those are shared definitions. Use the `RecruitSpec` adjustments instead.
 
 ## Checklist
 
@@ -169,19 +169,19 @@ Cross-battle:
 
 | File | Purpose |
 |------|---------|
-| `Battles/ElementalBattle1.cs` | 3 elementals + per-battle stat adjustments |
-| `Battles/ElementalBattle2.cs` | 2 elementals, no adjustments |
-| `Battles/ElementalBattle3.cs` | 2 elementals + per-battle stat adjustments |
-| `Battles/ElementalBattle4.cs` | 2 elementals + per-enemy adjustments |
-| `CharacterClasses/Enemies/AirElemental.cs` | Air base stats (shared) |
-| `CharacterClasses/Enemies/WaterElemental.cs` | Water base stats (shared) |
-| `CharacterClasses/Enemies/FireElemental.cs` | Fire base stats (shared) |
-| `BattleSimulator/PartyComposer.cs` | RecruitSpec definitions (lines 126-148) |
-| `CharacterClasses/Enemies/Seraph.cs` | Seraph recruit class |
-| `CharacterClasses/Enemies/Fiend.cs` | Fiend recruit class |
-| `CharacterClasses/Enemies/Druid.cs` | Druid recruit class |
-| `CharacterClasses/Enemies/Necromancer.cs` | Necromancer recruit class |
-| `CharacterClasses/Enemies/Psion.cs` | Psion recruit class |
-| `CharacterClasses/Enemies/Runewright.cs` | Runewright recruit class |
-| `CharacterClasses/Enemies/Shaman.cs` | Shaman recruit class |
-| `CharacterClasses/Enemies/Warlock.cs` | Warlock recruit class |
+| `EchoesOfChoice/Battles/ElementalBattle1.cs` | 3 elementals + per-battle stat adjustments |
+| `EchoesOfChoice/Battles/ElementalBattle2.cs` | 2 elementals, no adjustments |
+| `EchoesOfChoice/Battles/ElementalBattle3.cs` | 2 elementals + per-battle stat adjustments |
+| `EchoesOfChoice/Battles/ElementalBattle4.cs` | 2 elementals + per-enemy adjustments |
+| `EchoesOfChoice/CharacterClasses/Enemies/AirElemental.cs` | Air base stats (shared) |
+| `EchoesOfChoice/CharacterClasses/Enemies/WaterElemental.cs` | Water base stats (shared) |
+| `EchoesOfChoice/CharacterClasses/Enemies/FireElemental.cs` | Fire base stats (shared) |
+| `EchoesOfChoice/BattleSimulator/PartyComposer.cs` | RecruitSpec definitions |
+| `EchoesOfChoice/CharacterClasses/Enemies/Seraph.cs` | Seraph recruit class |
+| `EchoesOfChoice/CharacterClasses/Enemies/Fiend.cs` | Fiend recruit class |
+| `EchoesOfChoice/CharacterClasses/Enemies/Druid.cs` | Druid recruit class |
+| `EchoesOfChoice/CharacterClasses/Enemies/Necromancer.cs` | Necromancer recruit class |
+| `EchoesOfChoice/CharacterClasses/Enemies/Psion.cs` | Psion recruit class |
+| `EchoesOfChoice/CharacterClasses/Enemies/Runewright.cs` | Runewright recruit class |
+| `EchoesOfChoice/CharacterClasses/Enemies/Shaman.cs` | Shaman recruit class |
+| `EchoesOfChoice/CharacterClasses/Enemies/Warlock.cs` | Warlock recruit class |

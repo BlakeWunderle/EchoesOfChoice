@@ -5,6 +5,8 @@ description: Test and analyze party composition balance in Echoes of Choice. Use
 
 # Party Composition Balance Testing
 
+All paths are relative to the workspace root. The C# project lives at `EchoesOfChoice/`.
+
 This skill guides analysis of *party-level* balance — whether certain 3-class combinations dominate or struggle, rather than individual class win rates (which the battle-simulator skill already tracks).
 
 ## Quick Start
@@ -14,7 +16,7 @@ This skill guides analysis of *party-level* balance — whether certain 3-class 
 The simulator already reports the 5 strongest and 5 weakest party compositions per battle. Run with `--auto` for statistically meaningful results:
 
 ```bash
-dotnet run --project BattleSimulator -- --auto --progression 2
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto --progression 2
 ```
 
 ### 2. Look for red flags in the output
@@ -159,13 +161,13 @@ For full elemental tuning, use the **elemental-balance** skill.
 
 ### Quick Comp Check (5 minutes)
 
-1. Run the target battle at 50 sims: `dotnet run --project BattleSimulator -- --sims 50 <BattleName>`
+1. Run the target battle at 50 sims: `dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 50 <BattleName>`
 2. Scan WEAKEST/STRONGEST COMBOS for spreads > 30%
 3. Scan CLASS BREAKDOWN for any class flagged WEAK
 
 ### Full Comp Analysis (per progression stage)
 
-1. Run with auto sims: `dotnet run --project BattleSimulator -- --auto --progression <N>`
+1. Run with auto sims: `dotnet run --project EchoesOfChoice/BattleSimulator -- --auto --progression <N>`
 2. For each battle in the stage:
    - Check that overall win rate is in target range (PASS)
    - Check spread between best and worst combo < 30%
@@ -178,7 +180,7 @@ For full elemental tuning, use the **elemental-balance** skill.
 
 ### Cross-Progression Tracking
 
-The **balance-feedback-loop** skill formalizes this into a three-phase loop (enemy tuning → power curve → class banding). Use it for the full iterative process; the tracking below is useful for quick spot-checks.
+The **balance-feedback-loop** skill formalizes this into a three-phase loop (enemy tuning -> power curve -> class banding). Use it for the full iterative process; the tracking below is useful for quick spot-checks.
 
 Track how classes evolve across progressions. A class being WEAK at Prog 0 is acceptable if it becomes strong by Prog 3+. This is the "late bloomer" pattern:
 
@@ -208,7 +210,7 @@ If a specific composition pattern (like triple-same-archetype) is consistently b
 
 | Skill | When to Use |
 |-------|-------------|
-| **balance-feedback-loop** | Full iterative balance pass for Prog 0-6 (enemy tuning → power curve → class banding) |
+| **balance-feedback-loop** | Full iterative balance pass for Prog 0-6 (enemy tuning -> power curve -> class banding) |
 | **elemental-balance** | Dedicated tuning pass for Prog 7 ElementalBattles |
 | **battle-simulator** | Running simulations and interpreting output |
 | **character-stat-tuning** | Adjusting individual class stats and abilities |
@@ -217,9 +219,9 @@ If a specific composition pattern (like triple-same-archetype) is consistently b
 
 | File | What It Provides |
 |------|-----------------|
-| `BattleSimulator/SimulationRunner.cs` | Combo results, class breakdown, WEAK flags; `SimulateMultipleStages` for parallel multi-stage runs |
-| `BattleSimulator/PartyComposer.cs` | Party generation, tier-aware leveling, `RecruitSpec` definitions, `GetTier2PartiesWithRecruits()` |
-| `BattleSimulator/BattleStage.cs` | Target win rates, progression stages; each ElementalBattle has its own recruit pair |
-| `CharacterClasses/<Archetype>/<Class>.cs` | Individual class stats and growth rates (differ per tier — affects leveling accuracy) |
-| `CharacterClasses/Enemies/<Enemy>.cs` | Enemy stats (primary tuning lever); recruit enemies (Seraph, Fiend, Druid, Necromancer, Psion, Runewright, Shaman, Warlock) |
-| `Battles/<BattleName>.cs` | Enemy composition and level-ups per battle |
+| `EchoesOfChoice/BattleSimulator/SimulationRunner.cs` | Combo results, class breakdown, WEAK flags; `SimulateMultipleStages` for parallel multi-stage runs |
+| `EchoesOfChoice/BattleSimulator/PartyComposer.cs` | Party generation, tier-aware leveling, `RecruitSpec` definitions, `GetTier2PartiesWithRecruits()` |
+| `EchoesOfChoice/BattleSimulator/BattleStage.cs` | Target win rates, progression stages; each ElementalBattle has its own recruit pair |
+| `EchoesOfChoice/CharacterClasses/<Archetype>/<Class>.cs` | Individual class stats and growth rates (differ per tier — affects leveling accuracy) |
+| `EchoesOfChoice/CharacterClasses/Enemies/<Enemy>.cs` | Enemy stats (primary tuning lever); recruit enemies (Seraph, Fiend, Druid, Necromancer, Psion, Runewright, Shaman, Warlock) |
+| `EchoesOfChoice/Battles/<BattleName>.cs` | Enemy composition and level-ups per battle |

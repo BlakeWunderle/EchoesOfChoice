@@ -5,6 +5,8 @@ description: Guide for adjusting character and enemy stats in Echoes of Choice. 
 
 # Character Stat Tuning
 
+All paths are relative to the workspace root. The C# project lives at `EchoesOfChoice/`.
+
 When adjusting character stats, respect the **archetype identity** and **role** of the class. Every class falls into an archetype (Fighter, Mage, Entertainer, Scholar) and a role (offensive or defensive/support).
 
 ## Stat Overview
@@ -106,11 +108,11 @@ Within each archetype, classes split into offensive and defensive/support roles.
 
 ## Enemy Stats
 
-All enemies use dedicated enemy classes in `CharacterClasses/Enemies/`. Enemy stats are fully self-contained in each class constructor — battle files simply instantiate enemies with no stat adjustments. The only exception is **MirrorBattle**, which clones the player party.
+All enemies use dedicated enemy classes in `EchoesOfChoice/CharacterClasses/Enemies/`. Enemy stats are fully self-contained in each class constructor — battle files simply instantiate enemies with no stat adjustments. The only exception is **MirrorBattle**, which clones the player party.
 
 **Recruit enemies** (Seraph, Fiend, Druid, Necromancer, Psion, Runewright, Shaman, Warlock) serve double duty as both battle enemies and recruitable 4th party members. Their stats are static -- `IncreaseLevel()` only increments Level with no stat gains. They are overpowered companions at their full battle power level. `RecruitSpec` in `PartyComposer.cs` has zero adjustments; `CreateRecruit` just instantiates the class as-is.
 
-To adjust a battle's difficulty, tune the enemy class stats directly in `CharacterClasses/Enemies/<EnemyName>.cs`. No battle file edits are needed.
+To adjust a battle's difficulty, tune the enemy class stats directly in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`. No battle file edits are needed.
 
 ## After Making Changes
 
@@ -142,7 +144,7 @@ These are set as flat values in each class constructor (not random):
 
 ### Adjusting Abilities
 
-Abilities are defined in `CharacterClasses/Abilities/`. Each ability has these properties:
+Abilities are defined in `EchoesOfChoice/CharacterClasses/Abilities/`. Each ability has these properties:
 
 | Property | Type | What It Controls |
 |----------|------|-----------------|
@@ -264,11 +266,11 @@ Bold = primary growth stats for that role.
 
 | What | Where |
 |------|-------|
-| Base class stats | `CharacterClasses/Fighter/Squire.cs`, `Mage/Mage.cs`, `Entertainer/Entertainer.cs`, `Scholar/Scholar.cs` |
-| Tier 1/2 class stats | `CharacterClasses/<Archetype>/<ClassName>.cs` (in IncreaseLevel and constructor) |
-| Enemy stats | `CharacterClasses/Enemies/<EnemyName>.cs` |
-| Abilities | `CharacterClasses/Abilities/<AbilityName>.cs` |
-| Stat enum | `CharacterClasses/Common/StatEnum.cs` |
+| Base class stats | `EchoesOfChoice/CharacterClasses/Fighter/Squire.cs`, `Mage/Mage.cs`, `Entertainer/Entertainer.cs`, `Scholar/Scholar.cs` |
+| Tier 1/2 class stats | `EchoesOfChoice/CharacterClasses/<Archetype>/<ClassName>.cs` (in IncreaseLevel and constructor) |
+| Enemy stats | `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs` |
+| Abilities | `EchoesOfChoice/CharacterClasses/Abilities/<AbilityName>.cs` |
+| Stat enum | `EchoesOfChoice/CharacterClasses/Common/StatEnum.cs` |
 
 ## Related Skills
 

@@ -5,9 +5,11 @@ alwaysApply: true
 
 # Project Architecture
 
-Godot 4 project using GDScript. Built alongside (not replacing) the C# console RPG at `../EchoesOfChoice/`.
+Godot 4 project using GDScript at `EchoesOfChoiceTactical/`. Built alongside (not replacing) the C# console RPG at `EchoesOfChoice/`.
 
 ## File Map
+
+All paths below are relative to `EchoesOfChoiceTactical/`.
 
 ### Core Data (`scripts/data/`)
 - `enums.gd` -- All enums: StatType, AbilityType, AoEShape, TileType, Facing, ReactionType, TurnPhase, Team
@@ -46,10 +48,10 @@ Phases 8-12 PENDING (tactical AI, polished UI, 52 classes, map design, story/pro
 
 ## Reference Codebase
 
-The original C# console RPG at `../EchoesOfChoice/` contains all stat values, ability definitions, damage formulas, class upgrade trees, enemy definitions, and story text. Key reference files:
-- `CharacterClasses/Common/BaseFighter.cs` -- stat model
-- `CharacterClasses/Common/Ability.cs` -- ability model
-- `Battles/Battle.cs` -- damage formulas, ATB system, AI
-- `CharacterClasses/Fighter/`, `Mage/`, `Entertainer/`, `Scholar/` -- all 52 classes
-- `CharacterClasses/Enemies/` -- all enemy types
-- `Echoes of Choice/Program.cs` -- story flow, party creation
+The original C# console RPG at `EchoesOfChoice/` contains all stat values, ability definitions, damage formulas, class upgrade trees, enemy definitions, and story text. Key reference files:
+- `EchoesOfChoice/CharacterClasses/Common/BaseFighter.cs` -- stat model
+- `EchoesOfChoice/CharacterClasses/Common/Ability.cs` -- ability model
+- `EchoesOfChoice/Battles/Battle.cs` -- damage formulas, ATB system, AI
+- `EchoesOfChoice/CharacterClasses/Fighter/`, `Mage/`, `Entertainer/`, `Scholar/` -- all 52 classes
+- `EchoesOfChoice/CharacterClasses/Enemies/` -- all enemy types
+- `EchoesOfChoice/Echoes of Choice/Program.cs` -- story flow, party creation

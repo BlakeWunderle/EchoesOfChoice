@@ -5,6 +5,8 @@ description: Full balance feedback loop for Echoes of Choice. Iterates enemy tun
 
 # Balance Feedback Loop
 
+All paths are relative to the workspace root. The C# project lives at `EchoesOfChoice/`.
+
 Iterative balancing process for Progressions 0-6. Each cycle has three phases that must all pass before the game is considered balanced. Elemental battles (Progression 7) are excluded — recruits shift the power level enough that they need their own dedicated pass.
 
 ## The Loop
@@ -12,27 +14,27 @@ Iterative balancing process for Progressions 0-6. Each cycle has three phases th
 **Work one progression at a time, lowest to highest.** Each progression completes all three phases before moving on. Player class changes cascade forward — adjusting a Tier 1 growth rate at Prog 2 affects every stage from Prog 2 onward but leaves Prog 0-1 untouched.
 
 ```
-FOR each progression 0 → 6, in order:
-  ┌─────────────────────────────────────────────────┐
-  │  STEP 1: Enemy Tuning                           │
-  │  Stage hits gradient win rate?                   │
-  │  NO → adjust enemy stats → re-sim → repeat      │
-  │  YES ↓                                          │
-  ├─────────────────────────────────────────────────┤
-  │  STEP 2: Power Curve Check                      │
-  │  Archetype ranking correct for this stage?       │
-  │  NO → adjust player growth → restart this prog  │
-  │  YES ↓                                          │
-  ├─────────────────────────────────────────────────┤
-  │  STEP 3: Class Win Rate Band                    │
-  │  Every class between 57% and 93%?               │
-  │  NO → buff/nerf outliers → restart this prog    │
-  │  YES → LOCK this progression, move to next      │
-  └─────────────────────────────────────────────────┘
+FOR each progression 0 -> 6, in order:
+  +-------------------------------------------------+
+  |  STEP 1: Enemy Tuning                           |
+  |  Stage hits gradient win rate?                   |
+  |  NO -> adjust enemy stats -> re-sim -> repeat   |
+  |  YES v                                          |
+  +-------------------------------------------------+
+  |  STEP 2: Power Curve Check                      |
+  |  Archetype ranking correct for this stage?       |
+  |  NO -> adjust player growth -> restart this prog |
+  |  YES v                                          |
+  +-------------------------------------------------+
+  |  STEP 3: Class Win Rate Band                    |
+  |  Every class between 57% and 93%?               |
+  |  NO -> buff/nerf outliers -> restart this prog   |
+  |  YES -> LOCK this progression, move to next      |
+  +-------------------------------------------------+
 
 AFTER all progressions locked:
-  → Final validation pass (--auto for all Prog 0-6)
-  → If any stage broke, restart FROM that progression forward
+  -> Final validation pass (--auto for all Prog 0-6)
+  -> If any stage broke, restart FROM that progression forward
 ```
 
 ### Why This Order Matters
@@ -62,21 +64,21 @@ AFTER all progressions locked:
 
 For Progressions 0-3 (Base and Tier 1 classes):
 ```bash
-dotnet run --project BattleSimulator -- --sims 50 --progression <N>
+dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 50 --progression <N>
 ```
 
 For Progressions 4-6 (Tier 2 classes — 4,960 combos), use `--sample 500` for fast iteration. This picks a stratified random sample ensuring every class appears, giving a directionally accurate overall win rate in ~1/10th the time:
 ```bash
-dotnet run --project BattleSimulator -- --sample 500 --sims 50 --progression <N>
+dotnet run --project EchoesOfChoice/BattleSimulator -- --sample 500 --sims 50 --progression <N>
 ```
 
 ### Check each battle's STATUS line
 
-- **PASS** → move to Step 2
-- **TOO HARD** → weaken enemies (lower base stats in `CharacterClasses/Enemies/<EnemyName>.cs`, reduce ability Modifiers, reduce growth rates)
-- **TOO EASY** → strengthen enemies (raise base stats in `CharacterClasses/Enemies/<EnemyName>.cs`, increase ability Modifiers, add abilities)
+- **PASS** -> move to Step 2
+- **TOO HARD** -> weaken enemies (lower base stats in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`, reduce ability Modifiers, reduce growth rates)
+- **TOO EASY** -> strengthen enemies (raise base stats in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`, increase ability Modifiers, add abilities)
 
-All enemy stats are fully defined in their class files — battle files just instantiate enemies. Tune stats directly in `CharacterClasses/Enemies/`. Avoid touching player classes in this step.
+All enemy stats are fully defined in their class files — battle files just instantiate enemies. Tune stats directly in `EchoesOfChoice/CharacterClasses/Enemies/`. Avoid touching player classes in this step.
 
 ### Re-sim after each change until all battles at this stage show PASS
 
@@ -120,13 +122,13 @@ Group classes by archetype in the CLASS BREAKDOWN and average their win rates fo
 - **Prog 5-6:** Scholar classes should lead.
 - **Any stage:** Entertainer should be strong. It can lead individual battles — the key is no extreme spikes (>95%) or troughs (<57%).
 
-If the ranking is roughly correct (or deviations are explained by matchup) → move to Step 3.
+If the ranking is roughly correct (or deviations are explained by matchup) -> move to Step 3.
 
 ### Fixing Curve Problems
 
 | Problem | Fix | Where | Cascade |
 |---------|-----|-------|---------|
-| Fighter too weak early | Buff Squire base stats | `CharacterClasses/Fighter/Squire.cs` | Restart from Prog 0 |
+| Fighter too weak early | Buff Squire base stats | `EchoesOfChoice/CharacterClasses/Fighter/Squire.cs` | Restart from Prog 0 |
 | Fighter too strong late | Reduce Fighter Tier 2 growth | Tier 2 Fighter class files | Restart from Prog 4 |
 | Mage doesn't spike mid | Buff Tier 1 Mage growth | Tier 1 Mage class files | Restart from Prog 2 |
 | Scholar still weak late | Buff Tier 2 Scholar growth | Tier 2 Scholar class files | Restart from Prog 4 |
@@ -152,7 +154,7 @@ From this stage's CLASS BREAKDOWN output:
 2. **Flag any class above 93%** — this class trivializes the content.
 3. Classes flagged `** WEAK **` by the simulator (below `TargetWinRate * 0.60`) are most urgent.
 
-If all classes are within band → **LOCK this progression** and move to the next.
+If all classes are within band -> **LOCK this progression** and move to the next.
 
 ### Fixing Outliers
 
@@ -181,8 +183,8 @@ If all classes are within band → **LOCK this progression** and move to the nex
 After all progressions are locked at `--sims 50`, run a full validation pass. Do NOT use `--sample` here — final validation needs all party compositions:
 
 ```bash
-dotnet run --project BattleSimulator -- --auto --progression 0
-dotnet run --project BattleSimulator -- --auto --progression 1
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto --progression 0
+dotnet run --project EchoesOfChoice/BattleSimulator -- --auto --progression 1
 # ... through --progression 6
 ```
 
@@ -241,7 +243,7 @@ FINAL VALIDATION:
 - [ ] All Prog 0-6 validated with --auto
 - [ ] No stage broke at full sample size
 
-RESULT: [ ] ALL LOCKED → balanced  |  [ ] Stage broke → restart from that prog
+RESULT: [ ] ALL LOCKED -> balanced  |  [ ] Stage broke -> restart from that prog
 ```
 
 ---
@@ -264,12 +266,12 @@ After Prog 0-6 is balanced, use the **elemental-balance** skill to balance Progr
 
 | File | Purpose |
 |------|---------|
-| `CharacterClasses/Enemies/*.cs` | Primary tuning lever for Step 1 — all enemy stats live here |
-| `Battles/*.cs` | Enemy composition (which enemies appear); no stat adjustments |
-| `CharacterClasses/Fighter/Squire.cs` | Fighter base stats |
-| `CharacterClasses/Mage/Mage.cs` | Mage base stats |
-| `CharacterClasses/Entertainer/Entertainer.cs` | Entertainer base stats |
-| `CharacterClasses/Scholar/Scholar.cs` | Scholar base stats |
-| `CharacterClasses/<Archetype>/<Class>.cs` | Tier 1/2 growth rates (IncreaseLevel) |
-| `BattleSimulator/SimulationRunner.cs` | CLASS BREAKDOWN output, WEAK flags |
-| `BattleSimulator/BattleStage.cs` | Target win rates per stage |
+| `EchoesOfChoice/CharacterClasses/Enemies/*.cs` | Primary tuning lever for Step 1 — all enemy stats live here |
+| `EchoesOfChoice/Battles/*.cs` | Enemy composition (which enemies appear); no stat adjustments |
+| `EchoesOfChoice/CharacterClasses/Fighter/Squire.cs` | Fighter base stats |
+| `EchoesOfChoice/CharacterClasses/Mage/Mage.cs` | Mage base stats |
+| `EchoesOfChoice/CharacterClasses/Entertainer/Entertainer.cs` | Entertainer base stats |
+| `EchoesOfChoice/CharacterClasses/Scholar/Scholar.cs` | Scholar base stats |
+| `EchoesOfChoice/CharacterClasses/<Archetype>/<Class>.cs` | Tier 1/2 growth rates (IncreaseLevel) |
+| `EchoesOfChoice/BattleSimulator/SimulationRunner.cs` | CLASS BREAKDOWN output, WEAK flags |
+| `EchoesOfChoice/BattleSimulator/BattleStage.cs` | Target win rates per stage |
