@@ -53,3 +53,7 @@ func go_to_barracks() -> void:
 
 func go_to_title_screen() -> void:
 	change_scene("res://scenes/story/TitleScreen.tscn")
+
+
+func go_to_overworld() -> void:
+	change_scene("res://scenes/overworld/OverworldMap.tscn")

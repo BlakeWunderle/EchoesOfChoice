@@ -42,5 +42,4 @@ func _input(event: InputEvent) -> void:
 		return
 	if (event is InputEventKey and event.pressed) or (event is InputEventMouseButton and event.pressed):
 		_ready_to_proceed = false
-		GameState.current_battle_id = ""
-		SceneManager.change_scene("res://scenes/battle/BattleMap.tscn")
+		SceneManager.go_to_overworld()

@@ -1,0 +1,80 @@
+[gd_resource type="PackedScene" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/overworld/OverworldMap.gd" id="1"]
+
+[node name="OverworldMap" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -10
+offset_left = -200.0
+offset_top = -200.0
+offset_right = 1800.0
+offset_bottom = 900.0
+color = Color(0.04, 0.04, 0.06, 1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+zoom = Vector2(0.9, 0.9)
+
+[node name="FogLayer" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="TitleLabel" type="Label" parent="UILayer"]
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 400.0
+offset_bottom = 50.0
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 1)
+text = "The Kingdom"
+
+[node name="InfoPanel" type="PanelContainer" parent="UILayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -320.0
+offset_top = -200.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="UILayer/InfoPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="UILayer/InfoPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NameLabel" type="Label" parent="UILayer/InfoPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Location Name"
+
+[node name="DescLabel" type="Label" parent="UILayer/InfoPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
+text = "Description text."
+autowrap_mode = 3
+
+[node name="StatusLabel" type="Label" parent="UILayer/InfoPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Available"
+
+[node name="EnterButton" type="Button" parent="UILayer/InfoPanel/Margin/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
+theme_override_font_sizes/font_size = 16
+text = "Enter Battle"

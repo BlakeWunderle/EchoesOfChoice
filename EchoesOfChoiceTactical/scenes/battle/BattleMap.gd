@@ -20,8 +20,15 @@ var _attack_tiles: Array[Vector2i] = []
 
 
 func _ready() -> void:
-	if GameState.current_battle_id == "tutorial":
+	var battle_id := GameState.current_battle_id
+	if battle_id == "tutorial":
 		_setup_from_config(BattleConfig.create_tutorial())
+	elif battle_id == "city_street":
+		_setup_from_config(BattleConfig.create_city_street())
+	elif battle_id == "forest":
+		_setup_from_config(BattleConfig.create_forest())
+	elif not battle_id.is_empty():
+		_setup_from_config(BattleConfig.create_placeholder(battle_id))
 	else:
 		_setup_test_battle()
 
@@ -762,13 +769,15 @@ func _on_battle_ended(player_won: bool) -> void:
 	else:
 		turn_info.text = "DEFEAT... The party has fallen."
 
+	await get_tree().create_timer(2.0).timeout
+
 	if GameState.current_battle_id == "tutorial":
 		GameState.set_flag("tutorial_complete")
-		await get_tree().create_timer(2.0).timeout
+		SceneManager.go_to_class_selection()
+	else:
 		if player_won:
-			SceneManager.go_to_class_selection()
-		else:
-			SceneManager.go_to_class_selection()
+			GameState.complete_battle(GameState.current_battle_id)
+		SceneManager.go_to_overworld()
 
 
 # --- Grid Drawing ---

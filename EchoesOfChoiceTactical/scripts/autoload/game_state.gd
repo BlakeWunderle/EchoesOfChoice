@@ -10,6 +10,9 @@ var progression_stage: int = 0
 var current_battle_id: String = ""
 var story_flags: Dictionary = {}
 
+var completed_battles: Array[String] = []
+var locked_nodes: Array[String] = []
+
 const SAVE_PATH := "user://savegame.json"
 
 
@@ -43,6 +46,25 @@ func has_flag(flag: String) -> bool:
 	return story_flags.get(flag, false)
 
 
+func complete_battle(battle_id: String) -> void:
+	if battle_id not in completed_battles:
+		completed_battles.append(battle_id)
+
+
+func lock_nodes(node_ids: Array[String]) -> void:
+	for nid in node_ids:
+		if nid not in locked_nodes:
+			locked_nodes.append(nid)
+
+
+func is_battle_completed(battle_id: String) -> bool:
+	return battle_id in completed_battles
+
+
+func is_node_locked(node_id: String) -> bool:
+	return node_id in locked_nodes
+
+
 func reset_for_new_game() -> void:
 	player_name = ""
 	player_gender = ""
@@ -51,6 +73,8 @@ func reset_for_new_game() -> void:
 	progression_stage = 0
 	current_battle_id = ""
 	story_flags.clear()
+	completed_battles.clear()
+	locked_nodes.clear()
 
 
 func save_game() -> void:
@@ -62,6 +86,8 @@ func save_game() -> void:
 		"progression_stage": progression_stage,
 		"current_battle": current_battle_id,
 		"story_flags": story_flags,
+		"completed_battles": completed_battles,
+		"locked_nodes": locked_nodes,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -88,6 +114,14 @@ func load_game() -> bool:
 	progression_stage = data.get("progression_stage", 0)
 	current_battle_id = data.get("current_battle", "")
 	story_flags = data.get("story_flags", {})
+	var cb: Array = data.get("completed_battles", [])
+	completed_battles.clear()
+	for b in cb:
+		completed_battles.append(str(b))
+	var ln: Array = data.get("locked_nodes", [])
+	locked_nodes.clear()
+	for n in ln:
+		locked_nodes.append(str(n))
 	return true
 
 
