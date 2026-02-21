@@ -34,6 +34,12 @@ var abilities: Array[AbilityData] = []
 var reaction_types: Array[Enums.ReactionType] = []
 var modified_stats: Array[ModifiedStat] = []
 
+var xp: int = 0
+var jp: int = 0
+var xp_gained_this_battle: int = 0
+var jp_gained_this_battle: int = 0
+var levels_gained_this_battle: int = 0
+
 var turn_counter: int = 0
 var has_reaction: bool = true
 var has_acted: bool = false
@@ -68,6 +74,11 @@ func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: 
 
 	abilities = data.abilities.duplicate()
 	reaction_types = data.reaction_types.duplicate()
+
+
+func initialize_xp(p_xp: int, p_jp: int) -> void:
+	xp = p_xp
+	jp = p_jp
 
 
 func place_on_grid(pos: Vector2i) -> void:
@@ -235,3 +246,67 @@ func animate_move_along_path(path: Array[Vector2i]) -> void:
 
 	if path.size() > 1:
 		set_facing_toward(path[-1])
+
+
+# --- XP / JP ---
+
+func award_xp(raw_amount: int) -> void:
+	if team != Enums.Team.PLAYER:
+		return
+	var multiplier := XpConfig.get_catchup_multiplier(level, GameState.progression_stage)
+	var scaled := int(raw_amount * multiplier)
+	scaled = maxi(scaled, 1)
+	xp += scaled
+	xp_gained_this_battle += scaled
+	_check_level_up()
+
+
+func award_jp(amount: int) -> void:
+	if team != Enums.Team.PLAYER:
+		return
+	jp += amount
+	jp_gained_this_battle += amount
+
+
+func award_ability_xp_jp(ability: AbilityData, got_crit: bool, got_kill: bool) -> void:
+	var xp_amount := XpConfig.BASE_ABILITY_XP
+	if XpConfig.is_basic_attack(ability):
+		xp_amount += XpConfig.BASIC_ATTACK_BONUS_XP
+	if got_kill:
+		xp_amount += XpConfig.KILL_BONUS_XP
+	if got_crit:
+		xp_amount += XpConfig.CRIT_BONUS_XP
+	award_xp(xp_amount)
+
+	var jp_amount := XpConfig.calculate_jp(fighter_data.class_id, ability)
+	award_jp(jp_amount)
+
+
+func _check_level_up() -> void:
+	var threshold := XpConfig.xp_to_next_level(level)
+	while xp >= threshold:
+		xp -= threshold
+		_level_up()
+		threshold = XpConfig.xp_to_next_level(level)
+
+
+func _level_up() -> void:
+	level += 1
+	levels_gained_this_battle += 1
+
+	var stats := fighter_data.get_stats_at_level(level)
+	max_health = stats["max_health"]
+	health = max_health
+	max_mana = stats["max_mana"]
+	mana = max_mana
+	physical_attack = stats["physical_attack"]
+	physical_defense = stats["physical_defense"]
+	magic_attack = stats["magic_attack"]
+	magic_defense = stats["magic_defense"]
+	speed = stats["speed"]
+	crit_chance = stats["crit_chance"]
+	crit_damage = stats["crit_damage"]
+	dodge_chance = stats["dodge_chance"]
+	movement = stats["movement"]
+	jump = stats["jump"]
+	_update_health_bar()

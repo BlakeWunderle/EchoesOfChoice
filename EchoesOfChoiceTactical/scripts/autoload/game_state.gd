@@ -31,6 +31,8 @@ func add_party_member(p_name: String, p_gender: String, class_id: String, level:
 		"gender": p_gender,
 		"class_id": class_id,
 		"level": level,
+		"xp": 0,
+		"jp": 0,
 	})
 
 
@@ -63,6 +65,29 @@ func is_battle_completed(battle_id: String) -> bool:
 
 func is_node_locked(node_id: String) -> bool:
 	return node_id in locked_nodes
+
+
+func update_party_after_battle(player_units: Array) -> void:
+	for unit in player_units:
+		if not unit is Unit:
+			continue
+		var u: Unit = unit
+		if u.team != Enums.Team.PLAYER:
+			continue
+		if u.unit_name == player_name:
+			# Player character (not in party_members array)
+			continue
+		for i in range(party_members.size()):
+			if party_members[i]["name"] == u.unit_name:
+				party_members[i]["level"] = u.level
+				party_members[i]["xp"] = u.xp
+				party_members[i]["jp"] = u.jp
+				break
+
+
+func advance_progression(battle_progression: int) -> void:
+	if battle_progression > progression_stage:
+		progression_stage = battle_progression
 
 
 func reset_for_new_game() -> void:

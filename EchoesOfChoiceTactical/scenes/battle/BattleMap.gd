@@ -110,7 +110,9 @@ func _setup_from_config(config: BattleConfig) -> void:
 			grid.set_tile(Vector2i(x, y), true, 1, 0)
 
 	for entry in config.player_units:
-		_spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"])
+		var unit := _spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"])
+		var member_xp := _find_party_member_xp(entry["name"])
+		unit.initialize_xp(member_xp[0], member_xp[1])
 
 	for entry in config.enemy_units:
 		_spawn_unit(entry["data"], entry["name"], Enums.Team.ENEMY, entry["pos"], entry["level"])
@@ -559,6 +561,9 @@ func _execute_action(unit: Unit, target_pos: Vector2i) -> void:
 
 
 func _execute_damage_ability(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
+	var got_crit := false
+	var got_kill := false
+
 	for tile in tiles:
 		var target = grid.get_occupant(tile)
 		if not target is Unit or not target.is_alive:
@@ -571,20 +576,24 @@ func _execute_damage_ability(attacker: Unit, ability: AbilityData, tiles: Array[
 		if Combat.roll_dodge(target.dodge_chance):
 			continue
 
-		if Combat.roll_crit(attacker.crit_chance):
+		var this_crit := Combat.roll_crit(attacker.crit_chance)
+		if this_crit:
 			damage += attacker.crit_damage
+			got_crit = true
 
-		# Process defensive reactions before applying damage
 		damage = reaction_system.process_defensive_reactions(target, damage)
 
 		target.take_damage(damage)
 
-		# Check for flanking strikes
+		if not target.is_alive:
+			got_kill = true
+
 		reaction_system.check_flanking_strikes(attacker, target)
 
-		# Check for reactive heal on the damaged unit
 		if target.is_alive:
 			reaction_system.check_reactive_heal(target, damage)
+
+	attacker.award_ability_xp_jp(ability, got_crit, got_kill)
 
 
 func _execute_heal_ability(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
@@ -596,6 +605,8 @@ func _execute_heal_ability(caster: Unit, ability: AbilityData, tiles: Array[Vect
 			continue
 		var heal_amount := Combat.calculate_heal(ability, caster.magic_attack)
 		target.heal(heal_amount)
+
+	caster.award_ability_xp_jp(ability, false, false)
 
 
 func _execute_buff_ability(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
@@ -613,6 +624,8 @@ func _execute_buff_ability(caster: Unit, ability: AbilityData, tiles: Array[Vect
 		var ms := ModifiedStat.create(ability.modified_stat, ability.modifier, ability.impacted_turns, is_debuff)
 		target.modified_stats.append(ms)
 		target.apply_stat_modifier(ability.modified_stat, ability.modifier, is_debuff)
+
+	caster.award_ability_xp_jp(ability, false, false)
 
 
 func _execute_terrain_ability(_caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
@@ -756,6 +769,13 @@ func _start_ai_turn(unit: Unit) -> void:
 	unit.end_turn()
 
 
+func _find_party_member_xp(unit_name: String) -> Array:
+	for member in GameState.party_members:
+		if member["name"] == unit_name:
+			return [member.get("xp", 0), member.get("jp", 0)]
+	return [0, 0]
+
+
 func _manhattan_distance(a: Vector2i, b: Vector2i) -> int:
 	return absi(a.x - b.x) + absi(a.y - b.y)
 
@@ -769,15 +789,50 @@ func _on_battle_ended(player_won: bool) -> void:
 	else:
 		turn_info.text = "DEFEAT... The party has fallen."
 
+	# Sync XP/JP and update progression
+	var player_units_list: Array = []
+	for child in units_container.get_children():
+		if child is Unit and child.team == Enums.Team.PLAYER:
+			player_units_list.append(child)
+
+	if player_won:
+		var node_data: Dictionary = MapData.get_node(GameState.current_battle_id)
+		var battle_prog: int = node_data.get("progression", 0)
+		GameState.advance_progression(battle_prog)
+
+	GameState.update_party_after_battle(player_units_list)
+
 	await get_tree().create_timer(2.0).timeout
 
 	if GameState.current_battle_id == "tutorial":
 		GameState.set_flag("tutorial_complete")
 		SceneManager.go_to_class_selection()
 	else:
-		if player_won:
+		if player_won and _has_xp_gains(player_units_list):
+			_show_battle_summary(player_units_list)
+		elif player_won:
 			GameState.complete_battle(GameState.current_battle_id)
+			SceneManager.go_to_overworld()
+		else:
+			SceneManager.go_to_overworld()
+
+
+func _has_xp_gains(units: Array) -> bool:
+	for u in units:
+		if u is Unit and (u.xp_gained_this_battle > 0 or u.jp_gained_this_battle > 0):
+			return true
+	return false
+
+
+func _show_battle_summary(units: Array) -> void:
+	var summary_scene := preload("res://scenes/battle/BattleSummary.tscn")
+	var summary: Control = summary_scene.instantiate()
+	summary.setup(units)
+	summary.summary_closed.connect(func():
+		GameState.complete_battle(GameState.current_battle_id)
 		SceneManager.go_to_overworld()
+	)
+	$HUD.add_child(summary)
 
 
 # --- Grid Drawing ---
