@@ -12,12 +12,13 @@ config_version=5
 
 config/name="Echoes of Choice - Tactical"
 config/description="A tactical RPG with grid-based combat, elevation, and role-based reactions."
-run/main_scene="res://scenes/battle/BattleMap.tscn"
+run/main_scene="res://scenes/story/CharacterCreation.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 
 [autoload]
 
 GameState="*res://scripts/autoload/game_state.gd"
+SceneManager="*res://scripts/autoload/scene_manager.gd"
 
 [display]
 

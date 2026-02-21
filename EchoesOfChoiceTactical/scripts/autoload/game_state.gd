@@ -1,6 +1,11 @@
 extends Node
 
-var party: Array = []
+var player_name: String = ""
+var player_gender: String = ""
+var player_class_id: String = ""
+
+var party_members: Array[Dictionary] = []
+
 var progression_stage: int = 0
 var current_battle_id: String = ""
 var story_flags: Dictionary = {}
@@ -8,18 +13,52 @@ var story_flags: Dictionary = {}
 const SAVE_PATH := "user://savegame.json"
 
 
-func add_to_party(unit_data: Dictionary) -> void:
-	party.append(unit_data)
+func set_player_info(p_name: String, p_gender: String) -> void:
+	player_name = p_name
+	player_gender = p_gender
 
 
-func remove_from_party(index: int) -> void:
-	if index >= 0 and index < party.size():
-		party.remove_at(index)
+func set_player_class(class_id: String) -> void:
+	player_class_id = class_id
+
+
+func add_party_member(p_name: String, p_gender: String, class_id: String, level: int = 1) -> void:
+	party_members.append({
+		"name": p_name,
+		"gender": p_gender,
+		"class_id": class_id,
+		"level": level,
+	})
+
+
+func get_party_size() -> int:
+	return party_members.size()
+
+
+func set_flag(flag: String, value: bool = true) -> void:
+	story_flags[flag] = value
+
+
+func has_flag(flag: String) -> bool:
+	return story_flags.get(flag, false)
+
+
+func reset_for_new_game() -> void:
+	player_name = ""
+	player_gender = ""
+	player_class_id = ""
+	party_members.clear()
+	progression_stage = 0
+	current_battle_id = ""
+	story_flags.clear()
 
 
 func save_game() -> void:
 	var save_data := {
-		"party": party,
+		"player_name": player_name,
+		"player_gender": player_gender,
+		"player_class_id": player_class_id,
+		"party_members": party_members,
 		"progression_stage": progression_stage,
 		"current_battle": current_battle_id,
 		"story_flags": story_flags,
@@ -42,7 +81,10 @@ func load_game() -> bool:
 	if result != OK:
 		return false
 	var data: Dictionary = json.data
-	party = data.get("party", [])
+	player_name = data.get("player_name", "")
+	player_gender = data.get("player_gender", "")
+	player_class_id = data.get("player_class_id", "")
+	party_members.assign(data.get("party_members", []))
 	progression_stage = data.get("progression_stage", 0)
 	current_battle_id = data.get("current_battle", "")
 	story_flags = data.get("story_flags", {})

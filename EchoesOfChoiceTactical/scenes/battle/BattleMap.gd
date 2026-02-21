@@ -20,7 +20,10 @@ var _attack_tiles: Array[Vector2i] = []
 
 
 func _ready() -> void:
-	_setup_test_battle()
+	if GameState.current_battle_id == "tutorial":
+		_setup_from_config(BattleConfig.create_tutorial())
+	else:
+		_setup_test_battle()
 
 
 func _setup_test_battle() -> void:
@@ -88,6 +91,37 @@ func _setup_test_battle() -> void:
 
 	_build_action_panel()
 
+	turn_manager.run_battle()
+
+
+func _setup_from_config(config: BattleConfig) -> void:
+	grid = Grid.new(config.grid_width, config.grid_height)
+	reaction_system = ReactionSystem.new(grid)
+
+	for x in range(config.grid_width):
+		for y in range(config.grid_height):
+			grid.set_tile(Vector2i(x, y), true, 1, 0)
+
+	for entry in config.player_units:
+		_spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"])
+
+	for entry in config.enemy_units:
+		_spawn_unit(entry["data"], entry["name"], Enums.Team.ENEMY, entry["pos"], entry["level"])
+
+	var all_units: Array[Unit] = []
+	for child in units_container.get_children():
+		if child is Unit:
+			all_units.append(child)
+
+	turn_manager.setup(all_units)
+	turn_manager.unit_turn_started.connect(_on_unit_turn_started)
+	turn_manager.battle_ended.connect(_on_battle_ended)
+
+	grid_cursor.cell_selected.connect(_on_cell_selected)
+	grid_cursor.cell_hovered.connect(_on_cell_hovered)
+	grid_cursor.cancelled.connect(_on_cursor_cancelled)
+
+	_build_action_panel()
 	turn_manager.run_battle()
 
 
@@ -727,6 +761,14 @@ func _on_battle_ended(player_won: bool) -> void:
 		turn_info.text = "VICTORY! The enemies have been vanquished."
 	else:
 		turn_info.text = "DEFEAT... The party has fallen."
+
+	if GameState.current_battle_id == "tutorial":
+		GameState.set_flag("tutorial_complete")
+		await get_tree().create_timer(2.0).timeout
+		if player_won:
+			SceneManager.go_to_class_selection()
+		else:
+			SceneManager.go_to_class_selection()
 
 
 # --- Grid Drawing ---
