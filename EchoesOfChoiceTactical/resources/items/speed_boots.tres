@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "speed_boots"
+display_name = "Speed Boots"
+description = "Enchanted boots that quicken the wearer's stride. Increases speed."
+item_type = 3
+buy_price = 90
+sell_price_override = -1
+equip_slot = 2
+stat_bonuses = { 7: 3 }
+consumable_effect = 0
+consumable_value = 0
+buff_stat = 0
+buff_turns = 0

@@ -14,9 +14,22 @@ func _ready() -> void:
 	)
 
 
-func setup(player_units: Array) -> void:
+func setup(player_units: Array, gold_earned: int = 0) -> void:
 	for child in unit_list.get_children():
 		child.queue_free()
+
+	if gold_earned > 0:
+		var gold_row := HBoxContainer.new()
+		gold_row.add_theme_constant_override("separation", 8)
+		var gold_label := Label.new()
+		gold_label.text = "Gold +%d   (Total: %d)" % [gold_earned, GameState.gold]
+		gold_label.add_theme_font_size_override("font_size", 15)
+		gold_label.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))
+		gold_row.add_child(gold_label)
+		unit_list.add_child(gold_row)
+		var sep := HSeparator.new()
+		sep.add_theme_constant_override("separation", 4)
+		unit_list.add_child(sep)
 
 	for u in player_units:
 		if not u is Unit:

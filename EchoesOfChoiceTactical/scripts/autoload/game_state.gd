@@ -8,10 +8,15 @@ var party_members: Array[Dictionary] = []
 
 var progression_stage: int = 0
 var current_battle_id: String = ""
+var current_town_id: String = ""
 var story_flags: Dictionary = {}
 
 var completed_battles: Array[String] = []
 var locked_nodes: Array[String] = []
+
+var gold: int = 0
+var inventory: Dictionary = {}
+var equipment: Dictionary = {}
 
 const SAVE_PATH := "user://savegame.json"
 
@@ -90,6 +95,117 @@ func advance_progression(battle_progression: int) -> void:
 		progression_stage = battle_progression
 
 
+# --- Gold ---
+
+func add_gold(amount: int) -> void:
+	gold += amount
+
+
+func spend_gold(amount: int) -> bool:
+	if gold < amount:
+		return false
+	gold -= amount
+	return true
+
+
+func can_afford(amount: int) -> bool:
+	return gold >= amount
+
+
+# --- Inventory ---
+
+func add_item(item_id: String, quantity: int = 1) -> void:
+	inventory[item_id] = inventory.get(item_id, 0) + quantity
+
+
+func remove_item(item_id: String, quantity: int = 1) -> bool:
+	var owned: int = inventory.get(item_id, 0)
+	if owned < quantity:
+		return false
+	owned -= quantity
+	if owned <= 0:
+		inventory.erase(item_id)
+	else:
+		inventory[item_id] = owned
+	return true
+
+
+func get_item_count(item_id: String) -> int:
+	return inventory.get(item_id, 0)
+
+
+func get_consumables_in_inventory() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for item_id in inventory:
+		var qty: int = inventory[item_id]
+		if qty <= 0:
+			continue
+		var item := _load_item(item_id)
+		if item and item.is_consumable():
+			result.append({"item": item, "quantity": qty})
+	return result
+
+
+# --- Equipment ---
+
+func equip_item(unit_name: String, item_id: String) -> void:
+	var item := _load_item(item_id)
+	if not item or not item.is_equipment():
+		return
+	var slot_key := _slot_key(item.get_equip_slot())
+	if not equipment.has(unit_name):
+		equipment[unit_name] = {}
+	var prev_id: String = equipment[unit_name].get(slot_key, "")
+	if not prev_id.is_empty():
+		add_item(prev_id)
+	equipment[unit_name][slot_key] = item_id
+	remove_item(item_id)
+
+
+func unequip_item(unit_name: String, slot: Enums.EquipSlot) -> void:
+	var slot_key := _slot_key(slot)
+	if not equipment.has(unit_name):
+		return
+	var item_id: String = equipment[unit_name].get(slot_key, "")
+	if item_id.is_empty():
+		return
+	equipment[unit_name].erase(slot_key)
+	add_item(item_id)
+	if equipment[unit_name].is_empty():
+		equipment.erase(unit_name)
+
+
+func get_equipped_item(unit_name: String, slot: Enums.EquipSlot) -> ItemData:
+	var slot_key := _slot_key(slot)
+	if not equipment.has(unit_name):
+		return null
+	var item_id: String = equipment[unit_name].get(slot_key, "")
+	if item_id.is_empty():
+		return null
+	return _load_item(item_id)
+
+
+func get_all_equipped(unit_name: String) -> Dictionary:
+	if not equipment.has(unit_name):
+		return {}
+	return equipment[unit_name].duplicate()
+
+
+func _slot_key(slot: Enums.EquipSlot) -> String:
+	match slot:
+		Enums.EquipSlot.WEAPON: return "weapon"
+		Enums.EquipSlot.ARMOR: return "armor"
+		Enums.EquipSlot.ACCESSORY: return "accessory"
+	return "weapon"
+
+
+func _load_item(item_id: String) -> ItemData:
+	var path := "res://resources/items/%s.tres" % item_id
+	if ResourceLoader.exists(path):
+		return load(path) as ItemData
+	return null
+
+
 func reset_for_new_game() -> void:
 	player_name = ""
 	player_gender = ""
@@ -100,6 +216,9 @@ func reset_for_new_game() -> void:
 	story_flags.clear()
 	completed_battles.clear()
 	locked_nodes.clear()
+	gold = 0
+	inventory.clear()
+	equipment.clear()
 
 
 func save_game() -> void:
@@ -113,6 +232,9 @@ func save_game() -> void:
 		"story_flags": story_flags,
 		"completed_battles": completed_battles,
 		"locked_nodes": locked_nodes,
+		"gold": gold,
+		"inventory": inventory,
+		"equipment": equipment,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -147,6 +269,9 @@ func load_game() -> bool:
 	locked_nodes.clear()
 	for n in ln:
 		locked_nodes.append(str(n))
+	gold = int(data.get("gold", 0))
+	inventory = data.get("inventory", {})
+	equipment = data.get("equipment", {})
 	return true
 
 

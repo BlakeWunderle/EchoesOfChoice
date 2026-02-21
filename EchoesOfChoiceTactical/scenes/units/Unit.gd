@@ -75,10 +75,47 @@ func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: 
 	abilities = data.abilities.duplicate()
 	reaction_types = data.reaction_types.duplicate()
 
+	if p_team == Enums.Team.PLAYER:
+		_apply_equipment()
+
 
 func initialize_xp(p_xp: int, p_jp: int) -> void:
 	xp = p_xp
 	jp = p_jp
+
+
+func _apply_equipment() -> void:
+	var slots := [Enums.EquipSlot.WEAPON, Enums.EquipSlot.ARMOR, Enums.EquipSlot.ACCESSORY]
+	for slot in slots:
+		var item: ItemData = GameState.get_equipped_item(unit_name, slot)
+		if not item:
+			continue
+		for stat_key in item.stat_bonuses:
+			var bonus: int = int(item.stat_bonuses[stat_key])
+			var stat_val: int
+			if stat_key is String:
+				stat_val = Enums.StatType.get(stat_key.to_upper(), -1)
+			else:
+				stat_val = int(stat_key)
+			match stat_val:
+				Enums.StatType.PHYSICAL_ATTACK:
+					physical_attack += bonus
+				Enums.StatType.PHYSICAL_DEFENSE:
+					physical_defense += bonus
+				Enums.StatType.MAGIC_ATTACK:
+					magic_attack += bonus
+				Enums.StatType.MAGIC_DEFENSE:
+					magic_defense += bonus
+				Enums.StatType.SPEED:
+					speed += bonus
+				Enums.StatType.DODGE_CHANCE:
+					dodge_chance += bonus
+				Enums.StatType.ATTACK:
+					physical_attack += bonus
+					magic_attack += bonus
+				Enums.StatType.DEFENSE:
+					physical_defense += bonus
+					magic_defense += bonus
 
 
 func place_on_grid(pos: Vector2i) -> void:

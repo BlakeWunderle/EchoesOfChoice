@@ -15,22 +15,41 @@ var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 
 var _current_phase: Enums.TurnPhase = Enums.TurnPhase.AWAITING_INPUT
 var _selected_ability: AbilityData = null
+var _selected_item: ItemData = null
 var _reachable_tiles: Array[Vector2i] = []
 var _attack_tiles: Array[Vector2i] = []
 
 
 func _ready() -> void:
 	var battle_id := GameState.current_battle_id
-	if battle_id == "tutorial":
-		_setup_from_config(BattleConfig.create_tutorial())
-	elif battle_id == "city_street":
-		_setup_from_config(BattleConfig.create_city_street())
-	elif battle_id == "forest":
-		_setup_from_config(BattleConfig.create_forest())
+	var config := _get_battle_config(battle_id)
+	if config:
+		_setup_from_config(config)
 	elif not battle_id.is_empty():
 		_setup_from_config(BattleConfig.create_placeholder(battle_id))
 	else:
 		_setup_test_battle()
+
+
+static var _config_creators: Dictionary = {
+	"tutorial": BattleConfig.create_tutorial,
+	"city_street": BattleConfig.create_city_street,
+	"forest": BattleConfig.create_forest,
+	"village_raid": BattleConfig.create_village_raid,
+	"smoke": BattleConfig.create_smoke,
+	"deep_forest": BattleConfig.create_deep_forest,
+	"clearing": BattleConfig.create_clearing,
+	"ruins": BattleConfig.create_ruins,
+	"cave": BattleConfig.create_cave,
+	"portal": BattleConfig.create_portal,
+	"inn_ambush": BattleConfig.create_inn_ambush,
+}
+
+
+func _get_battle_config(battle_id: String) -> BattleConfig:
+	if _config_creators.has(battle_id):
+		return _config_creators[battle_id].call()
+	return null
 
 
 func _setup_test_battle() -> void:
@@ -224,6 +243,7 @@ func _spawn_unit(data: FighterData, unit_name: String, team: Enums.Team, pos: Ve
 
 var _btn_attack: Button
 var _btn_ability: Button
+var _btn_item: Button
 var _btn_move: Button
 var _btn_wait: Button
 var _btn_facing_n: Button
@@ -232,6 +252,7 @@ var _btn_facing_e: Button
 var _btn_facing_w: Button
 var _facing_container: HBoxContainer
 var _ability_container: VBoxContainer
+var _item_container: VBoxContainer
 
 
 func _build_action_panel() -> void:
@@ -244,6 +265,11 @@ func _build_action_panel() -> void:
 	_btn_ability.text = "Ability"
 	_btn_ability.pressed.connect(_on_ability_pressed)
 	action_panel.add_child(_btn_ability)
+
+	_btn_item = Button.new()
+	_btn_item.text = "Item"
+	_btn_item.pressed.connect(_on_item_pressed)
+	action_panel.add_child(_btn_item)
 
 	_btn_move = Button.new()
 	_btn_move.text = "Move"
@@ -258,6 +284,10 @@ func _build_action_panel() -> void:
 	_ability_container = VBoxContainer.new()
 	_ability_container.visible = false
 	action_panel.add_child(_ability_container)
+
+	_item_container = VBoxContainer.new()
+	_item_container.visible = false
+	action_panel.add_child(_item_container)
 
 	# Facing chooser
 	_facing_container = HBoxContainer.new()
@@ -288,10 +318,12 @@ func _build_action_panel() -> void:
 func _show_action_menu(unit: Unit) -> void:
 	action_panel.visible = true
 	_ability_container.visible = false
+	_item_container.visible = false
 	_facing_container.visible = false
 
 	_btn_attack.visible = not unit.has_acted
 	_btn_ability.visible = not unit.has_acted and unit.has_any_affordable_ability()
+	_btn_item.visible = not unit.has_acted and _has_usable_items()
 	_btn_move.visible = not unit.has_moved
 	_btn_wait.visible = true
 
@@ -301,6 +333,7 @@ func _show_action_menu(unit: Unit) -> void:
 func _hide_action_menu() -> void:
 	action_panel.visible = false
 	_ability_container.visible = false
+	_item_container.visible = false
 	_facing_container.visible = false
 
 
@@ -359,6 +392,7 @@ func _on_ability_pressed() -> void:
 	_ability_container.visible = true
 	_btn_attack.visible = false
 	_btn_ability.visible = false
+	_btn_item.visible = false
 	_btn_move.visible = false
 	_btn_wait.visible = false
 
@@ -371,6 +405,109 @@ func _on_ability_selected(ability: AbilityData) -> void:
 	_current_phase = Enums.TurnPhase.ACT
 	_selected_ability = ability
 	_show_targeting(ability, unit)
+
+
+func _on_item_pressed() -> void:
+	var unit := turn_manager.current_unit
+	if unit == null or unit.has_acted:
+		return
+
+	for child in _item_container.get_children():
+		child.queue_free()
+
+	var consumables := GameState.get_consumables_in_inventory()
+	for entry in consumables:
+		var item: ItemData = entry["item"]
+		var qty: int = entry["quantity"]
+		var btn := Button.new()
+		btn.text = "%s x%d  (%s)" % [item.display_name, qty, item.get_stat_summary()]
+		btn.pressed.connect(func(): _on_item_selected(item))
+		_item_container.add_child(btn)
+
+	var back_btn := Button.new()
+	back_btn.text = "Back"
+	back_btn.pressed.connect(func():
+		_item_container.visible = false
+		_show_action_menu(unit)
+	)
+	_item_container.add_child(back_btn)
+
+	_item_container.visible = true
+	_btn_attack.visible = false
+	_btn_ability.visible = false
+	_btn_item.visible = false
+	_btn_move.visible = false
+	_btn_wait.visible = false
+
+
+func _on_item_selected(item: ItemData) -> void:
+	var unit := turn_manager.current_unit
+	if unit == null:
+		return
+	_selected_item = item
+	_hide_action_menu()
+	_current_phase = Enums.TurnPhase.ACT
+
+	var target_tiles: Array[Vector2i] = []
+	match item.consumable_effect:
+		Enums.ConsumableEffect.HEAL_HP, Enums.ConsumableEffect.RESTORE_MANA, Enums.ConsumableEffect.BUFF_STAT:
+			target_tiles = _get_ally_tiles(unit)
+
+	if target_tiles.is_empty():
+		target_tiles.append(unit.grid_position)
+
+	grid_overlay.show_attack_range(target_tiles)
+	_attack_tiles = target_tiles
+	grid_cursor.activate(target_tiles, unit.grid_position)
+
+
+func _get_ally_tiles(user: Unit) -> Array[Vector2i]:
+	var tiles: Array[Vector2i] = []
+	for child in units_container.get_children():
+		if child is Unit and child.is_alive and child.team == user.team:
+			tiles.append(child.grid_position)
+	return tiles
+
+
+func _has_usable_items() -> bool:
+	return GameState.get_consumables_in_inventory().size() > 0
+
+
+func _execute_item(unit: Unit, target_pos: Vector2i) -> void:
+	grid_cursor.deactivate()
+	grid_overlay.clear_all()
+
+	if _selected_item == null:
+		_show_action_menu(unit)
+		return
+
+	var item := _selected_item
+	_selected_item = null
+
+	var target = grid.get_occupant(target_pos)
+	if not target is Unit or not target.is_alive:
+		target = unit
+
+	if not GameState.remove_item(item.item_id):
+		_show_action_menu(unit)
+		return
+
+	match item.consumable_effect:
+		Enums.ConsumableEffect.HEAL_HP:
+			target.heal(item.consumable_value)
+		Enums.ConsumableEffect.RESTORE_MANA:
+			target.mana = mini(target.mana + item.consumable_value, target.max_mana)
+		Enums.ConsumableEffect.BUFF_STAT:
+			var ms := ModifiedStat.create(item.buff_stat, item.consumable_value, item.buff_turns, false)
+			target.modified_stats.append(ms)
+			target.apply_stat_modifier(item.buff_stat, item.consumable_value, false)
+
+	unit.has_acted = true
+
+	if not unit.has_moved:
+		_show_action_menu(unit)
+	else:
+		_enter_facing_phase(unit)
 
 
 func _on_move_pressed() -> void:
@@ -460,6 +597,7 @@ func _enter_facing_phase(unit: Unit) -> void:
 	action_panel.visible = true
 	_btn_attack.visible = false
 	_btn_ability.visible = false
+	_btn_item.visible = false
 	_btn_move.visible = false
 	_btn_wait.visible = false
 	_facing_container.visible = true
@@ -486,7 +624,10 @@ func _on_cell_selected(pos: Vector2i) -> void:
 		Enums.TurnPhase.MOVE:
 			_execute_move(unit, pos)
 		Enums.TurnPhase.ACT:
-			_execute_action(unit, pos)
+			if _selected_item != null:
+				_execute_item(unit, pos)
+			else:
+				_execute_action(unit, pos)
 
 
 func _execute_move(unit: Unit, target_pos: Vector2i) -> void:
@@ -669,6 +810,7 @@ func _on_cursor_cancelled() -> void:
 			_show_action_menu(unit)
 		Enums.TurnPhase.ACT:
 			_selected_ability = null
+			_selected_item = null
 			_show_action_menu(unit)
 
 
@@ -795,10 +937,14 @@ func _on_battle_ended(player_won: bool) -> void:
 		if child is Unit and child.team == Enums.Team.PLAYER:
 			player_units_list.append(child)
 
+	var gold_earned := 0
 	if player_won:
 		var node_data: Dictionary = MapData.get_node(GameState.current_battle_id)
 		var battle_prog: int = node_data.get("progression", 0)
 		GameState.advance_progression(battle_prog)
+		gold_earned = int(node_data.get("gold_reward", 0))
+		if gold_earned > 0:
+			GameState.add_gold(gold_earned)
 
 	GameState.update_party_after_battle(player_units_list)
 
@@ -808,8 +954,8 @@ func _on_battle_ended(player_won: bool) -> void:
 		GameState.set_flag("tutorial_complete")
 		SceneManager.go_to_class_selection()
 	else:
-		if player_won and _has_xp_gains(player_units_list):
-			_show_battle_summary(player_units_list)
+		if player_won and (_has_xp_gains(player_units_list) or gold_earned > 0):
+			_show_battle_summary(player_units_list, gold_earned)
 		elif player_won:
 			GameState.complete_battle(GameState.current_battle_id)
 			SceneManager.go_to_overworld()
@@ -824,10 +970,10 @@ func _has_xp_gains(units: Array) -> bool:
 	return false
 
 
-func _show_battle_summary(units: Array) -> void:
+func _show_battle_summary(units: Array, gold_earned: int = 0) -> void:
 	var summary_scene := preload("res://scenes/battle/BattleSummary.tscn")
 	var summary: Control = summary_scene.instantiate()
-	summary.setup(units)
+	summary.setup(units, gold_earned)
 	summary.summary_closed.connect(func():
 		GameState.complete_battle(GameState.current_battle_id)
 		SceneManager.go_to_overworld()

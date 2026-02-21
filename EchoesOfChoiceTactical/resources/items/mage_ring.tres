@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "mage_ring"
+display_name = "Mage Ring"
+description = "A ring set with a glowing gem. Amplifies magical attack power."
+item_type = 3
+buy_price = 75
+sell_price_override = -1
+equip_slot = 2
+stat_bonuses = { 2: 4 }
+consumable_effect = 0
+consumable_value = 0
+buff_stat = 0
+buff_turns = 0

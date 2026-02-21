@@ -68,3 +68,22 @@ enum Team {
 	PLAYER,
 	ENEMY,
 }
+
+enum ItemType {
+	CONSUMABLE,
+	WEAPON,
+	ARMOR,
+	ACCESSORY,
+}
+
+enum EquipSlot {
+	WEAPON,
+	ARMOR,
+	ACCESSORY,
+}
+
+enum ConsumableEffect {
+	HEAL_HP,
+	RESTORE_MANA,
+	BUFF_STAT,
+}
