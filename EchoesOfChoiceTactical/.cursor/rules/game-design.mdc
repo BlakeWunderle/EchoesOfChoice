@@ -1,0 +1,70 @@
+---
+description: Core design decisions for Echoes of Choice Tactical -- all confirmed game mechanics, systems, and rules
+alwaysApply: true
+---
+
+# Echoes of Choice Tactical -- Design Decisions
+
+This is a tactical RPG built in Godot 4 with GDScript. It is a reimagining of the console-based RPG "Echoes of Choice" (C# project at ../EchoesOfChoice/) as a grid-based tactical game.
+
+## Turn System
+
+- **ATB (Active Time Battle)**: Speed stat accumulates each tick. At 100, the unit acts. Same as FFT's Charge Time.
+- **Act-then-Move**: On their turn, a unit can Act (attack/ability) and Move in either order. Both are optional. "Wait" ends the turn.
+- **Facing**: Units face N/S/E/W. Auto-set by last action/movement. Player chooses facing at end of turn. Affects Snap Shot reaction.
+
+## Elevation
+
+- Maps have integer height levels (0, 1, 2, 3).
+- Climbing costs +1 movement per elevation gained. A unit can only climb if height difference <= their `jump` stat.
+- Descending is free.
+- Ranged abilities (range >= 2) gain +1 range per elevation level above the target.
+- Melee can only hit adjacent tiles within 1 elevation difference.
+
+## Movement
+
+- Each class has its own `movement` (horizontal tiles) and `jump` (max climbable height) stats.
+- BFS flood fill for reachable tiles, A* for pathfinding.
+- Examples: Ranger (5 mov, 3 jump), Warden (3 mov, 1 jump), Cavalry (6-7 mov, 1 jump).
+
+## Reactions (one per round, role-based)
+
+Each unit gets ONE reaction per round. Available reactions depend on class role:
+
+- **Opportunity Attack** (melee): Enemy leaves adjacent tile -> free melee hit.
+- **Flanking Strike** (melee): Ally attacks enemy this unit is adjacent to -> ~50% damage bonus hit.
+- **Snap Shot** (ranged): Enemy enters adjacent tile FROM unit's front facing -> ~50% ranged shot. Side/rear approach avoids it.
+- **Reactive Heal** (healer): Ally within 3 tiles takes damage -> small heal (~30-40%).
+- **Damage Mitigation** (support): Ally within 3 tiles takes damage -> reduce damage by ~25%.
+- **Bodyguard** (tank): Adjacent ally takes damage -> tank absorbs 40-50% onto themselves.
+
+Classes can have multiple reaction types but only use one per round.
+
+## Abilities
+
+Five types: Damage, Heal, Buff, Debuff, Terrain.
+- **Terrain abilities** create/destroy grid tiles (e.g., Cryomancer Ice Wall creates impassable tiles for N turns).
+- Each ability has: range, AoE shape (Single/Line/Cross/Diamond/Square/Global), AoE size, mana cost.
+- Maps include destructible objects (crates, boulders) with HP.
+
+## Combat Formulas (ported from C# version)
+
+- Physical: `attacker.phys_atk - defender.phys_def` (min 0)
+- Magic: `ability.modifier + attacker.mag_atk - defender.mag_def`
+- Mixed: `ability.modifier + avg(phys+mag atk) - avg(phys+mag def)`
+- Crit: roll 1-10, crit if > (10 - crit_chance), adds crit_damage
+- Dodge: roll 1-10, dodge if <= dodge_chance
+
+## Map Sizes (mixed by battle)
+
+- Caves: 8x6 (tight, chokepoints)
+- Forests: 10x8-12x10 (obstacles, moderate)
+- Clearings/Arenas: 14x10-14x12 (open, elevation features)
+
+## Art Style
+
+Placeholder sprites for now, iterate on art later.
+
+## Class System
+
+52 player classes from the C# version. 4 base -> 16 Tier 1 -> 32 Tier 2 via upgrades. Each class has unique movement/jump/reaction values. The C# codebase at `../EchoesOfChoice/CharacterClasses/` is the reference for all stat values.

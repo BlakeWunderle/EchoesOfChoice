@@ -1,0 +1,55 @@
+---
+description: Project architecture and file responsibilities for Echoes of Choice Tactical
+alwaysApply: true
+---
+
+# Project Architecture
+
+Godot 4 project using GDScript. Built alongside (not replacing) the C# console RPG at `../EchoesOfChoice/`.
+
+## File Map
+
+### Core Data (`scripts/data/`)
+- `enums.gd` -- All enums: StatType, AbilityType, AoEShape, TileType, Facing, ReactionType, TurnPhase, Team
+- `fighter_data.gd` -- Resource class for class definitions (stats, growth, movement, jump, reactions, abilities, upgrades)
+- `ability_data.gd` -- Resource class for abilities (range, AoE, type including Terrain, elevation-aware range calc)
+- `modified_stat.gd` -- Buff/debuff with turn countdown
+- `terrain_effect.gd` -- Dynamically placed terrain (ice walls, fire tiles) with duration
+
+### Systems (`scripts/systems/`)
+- `grid.gd` -- Grid engine: BFS movement with elevation+jump, A* pathfinding, range/AoE calculation, line-of-sight (Bresenham), dynamic terrain placement/removal
+- `combat.gd` -- All damage formulas, crit/dodge rolls, reaction damage calculations (flanking 50%, snap shot 50%, reactive heal 35%, mitigation 25%, bodyguard 45%)
+- `reaction_system.gd` -- All 6 reaction types with trigger logic, defensive reaction chaining (bodyguard then mitigation before damage applies)
+
+### Autoload (`scripts/autoload/`)
+- `game_state.gd` -- Singleton: party data, progression stage, story flags, JSON save/load
+
+### Battle (`scenes/battle/`)
+- `BattleMap.gd/.tscn` -- Main battle scene: grid rendering, turn flow (act-then-move), action menu, targeting with AoE preview, facing chooser, AI, reaction integration
+- `TurnManager.gd` -- ATB system (speed -> 100 threshold), turn order preview, battle end detection
+- `GridOverlay.gd` -- Colored tile overlays (movement=blue, attack=red, AoE=orange, threatened=red border, path=cyan)
+- `GridCursor.gd/.tscn` -- Keyboard cursor (WASD/arrows, Enter/Z=select, Esc/X=cancel)
+
+### Units (`scenes/units/`)
+- `Unit.gd/.tscn` -- Unit node: all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
+
+### Resources (`resources/`)
+- `classes/` -- FighterData .tres files per class (to be populated in Phase 10)
+- `abilities/` -- AbilityData .tres files per ability (to be populated in Phase 10)
+- `enemies/` -- FighterData .tres files per enemy type
+- `tilesets/` -- TileSet resources for terrain
+
+## Build Progress
+
+Phases 1-7 COMPLETE (project setup, grid, units, movement, turns, abilities, combat).
+Phases 8-12 PENDING (tactical AI, polished UI, 52 classes, map design, story/progression).
+
+## Reference Codebase
+
+The original C# console RPG at `../EchoesOfChoice/` contains all stat values, ability definitions, damage formulas, class upgrade trees, enemy definitions, and story text. Key reference files:
+- `CharacterClasses/Common/BaseFighter.cs` -- stat model
+- `CharacterClasses/Common/Ability.cs` -- ability model
+- `Battles/Battle.cs` -- damage formulas, ATB system, AI
+- `CharacterClasses/Fighter/`, `Mage/`, `Entertainer/`, `Scholar/` -- all 52 classes
+- `CharacterClasses/Enemies/` -- all enemy types
+- `Echoes of Choice/Program.cs` -- story flow, party creation

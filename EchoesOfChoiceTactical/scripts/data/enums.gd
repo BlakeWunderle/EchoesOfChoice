@@ -1,0 +1,70 @@
+class_name Enums
+
+enum StatType {
+	PHYSICAL_ATTACK,
+	PHYSICAL_DEFENSE,
+	MAGIC_ATTACK,
+	MAGIC_DEFENSE,
+	ATTACK,
+	DEFENSE,
+	MIXED_ATTACK,
+	SPEED,
+	DODGE_CHANCE,
+	TAUNT,
+}
+
+enum AbilityType {
+	DAMAGE,
+	HEAL,
+	BUFF,
+	DEBUFF,
+	TERRAIN,
+}
+
+enum AoEShape {
+	SINGLE,
+	LINE,
+	CROSS,
+	DIAMOND,
+	SQUARE,
+	GLOBAL,
+}
+
+enum TileType {
+	FLOOR,
+	WALL,
+	WATER,
+	ROUGH_TERRAIN,
+	DESTRUCTIBLE,
+	ICE_WALL,
+	FIRE_TILE,
+}
+
+enum Facing {
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST,
+}
+
+enum ReactionType {
+	OPPORTUNITY_ATTACK,
+	FLANKING_STRIKE,
+	SNAP_SHOT,
+	REACTIVE_HEAL,
+	DAMAGE_MITIGATION,
+	BODYGUARD,
+}
+
+enum TurnPhase {
+	AWAITING_INPUT,
+	MOVE,
+	ACT,
+	CHOOSE_FACING,
+	DONE,
+}
+
+enum Team {
+	PLAYER,
+	ENEMY,
+}

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>EchoesOfChoice.Battles</AssemblyName>
+    <RootNamespace>EchoesOfChoice.Battles</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CharacterClasses\CharacterClasses.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=3 uid="uid://cbattle001"]
+
+[ext_resource type="Script" path="res://scenes/battle/BattleMap.gd" id="1_battle"]
+[ext_resource type="Script" path="res://scenes/battle/TurnManager.gd" id="2_turn"]
+[ext_resource type="Script" path="res://scenes/battle/GridOverlay.gd" id="3_overlay"]
+[ext_resource type="Script" path="res://scenes/battle/GridCursor.gd" id="4_cursor"]
+
+[node name="BattleMap" type="Node2D"]
+script = ExtResource("1_battle")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.5, 1.5)
+
+[node name="GridOverlay" type="Node2D" parent="."]
+script = ExtResource("3_overlay")
+
+[node name="Units" type="Node2D" parent="."]
+
+[node name="GridCursor" type="Node2D" parent="."]
+script = ExtResource("4_cursor")
+visible = false
+
+[node name="CursorSprite" type="ColorRect" parent="GridCursor"]
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+color = Color(1, 1, 0, 0.3)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="TurnInfo" type="Label" parent="HUD"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 400.0
+offset_bottom = 60.0
+
+[node name="ActionPanel" type="VBoxContainer" parent="HUD"]
+visible = false
+offset_left = 10.0
+offset_top = 70.0
+offset_right = 200.0
+offset_bottom = 300.0
+
+[node name="TurnManager" type="Node" parent="."]
+script = ExtResource("2_turn")
