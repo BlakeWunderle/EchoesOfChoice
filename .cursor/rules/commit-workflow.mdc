@@ -1,5 +1,5 @@
 ---
-description: When and how to commit code changes. Commit after completing logical units of work — not after every file edit, and not only when the user asks.
+description: When and how to commit code changes. Build and commit on every plan; break large plans into multiple commits at natural boundaries.
 alwaysApply: true
 ---
 
@@ -7,15 +7,35 @@ alwaysApply: true
 
 ## When to Commit
 
-Commit after completing a **logical unit of work** — a cohesive piece of functionality that makes sense on its own. Examples:
+### Per-Plan Rule
+Every plan implementation must **build**, then **commit**:
 
-- A new class, enemy, or ability is fully implemented
+1. **Build** — Run the project build (e.g. Godot headless `--path <project> --headless --quit`, or the repo’s standard build command) and fix any errors before committing.
+2. **Commit** — Produce at least one commit. Large plans should be broken into **multiple commits** at natural boundaries — don’t try to land an entire plan in a single giant commit.
+
+Do not commit without a successful build.
+
+### Natural Commit Boundaries
+
+Split a plan into separate commits when there are distinct phases, such as:
+
+- **Data/resources first, then logic**: e.g., commit new `.tres` files, then commit the code that uses them
+- **Infrastructure, then features**: e.g., commit a new autoload/scene manager, then commit the scenes that depend on it
+- **Per-system or per-feature**: e.g., commit map data changes separately from battle config changes if they can stand alone
+- **Per-progression stage**: e.g., commit Prog 0-1 enemies separately from Prog 2-3 enemies in a large balance pass
+
+### What Counts as a Logical Unit
+
+A commit should be a **cohesive piece of functionality** that makes sense on its own:
+
+- A new class, enemy, or ability set is fully implemented
 - A battle's enemy tuning passes validation
 - A system (e.g., reactions, grid, combat) is added or meaningfully changed
 - A bug fix is complete and verified
 - A balance pass for a progression stage is locked
 - A refactor is finished and the code still works
 - Cursor rules or skills are added or updated
+- A new scene and its supporting scripts are wired up
 
 Do **not** wait for the user to ask. Do **not** commit half-finished work or mid-debugging states.
 
