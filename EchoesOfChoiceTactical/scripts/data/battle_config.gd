@@ -288,6 +288,59 @@ static func create_inn_ambush() -> BattleConfig:
 	return config
 
 
+static func create_shore() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "shore"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var siren := load("res://resources/enemies/siren.tres")
+	config.enemy_units = [
+		{"data": siren, "name": "Lorelei", "pos": Vector2i(8, 1), "level": 4},
+		{"data": siren, "name": "Thalassa", "pos": Vector2i(8, 3), "level": 4},
+		{"data": siren, "name": "Ligeia", "pos": Vector2i(8, 5), "level": 4},
+	]
+	return config
+
+
+static func create_beach() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "beach"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var captain := load("res://resources/enemies/captain.tres")
+	var pirate := load("res://resources/enemies/pirate.tres")
+	config.enemy_units = [
+		{"data": captain, "name": "Greybeard", "pos": Vector2i(9, 3), "level": 4},
+		{"data": pirate, "name": "Flint", "pos": Vector2i(8, 2), "level": 4},
+		{"data": pirate, "name": "Bonny", "pos": Vector2i(8, 4), "level": 4},
+	]
+	return config
+
+
+static func create_gate_ambush() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "gate_ambush"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var tough := load("res://resources/enemies/street_tough.tres")
+	var peddler := load("res://resources/enemies/hex_peddler.tres")
+	var prowler := load("res://resources/enemies/night_prowler.tres")
+	config.enemy_units = [
+		{"data": tough, "name": "Gate Raider", "pos": Vector2i(8, 1), "level": 5},
+		{"data": tough, "name": "Gate Brute", "pos": Vector2i(8, 3), "level": 5},
+		{"data": tough, "name": "Gate Thug", "pos": Vector2i(8, 5), "level": 5},
+		{"data": peddler, "name": "Cursed Peddler", "pos": Vector2i(9, 2), "level": 5},
+		{"data": prowler, "name": "Shadow at the Gate", "pos": Vector2i(9, 4), "level": 5},
+	]
+	return config
+
+
 static func create_placeholder(battle_id: String) -> BattleConfig:
 	var config := BattleConfig.new()
 	config.battle_id = battle_id

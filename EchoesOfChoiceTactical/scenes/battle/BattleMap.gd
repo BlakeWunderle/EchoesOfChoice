@@ -43,6 +43,9 @@ static var _config_creators: Dictionary = {
 	"cave": BattleConfig.create_cave,
 	"portal": BattleConfig.create_portal,
 	"inn_ambush": BattleConfig.create_inn_ambush,
+	"shore": BattleConfig.create_shore,
+	"beach": BattleConfig.create_beach,
+	"gate_ambush": BattleConfig.create_gate_ambush,
 }
 
 

@@ -22,6 +22,11 @@ const TOWN_BATTLES: Dictionary = {
 		"label": "Fight Off Night Ambush",
 		"flag": "inn_defended",
 	},
+	"gate_town": {
+		"battle_id": "gate_ambush",
+		"label": "Defend the Gate",
+		"flag": "gate_defended",
+	},
 }
 
 const TOWN_SHOPS: Dictionary = {
@@ -30,6 +35,11 @@ const TOWN_SHOPS: Dictionary = {
 		"iron_sword", "oak_staff", "leather_armor",
 	],
 	"crossroads_inn": [
+		"health_potion", "mana_potion", "strength_tonic", "magic_tonic",
+		"iron_sword", "oak_staff", "leather_armor",
+		"iron_shield", "speed_boots", "mage_ring",
+	],
+	"gate_town": [
 		"health_potion", "mana_potion", "strength_tonic", "magic_tonic",
 		"iron_sword", "oak_staff", "leather_armor",
 		"iron_shield", "speed_boots", "mage_ring",
