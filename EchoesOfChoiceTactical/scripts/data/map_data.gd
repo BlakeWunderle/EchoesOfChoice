@@ -30,7 +30,7 @@ enum Terrain {
 const NODES: Dictionary = {
 	"castle": {
 		"display_name": "The Castle",
-		"description": "Home of the royal family. Your journey begins here.",
+		"description": "Home of the royal family. Your journey begins here. Beyond the gates, the city streets await—and not everyone there wishes you well.",
 		"pos": Vector2(120, 360),
 		"terrain": Terrain.CASTLE,
 		"prev_nodes": [],
@@ -42,7 +42,7 @@ const NODES: Dictionary = {
 	},
 	"city_street": {
 		"display_name": "City Streets",
-		"description": "Thugs roam the streets outside the castle walls.",
+		"description": "No sooner have you left the castle than a gang of thugs and their enforcer block your path. The road to the forest lies beyond them.",
 		"pos": Vector2(280, 360),
 		"terrain": Terrain.CITY,
 		"prev_nodes": ["castle"],
@@ -54,7 +54,7 @@ const NODES: Dictionary = {
 	},
 	"forest": {
 		"display_name": "The Forest",
-		"description": "A wild bear and her pack block the forest path.",
+		"description": "A mother bear and her pack guard the forest path. Past them, a village at the forest's edge offers rest and rumors of what lies deeper.",
 		"pos": Vector2(400, 360),
 		"terrain": Terrain.FOREST,
 		"prev_nodes": ["city_street"],
@@ -66,7 +66,7 @@ const NODES: Dictionary = {
 	},
 	"forest_village": {
 		"display_name": "Forest Village",
-		"description": "A small settlement at the forest's edge. Villagers speak of a cave in the nearby hills.",
+		"description": "A small settlement at the forest's edge. Villagers speak of a cave in the nearby hills for shelter, and of four paths into the wilds: smoldering ruins, the deep woods, a moonlit clearing, or ancient stonework where the dead stir.",
 		"pos": Vector2(520, 360),
 		"terrain": Terrain.VILLAGE,
 		"prev_nodes": ["forest"],
@@ -80,7 +80,7 @@ const NODES: Dictionary = {
 	# --- Progression 2: Four-way branch ---
 	"smoke": {
 		"display_name": "The Smoke",
-		"description": "Smoldering embers and imps lurk in the haze.",
+		"description": "Smoldering embers and imps lurk in the haze. Beyond the smoke, a rift between worlds crackles—the portal leads toward the crossroads.",
 		"pos": Vector2(660, 180),
 		"terrain": Terrain.SMOKE,
 		"prev_nodes": ["forest_village"],
@@ -92,7 +92,7 @@ const NODES: Dictionary = {
 	},
 	"deep_forest": {
 		"display_name": "Deep Forest",
-		"description": "A witch and her conjured spirits haunt the deep woods.",
+		"description": "A witch and her conjured spirits haunt the deep woods. The path through the woods leads to a cave in the hills—shelter, or a nest of wyrms.",
 		"pos": Vector2(660, 300),
 		"terrain": Terrain.DEEP_FOREST,
 		"prev_nodes": ["forest_village"],
@@ -104,7 +104,7 @@ const NODES: Dictionary = {
 	},
 	"clearing": {
 		"display_name": "The Clearing",
-		"description": "Fae creatures gather in a moonlit glade. A storm drives the party toward the cave the villagers mentioned.",
+		"description": "Fae creatures gather in a moonlit glade. A storm rolls in—the party seeks shelter in the cave the villagers spoke of, but the fae have other ideas.",
 		"pos": Vector2(660, 420),
 		"terrain": Terrain.CLEARING,
 		"prev_nodes": ["forest_village"],
@@ -116,7 +116,7 @@ const NODES: Dictionary = {
 	},
 	"ruins": {
 		"display_name": "The Ruins",
-		"description": "Shades cling to the crumbling stonework.",
+		"description": "Shades cling to the crumbling stonework. Past the ruins, a rift between worlds awaits—the portal that leads to the crossroads.",
 		"pos": Vector2(660, 540),
 		"terrain": Terrain.RUINS,
 		"prev_nodes": ["forest_village"],
@@ -130,7 +130,7 @@ const NODES: Dictionary = {
 	# --- Progression 3: Mid-game convergence ---
 	"cave": {
 		"display_name": "The Cave",
-		"description": "Fire and frost wyrmlings nest in the cavern depths.",
+		"description": "Shelter from the storm—but fire and frost wyrmlings nest in the cavern depths. Beyond the cave, an inn at the crossroads offers the first true respite.",
 		"pos": Vector2(820, 360),
 		"terrain": Terrain.CAVE,
 		"prev_nodes": ["deep_forest", "clearing"],
@@ -142,7 +142,7 @@ const NODES: Dictionary = {
 	},
 	"portal": {
 		"display_name": "The Portal",
-		"description": "A rift between worlds crackles with infernal energy.",
+		"description": "A rift between worlds crackles with infernal energy. Survive the onslaught and the road leads to the crossroads inn.",
 		"pos": Vector2(820, 260),
 		"terrain": Terrain.PORTAL,
 		"prev_nodes": ["smoke", "ruins"],
@@ -154,7 +154,7 @@ const NODES: Dictionary = {
 	},
 	"crossroads_inn": {
 		"display_name": "Crossroads Inn",
-		"description": "A weary inn at a mountain crossroads. The first safe haven since the forest village. Three roads lead out: the coast, the old cemetery where a carnival has set up, and the encampment at the lab.",
+		"description": "A weary inn at a mountain crossroads—the first safe haven since the forest village. Rest here; three roads lead out: the coast, the old cemetery where a carnival has set up, and the encampment at the lab.",
 		"pos": Vector2(940, 310),
 		"terrain": Terrain.INN,
 		"prev_nodes": ["cave", "portal"],
