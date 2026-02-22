@@ -93,6 +93,11 @@ layout_mode = 2
 custom_minimum_size = Vector2(120, 0)
 text = "Shop"
 
+[node name="RecruitButton" type="Button" parent="Panel/MarginContainer/VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(120, 0)
+text = "Recruit"
+
 [node name="ContinueButton" type="Button" parent="Panel/MarginContainer/VBox/Buttons"]
 layout_mode = 2
 custom_minimum_size = Vector2(120, 0)

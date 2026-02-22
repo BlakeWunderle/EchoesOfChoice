@@ -57,3 +57,16 @@ func go_to_title_screen() -> void:
 
 func go_to_overworld() -> void:
 	change_scene("res://scenes/overworld/OverworldMap.tscn")
+
+
+func go_to_town(town_node_id: String) -> void:
+	GameState.current_town_id = town_node_id
+	change_scene("res://scenes/town/Town.tscn")
+
+
+func go_to_party_select() -> void:
+	change_scene("res://scenes/battle/PartySelect.tscn")
+
+
+func go_to_game_over() -> void:
+	change_scene("res://scenes/ui/GameOver.tscn")

@@ -130,6 +130,12 @@ func _show_info(node_id: String) -> void:
 	elif is_available and node_data.get("is_battle", true):
 		info_status.text = "Available"
 		info_status.add_theme_color_override("font_color", NODE_AVAILABLE_COLOR)
+		enter_button.text = "Enter Battle"
+		enter_button.visible = true
+	elif is_available and not node_data.get("is_battle", true):
+		info_status.text = "Available"
+		info_status.add_theme_color_override("font_color", NODE_AVAILABLE_COLOR)
+		enter_button.text = "Enter Town"
 		enter_button.visible = true
 	else:
 		info_status.text = ""
@@ -152,8 +158,12 @@ func _on_enter_battle() -> void:
 	if siblings.size() > 0:
 		GameState.lock_nodes(siblings)
 
-	GameState.current_battle_id = _selected_node_id
-	SceneManager.change_scene("res://scenes/battle/BattleMap.tscn")
+	if node_data.get("is_battle", true):
+		GameState.current_battle_id = _selected_node_id
+		SceneManager.go_to_party_select()
+	else:
+		GameState.complete_battle(_selected_node_id)
+		SceneManager.go_to_town(_selected_node_id)
 
 
 func _center_camera_on_latest() -> void:

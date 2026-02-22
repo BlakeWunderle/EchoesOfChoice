@@ -6,6 +6,7 @@ extends Control
 @onready var gold_label: Label = $Panel/MarginContainer/VBox/GoldLabel
 @onready var optional_battle_button: Button = $Panel/MarginContainer/VBox/Buttons/OptionalBattleButton
 @onready var shop_button: Button = $Panel/MarginContainer/VBox/Buttons/ShopButton
+@onready var recruit_button: Button = $Panel/MarginContainer/VBox/Buttons/RecruitButton
 @onready var continue_button: Button = $Panel/MarginContainer/VBox/Buttons/ContinueButton
 
 var _town_id: String = ""
@@ -60,6 +61,8 @@ func _ready() -> void:
 	else:
 		shop_button.visible = false
 
+	recruit_button.pressed.connect(_on_recruit_pressed)
+
 	continue_button.pressed.connect(_on_continue)
 
 
@@ -67,14 +70,15 @@ func _populate_party_list() -> void:
 	for child in party_list.get_children():
 		child.queue_free()
 
+	var roster_total := GameState.party_members.size() + 1
 	var header := Label.new()
-	header.text = "— Party Status —"
+	header.text = "— Roster (%d members) —" % roster_total
 	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	header.add_theme_font_size_override("font_size", 18)
 	party_list.add_child(header)
 
 	var player_row := _make_member_row(
-		GameState.player_name, GameState.player_class_id, 1
+		GameState.player_name, GameState.player_class_id, GameState.player_level
 	)
 	party_list.add_child(player_row)
 
@@ -115,7 +119,7 @@ func _on_optional_battle() -> void:
 		return
 	GameState.current_battle_id = battle_info["battle_id"]
 	GameState.story_flags[battle_info["flag"]] = true
-	SceneManager.change_scene("res://scenes/battle/BattleMap.tscn")
+	SceneManager.go_to_party_select()
 
 
 func _on_shop_pressed() -> void:
@@ -133,6 +137,17 @@ func _on_shop_pressed() -> void:
 		gold_label.text = "Gold: %d" % GameState.gold
 	)
 	add_child(shop)
+
+
+func _on_recruit_pressed() -> void:
+	var recruit_scene := preload("res://scenes/town/RecruitUI.tscn")
+	var recruit: Control = recruit_scene.instantiate()
+	recruit.recruit_closed.connect(func():
+		recruit.queue_free()
+		gold_label.text = "Gold: %d" % GameState.gold
+		_populate_party_list()
+	)
+	add_child(recruit)
 
 
 func _on_continue() -> void:
