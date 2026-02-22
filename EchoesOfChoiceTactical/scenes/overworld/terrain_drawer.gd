@@ -35,6 +35,10 @@ func _draw() -> void:
 			_draw_mirror()
 		MapData.Terrain.SHRINE:
 			_draw_shrine()
+		MapData.Terrain.VILLAGE:
+			_draw_village()
+		MapData.Terrain.INN:
+			_draw_inn()
 
 
 func _draw_castle() -> void:
@@ -214,6 +218,43 @@ func _draw_mirror() -> void:
 	draw_circle(Vector2(6, 3), 3.0, Color(0.45, 0.5, 0.65, 0.4))
 	# Stone border
 	draw_arc(Vector2.ZERO, 22.0, 0, TAU, 32, Color(0.4, 0.38, 0.34), 2.5)
+
+
+func _draw_village() -> void:
+	# Ground
+	draw_circle(Vector2.ZERO, 30.0, Color(0.3, 0.45, 0.2))
+	# Cottages
+	draw_rect(Rect2(-22, -8, 16, 14), Color(0.5, 0.4, 0.28))
+	var roof1 := PackedVector2Array([Vector2(-24, -8), Vector2(-14, -20), Vector2(-4, -8)])
+	draw_colored_polygon(roof1, Color(0.55, 0.3, 0.15))
+	draw_rect(Rect2(6, -4, 14, 12), Color(0.48, 0.38, 0.26))
+	var roof2 := PackedVector2Array([Vector2(4, -4), Vector2(13, -16), Vector2(22, -4)])
+	draw_colored_polygon(roof2, Color(0.5, 0.28, 0.14))
+	# Well
+	draw_circle(Vector2(-4, 10), 5.0, Color(0.35, 0.32, 0.3))
+	draw_circle(Vector2(-4, 10), 3.0, Color(0.2, 0.35, 0.55))
+	# Fence posts
+	draw_rect(Rect2(-28, 8, 2, 8), Color(0.4, 0.3, 0.15))
+	draw_rect(Rect2(26, 8, 2, 8), Color(0.4, 0.3, 0.15))
+
+
+func _draw_inn() -> void:
+	# Large building
+	draw_rect(Rect2(-24, -16, 48, 36), Color(0.45, 0.35, 0.25))
+	# Roof
+	var roof := PackedVector2Array([Vector2(-28, -16), Vector2(0, -34), Vector2(28, -16)])
+	draw_colored_polygon(roof, Color(0.5, 0.25, 0.15))
+	# Chimney
+	draw_rect(Rect2(12, -38, 6, 10), Color(0.4, 0.35, 0.3))
+	draw_circle(Vector2(15, -40), 4.0, Color(0.5, 0.5, 0.5, 0.35))
+	# Door
+	draw_rect(Rect2(-5, 4, 10, 16), Color(0.3, 0.2, 0.1))
+	# Windows
+	draw_rect(Rect2(-18, -6, 8, 8), Color(0.7, 0.6, 0.3, 0.6))
+	draw_rect(Rect2(10, -6, 8, 8), Color(0.7, 0.6, 0.3, 0.6))
+	# Sign post
+	draw_line(Vector2(30, 16), Vector2(30, -4), Color(0.4, 0.3, 0.2), 2.0)
+	draw_rect(Rect2(24, -8, 14, 8), Color(0.45, 0.35, 0.2))
 
 
 func _draw_shrine() -> void:

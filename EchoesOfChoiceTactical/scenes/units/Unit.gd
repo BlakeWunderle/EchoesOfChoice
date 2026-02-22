@@ -168,6 +168,10 @@ func spend_mana(amount: int) -> void:
 	mana = maxi(mana - amount, 0)
 
 
+func restore_mana(amount: int) -> void:
+	mana = mini(mana + amount, max_mana)
+
+
 func can_afford_ability(ability: AbilityData) -> bool:
 	return mana >= ability.mana_cost
 

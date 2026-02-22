@@ -744,8 +744,11 @@ func _execute_heal_ability(caster: Unit, ability: AbilityData, tiles: Array[Vect
 			continue
 		if target.team != caster.team:
 			continue
-		var heal_amount := Combat.calculate_heal(ability, caster.magic_attack)
-		target.heal(heal_amount)
+		var amount := Combat.calculate_heal(ability, caster.magic_attack)
+		if ability.modified_stat == Enums.StatType.MAX_MANA:
+			target.restore_mana(amount)
+		else:
+			target.heal(amount)
 
 	caster.award_ability_xp_jp(ability, false, false)
 
