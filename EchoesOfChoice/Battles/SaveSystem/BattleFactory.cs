@@ -11,6 +11,8 @@ namespace EchoesOfChoice.Battles.SaveSystem
         {
             { "CityStreetBattle", units => new CityStreetBattle(units) },
             { "ForestBattle", units => new ForestBattle(units) },
+            { "ForestWaypoint", units => new ForestWaypoint(units) },
+            { "WildernessOutpost", units => new WildernessOutpost(units) },
             { "SmokeBattle", units => new SmokeBattle(units) },
             { "DeepForestBattle", units => new DeepForestBattle(units) },
             { "ClearingBattle", units => new ClearingBattle(units) },
@@ -19,7 +21,8 @@ namespace EchoesOfChoice.Battles.SaveSystem
             { "PortalBattle", units => new PortalBattle(units) },
             { "ShoreBattle", units => new ShoreBattle(units) },
             { "RuinsBattle", units => new RuinsBattle(units) },
-            { "BoxBattle", units => new BoxBattle(units) },
+            { "CircusBattle", units => new CircusBattle(units) },
+            { "BoxBattle", units => new CircusBattle(units) },
             { "CemeteryBattle", units => new CemeteryBattle(units) },
             { "LabBattle", units => new LabBattle(units) },
             { "ArmyBattle", units => new ArmyBattle(units) },

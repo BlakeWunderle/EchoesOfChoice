@@ -38,7 +38,7 @@ namespace EchoesOfChoice.Battles
         public override void PreBattleInteraction()
         {
             Console.WriteLine();
-            Console.WriteLine("The party travels toward the coast. Salt hangs heavy in the air and waves crash against jagged rocks.");
+            Console.WriteLine("The salt air hit them before the trees even thinned. Following it southeast, the forest gives way to rocky cliffs and the sound of surf crashing far below.");
             Console.WriteLine("A strange singing drifts across the water, beautiful enough to stop everyone in their tracks.");
             Console.WriteLine("Three figures emerge from the tide pools, their haunting melody turning hostile as the adventurers draw near.");
         }

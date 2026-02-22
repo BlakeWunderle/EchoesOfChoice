@@ -19,25 +19,8 @@ namespace EchoesOfChoice.Battles
 
         public override void DetermineNextBattle()
         {
-            Console.WriteLine();
-            Console.WriteLine("With Hell behind them the adventurers take stock of their surroundings. Two paths lead away from the portal site.");
-            Console.WriteLine("  - To the North, the air hums with static and something metallic glints on the horizon.");
-            Console.WriteLine("  - To the South, the faint sound of marching boots and a barking voice echo across the plains.");
-
-            while (NextBattle == null)
-            {
-                Console.WriteLine("Please type 'North' or 'South' and press enter.");
-                var nextBattle = (Console.ReadLine() ?? "").ToLower().Trim();
-
-                switch (nextBattle)
-                {
-                    case "north": NextBattle = new LabBattle(Units); break;
-                    case "south": NextBattle = new ArmyBattle(Units); break;
-                    default:
-                        Console.WriteLine("That's not a valid direction. Try again.");
-                        break;
-                }
-            }
+            NextBattle = new WildernessOutpost(Units);
+            NextBattle.PreviousBattleName = GetType().Name;
         }
 
         public override void PostBattleInteraction()
@@ -79,6 +62,9 @@ namespace EchoesOfChoice.Battles
             }
 
             Units = newUnits;
+            Console.WriteLine();
+            Console.WriteLine("That was Hell. Actually, genuinely Hell.");
+            Console.WriteLine("The stranger said to find the source of the darkness. A portal to a demon realm isn't nothing — but it felt more like a wound than an origin. Something out here is still wrong.");
         }
 
         public override void PreBattleInteraction()

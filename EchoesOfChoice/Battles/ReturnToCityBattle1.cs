@@ -82,7 +82,8 @@ namespace EchoesOfChoice.Battles
             Console.WriteLine();
             Console.WriteLine("The party rushes back to the city. Smoke rises from the rooftops and the streets are emptier than when they left.");
             Console.WriteLine("The ground trembles beneath their feet. Whatever is coming, it's close.");
-            Console.WriteLine("A familiar voice cuts through the chaos. 'You have proven yourself.'");
+            Console.WriteLine("A familiar voice cuts through the chaos — the same one that spoke across a corner booth so many nights ago, that warned of a darkness taking root.");
+            Console.WriteLine("'You have proven yourself.'");
             Console.WriteLine("A second voice, eerily similar to the first, adds, 'We will help, after you pass our final test.'");
             Console.WriteLine("The stranger who sent them on this journey steps out from the shadows and pulls back his hood.");
             Console.WriteLine("Beside him stands his brother, doing the same.");

@@ -37,10 +37,11 @@ namespace EchoesOfChoice.Battles
         public override void PreBattleInteraction()
         {
             Console.WriteLine();
-            Console.WriteLine("Travelling to the North West, everyone begins to notice static in the air.");
-            Console.WriteLine("A large building looms in the distance and the group enters it trying to figure out the cause.");
-            Console.WriteLine("Outlined under a cloth a human shape lies on a table.");
-            Console.WriteLine("The cloth drops to the ground and a laser blasts past the party.");
+            var direction = PreviousBattleName == nameof(CaveBattle) ? "west" : "north";
+            Console.WriteLine($"Heading {direction}, the air changes. There's a faint charge to it — a prickling on the skin and a taste like iron. Not magic. Something else.");
+            Console.WriteLine("A large structure rises from the landscape, all clean angles and dark windows. No signs, no torches. Whatever it runs on, it isn't fire.");
+            Console.WriteLine("Inside, the hum is louder. Banks of machinery line the walls. On a central table, something large lies covered by a cloth — something roughly human-shaped.");
+            Console.WriteLine("The cloth drops on its own. A laser beam punches through the air and the party dives clear.");
         }
     }
 }

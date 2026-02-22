@@ -19,25 +19,8 @@ namespace EchoesOfChoice.Battles
 
         public override void DetermineNextBattle()
         {
-            Console.WriteLine();
-            Console.WriteLine("Stepping out of the cave the adventurers find two paths stretching in opposite directions.");
-            Console.WriteLine("  - To the East, distant laughter and music echo through the trees. It sounds like a show of some kind.");
-            Console.WriteLine("  - To the West, the air hums with an unnatural energy. Something metallic glints on the horizon.");
-
-            while (NextBattle == null)
-            {
-                Console.WriteLine("Please type 'East' or 'West' and press enter.");
-                var nextBattle = (Console.ReadLine() ?? "").ToLower().Trim();
-
-                switch (nextBattle)
-                {
-                    case "east": NextBattle = new BoxBattle(Units); break;
-                    case "west": NextBattle = new LabBattle(Units); break;
-                    default:
-                        Console.WriteLine("That's not a valid direction. Try again.");
-                        break;
-                }
-            }
+            NextBattle = new WildernessOutpost(Units);
+            NextBattle.PreviousBattleName = GetType().Name;
         }
 
         public override void PostBattleInteraction()
@@ -77,6 +60,8 @@ namespace EchoesOfChoice.Battles
             }
 
             Units = newUnits;
+            Console.WriteLine();
+            Console.WriteLine("Twin dragons, ancient and territorial. Not the source — but old creatures don't settle near nothing. Something stirred them. Something darker than treasure hunters.");
         }
 
         public override void PreBattleInteraction()

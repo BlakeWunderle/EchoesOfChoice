@@ -79,6 +79,13 @@ namespace EchoesOfChoice.Battles
             Console.WriteLine("The surface ripples and cloudy letters slowly form across the glass: 'Return to the city.'");
             Console.WriteLine("The letters pulse with urgency. Something is wrong back home and whoever left this message knew it.");
             Console.WriteLine("The adventurers exchange a look. No more detours. Time to head back.");
+            Console.WriteLine("The stranger said the source of the darkness was beyond the forest. They went looking. They found demons, dragons, an army, machines that shouldn't exist, performers that trap travelers, and the walking dead.");
+            Console.WriteLine("None of it felt like an origin. All of it felt like chaos spreading from somewhere else.");
+            Console.WriteLine("And now a mirror is pointing them home.");
+            Console.WriteLine("The thought lands slowly, uncomfortably: maybe the source was never out here. Maybe it was always at the city.");
+            Console.WriteLine("As they turn toward the city, something catches the eye. A faint smudge on the horizon where the skyline should be.");
+            Console.WriteLine("Dark. Wrong. Moving.");
+            Console.WriteLine("They run.");
             foreach (var unit in Units)
             {
                 unit.IncreaseLevel();

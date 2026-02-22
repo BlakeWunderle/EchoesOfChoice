@@ -49,6 +49,17 @@ namespace EchoesOfChoice.BattleSimulator
                     ProgressionStage = 1
                 },
 
+                // Progression 1b: Town waypoint (no enemies, always succeeds)
+                new BattleStage
+                {
+                    Name = "ForestWaypoint",
+                    BattleFactory = units => new ForestWaypoint(units),
+                    LevelUps = 1,
+                    PartySource = PartyComposer.GetBaseParties,
+                    TargetWinRate = 1.0,
+                    ProgressionStage = 1
+                },
+
                 // Progression 2: Tier 1 classes, 2 total level ups (1 base + 1 Tier 1)
                 new BattleStage
                 {
@@ -125,11 +136,22 @@ namespace EchoesOfChoice.BattleSimulator
                     ProgressionStage = 3
                 },
 
+                // Progression 3b: Town waypoint (no enemies, always succeeds)
+                new BattleStage
+                {
+                    Name = "WildernessOutpost",
+                    BattleFactory = units => new WildernessOutpost(units),
+                    LevelUps = 3,
+                    PartySource = PartyComposer.GetTier1Parties,
+                    TargetWinRate = 1.0,
+                    ProgressionStage = 3
+                },
+
                 // Progression 4: Tier 2 classes, 4 total level ups (1 base + 2 Tier 1 + 1 Tier 2)
                 new BattleStage
                 {
-                    Name = "BoxBattle",
-                    BattleFactory = units => new BoxBattle(units),
+                    Name = "CircusBattle",
+                    BattleFactory = units => new CircusBattle(units),
                     LevelUps = 4,
                     PartySource = PartyComposer.GetTier2Parties,
                     TargetWinRate = 0.73,

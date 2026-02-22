@@ -20,25 +20,8 @@ namespace EchoesOfChoice.Battles
 
         public override void DetermineNextBattle()
         {
-            Console.WriteLine();
-            Console.WriteLine("Leaving the shipwreck behind the adventurers spot two paths along the coastline.");
-            Console.WriteLine("  - To the North, a winding trail leads inland where faint laughter and music drift through the trees.");
-            Console.WriteLine("  - To the South, a fog-covered path disappears into rolling hills. The air smells of damp earth and something old.");
-
-            while (NextBattle == null)
-            {
-                Console.WriteLine("Please type 'North' or 'South' and press enter.");
-                var nextBattle = (Console.ReadLine() ?? "").ToLower().Trim();
-
-                switch (nextBattle)
-                {
-                    case "north": NextBattle = new BoxBattle(Units); break;
-                    case "south": NextBattle = new CemeteryBattle(Units); break;
-                    default:
-                        Console.WriteLine("That's not a valid direction. Try again.");
-                        break;
-                }
-            }
+            NextBattle = new WildernessOutpost(Units);
+            NextBattle.PreviousBattleName = GetType().Name;
         }
 
         public override void PostBattleInteraction()

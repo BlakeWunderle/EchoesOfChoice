@@ -28,6 +28,7 @@ namespace EchoesOfChoice.Battles
             Console.WriteLine("The regiment scatters and the commander's voice goes silent. Tents flap in the wind, abandoned.");
             Console.WriteLine("Among the scattered supplies and overturned crates the party spots something that doesn't belong.");
             Console.WriteLine("A mirror, sitting upright in the dirt, untouched by the chaos around it. Its surface gleams like it's brand new.");
+            Console.WriteLine("Someone put it here on purpose. Someone who knew they'd be passing through.");
             foreach (var unit in Units)
             {
                 unit.IncreaseLevel();
@@ -37,9 +38,9 @@ namespace EchoesOfChoice.Battles
         public override void PreBattleInteraction()
         {
             Console.WriteLine();
-            Console.WriteLine("After returning from Hell our adventurers travel to the South West.");
-            Console.WriteLine("They encounter a series of tents and hear a booming voice shouting orders.");
-            Console.WriteLine("A regiment descends upon them and they try to fight through it.");
+            Console.WriteLine("Heading south, the landscape opens up into a wide plain. It should be empty. It isn't.");
+            Console.WriteLine("Rows of canvas tents stretch out ahead, fires burning in careful formation. A booming voice cuts through the air, barking orders. This is no bandit camp — it's a regiment, moving with discipline.");
+            Console.WriteLine("The scouts spot the party before they can pull back. A commander's voice rings out and the regiment wheels toward them.");
         }
     }
 }

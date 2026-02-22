@@ -20,32 +20,7 @@ namespace EchoesOfChoice.Battles
 
         public override void DetermineNextBattle()
         {
-            Console.WriteLine();
-            Console.WriteLine("After upgrading their weapons and armor our adventurers have a choice to make as to where they next travel.");
-            Console.WriteLine("There are five paths open to the adventurers:");
-            Console.WriteLine("  - To the West, smoke rises as if from another campfire.");
-            Console.WriteLine("  - To the North, the forest grows deeper and darker.");
-            Console.WriteLine("  - To the East, a clearing opens toward the sea.");
-            Console.WriteLine("  - To the Southeast, the sound of crashing waves echoes from a rocky shore.");
-            Console.WriteLine("  - To the Southwest, a faint glow flickers among ancient ruins.");
-
-            while (NextBattle == null)
-            {
-                Console.WriteLine("Please type 'Smoke', 'Forest', 'Clearing', 'Shore', or 'Ruins' and press enter.");
-                var nextBattle = (Console.ReadLine() ?? "").ToLower().Trim();
-
-                switch (nextBattle)
-                {
-                    case "smoke": NextBattle = new SmokeBattle(Units); break;
-                    case "forest": NextBattle = new DeepForestBattle(Units); break;
-                    case "clearing": NextBattle = new ClearingBattle(Units); break;
-                    case "shore": NextBattle = new ShoreBattle(Units); break;
-                    case "ruins": NextBattle = new RuinsBattle(Units); break;
-                    default:
-                        Console.WriteLine("That's not a valid path. Try again.");
-                        break;
-                }
-            }
+            NextBattle = new ForestWaypoint(Units);
         }
 
         public override void PostBattleInteraction()

@@ -39,8 +39,9 @@ namespace EchoesOfChoice.Battles
         public override void PreBattleInteraction()
         {
             Console.WriteLine();
-            Console.WriteLine("As the travelers journey toward the smoke they begin to notice lights flickering between the trees.");
-            Console.WriteLine("Cackling and the sound of tiny feet fill the air. Three small beings huddle around a growing fire, feeding it anything they can grab.");
+            Console.WriteLine("From the crossroads the smoke was just a smear on the horizon. Up close it's a churning column, feeding on something big.");
+            Console.WriteLine("Lights flicker between the trees and the sound of cackling carries on the wind.");
+            Console.WriteLine("Three small beings huddle around a growing fire, feeding it anything they can grab.");
             Console.WriteLine("The warriors step out of the brush and the imps spin around with wicked grins. So much for a quiet approach.");
         }
     }

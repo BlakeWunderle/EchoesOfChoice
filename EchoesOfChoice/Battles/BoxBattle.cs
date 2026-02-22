@@ -5,9 +5,9 @@ using EchoesOfChoice.CharacterClasses.Enemies;
 
 namespace EchoesOfChoice.Battles
 {
-    public class BoxBattle : Battle
+    public class CircusBattle : Battle
     {
-        public BoxBattle(List<BaseFighter> units) : base(units)
+        public CircusBattle(List<BaseFighter> units) : base(units)
         {
             Enemies = new List<BaseFighter>();
             Enemies.Add(new Harlequin() { CharacterName = "Louis" });
@@ -37,7 +37,10 @@ namespace EchoesOfChoice.Battles
         public override void PreBattleInteraction()
         {
             Console.WriteLine();
-            Console.WriteLine("Following a winding path through the hills everyone suddenly hits something. An invisible wall.");
+            if (PreviousBattleName == nameof(BeachBattle))
+                Console.WriteLine("The trail leads north from the coast, winding through rolling hills with the sound of distant music growing louder. It seems peaceful enough until everyone suddenly hits something. An invisible wall.");
+            else
+                Console.WriteLine("The path east from the cave threads through wooded hills. Quiet, unremarkable terrain — until everyone suddenly hits something. An invisible wall.");
             Console.WriteLine("They turn left, then right, and finally turn back but they're boxed in. Something is trapping them and they can't see what.");
             Console.WriteLine("The air around them begins to darken, the invisible walls turning black as ink.");
             Console.WriteLine("Their attackers reveal themselves with smiles far too wide for comfort.");

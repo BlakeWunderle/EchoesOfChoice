@@ -40,6 +40,7 @@ namespace EchoesOfChoice.Battles
         public override void PreBattleInteraction()
         {
             Console.WriteLine();
+            Console.WriteLine("Pushing north, the forest grows denser. The trees here are older — thick-rooted and close-set, their canopy blocking out most of the sky. The path narrows to barely a trail.");
             Console.WriteLine("Everyone walks up on a circle of sticks, stones, and mud. Everything around them begins to shake and levitate.");
             Console.WriteLine("The sticks catch fire and a strike of lightning flashes across the sky.");
             Console.WriteLine("A cackle and two screeches fill the air as the adventurers prepare for battle.");

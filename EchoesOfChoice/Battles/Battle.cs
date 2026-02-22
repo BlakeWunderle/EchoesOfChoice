@@ -32,6 +32,7 @@ namespace EchoesOfChoice.Battles
         public List<BaseFighter> Enemies { get; protected set; }
         public List<BaseFighter> Units { get; protected set; }
         public List<BaseFighter> DeadUnits { get; protected set; }
+        public string PreviousBattleName { get; set; }
 
         private readonly List<BaseFighter> _actingUnits = new List<BaseFighter>(8);
         private readonly List<Ability> _affordable = new List<Ability>(8);
@@ -179,7 +180,7 @@ namespace EchoesOfChoice.Battles
             }
             else
             {
-                if (!IsSilent)
+                if (!IsSilent && !IsTownStop)
                 {
                     Console.WriteLine();
                     Console.WriteLine("Victory! The enemies have been vanquished.");
@@ -1012,6 +1013,7 @@ namespace EchoesOfChoice.Battles
         public abstract void DetermineNextBattle();
 
         public bool IsFinalBattle { get; set; }
+        public bool IsTownStop { get; protected set; }
 
         public Battle NextBattle { get; set; }
 
