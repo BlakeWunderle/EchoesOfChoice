@@ -108,11 +108,74 @@ Within each archetype, classes split into offensive and defensive/support roles.
 
 ## Enemy Stats
 
+### C# Reference Game
 All enemies use dedicated enemy classes in `EchoesOfChoice/CharacterClasses/Enemies/`. Enemy stats are fully self-contained in each class constructor — battle files simply instantiate enemies with no stat adjustments. The only exception is **MirrorBattle**, which clones the player party.
 
 **Recruit enemies** (Seraph, Fiend, Druid, Necromancer, Psion, Runewright, Shaman, Warlock) serve double duty as both battle enemies and recruitable 4th party members. Their stats are static -- `IncreaseLevel()` only increments Level with no stat gains. They are overpowered companions at their full battle power level. `RecruitSpec` in `PartyComposer.cs` has zero adjustments; `CreateRecruit` just instantiates the class as-is.
 
 To adjust a battle's difficulty, tune the enemy class stats directly in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`. No battle file edits are needed.
+
+### Godot Tactical Game
+
+Enemies in the tactical game are `.tres` `FighterData` resources in `EchoesOfChoiceTactical/resources/enemies/`. Each enemy has fixed base stats (all growth values = 0), a movement/jump profile, and one or two `AbilityData` abilities.
+
+**Scaling philosophy — Mob vs Boss encounters:**
+The tactical game uses a 5-member player party, so encounters are scaled differently from the C# 3v3 format:
+
+| Pattern | Party Size | Enemy Count | Enemy Design | Target Win Rate |
+|---------|-----------|-------------|--------------|-----------------|
+| **Mob fight** | 5 | 5 | Mix of weak-to-moderate enemies; no single dominant threat | ~81-85% |
+| **Mini-boss** | 5 | 4 | 1-2 strong bosses + 2 weaker thematic adds | ~77% |
+| **Boss fight** | 5 | 3-4 | 1 very strong boss + supporting adds | ~70-75% |
+
+**No duplicate-only fights.** Every encounter should feature at least 2 distinct enemy types to create tactical variety.
+
+**Enemy archetypes by progression:**
+
+| Progression | Expected Player Lv | Enemy HP Range | Enemy Atk Range | Examples |
+|------------|-------------------|---------------|----------------|----------|
+| 0 (City Street) | 1 | 30-52 | 10-16 | Thug, Street Tough, Hex Peddler |
+| 1 (Forest) | 1-2 | 25-60 | 10-16 | Wolf, Wild Boar, Bear, Bear Cub |
+| 1 (Village Raid) | 1-2 | 22-55 | 10-16 | Goblin, Goblin Archer, Goblin Shaman, Hobgoblin |
+| 2 (Branch battles) | 2-3 | 16-56 | 8-18 | Imp, Fire Spirit, Witch, Wisp, Sprite, Satyr, Nymph, Pixie, Shade, Wraith, Bone Sentry |
+| 3 (Convergence) | 3-4 | 20-80 | 8-20 | Fire/Frost Wyrmling, Cave Bat, Hellion, Fiendling |
+| 3 (Inn Ambush) | 3-4 | 28-70 | 10-20 | Shadow Hound, Night Prowler, Dusk Moth, Gloom Stalker |
+
+**Current enemy roster (full list):**
+
+| Enemy | Battle(s) | Archetype | Abilities | Key Trait |
+|-------|----------|-----------|-----------|-----------|
+| Thug | City Street | Fighter | Slash | Baseline melee |
+| Street Tough | City Street | Fighter | Slash, Stun Strike | Tanky, speed debuff |
+| Hex Peddler | City Street | Mage | Hex Bolt, Curse | Ranged magic + debuff |
+| Bear | Forest | Fighter | Slash | Slow boss, high HP |
+| Bear Cub | Forest | Fighter | Slash | Weaker add |
+| Wolf | Forest | Fighter | Bite | Fast, fragile |
+| Wild Boar | Forest | Fighter | Gore | Tanky charge |
+| Goblin | Village Raid | Fighter | Stab | Fast melee, fragile |
+| Goblin Archer | Village Raid | Fighter | Arrow Shot | Ranged poke |
+| Goblin Shaman | Village Raid | Mage | Heal Chant, Bolster | Healer/buffer |
+| Hobgoblin | Village Raid | Fighter | Cleave | Boss, AoE melee |
+| Imp | Smoke, Portal | Mage | Fire Spark | Fast, fragile fire |
+| Fire Spirit | Smoke | Mage | Flame Wave, Fire Spark | Tanky fire AoE |
+| Witch | Deep Forest | Mage | Shadow Bolt, Bewitch | Boss caster |
+| Wisp | Deep Forest | Mage | Spirit Touch | Fragile, fast |
+| Sprite | Deep Forest | Entertainer | Bewitch, Dust Cloud | Debuffer |
+| Satyr | Clearing | Fighter | Ram, Battle Cry | Boss, self-buff |
+| Nymph | Clearing | Mage | Nature's Embrace, Bewitch | Healer/debuffer |
+| Pixie | Clearing | Entertainer | Dust Cloud, Spirit Touch | Fast debuffer |
+| Shade | Ruins | Scholar | Drain | Evasive magic |
+| Wraith | Ruins | Scholar | Soul Siphon, Wither | Boss, drain + debuff |
+| Bone Sentry | Ruins | Fighter | Shield Bash | Slow tank |
+| Fire Wyrmling | Cave | Mage | Fire Breath, Fire Spark | Boss, fire AoE |
+| Frost Wyrmling | Cave | Mage | Ice Breath | Boss, ice AoE |
+| Cave Bat | Cave | Entertainer | Bite, Screech | Fast harasser |
+| Hellion | Portal | Fighter/Mage | Hellfire, Demon Strike | Boss, hybrid |
+| Fiendling | Portal | Fighter | Claw | Melee demon |
+| Shadow Hound | Inn Ambush | Fighter | Lunge | Fast pack hunter |
+| Night Prowler | Inn Ambush | Fighter | Backstab | High crit burst |
+| Dusk Moth | Inn Ambush | Entertainer | Wing Dust | Flying debuffer |
+| Gloom Stalker | Inn Ambush | Fighter | Rend, Terrify | Boss, tank + debuff |
 
 ## After Making Changes
 
@@ -264,6 +327,7 @@ Bold = primary growth stats for that role.
 
 ## File Locations
 
+### C# Reference Game
 | What | Where |
 |------|-------|
 | Base class stats | `EchoesOfChoice/CharacterClasses/Fighter/Squire.cs`, `Mage/Mage.cs`, `Entertainer/Entertainer.cs`, `Scholar/Scholar.cs` |
@@ -271,6 +335,19 @@ Bold = primary growth stats for that role.
 | Enemy stats | `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs` |
 | Abilities | `EchoesOfChoice/CharacterClasses/Abilities/<AbilityName>.cs` |
 | Stat enum | `EchoesOfChoice/CharacterClasses/Common/StatEnum.cs` |
+
+### Godot Tactical Game
+| What | Where |
+|------|-------|
+| Player class data | `EchoesOfChoiceTactical/resources/classes/*.tres` (FighterData) |
+| Enemy data | `EchoesOfChoiceTactical/resources/enemies/*.tres` (FighterData) |
+| Abilities | `EchoesOfChoiceTactical/resources/abilities/*.tres` (AbilityData) |
+| FighterData script | `EchoesOfChoiceTactical/scripts/data/fighter_data.gd` |
+| AbilityData script | `EchoesOfChoiceTactical/scripts/data/ability_data.gd` |
+| Battle configs | `EchoesOfChoiceTactical/scripts/data/battle_config.gd` |
+| Enums (StatType, AbilityType) | `EchoesOfChoiceTactical/scripts/data/enums.gd` |
+| Map/progression data | `EchoesOfChoiceTactical/scripts/data/map_data.gd` |
+| XP/JP config | `EchoesOfChoiceTactical/scripts/data/xp_config.gd` |
 
 ## Related Skills
 
