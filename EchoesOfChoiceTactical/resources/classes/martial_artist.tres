@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/punch.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/sweep.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+class_id = "martial_artist"
+class_display_name = "Martial Artist"
+base_max_health = 59
+base_max_mana = 9
+base_physical_attack = 21
+base_physical_defense = 17
+base_magic_attack = 9
+base_magic_defense = 13
+base_speed = 15
+base_crit_chance = 3
+base_crit_damage = 3
+base_dodge_chance = 2
+growth_health = 10
+growth_mana = 2
+growth_physical_attack = 4
+growth_physical_defense = 3
+growth_magic_attack = 2
+growth_magic_defense = 2
+growth_speed = 4
+movement = 4
+jump = 2
+reaction_types = []
+abilities = [ExtResource("2"), ExtResource("3")]
+tier = 1
+upgrade_options = []
