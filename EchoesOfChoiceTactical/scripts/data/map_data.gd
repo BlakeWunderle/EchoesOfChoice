@@ -168,7 +168,7 @@ const NODES: Dictionary = {
 	# --- Progression 4: Three paths (two battles each) ---
 	"shore": {
 		"display_name": "The Shore",
-		"description": "The coast road. Salt hangs heavy in the air. A strange singing drifts across the water.",
+		"description": "The coast road. Salt hangs heavy in the air; sirens and pirates lurk by the water. Past them, the beach and a shipwreck await.",
 		"pos": Vector2(1060, 520),
 		"terrain": Terrain.SHORE,
 		"prev_nodes": ["crossroads_inn"],
@@ -180,7 +180,7 @@ const NODES: Dictionary = {
 	},
 	"beach": {
 		"display_name": "The Beach",
-		"description": "Past the sirens, the coast opens onto a beach. A shipwreck juts from the shallows. A pirate crew drops down and the ambush begins.",
+		"description": "Past the sirens, the coast opens onto a beach. A shipwreck juts from the shallows—and a pirate crew drops down. Beyond the beach, the road converges at the Mirror.",
 		"pos": Vector2(1180, 520),
 		"terrain": Terrain.BEACH,
 		"prev_nodes": ["shore"],
@@ -192,7 +192,7 @@ const NODES: Dictionary = {
 	},
 	"box_battle": {
 		"display_name": "The Carnival",
-		"description": "Past the cemetery, the carnival. A harlequin, chanteuse, and ringmaster put on a deadly show.",
+		"description": "Past the cemetery, the carnival. The ringmaster and his troupe put on a deadly show. Beyond the tents, the road converges at the Mirror—then Gate Town.",
 		"pos": Vector2(1180, 360),
 		"terrain": Terrain.CIRCUS,
 		"prev_nodes": ["cemetery_battle"],
@@ -204,7 +204,7 @@ const NODES: Dictionary = {
 	},
 	"cemetery_battle": {
 		"display_name": "The Cemetery",
-		"description": "The old cemetery. A carnival has set up nearby. The dead refuse to stay buried.",
+		"description": "The old cemetery—the dead refuse to stay buried. A carnival has set up nearby; past the graves, the carnival awaits. Then the road leads to the Mirror.",
 		"pos": Vector2(1060, 360),
 		"terrain": Terrain.CEMETERY,
 		"prev_nodes": ["crossroads_inn"],
@@ -216,7 +216,7 @@ const NODES: Dictionary = {
 	},
 	"lab_battle": {
 		"display_name": "The Laboratory",
-		"description": "Past the encampment, the laboratory. Automatons and their creators defend the workshop.",
+		"description": "Past the encampment, the laboratory. The head tinker and guards defend the workshop. Beyond the lab, the road leads to the Mirror—then Gate Town.",
 		"pos": Vector2(1180, 230),
 		"terrain": Terrain.LAB,
 		"prev_nodes": ["army_battle"],
@@ -228,7 +228,7 @@ const NODES: Dictionary = {
 	},
 	"army_battle": {
 		"display_name": "The Encampment",
-		"description": "An old army has set up an encampment at the lab. A military commander marshals draconian forces.",
+		"description": "An old army has set up an encampment at the lab. A commander marshals the forces. Past the encampment, the laboratory; past the lab, the Mirror and Gate Town.",
 		"pos": Vector2(1060, 230),
 		"terrain": Terrain.ARMY_CAMP,
 		"prev_nodes": ["crossroads_inn"],
@@ -242,7 +242,7 @@ const NODES: Dictionary = {
 	# --- Progression 5: Mirror ---
 	"mirror_battle": {
 		"display_name": "The Mirror",
-		"description": "Face the shadow of your own party. Beyond it, the way leads back toward the city.",
+		"description": "All three roads converge here. Shadows and gloom stalk the crossing—face them, and the way leads to Gate Town, the last rest before the city gates.",
 		"pos": Vector2(1220, 320),
 		"terrain": Terrain.MIRROR,
 		"prev_nodes": ["beach", "box_battle", "lab_battle"],
@@ -254,7 +254,7 @@ const NODES: Dictionary = {
 	},
 	"gate_town": {
 		"display_name": "Gate Town",
-		"description": "The last settlement before the city gates. Rest and resupply before the final push. Rumors of an assault at the gate.",
+		"description": "The last settlement before the city gates. Rest and resupply before the final push. Four gates lead back to the city—each with its own defenders. Rumors speak of an assault at the gates.",
 		"pos": Vector2(1300, 320),
 		"terrain": Terrain.CITY,
 		"prev_nodes": ["mirror_battle"],
