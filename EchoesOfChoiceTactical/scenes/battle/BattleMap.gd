@@ -131,6 +131,11 @@ func _setup_from_config(config: BattleConfig) -> void:
 		for y in range(config.grid_height):
 			grid.set_tile(Vector2i(x, y), true, 1, 0)
 
+	var terrain_overrides: Array = BattleConfig.get_terrain_overrides(config)
+	for t in terrain_overrides:
+		var pos: Vector2i = t["pos"]
+		grid.set_tile(pos, t["walkable"], t["cost"], t["elevation"], t["blocks_los"], t.get("destructible_hp", 0))
+
 	for entry in config.player_units:
 		var unit := _spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"])
 		var member_xp := _find_party_member_xp(entry["name"])

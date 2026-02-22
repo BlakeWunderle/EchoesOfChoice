@@ -100,10 +100,10 @@ static func create_city_street() -> BattleConfig:
 	var peddler := load("res://resources/enemies/hex_peddler.tres")
 	config.enemy_units = [
 		{"data": thug, "name": "Street Thug", "pos": Vector2i(8, 1), "level": 1},
-		{"data": thug, "name": "Alley Brute", "pos": Vector2i(8, 3), "level": 1},
-		{"data": thug, "name": "Ruffian", "pos": Vector2i(8, 5), "level": 1},
-		{"data": tough, "name": "Gang Enforcer", "pos": Vector2i(9, 2), "level": 1},
-		{"data": peddler, "name": "Hex Peddler", "pos": Vector2i(9, 4), "level": 1},
+		{"data": thug, "name": "Alley Brute", "pos": Vector2i(8, 5), "level": 1},
+		{"data": tough, "name": "Brawler", "pos": Vector2i(8, 3), "level": 1},
+		{"data": tough, "name": "Gang Enforcer", "pos": Vector2i(9, 3), "level": 1},
+		{"data": peddler, "name": "Hex Peddler", "pos": Vector2i(9, 1), "level": 1},
 	]
 	return config
 
@@ -161,10 +161,10 @@ static func create_smoke() -> BattleConfig:
 	var spirit := load("res://resources/enemies/fire_spirit.tres")
 	config.enemy_units = [
 		{"data": imp, "name": "Vex", "pos": Vector2i(8, 1), "level": 2},
-		{"data": imp, "name": "Gror", "pos": Vector2i(8, 3), "level": 2},
-		{"data": imp, "name": "Pyx", "pos": Vector2i(8, 5), "level": 2},
-		{"data": imp, "name": "Zik", "pos": Vector2i(9, 2), "level": 2},
-		{"data": spirit, "name": "Ember", "pos": Vector2i(9, 4), "level": 2},
+		{"data": imp, "name": "Gror", "pos": Vector2i(8, 5), "level": 2},
+		{"data": spirit, "name": "Cinder", "pos": Vector2i(8, 2), "level": 2},
+		{"data": spirit, "name": "Flamekin", "pos": Vector2i(8, 4), "level": 2},
+		{"data": spirit, "name": "Ember", "pos": Vector2i(9, 3), "level": 2},
 	]
 	return config
 
@@ -192,19 +192,19 @@ static func create_deep_forest() -> BattleConfig:
 static func create_clearing() -> BattleConfig:
 	var config := BattleConfig.new()
 	config.battle_id = "clearing"
-	config.grid_width = 10
-	config.grid_height = 8
+	config.grid_width = 14
+	config.grid_height = 10
 	_build_party_units(config)
 
 	var satyr := load("res://resources/enemies/satyr.tres")
 	var nymph := load("res://resources/enemies/nymph.tres")
 	var pixie := load("res://resources/enemies/pixie.tres")
 	config.enemy_units = [
-		{"data": satyr, "name": "Sylvan", "pos": Vector2i(9, 3), "level": 2},
-		{"data": nymph, "name": "Ondine", "pos": Vector2i(8, 2), "level": 2},
-		{"data": nymph, "name": "Lirien", "pos": Vector2i(8, 4), "level": 2},
-		{"data": pixie, "name": "Jinx", "pos": Vector2i(8, 1), "level": 2},
-		{"data": pixie, "name": "Flitz", "pos": Vector2i(8, 5), "level": 2},
+		{"data": nymph, "name": "Ondine", "pos": Vector2i(12, 2), "level": 2},
+		{"data": nymph, "name": "Lirien", "pos": Vector2i(12, 5), "level": 2},
+		{"data": pixie, "name": "Jinx", "pos": Vector2i(12, 1), "level": 2},
+		{"data": pixie, "name": "Flitz", "pos": Vector2i(12, 7), "level": 2},
+		{"data": satyr, "name": "Sylvan", "pos": Vector2i(13, 4), "level": 2},
 	]
 	return config
 
@@ -212,19 +212,19 @@ static func create_clearing() -> BattleConfig:
 static func create_ruins() -> BattleConfig:
 	var config := BattleConfig.new()
 	config.battle_id = "ruins"
-	config.grid_width = 10
-	config.grid_height = 8
+	config.grid_width = 12
+	config.grid_height = 10
 	_build_party_units(config)
 
 	var shade := load("res://resources/enemies/shade.tres")
 	var wraith := load("res://resources/enemies/wraith.tres")
 	var sentry := load("res://resources/enemies/bone_sentry.tres")
 	config.enemy_units = [
-		{"data": shade, "name": "Umbra", "pos": Vector2i(8, 1), "level": 2},
-		{"data": shade, "name": "Nyx", "pos": Vector2i(8, 3), "level": 2},
-		{"data": shade, "name": "Vesper", "pos": Vector2i(8, 5), "level": 2},
-		{"data": wraith, "name": "Duskwraith", "pos": Vector2i(9, 2), "level": 2},
-		{"data": sentry, "name": "Bone Sentry", "pos": Vector2i(9, 4), "level": 2},
+		{"data": shade, "name": "Umbra", "pos": Vector2i(10, 2), "level": 2},
+		{"data": shade, "name": "Nyx", "pos": Vector2i(10, 5), "level": 2},
+		{"data": wraith, "name": "Duskwraith", "pos": Vector2i(11, 4), "level": 2},
+		{"data": wraith, "name": "Shade Wraith", "pos": Vector2i(10, 7), "level": 2},
+		{"data": sentry, "name": "Bone Sentry", "pos": Vector2i(11, 2), "level": 2},
 	]
 	return config
 
@@ -232,18 +232,18 @@ static func create_ruins() -> BattleConfig:
 static func create_cave() -> BattleConfig:
 	var config := BattleConfig.new()
 	config.battle_id = "cave"
-	config.grid_width = 10
-	config.grid_height = 8
+	config.grid_width = 8
+	config.grid_height = 6
 	_build_party_units(config)
 
 	var fire_wyrm := load("res://resources/enemies/fire_wyrmling.tres")
 	var frost_wyrm := load("res://resources/enemies/frost_wyrmling.tres")
 	var bat := load("res://resources/enemies/cave_bat.tres")
 	config.enemy_units = [
-		{"data": fire_wyrm, "name": "Raysses", "pos": Vector2i(9, 2), "level": 3},
-		{"data": frost_wyrm, "name": "Sythara", "pos": Vector2i(9, 4), "level": 3},
-		{"data": bat, "name": "Shriek", "pos": Vector2i(8, 1), "level": 3},
-		{"data": bat, "name": "Fang", "pos": Vector2i(8, 5), "level": 3},
+		{"data": bat, "name": "Shriek", "pos": Vector2i(6, 1), "level": 3},
+		{"data": bat, "name": "Fang", "pos": Vector2i(6, 4), "level": 3},
+		{"data": fire_wyrm, "name": "Raysses", "pos": Vector2i(7, 2), "level": 3},
+		{"data": frost_wyrm, "name": "Sythara", "pos": Vector2i(7, 4), "level": 3},
 	]
 	return config
 
@@ -359,3 +359,81 @@ static func create_placeholder(battle_id: String) -> BattleConfig:
 			{"data": thug, "name": names[i], "pos": Vector2i(8, 1 + i * 2), "level": maxi(1, progression)}
 		)
 	return config
+
+
+## Returns array of terrain overrides: {pos: Vector2i, walkable: bool, cost: int, elevation: int, blocks_los: bool, destructible_hp: int}.
+## Only includes tiles that are not unit spawn positions.
+static func get_terrain_overrides(config: BattleConfig) -> Array:
+	var occupied: Dictionary = {}
+	for entry in config.player_units:
+		occupied[entry["pos"]] = true
+	for entry in config.enemy_units:
+		occupied[entry["pos"]] = true
+
+	var w: int = config.grid_width
+	var h: int = config.grid_height
+	var out: Array = []
+
+	match config.battle_id:
+		"city_street":
+			# Buildings as walls (middle of map), avoid spawns at x 0-1 and 8-9
+			for x in range(3, 7):
+				for y in [2, 3, 4]:
+					var pos := Vector2i(x, y)
+					if not occupied.get(pos, false):
+						out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+		"forest":
+			# Scattered trees (blocking), leave paths
+			var trees: Array[Vector2i] = [Vector2i(4, 2), Vector2i(5, 4), Vector2i(6, 1), Vector2i(6, 6), Vector2i(3, 5)]
+			for pos in trees:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+		"smoke":
+			# Sparse blocking (haze)
+			var blocks: Array[Vector2i] = [Vector2i(4, 3), Vector2i(6, 4), Vector2i(5, 5)]
+			for pos in blocks:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+		"deep_forest":
+			# Dense trees and a ridge (elevation 1)
+			var trees: Array[Vector2i] = [Vector2i(3, 2), Vector2i(4, 4), Vector2i(5, 1), Vector2i(5, 5), Vector2i(6, 3)]
+			for pos in trees:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+			for pos in [Vector2i(4, 3), Vector2i(5, 3)]:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": true, "cost": 1, "elevation": 1, "blocks_los": false, "destructible_hp": 0})
+		"clearing":
+			# Central hill (elevation 1-2), 14x10
+			for dx in range(5, 9):
+				for dy in range(3, 7):
+					var pos := Vector2i(dx, dy)
+					if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+						var elev: int = 2 if dx >= 6 and dx <= 7 and dy >= 4 and dy <= 5 else 1
+						out.append({"pos": pos, "walkable": true, "cost": 1, "elevation": elev, "blocks_los": false, "destructible_hp": 0})
+		"ruins":
+			# Crumbling walls and elevation steps, 12x10
+			var walls: Array[Vector2i] = [Vector2i(4, 2), Vector2i(4, 3), Vector2i(5, 2), Vector2i(5, 3), Vector2i(6, 5), Vector2i(6, 6), Vector2i(7, 5), Vector2i(7, 6)]
+			for pos in walls:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+			for pos in [Vector2i(7, 2), Vector2i(7, 3), Vector2i(8, 2), Vector2i(8, 3)]:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": true, "cost": 1, "elevation": 1, "blocks_los": false, "destructible_hp": 0})
+		"cave":
+			# Corridor walls and destructible boulder, 8x6
+			var walls: Array[Vector2i] = [Vector2i(2, 0), Vector2i(2, 1), Vector2i(3, 5), Vector2i(4, 0), Vector2i(4, 5)]
+			for pos in walls:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+			var boulder := Vector2i(4, 3)
+			if not occupied.get(boulder, false):
+				out.append({"pos": boulder, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 20})
+		"portal":
+			# Rift edges (blocking)
+			var edges: Array[Vector2i] = [Vector2i(4, 1), Vector2i(4, 6), Vector2i(5, 0), Vector2i(5, 7), Vector2i(6, 2), Vector2i(6, 5)]
+			for pos in edges:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+
+	return out
