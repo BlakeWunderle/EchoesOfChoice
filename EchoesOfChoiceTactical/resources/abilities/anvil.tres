@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/ability_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ability_name = "Anvil"
+flavor_text = "Summon an anvil that crushes the enemy."
+modified_stat = 6
+modifier = 6
+impacted_turns = 0
+use_on_enemy = true
+mana_cost = 4
+ability_range = 3
+aoe_shape = 0
+aoe_size = 0
+ability_type = 0

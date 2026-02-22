@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/ability_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ability_name = "Shrapnel"
+flavor_text = "Scatter shrapnel in a cone."
+modified_stat = 0
+modifier = 5
+impacted_turns = 0
+use_on_enemy = true
+mana_cost = 3
+ability_range = 4
+aoe_shape = 1
+aoe_size = 2
+ability_type = 0

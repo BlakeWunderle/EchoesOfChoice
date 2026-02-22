@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/backstab.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+class_id = "night_prowler"
+class_display_name = "Night Prowler"
+base_max_health = 36
+base_max_mana = 6
+base_physical_attack = 18
+base_physical_defense = 7
+base_magic_attack = 4
+base_magic_defense = 6
+base_speed = 15
+base_crit_chance = 4
+base_crit_damage = 6
+base_dodge_chance = 3
+growth_health = 0
+growth_mana = 0
+growth_physical_attack = 0
+growth_physical_defense = 0
+growth_magic_attack = 0
+growth_magic_defense = 0
+growth_speed = 0
+movement = 5
+jump = 3
+reaction_types = []
+abilities = [ExtResource("2")]
+upgrade_options = []
