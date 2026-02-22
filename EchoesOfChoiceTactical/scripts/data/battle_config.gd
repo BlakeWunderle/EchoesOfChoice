@@ -296,10 +296,13 @@ static func create_shore() -> BattleConfig:
 	_build_party_units(config)
 
 	var siren := load("res://resources/enemies/siren.tres")
+	var pirate := load("res://resources/enemies/pirate.tres")
 	config.enemy_units = [
-		{"data": siren, "name": "Lorelei", "pos": Vector2i(8, 1), "level": 4},
-		{"data": siren, "name": "Thalassa", "pos": Vector2i(8, 3), "level": 4},
+		{"data": siren, "name": "Thalassa", "pos": Vector2i(8, 1), "level": 4},
 		{"data": siren, "name": "Ligeia", "pos": Vector2i(8, 5), "level": 4},
+		{"data": pirate, "name": "Shore Raider", "pos": Vector2i(8, 2), "level": 4},
+		{"data": pirate, "name": "Coastal Cutthroat", "pos": Vector2i(8, 4), "level": 4},
+		{"data": siren, "name": "Lorelei", "pos": Vector2i(9, 3), "level": 4},
 	]
 	return config
 
@@ -313,10 +316,114 @@ static func create_beach() -> BattleConfig:
 
 	var captain := load("res://resources/enemies/captain.tres")
 	var pirate := load("res://resources/enemies/pirate.tres")
+	var tough := load("res://resources/enemies/street_tough.tres")
 	config.enemy_units = [
+		{"data": pirate, "name": "Flint", "pos": Vector2i(8, 1), "level": 4},
+		{"data": pirate, "name": "Bonny", "pos": Vector2i(8, 5), "level": 4},
+		{"data": tough, "name": "Crew Bruiser", "pos": Vector2i(8, 2), "level": 4},
+		{"data": tough, "name": "Deck Hand", "pos": Vector2i(8, 4), "level": 4},
 		{"data": captain, "name": "Greybeard", "pos": Vector2i(9, 3), "level": 4},
-		{"data": pirate, "name": "Flint", "pos": Vector2i(8, 2), "level": 4},
-		{"data": pirate, "name": "Bonny", "pos": Vector2i(8, 4), "level": 4},
+	]
+	return config
+
+
+static func create_cemetery_battle() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "cemetery_battle"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var shade := load("res://resources/enemies/shade.tres")
+	var wraith := load("res://resources/enemies/wraith.tres")
+	var sentry := load("res://resources/enemies/bone_sentry.tres")
+	config.enemy_units = [
+		{"data": shade, "name": "Grave Shade", "pos": Vector2i(8, 1), "level": 4},
+		{"data": shade, "name": "Tomb Shade", "pos": Vector2i(8, 5), "level": 4},
+		{"data": wraith, "name": "Duskwraith", "pos": Vector2i(8, 2), "level": 4},
+		{"data": wraith, "name": "Grave Wraith", "pos": Vector2i(9, 4), "level": 4},
+		{"data": sentry, "name": "Bone Sentry", "pos": Vector2i(9, 2), "level": 4},
+	]
+	return config
+
+
+static func create_box_battle() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "box_battle"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var tough := load("res://resources/enemies/street_tough.tres")
+	var peddler := load("res://resources/enemies/hex_peddler.tres")
+	var prowler := load("res://resources/enemies/night_prowler.tres")
+	config.enemy_units = [
+		{"data": tough, "name": "Carnival Brawler", "pos": Vector2i(8, 1), "level": 4},
+		{"data": tough, "name": "Ringmaster", "pos": Vector2i(9, 3), "level": 4},
+		{"data": peddler, "name": "Fortune Teller", "pos": Vector2i(8, 3), "level": 4},
+		{"data": prowler, "name": "Harlequin", "pos": Vector2i(8, 2), "level": 4},
+		{"data": prowler, "name": "Fire Eater", "pos": Vector2i(8, 4), "level": 4},
+	]
+	return config
+
+
+static func create_army_battle() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "army_battle"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var captain := load("res://resources/enemies/captain.tres")
+	var tough := load("res://resources/enemies/street_tough.tres")
+	var prowler := load("res://resources/enemies/night_prowler.tres")
+	config.enemy_units = [
+		{"data": tough, "name": "Encampment Soldier", "pos": Vector2i(8, 1), "level": 4},
+		{"data": tough, "name": "Encampment Guard", "pos": Vector2i(8, 5), "level": 4},
+		{"data": prowler, "name": "Scout", "pos": Vector2i(8, 2), "level": 4},
+		{"data": prowler, "name": "Outrider", "pos": Vector2i(8, 4), "level": 4},
+		{"data": captain, "name": "Commander", "pos": Vector2i(9, 3), "level": 4},
+	]
+	return config
+
+
+static func create_lab_battle() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "lab_battle"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var peddler := load("res://resources/enemies/hex_peddler.tres")
+	var tough := load("res://resources/enemies/street_tough.tres")
+	var prowler := load("res://resources/enemies/night_prowler.tres")
+	config.enemy_units = [
+		{"data": tough, "name": "Lab Guard", "pos": Vector2i(8, 1), "level": 4},
+		{"data": tough, "name": "Lab Sentry", "pos": Vector2i(8, 5), "level": 4},
+		{"data": peddler, "name": "Head Tinker", "pos": Vector2i(9, 3), "level": 4},
+		{"data": peddler, "name": "Alchemist", "pos": Vector2i(8, 3), "level": 4},
+		{"data": prowler, "name": "Lab Assistant", "pos": Vector2i(9, 2), "level": 4},
+	]
+	return config
+
+
+static func create_mirror_battle() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "mirror_battle"
+	config.grid_width = 14
+	config.grid_height = 10
+	_build_party_units(config)
+
+	var hound := load("res://resources/enemies/shadow_hound.tres")
+	var prowler := load("res://resources/enemies/night_prowler.tres")
+	var stalker := load("res://resources/enemies/gloom_stalker.tres")
+	var moth := load("res://resources/enemies/dusk_moth.tres")
+	config.enemy_units = [
+		{"data": hound, "name": "Shadow Hound", "pos": Vector2i(12, 1), "level": 5},
+		{"data": hound, "name": "Dark Hound", "pos": Vector2i(12, 7), "level": 5},
+		{"data": prowler, "name": "Night Prowler", "pos": Vector2i(12, 2), "level": 5},
+		{"data": moth, "name": "Dusk Moth", "pos": Vector2i(12, 5), "level": 5},
+		{"data": stalker, "name": "Gloom Stalker", "pos": Vector2i(13, 4), "level": 5},
 	]
 	return config
 
@@ -433,6 +540,62 @@ static func get_terrain_overrides(config: BattleConfig) -> Array:
 			# Rift edges (blocking)
 			var edges: Array[Vector2i] = [Vector2i(4, 1), Vector2i(4, 6), Vector2i(5, 0), Vector2i(5, 7), Vector2i(6, 2), Vector2i(6, 5)]
 			for pos in edges:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+		"shore":
+			# Water edge (blocking), sand (rough)
+			var water: Array[Vector2i] = [Vector2i(5, 0), Vector2i(6, 0), Vector2i(7, 0)]
+			for pos in water:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+			for pos in [Vector2i(4, 4), Vector2i(5, 5), Vector2i(6, 4)]:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": true, "cost": 2, "elevation": 0, "blocks_los": false, "destructible_hp": 0})
+		"beach":
+			# Sand (rough), wreckage (blocking)
+			for dx in range(4, 7):
+				for dy in [3, 4]:
+					var pos := Vector2i(dx, dy)
+					if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+						out.append({"pos": pos, "walkable": true, "cost": 2, "elevation": 0, "blocks_los": false, "destructible_hp": 0})
+			var wreck: Array[Vector2i] = [Vector2i(5, 1), Vector2i(6, 6)]
+			for pos in wreck:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+		"cemetery_battle":
+			# Tombstones (blocking/rough), mausoleum
+			var stones: Array[Vector2i] = [Vector2i(3, 2), Vector2i(4, 5), Vector2i(5, 1), Vector2i(6, 4), Vector2i(4, 3)]
+			for pos in stones:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+		"box_battle":
+			# Tents (walls), stage (elevation)
+			var tents: Array[Vector2i] = [Vector2i(3, 2), Vector2i(4, 2), Vector2i(5, 5), Vector2i(6, 5)]
+			for pos in tents:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+			for pos in [Vector2i(5, 3), Vector2i(6, 3)]:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": true, "cost": 1, "elevation": 1, "blocks_los": false, "destructible_hp": 0})
+		"army_battle":
+			# Barricades (blocking)
+			var barricades: Array[Vector2i] = [Vector2i(4, 2), Vector2i(5, 2), Vector2i(4, 5), Vector2i(5, 5)]
+			for pos in barricades:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+		"lab_battle":
+			# Walls, machinery (blocking), crates
+			var walls: Array[Vector2i] = [Vector2i(3, 2), Vector2i(4, 2), Vector2i(5, 4), Vector2i(6, 4)]
+			for pos in walls:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+			var crate := Vector2i(5, 3)
+			if not occupied.get(crate, false):
+				out.append({"pos": crate, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 15})
+		"mirror_battle":
+			# Reflective floor, minimal obstacles (arena), 14x10
+			var pillars: Array[Vector2i] = [Vector2i(6, 2), Vector2i(6, 7), Vector2i(7, 4), Vector2i(8, 2), Vector2i(8, 7)]
+			for pos in pillars:
 				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
 					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
 

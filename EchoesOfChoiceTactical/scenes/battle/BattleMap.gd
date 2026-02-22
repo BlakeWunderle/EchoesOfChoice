@@ -45,6 +45,11 @@ static var _config_creators: Dictionary = {
 	"inn_ambush": BattleConfig.create_inn_ambush,
 	"shore": BattleConfig.create_shore,
 	"beach": BattleConfig.create_beach,
+	"cemetery_battle": BattleConfig.create_cemetery_battle,
+	"box_battle": BattleConfig.create_box_battle,
+	"army_battle": BattleConfig.create_army_battle,
+	"lab_battle": BattleConfig.create_lab_battle,
+	"mirror_battle": BattleConfig.create_mirror_battle,
 	"gate_ambush": BattleConfig.create_gate_ambush,
 }
 
