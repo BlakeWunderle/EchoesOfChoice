@@ -931,7 +931,6 @@ func _on_battle_ended(player_won: bool) -> void:
 	else:
 		turn_info.text = "DEFEAT... The party has fallen."
 
-	# Sync XP/JP and update progression
 	var player_units_list: Array = []
 	for child in units_container.get_children():
 		if child is Unit and child.team == Enums.Team.PLAYER:
@@ -946,16 +945,21 @@ func _on_battle_ended(player_won: bool) -> void:
 		if gold_earned > 0:
 			GameState.add_gold(gold_earned)
 
-	GameState.update_party_after_battle(player_units_list)
+	var fallen: Array[String] = GameState.update_party_after_battle(player_units_list)
+	var mc_died := fallen.size() > 0 and fallen[0] == GameState.player_name
 
 	await get_tree().create_timer(2.0).timeout
+
+	if mc_died:
+		SceneManager.go_to_game_over()
+		return
 
 	if GameState.current_battle_id == "tutorial":
 		GameState.set_flag("tutorial_complete")
 		SceneManager.go_to_class_selection()
 	else:
-		if player_won and (_has_xp_gains(player_units_list) or gold_earned > 0):
-			_show_battle_summary(player_units_list, gold_earned)
+		if player_won and (_has_xp_gains(player_units_list) or gold_earned > 0 or fallen.size() > 0):
+			_show_battle_summary(player_units_list, gold_earned, fallen)
 		elif player_won:
 			GameState.complete_battle(GameState.current_battle_id)
 			SceneManager.go_to_overworld()
@@ -970,10 +974,10 @@ func _has_xp_gains(units: Array) -> bool:
 	return false
 
 
-func _show_battle_summary(units: Array, gold_earned: int = 0) -> void:
+func _show_battle_summary(units: Array, gold_earned: int = 0, fallen: Array[String] = []) -> void:
 	var summary_scene := preload("res://scenes/battle/BattleSummary.tscn")
 	var summary: Control = summary_scene.instantiate()
-	summary.setup(units, gold_earned)
+	summary.setup(units, gold_earned, fallen)
 	summary.summary_closed.connect(func():
 		GameState.complete_battle(GameState.current_battle_id)
 		SceneManager.go_to_overworld()

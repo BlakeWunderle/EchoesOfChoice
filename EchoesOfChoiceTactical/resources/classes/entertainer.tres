@@ -29,4 +29,5 @@ movement = 5
 jump = 2
 reaction_types = []
 abilities = [ExtResource("2"), ExtResource("3")]
+tier = 0
 upgrade_options = []

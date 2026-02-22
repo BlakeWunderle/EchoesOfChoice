@@ -18,16 +18,22 @@ var gold: int = 0
 var inventory: Dictionary = {}
 var equipment: Dictionary = {}
 
+var unlocked_classes: Array[String] = []
+var selected_party: Array[String] = []
+var player_level: int = 1
+
 const SAVE_PATH := "user://savegame.json"
 
 
 func set_player_info(p_name: String, p_gender: String) -> void:
 	player_name = p_name
 	player_gender = p_gender
+	unlock_class(p_gender)
 
 
 func set_player_class(class_id: String) -> void:
 	player_class_id = class_id
+	unlock_class(class_id)
 
 
 func add_party_member(p_name: String, p_gender: String, class_id: String, level: int = 1) -> void:
@@ -39,10 +45,50 @@ func add_party_member(p_name: String, p_gender: String, class_id: String, level:
 		"xp": 0,
 		"jp": 0,
 	})
+	unlock_class(class_id)
+
+
+func remove_party_member(member_name: String) -> void:
+	for i in range(party_members.size() - 1, -1, -1):
+		if party_members[i]["name"] == member_name:
+			party_members.remove_at(i)
+			break
 
 
 func get_party_size() -> int:
 	return party_members.size()
+
+
+# --- Class Unlock ---
+
+func unlock_class(class_id: String) -> void:
+	if class_id not in unlocked_classes:
+		unlocked_classes.append(class_id)
+
+
+func is_class_unlocked(class_id: String) -> bool:
+	return class_id in unlocked_classes
+
+
+func get_lowest_party_level() -> int:
+	var lowest := player_level
+	for member in party_members:
+		var lvl: int = member.get("level", 1)
+		if lvl < lowest:
+			lowest = lvl
+	return lowest
+
+
+const RECRUIT_COST_BY_TIER := [100, 300, 600]
+
+func get_recruit_cost(class_id: String) -> int:
+	var path := "res://resources/classes/%s.tres" % class_id
+	if ResourceLoader.exists(path):
+		var data: FighterData = load(path)
+		if data:
+			var tier_idx: int = clampi(data.tier, 0, RECRUIT_COST_BY_TIER.size() - 1)
+			return RECRUIT_COST_BY_TIER[tier_idx]
+	return RECRUIT_COST_BY_TIER[0]
 
 
 func set_flag(flag: String, value: bool = true) -> void:
@@ -72,15 +118,23 @@ func is_node_locked(node_id: String) -> bool:
 	return node_id in locked_nodes
 
 
-func update_party_after_battle(player_units: Array) -> void:
+func update_party_after_battle(player_units: Array) -> Array[String]:
+	var fallen: Array[String] = []
 	for unit in player_units:
 		if not unit is Unit:
 			continue
 		var u: Unit = unit
 		if u.team != Enums.Team.PLAYER:
 			continue
+		if not u.is_alive:
+			if u.unit_name == player_name:
+				fallen.insert(0, u.unit_name)
+			else:
+				fallen.append(u.unit_name)
+				remove_party_member(u.unit_name)
+			continue
 		if u.unit_name == player_name:
-			# Player character (not in party_members array)
+			player_level = u.level
 			continue
 		for i in range(party_members.size()):
 			if party_members[i]["name"] == u.unit_name:
@@ -88,6 +142,7 @@ func update_party_after_battle(player_units: Array) -> void:
 				party_members[i]["xp"] = u.xp
 				party_members[i]["jp"] = u.jp
 				break
+	return fallen
 
 
 func advance_progression(battle_progression: int) -> void:
@@ -210,15 +265,19 @@ func reset_for_new_game() -> void:
 	player_name = ""
 	player_gender = ""
 	player_class_id = ""
+	player_level = 1
 	party_members.clear()
 	progression_stage = 0
 	current_battle_id = ""
+	current_town_id = ""
 	story_flags.clear()
 	completed_battles.clear()
 	locked_nodes.clear()
 	gold = 0
 	inventory.clear()
 	equipment.clear()
+	unlocked_classes.clear()
+	selected_party.clear()
 
 
 func save_game() -> void:
@@ -226,6 +285,7 @@ func save_game() -> void:
 		"player_name": player_name,
 		"player_gender": player_gender,
 		"player_class_id": player_class_id,
+		"player_level": player_level,
 		"party_members": party_members,
 		"progression_stage": progression_stage,
 		"current_battle": current_battle_id,
@@ -235,6 +295,7 @@ func save_game() -> void:
 		"gold": gold,
 		"inventory": inventory,
 		"equipment": equipment,
+		"unlocked_classes": unlocked_classes,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -272,6 +333,11 @@ func load_game() -> bool:
 	gold = int(data.get("gold", 0))
 	inventory = data.get("inventory", {})
 	equipment = data.get("equipment", {})
+	player_level = int(data.get("player_level", 1))
+	var uc: Array = data.get("unlocked_classes", [])
+	unlocked_classes.clear()
+	for c in uc:
+		unlocked_classes.append(str(c))
 	return true
 
 

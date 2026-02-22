@@ -35,6 +35,7 @@ class_name FighterData extends Resource
 @export var abilities: Array[AbilityData] = []
 
 @export_group("Upgrades")
+@export var tier: int = 0
 @export var upgrade_options: Array[FighterData] = []
 
 

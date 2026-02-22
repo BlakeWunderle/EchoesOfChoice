@@ -14,7 +14,7 @@ func _ready() -> void:
 	)
 
 
-func setup(player_units: Array, gold_earned: int = 0) -> void:
+func setup(player_units: Array, gold_earned: int = 0, perma_fallen: Array[String] = []) -> void:
 	for child in unit_list.get_children():
 		child.queue_free()
 
@@ -81,9 +81,25 @@ func setup(player_units: Array, gold_earned: int = 0) -> void:
 		unit_list.add_child(row)
 
 		if not unit.is_alive:
-			name_label.add_theme_color_override("font_color", Color(0.5, 0.3, 0.3))
-			var fallen := Label.new()
-			fallen.text = "(Fallen)"
-			fallen.add_theme_font_size_override("font_size", 11)
-			fallen.add_theme_color_override("font_color", Color(0.6, 0.3, 0.3))
-			row.add_child(fallen)
+			name_label.add_theme_color_override("font_color", Color(0.7, 0.2, 0.2))
+			var fallen_label := Label.new()
+			if unit.unit_name in perma_fallen:
+				fallen_label.text = "LOST PERMANENTLY"
+				fallen_label.add_theme_color_override("font_color", Color(0.9, 0.15, 0.15))
+			else:
+				fallen_label.text = "(Fallen)"
+				fallen_label.add_theme_color_override("font_color", Color(0.6, 0.3, 0.3))
+			fallen_label.add_theme_font_size_override("font_size", 11)
+			row.add_child(fallen_label)
+
+	if perma_fallen.size() > 0:
+		var sep2 := HSeparator.new()
+		sep2.add_theme_constant_override("separation", 8)
+		unit_list.add_child(sep2)
+		var death_note := Label.new()
+		var names_str := ", ".join(perma_fallen)
+		death_note.text = "%s ha%s been permanently lost." % [names_str, "s" if perma_fallen.size() == 1 else "ve"]
+		death_note.add_theme_font_size_override("font_size", 13)
+		death_note.add_theme_color_override("font_color", Color(0.8, 0.25, 0.25))
+		death_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		unit_list.add_child(death_note)
