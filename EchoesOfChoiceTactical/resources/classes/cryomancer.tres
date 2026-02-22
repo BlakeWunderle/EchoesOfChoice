@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/blizzard.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/frostbite.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/abilities/ice_wall.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+class_id = "cryomancer"
+class_display_name = "Cryomancer"
+base_max_health = 55
+base_max_mana = 18
+base_physical_attack = 9
+base_physical_defense = 13
+base_magic_attack = 22
+base_magic_defense = 17
+base_speed = 17
+base_crit_chance = 2
+base_crit_damage = 2
+base_dodge_chance = 1
+growth_health = 9
+growth_mana = 4
+growth_physical_attack = 2
+growth_physical_defense = 2
+growth_magic_attack = 6
+growth_magic_defense = 3
+growth_speed = 4
+movement = 4
+jump = 2
+reaction_types = []
+abilities = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+tier = 2
+upgrade_options = []

@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/jump_ability.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/dragon_breath.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/abilities/dragon_ward.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+class_id = "dragoon"
+class_display_name = "Dragoon"
+base_max_health = 63
+base_max_mana = 12
+base_physical_attack = 22
+base_physical_defense = 17
+base_magic_attack = 14
+base_magic_defense = 13
+base_speed = 17
+base_crit_chance = 2
+base_crit_damage = 2
+base_dodge_chance = 2
+growth_health = 11
+growth_mana = 3
+growth_physical_attack = 5
+growth_physical_defense = 3
+growth_magic_attack = 4
+growth_magic_defense = 2
+growth_speed = 4
+movement = 4
+jump = 3
+reaction_types = []
+abilities = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+tier = 2
+upgrade_options = []

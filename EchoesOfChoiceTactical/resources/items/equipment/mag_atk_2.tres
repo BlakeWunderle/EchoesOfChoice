@@ -6,7 +6,7 @@
 script = ExtResource("1")
 item_id = "mag_atk_2"
 display_name = "Focus Stone III"
-description = "Greatly increases magic attack. +8 M.Atk. Unlocked by caster classes."
+description = "Greatly increases magic attack. +8 M.Atk. Unlocked when you have a T2 caster (e.g. Pyromancer, Cryomancer)."
 item_type = 1
 buy_price = 280
 sell_price_override = -1
@@ -14,7 +14,7 @@ stat_bonuses = {
 2: 8
 }
 unlock_tier = 2
-unlock_class_ids = PackedStringArray("mistweaver", "firebrand", "stormcaller", "cryomancer", "hydromancer", "pyromancer", "geomancer", "electromancer", "tempest")
+unlock_class_ids = PackedStringArray("cryomancer", "hydromancer", "pyromancer", "geomancer", "electromancer", "tempest")
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

@@ -6,7 +6,7 @@
 script = ExtResource("1")
 item_id = "speed_1"
 display_name = "Swift Boots II"
-description = "Greatly increases speed. +3 Spd. Unlocked by fast classes from any tree."
+description = "Greatly increases speed. +3 Spd. Unlocked when you have a T1 unit from any tree."
 item_type = 1
 buy_price = 120
 sell_price_override = -1
@@ -14,7 +14,7 @@ stat_bonuses = {
 7: 3
 }
 unlock_tier = 1
-unlock_class_ids = PackedStringArray("ranger", "martial_artist", "ninja", "mercenary", "stormcaller", "electromancer", "tempest", "dervish", "illusionist", "chronomancer", "automaton")
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

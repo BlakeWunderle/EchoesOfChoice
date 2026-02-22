@@ -6,7 +6,7 @@
 script = ExtResource("1")
 item_id = "crit_1"
 display_name = "Precision Lens II"
-description = "Greatly increases critical hit chance. +2 Crit%. Unlocked by crit-focused classes from any tree."
+description = "Greatly increases critical hit chance. +2 Crit%. Unlocked when you have a T2 crit-focused unit (e.g. Ninja, Mercenary)."
 item_type = 1
 buy_price = 200
 sell_price_override = -1
@@ -14,7 +14,7 @@ stat_bonuses = {
 12: 2
 }
 unlock_tier = 1
-unlock_class_ids = PackedStringArray("duelist", "martial_artist", "ninja", "monk", "mercenary", "electromancer", "warcrier", "automaton")
+unlock_class_ids = PackedStringArray("cavalry", "mercenary", "hunter", "ninja", "monk", "electromancer")
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

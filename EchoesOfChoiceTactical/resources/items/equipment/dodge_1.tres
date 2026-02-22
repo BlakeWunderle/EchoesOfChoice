@@ -6,7 +6,7 @@
 script = ExtResource("1")
 item_id = "dodge_1"
 display_name = "Evasion Cloak II"
-description = "Greatly increases dodge chance. +2 Dodge%. Unlocked by evasive classes from any tree."
+description = "Greatly increases dodge chance. +2 Dodge%. Unlocked when you have a T1 unit from any tree."
 item_type = 1
 buy_price = 200
 sell_price_override = -1
@@ -14,7 +14,7 @@ stat_bonuses = {
 8: 2
 }
 unlock_tier = 1
-unlock_class_ids = PackedStringArray("ninja", "hunter", "hydromancer", "pyromancer", "tempest", "dervish", "illusionist", "mime", "chronomancer")
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

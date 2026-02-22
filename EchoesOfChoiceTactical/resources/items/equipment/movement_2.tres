@@ -6,7 +6,7 @@
 script = ExtResource("1")
 item_id = "movement_2"
 display_name = "Stride Greaves II"
-description = "Greatly increases movement range. +2 Mov. Unlocked by mobile classes from any tree."
+description = "Greatly increases movement range. +2 Mov. Unlocked when you have a T2 unit from any tree."
 item_type = 1
 buy_price = 300
 sell_price_override = -1
@@ -14,7 +14,7 @@ stat_bonuses = {
 14: 2
 }
 unlock_tier = 2
-unlock_class_ids = PackedStringArray("ranger", "mercenary", "hunter", "cavalry", "tempest", "dervish", "bombardier")
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

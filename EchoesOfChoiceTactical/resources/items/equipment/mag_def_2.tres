@@ -6,7 +6,7 @@
 script = ExtResource("1")
 item_id = "mag_def_2"
 display_name = "Ward Amulet III"
-description = "Greatly increases magic defense. +8 M.Def. Unlocked by support and healer classes."
+description = "Greatly increases magic defense. +8 M.Def. Unlocked when you have a T2 support/healer (e.g. Priest, Muse)."
 item_type = 1
 buy_price = 280
 sell_price_override = -1
@@ -14,7 +14,7 @@ stat_bonuses = {
 3: 8
 }
 unlock_tier = 2
-unlock_class_ids = PackedStringArray("acolyte", "orator", "chorister", "priest", "laureate", "muse", "paladin")
+unlock_class_ids = PackedStringArray("priest", "laureate", "muse", "paladin", "minstrel", "herald", "elegist", "warcrier", "illusionist", "mime")
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0
