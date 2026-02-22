@@ -4,14 +4,18 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "health_potion"
-display_name = "Health Potion"
-description = "A vial of red liquid that restores 30 HP when consumed."
-item_type = 0
-buy_price = 25
+item_id = "speed_0"
+display_name = "Swift Boots I"
+description = "Increases speed. +2 Spd."
+item_type = 1
+buy_price = 50
 sell_price_override = -1
-stat_bonuses = {}
+stat_bonuses = {
+7: 2
+}
+unlock_tier = 0
+unlock_class_ids = []
 consumable_effect = 0
-consumable_value = 30
+consumable_value = 0
 buff_stat = 0
 buff_turns = 0

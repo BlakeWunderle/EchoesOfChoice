@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "jump_2"
+display_name = "Leap Bracers II"
+description = "Greatly increases jump height. +2 Jump. Unlocked by agile classes from any tree."
+item_type = 1
+buy_price = 300
+sell_price_override = -1
+stat_bonuses = {
+15: 2
+}
+unlock_tier = 2
+unlock_class_ids = PackedStringArray("ranger", "martial_artist", "dragoon", "ninja", "monk", "tempest", "dervish", "illusionist", "automaton")
+consumable_effect = 0
+consumable_value = 0
+buff_stat = 0
+buff_turns = 0

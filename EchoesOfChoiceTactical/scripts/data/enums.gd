@@ -11,6 +11,12 @@ enum StatType {
 	SPEED,
 	DODGE_CHANCE,
 	TAUNT,
+	MAX_HEALTH,
+	MAX_MANA,
+	CRIT_CHANCE,
+	CRIT_DAMAGE,
+	MOVEMENT,
+	JUMP,
 }
 
 enum AbilityType {
@@ -71,15 +77,7 @@ enum Team {
 
 enum ItemType {
 	CONSUMABLE,
-	WEAPON,
-	ARMOR,
-	ACCESSORY,
-}
-
-enum EquipSlot {
-	WEAPON,
-	ARMOR,
-	ACCESSORY,
+	EQUIPMENT,
 }
 
 enum ConsumableEffect {

@@ -10,7 +10,6 @@ description = "A vial of blue liquid that restores 20 MP when consumed."
 item_type = 0
 buy_price = 30
 sell_price_override = -1
-equip_slot = 0
 stat_bonuses = {}
 consumable_effect = 1
 consumable_value = 20

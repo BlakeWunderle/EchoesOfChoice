@@ -4,14 +4,18 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "health_potion"
-display_name = "Health Potion"
-description = "A vial of red liquid that restores 30 HP when consumed."
-item_type = 0
-buy_price = 25
+item_id = "mana_1"
+display_name = "Mana Charm II"
+description = "A refined charm that sharpens the mind. +5 Max MP."
+item_type = 1
+buy_price = 120
 sell_price_override = -1
-stat_bonuses = {}
+stat_bonuses = {
+11: 5
+}
+unlock_tier = 1
+unlock_class_ids = []
 consumable_effect = 0
-consumable_value = 30
+consumable_value = 0
 buff_stat = 0
 buff_turns = 0

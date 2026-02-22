@@ -4,14 +4,17 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "leather_armor"
-display_name = "Leather Armor"
-description = "Tanned hide stitched into light armor. Provides modest physical and magical defense."
-item_type = 2
-buy_price = 70
+item_id = "crit_0"
+display_name = "Precision Lens I"
+description = "Increases critical hit chance. +1 Crit%."
+item_type = 1
+buy_price = 80
 sell_price_override = -1
-equip_slot = 1
-stat_bonuses = { 1: 3, 3: 2 }
+stat_bonuses = {
+12: 1
+}
+unlock_tier = 0
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

@@ -4,14 +4,17 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "mage_ring"
-display_name = "Mage Ring"
-description = "A ring set with a glowing gem. Amplifies magical attack power."
-item_type = 3
-buy_price = 75
+item_id = "health_2"
+display_name = "Health Ring III"
+description = "A powerful ring that greatly fortifies the body. +15 Max HP."
+item_type = 1
+buy_price = 250
 sell_price_override = -1
-equip_slot = 2
-stat_bonuses = { 2: 4 }
+stat_bonuses = {
+10: 15
+}
+unlock_tier = 2
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

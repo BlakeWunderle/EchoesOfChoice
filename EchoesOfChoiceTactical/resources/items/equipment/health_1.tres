@@ -4,14 +4,17 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "oak_staff"
-display_name = "Oak Staff"
-description = "A staff carved from an ancient oak. Channels magical energy to boost magic attack."
+item_id = "health_1"
+display_name = "Health Ring II"
+description = "A sturdy ring that fortifies the body. +10 Max HP."
 item_type = 1
-buy_price = 80
+buy_price = 120
 sell_price_override = -1
-equip_slot = 0
-stat_bonuses = { 2: 5 }
+stat_bonuses = {
+10: 10
+}
+unlock_tier = 1
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

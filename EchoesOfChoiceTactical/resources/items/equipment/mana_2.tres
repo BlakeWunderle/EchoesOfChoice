@@ -4,14 +4,17 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "iron_shield"
-display_name = "Iron Shield"
-description = "A heavy iron shield. Bolsters physical defense against incoming blows."
-item_type = 3
-buy_price = 60
+item_id = "mana_2"
+display_name = "Mana Charm III"
+description = "A potent charm that greatly sharpens the mind. +8 Max MP."
+item_type = 1
+buy_price = 250
 sell_price_override = -1
-equip_slot = 2
-stat_bonuses = { 1: 4 }
+stat_bonuses = {
+11: 8
+}
+unlock_tier = 2
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

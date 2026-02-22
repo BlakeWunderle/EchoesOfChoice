@@ -195,14 +195,15 @@ func _show_detail(item: ItemData) -> void:
 func _type_label(item: ItemData) -> String:
 	match item.item_type:
 		Enums.ItemType.CONSUMABLE: return "[Use]"
-		Enums.ItemType.WEAPON: return "[Weapon]"
-		Enums.ItemType.ARMOR: return "[Armor]"
-		Enums.ItemType.ACCESSORY: return "[Acc]"
+		Enums.ItemType.EQUIPMENT: return "[Equip]"
 	return ""
 
 
 func _load_item(item_id: String) -> ItemData:
 	var path := "res://resources/items/%s.tres" % item_id
+	if ResourceLoader.exists(path):
+		return load(path) as ItemData
+	path = "res://resources/items/equipment/%s.tres" % item_id
 	if ResourceLoader.exists(path):
 		return load(path) as ItemData
 	return null

@@ -4,14 +4,17 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "iron_sword"
-display_name = "Iron Sword"
-description = "A sturdy blade forged from iron. Increases physical attack."
+item_id = "health_0"
+display_name = "Health Ring I"
+description = "A simple ring that fortifies the body. +5 Max HP."
 item_type = 1
-buy_price = 80
+buy_price = 50
 sell_price_override = -1
-equip_slot = 0
-stat_bonuses = { 0: 5 }
+stat_bonuses = {
+10: 5
+}
+unlock_tier = 0
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

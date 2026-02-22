@@ -201,61 +201,117 @@ func get_consumables_in_inventory() -> Array[Dictionary]:
 	return result
 
 
-# --- Equipment ---
+# --- Equipment (generic slots: 1/2/3 by tier) ---
 
-func equip_item(unit_name: String, item_id: String) -> void:
+func get_unit_tier(unit_name: String) -> int:
+	var class_id: String = ""
+	if unit_name == player_name:
+		class_id = player_class_id
+	else:
+		for member in party_members:
+			if member.get("name", "") == unit_name:
+				class_id = member.get("class_id", "")
+				break
+	if class_id.is_empty():
+		return 0
+	var path := "res://resources/classes/%s.tres" % class_id
+	if not ResourceLoader.exists(path):
+		return 0
+	var data: FighterData = load(path) as FighterData
+	return data.tier if data else 0
+
+
+func get_max_slots(unit_name: String) -> int:
+	return get_unit_tier(unit_name) + 1
+
+
+func _ensure_equipment_array(unit_name: String) -> void:
+	if not equipment.has(unit_name):
+		equipment[unit_name] = []
+		return
+	# Migrate old save format: { "weapon": id, "armor": id, "accessory": id } -> [id, id, id]
+	var val = equipment[unit_name]
+	if val is Dictionary:
+		var arr: Array = []
+		for key in ["weapon", "armor", "accessory"]:
+			var id_str: String = val.get(key, "")
+			if not id_str.is_empty():
+				arr.append(id_str)
+		equipment[unit_name] = arr
+
+
+func equip_item(unit_name: String, item_id: String) -> bool:
 	var item := _load_item(item_id)
 	if not item or not item.is_equipment():
-		return
-	var slot_key := _slot_key(item.get_equip_slot())
-	if not equipment.has(unit_name):
-		equipment[unit_name] = {}
-	var prev_id: String = equipment[unit_name].get(slot_key, "")
-	if not prev_id.is_empty():
-		add_item(prev_id)
-	equipment[unit_name][slot_key] = item_id
-	remove_item(item_id)
+		return false
+	_ensure_equipment_array(unit_name)
+	var arr: Array = equipment[unit_name]
+	var max_slots: int = get_max_slots(unit_name)
+	if arr.size() >= max_slots:
+		return false
+	if not remove_item(item_id):
+		return false
+	arr.append(item_id)
+	return true
 
 
-func unequip_item(unit_name: String, slot: Enums.EquipSlot) -> void:
-	var slot_key := _slot_key(slot)
-	if not equipment.has(unit_name):
+func unequip_item(unit_name: String, slot_index: int) -> void:
+	_ensure_equipment_array(unit_name)
+	var arr: Array = equipment[unit_name]
+	if slot_index < 0 or slot_index >= arr.size():
 		return
-	var item_id: String = equipment[unit_name].get(slot_key, "")
-	if item_id.is_empty():
-		return
-	equipment[unit_name].erase(slot_key)
+	var item_id: String = arr[slot_index]
+	arr.remove_at(slot_index)
 	add_item(item_id)
-	if equipment[unit_name].is_empty():
-		equipment.erase(unit_name)
 
 
-func get_equipped_item(unit_name: String, slot: Enums.EquipSlot) -> ItemData:
-	var slot_key := _slot_key(slot)
-	if not equipment.has(unit_name):
+func get_equipped_item_at(unit_name: String, slot_index: int) -> ItemData:
+	_ensure_equipment_array(unit_name)
+	var arr: Array = equipment[unit_name]
+	if slot_index < 0 or slot_index >= arr.size():
 		return null
-	var item_id: String = equipment[unit_name].get(slot_key, "")
-	if item_id.is_empty():
-		return null
+	var item_id: String = arr[slot_index]
 	return _load_item(item_id)
 
 
-func get_all_equipped(unit_name: String) -> Dictionary:
-	if not equipment.has(unit_name):
-		return {}
-	return equipment[unit_name].duplicate()
+func get_all_equipped(unit_name: String) -> Array:
+	_ensure_equipment_array(unit_name)
+	var arr: Array = equipment[unit_name]
+	return arr.duplicate()
 
 
-func _slot_key(slot: Enums.EquipSlot) -> String:
-	match slot:
-		Enums.EquipSlot.WEAPON: return "weapon"
-		Enums.EquipSlot.ARMOR: return "armor"
-		Enums.EquipSlot.ACCESSORY: return "accessory"
-	return "weapon"
+func is_item_unlocked(item: ItemData) -> bool:
+	if not item or not item.is_equipment():
+		return false
+	var party_class_ids: Array[String] = []
+	if not player_class_id.is_empty():
+		party_class_ids.append(player_class_id)
+	for member in party_members:
+		var cid: String = member.get("class_id", "")
+		if not cid.is_empty() and cid not in party_class_ids:
+			party_class_ids.append(cid)
+	var highest_tier: int = 0
+	for cid in party_class_ids:
+		var path := "res://resources/classes/%s.tres" % cid
+		if ResourceLoader.exists(path):
+			var data: FighterData = load(path) as FighterData
+			if data and data.tier > highest_tier:
+				highest_tier = data.tier
+	if highest_tier < item.unlock_tier:
+		return false
+	if item.unlock_class_ids.is_empty():
+		return true
+	for cid in item.unlock_class_ids:
+		if cid in party_class_ids:
+			return true
+	return false
 
 
 func _load_item(item_id: String) -> ItemData:
 	var path := "res://resources/items/%s.tres" % item_id
+	if ResourceLoader.exists(path):
+		return load(path) as ItemData
+	path = "res://resources/items/equipment/%s.tres" % item_id
 	if ResourceLoader.exists(path):
 		return load(path) as ItemData
 	return null

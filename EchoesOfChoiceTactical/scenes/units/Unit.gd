@@ -85,9 +85,9 @@ func initialize_xp(p_xp: int, p_jp: int) -> void:
 
 
 func _apply_equipment() -> void:
-	var slots := [Enums.EquipSlot.WEAPON, Enums.EquipSlot.ARMOR, Enums.EquipSlot.ACCESSORY]
-	for slot in slots:
-		var item: ItemData = GameState.get_equipped_item(unit_name, slot)
+	var equipped: Array = GameState.get_all_equipped(unit_name)
+	for i in range(equipped.size()):
+		var item: ItemData = GameState.get_equipped_item_at(unit_name, i)
 		if not item:
 			continue
 		for stat_key in item.stat_bonuses:
@@ -116,6 +116,20 @@ func _apply_equipment() -> void:
 				Enums.StatType.DEFENSE:
 					physical_defense += bonus
 					magic_defense += bonus
+				Enums.StatType.MAX_HEALTH:
+					max_health += bonus
+					health = mini(health + bonus, max_health)
+				Enums.StatType.MAX_MANA:
+					max_mana += bonus
+					mana = mini(mana + bonus, max_mana)
+				Enums.StatType.CRIT_CHANCE:
+					crit_chance += bonus
+				Enums.StatType.CRIT_DAMAGE:
+					crit_damage += bonus
+				Enums.StatType.MOVEMENT:
+					movement += bonus
+				Enums.StatType.JUMP:
+					jump += bonus
 
 
 func place_on_grid(pos: Vector2i) -> void:

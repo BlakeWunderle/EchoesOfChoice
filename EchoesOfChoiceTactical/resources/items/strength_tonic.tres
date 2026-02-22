@@ -10,7 +10,6 @@ description = "A bitter draught that temporarily boosts physical attack for 3 tu
 item_type = 0
 buy_price = 40
 sell_price_override = -1
-equip_slot = 0
 stat_bonuses = {}
 consumable_effect = 2
 consumable_value = 5

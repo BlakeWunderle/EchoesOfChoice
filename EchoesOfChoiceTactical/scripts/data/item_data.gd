@@ -10,8 +10,9 @@ class_name ItemData extends Resource
 @export var sell_price_override: int = -1
 
 @export_group("Equipment")
-@export var equip_slot: Enums.EquipSlot = Enums.EquipSlot.WEAPON
 @export var stat_bonuses: Dictionary = {}
+@export var unlock_tier: int = 0
+@export var unlock_class_ids: PackedStringArray = []
 
 @export_group("Consumable")
 @export var consumable_effect: Enums.ConsumableEffect = Enums.ConsumableEffect.HEAL_HP
@@ -27,22 +28,11 @@ func get_sell_price() -> int:
 
 
 func is_equipment() -> bool:
-	return item_type in [Enums.ItemType.WEAPON, Enums.ItemType.ARMOR, Enums.ItemType.ACCESSORY]
+	return item_type == Enums.ItemType.EQUIPMENT
 
 
 func is_consumable() -> bool:
 	return item_type == Enums.ItemType.CONSUMABLE
-
-
-func get_equip_slot() -> Enums.EquipSlot:
-	match item_type:
-		Enums.ItemType.WEAPON:
-			return Enums.EquipSlot.WEAPON
-		Enums.ItemType.ARMOR:
-			return Enums.EquipSlot.ARMOR
-		Enums.ItemType.ACCESSORY:
-			return Enums.EquipSlot.ACCESSORY
-	return equip_slot
 
 
 func get_stat_summary() -> String:
@@ -78,4 +68,10 @@ static func _stat_name(stat) -> String:
 		Enums.StatType.DEFENSE: return "Def"
 		Enums.StatType.SPEED: return "Spd"
 		Enums.StatType.DODGE_CHANCE: return "Dodge"
+		Enums.StatType.MAX_HEALTH: return "HP"
+		Enums.StatType.MAX_MANA: return "MP"
+		Enums.StatType.CRIT_CHANCE: return "Crit%"
+		Enums.StatType.CRIT_DAMAGE: return "CritDmg"
+		Enums.StatType.MOVEMENT: return "Mov"
+		Enums.StatType.JUMP: return "Jump"
 	return "???"
