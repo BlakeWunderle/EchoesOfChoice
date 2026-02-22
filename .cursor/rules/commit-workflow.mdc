@@ -15,6 +15,10 @@ Every plan implementation must **build**, then **commit**:
 
 Do not commit without a successful build.
 
+**Build:** If the build command isn't available (e.g. tool not on PATH), try reasonable alternatives (full path to the executable, or a project-documented location) so the build can succeed; don't skip the build or stop at "command not found."
+
+**Commit:** Produce the commit in the same session, right after a successful build. Don't report "build succeeded" and stop; complete the workflow with the commit.
+
 ### Natural Commit Boundaries
 
 Split a plan into separate commits when there are distinct phases, such as:
