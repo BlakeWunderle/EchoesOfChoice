@@ -1,5 +1,8 @@
 extends Node
 
+# Only preload enums (no dependencies). Other types use Resource/duck typing to avoid load-order issues.
+const _enums = preload("res://scripts/data/enums.gd")
+
 var player_name: String = ""
 var player_gender: String = ""
 var player_class_id: String = ""
@@ -84,8 +87,8 @@ const RECRUIT_COST_BY_TIER := [100, 300, 600]
 func get_recruit_cost(class_id: String) -> int:
 	var path := "res://resources/classes/%s.tres" % class_id
 	if ResourceLoader.exists(path):
-		var data: FighterData = load(path)
-		if data:
+		var data: Resource = load(path) as Resource
+		if data and "tier" in data:
 			var tier_idx: int = clampi(data.tier, 0, RECRUIT_COST_BY_TIER.size() - 1)
 			return RECRUIT_COST_BY_TIER[tier_idx]
 	return RECRUIT_COST_BY_TIER[0]
@@ -121,26 +124,25 @@ func is_node_locked(node_id: String) -> bool:
 func update_party_after_battle(player_units: Array) -> Array[String]:
 	var fallen: Array[String] = []
 	for unit in player_units:
-		if not unit is Unit:
+		if not ("team" in unit and "unit_name" in unit and "is_alive" in unit):
 			continue
-		var u: Unit = unit
-		if u.team != Enums.Team.PLAYER:
+		if unit.team != _enums.Team.PLAYER:
 			continue
-		if not u.is_alive:
-			if u.unit_name == player_name:
-				fallen.insert(0, u.unit_name)
+		if not unit.is_alive:
+			if unit.unit_name == player_name:
+				fallen.insert(0, unit.unit_name)
 			else:
-				fallen.append(u.unit_name)
-				remove_party_member(u.unit_name)
+				fallen.append(unit.unit_name)
+				remove_party_member(unit.unit_name)
 			continue
-		if u.unit_name == player_name:
-			player_level = u.level
+		if unit.unit_name == player_name:
+			player_level = unit.level
 			continue
 		for i in range(party_members.size()):
-			if party_members[i]["name"] == u.unit_name:
-				party_members[i]["level"] = u.level
-				party_members[i]["xp"] = u.xp
-				party_members[i]["jp"] = u.jp
+			if party_members[i]["name"] == unit.unit_name:
+				party_members[i]["level"] = unit.level
+				party_members[i]["xp"] = unit.xp
+				party_members[i]["jp"] = unit.jp
 				break
 	return fallen
 
@@ -195,8 +197,8 @@ func get_consumables_in_inventory() -> Array[Dictionary]:
 		var qty: int = inventory[item_id]
 		if qty <= 0:
 			continue
-		var item := _load_item(item_id)
-		if item and item.is_consumable():
+		var item: Resource = _load_item(item_id) as Resource
+		if item and item.get("is_consumable") and item.is_consumable():
 			result.append({"item": item, "quantity": qty})
 	return result
 
@@ -217,8 +219,9 @@ func get_unit_tier(unit_name: String) -> int:
 	var path := "res://resources/classes/%s.tres" % class_id
 	if not ResourceLoader.exists(path):
 		return 0
-	var data: FighterData = load(path) as FighterData
-	return data.tier if data else 0
+	var data: Resource = load(path) as Resource
+	var t = data.get("tier") if data else null
+	return int(t) if t != null else 0
 
 
 func get_max_slots(unit_name: String) -> int:
@@ -241,8 +244,8 @@ func _ensure_equipment_array(unit_name: String) -> void:
 
 
 func equip_item(unit_name: String, item_id: String) -> bool:
-	var item := _load_item(item_id)
-	if not item or not item.is_equipment():
+	var item: Resource = _load_item(item_id) as Resource
+	if not item or not item.get("is_equipment") or not item.is_equipment():
 		return false
 	_ensure_equipment_array(unit_name)
 	var arr: Array = equipment[unit_name]
@@ -265,7 +268,7 @@ func unequip_item(unit_name: String, slot_index: int) -> void:
 	add_item(item_id)
 
 
-func get_equipped_item_at(unit_name: String, slot_index: int) -> ItemData:
+func get_equipped_item_at(unit_name: String, slot_index: int) -> Resource:
 	_ensure_equipment_array(unit_name)
 	var arr: Array = equipment[unit_name]
 	if slot_index < 0 or slot_index >= arr.size():
@@ -280,8 +283,8 @@ func get_all_equipped(unit_name: String) -> Array:
 	return arr.duplicate()
 
 
-func is_item_unlocked(item: ItemData) -> bool:
-	if not item or not item.is_equipment():
+func is_item_unlocked(item: Resource) -> bool:
+	if not item or not item.get("is_equipment") or not item.is_equipment():
 		return false
 	var party_class_ids: Array[String] = []
 	if not player_class_id.is_empty():
@@ -294,26 +297,29 @@ func is_item_unlocked(item: ItemData) -> bool:
 	for cid in party_class_ids:
 		var path := "res://resources/classes/%s.tres" % cid
 		if ResourceLoader.exists(path):
-			var data: FighterData = load(path) as FighterData
-			if data and data.tier > highest_tier:
-				highest_tier = data.tier
-	if highest_tier < item.unlock_tier:
+			var data: Resource = load(path) as Resource
+			var dt = data.get("tier") if data else null
+			if data and dt != null and int(dt) > highest_tier:
+				highest_tier = int(dt)
+	var ut = item.get("unlock_tier")
+	if highest_tier < (int(ut) if ut != null else 0):
 		return false
-	if item.unlock_class_ids.is_empty():
+	var unlock_ids: Array = item.get("unlock_class_ids") if item.get("unlock_class_ids") != null else []
+	if unlock_ids.is_empty():
 		return true
-	for cid in item.unlock_class_ids:
+	for cid in unlock_ids:
 		if cid in party_class_ids:
 			return true
 	return false
 
 
-func _load_item(item_id: String) -> ItemData:
+func _load_item(item_id: String) -> Resource:
 	var path := "res://resources/items/%s.tres" % item_id
 	if ResourceLoader.exists(path):
-		return load(path) as ItemData
+		return load(path) as Resource
 	path = "res://resources/items/equipment/%s.tres" % item_id
 	if ResourceLoader.exists(path):
-		return load(path) as ItemData
+		return load(path) as Resource
 	return null
 
 

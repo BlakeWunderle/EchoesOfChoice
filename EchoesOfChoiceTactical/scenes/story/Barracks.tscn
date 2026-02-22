@@ -1,4 +1,4 @@
-[gd_resource type="PackedScene" load_steps=3 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scenes/story/Barracks.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/ui/DialogueBox.tscn" id="2"]
