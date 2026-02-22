@@ -257,12 +257,12 @@ static func create_portal() -> BattleConfig:
 
 	var hellion := load("res://resources/enemies/hellion.tres")
 	var fiendling := load("res://resources/enemies/fiendling.tres")
-	var imp := load("res://resources/enemies/imp.tres")
 	config.enemy_units = [
-		{"data": hellion, "name": "Abyzou", "pos": Vector2i(9, 3), "level": 3},
-		{"data": fiendling, "name": "Malphas", "pos": Vector2i(8, 2), "level": 3},
+		{"data": fiendling, "name": "Malphas", "pos": Vector2i(8, 1), "level": 3},
 		{"data": fiendling, "name": "Bael", "pos": Vector2i(8, 4), "level": 3},
-		{"data": imp, "name": "Cinder", "pos": Vector2i(8, 1), "level": 3},
+		{"data": fiendling, "name": "Dantalion", "pos": Vector2i(8, 7), "level": 3},
+		{"data": hellion, "name": "Abyzou", "pos": Vector2i(9, 3), "level": 3},
+		{"data": hellion, "name": "Purson", "pos": Vector2i(9, 5), "level": 3},
 	]
 	return config
 
@@ -295,14 +295,19 @@ static func create_shore() -> BattleConfig:
 	config.grid_height = 8
 	_build_party_units(config)
 
+	var node_data: Dictionary = MapData.get_node("shore")
+	var progression: int = node_data.get("progression", 4)
+	var lvl: int = maxi(1, progression)
+
+	# C# ShoreBattle: 3 Sirens (Lorelei, Thalassa, Ligeia). Sirens + aquatic only; no pirates. Unique names fitting class.
 	var siren := load("res://resources/enemies/siren.tres")
-	var pirate := load("res://resources/enemies/pirate.tres")
+	var nymph := load("res://resources/enemies/nymph.tres")
 	config.enemy_units = [
-		{"data": siren, "name": "Thalassa", "pos": Vector2i(8, 1), "level": 4},
-		{"data": siren, "name": "Ligeia", "pos": Vector2i(8, 5), "level": 4},
-		{"data": pirate, "name": "Shore Raider", "pos": Vector2i(8, 2), "level": 4},
-		{"data": pirate, "name": "Coastal Cutthroat", "pos": Vector2i(8, 4), "level": 4},
-		{"data": siren, "name": "Lorelei", "pos": Vector2i(9, 3), "level": 4},
+		{"data": siren, "name": "Thalassa", "pos": Vector2i(8, 1), "level": lvl},
+		{"data": siren, "name": "Ligeia", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": nymph, "name": "Nerida", "pos": Vector2i(8, 2), "level": lvl},
+		{"data": nymph, "name": "Coralie", "pos": Vector2i(8, 4), "level": lvl},
+		{"data": siren, "name": "Lorelei", "pos": Vector2i(9, 3), "level": lvl},
 	]
 	return config
 
@@ -314,15 +319,20 @@ static func create_beach() -> BattleConfig:
 	config.grid_height = 8
 	_build_party_units(config)
 
+	var node_data: Dictionary = MapData.get_node("beach")
+	var progression: int = node_data.get("progression", 4)
+	var lvl: int = maxi(1, progression)
+
+	# C# BeachBattle: Captain (Greybeard), Pirates (Flint, Bonny). Tactical: captain + 3 pirates + kraken. Unique names fitting class.
 	var captain := load("res://resources/enemies/captain.tres")
 	var pirate := load("res://resources/enemies/pirate.tres")
-	var tough := load("res://resources/enemies/street_tough.tres")
+	var kraken := load("res://resources/enemies/kraken.tres")
 	config.enemy_units = [
-		{"data": pirate, "name": "Flint", "pos": Vector2i(8, 1), "level": 4},
-		{"data": pirate, "name": "Bonny", "pos": Vector2i(8, 5), "level": 4},
-		{"data": tough, "name": "Crew Bruiser", "pos": Vector2i(8, 2), "level": 4},
-		{"data": tough, "name": "Deck Hand", "pos": Vector2i(8, 4), "level": 4},
-		{"data": captain, "name": "Greybeard", "pos": Vector2i(9, 3), "level": 4},
+		{"data": pirate, "name": "Flint", "pos": Vector2i(8, 1), "level": lvl},
+		{"data": pirate, "name": "Bonny", "pos": Vector2i(8, 4), "level": lvl},
+		{"data": pirate, "name": "Redeye", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": captain, "name": "Greybeard", "pos": Vector2i(9, 2), "level": lvl},
+		{"data": kraken, "name": "Abyssal", "pos": Vector2i(9, 3), "level": lvl},
 	]
 	return config
 
@@ -334,15 +344,20 @@ static func create_cemetery_battle() -> BattleConfig:
 	config.grid_height = 8
 	_build_party_units(config)
 
+	var node_data: Dictionary = MapData.get_node("cemetery_battle")
+	var progression: int = node_data.get("progression", 4)
+	var lvl: int = maxi(1, progression)
+
+	# C# CemeteryBattle: 3 Zombies (Mort--, Rave--, Jori--). Tactical fit: 2 zombies + 2 ghosts + 1 wraith → bone_sentry (zombie), shade (ghost), wraith (lead). C# names.
+	var bone_sentry := load("res://resources/enemies/bone_sentry.tres")
 	var shade := load("res://resources/enemies/shade.tres")
 	var wraith := load("res://resources/enemies/wraith.tres")
-	var sentry := load("res://resources/enemies/bone_sentry.tres")
 	config.enemy_units = [
-		{"data": shade, "name": "Grave Shade", "pos": Vector2i(8, 1), "level": 4},
-		{"data": shade, "name": "Tomb Shade", "pos": Vector2i(8, 5), "level": 4},
-		{"data": wraith, "name": "Duskwraith", "pos": Vector2i(8, 2), "level": 4},
-		{"data": wraith, "name": "Grave Wraith", "pos": Vector2i(9, 4), "level": 4},
-		{"data": sentry, "name": "Bone Sentry", "pos": Vector2i(9, 2), "level": 4},
+		{"data": bone_sentry, "name": "Mortis", "pos": Vector2i(8, 1), "level": lvl},
+		{"data": bone_sentry, "name": "Ravenna", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": shade, "name": "Duskward", "pos": Vector2i(8, 2), "level": lvl},
+		{"data": shade, "name": "Hollow", "pos": Vector2i(8, 4), "level": lvl},
+		{"data": wraith, "name": "Joris", "pos": Vector2i(9, 3), "level": lvl},
 	]
 	return config
 
@@ -354,15 +369,20 @@ static func create_box_battle() -> BattleConfig:
 	config.grid_height = 8
 	_build_party_units(config)
 
-	var tough := load("res://resources/enemies/street_tough.tres")
-	var peddler := load("res://resources/enemies/hex_peddler.tres")
-	var prowler := load("res://resources/enemies/night_prowler.tres")
+	var node_data: Dictionary = MapData.get_node("box_battle")
+	var progression: int = node_data.get("progression", 4)
+	var lvl: int = maxi(1, progression)
+
+	# C# BoxBattle: circus with ring leader. Ringmaster (Gaspard), Harlequin (Louis, Pierrot), Chanteuse (Erembour, Colombine). All performers — no fae.
+	var ringmaster := load("res://resources/enemies/guard_entertainer.tres")
+	var harlequin := load("res://resources/enemies/harlequin.tres")
+	var chanteuse := load("res://resources/enemies/chanteuse.tres")
 	config.enemy_units = [
-		{"data": tough, "name": "Carnival Brawler", "pos": Vector2i(8, 1), "level": 4},
-		{"data": tough, "name": "Ringmaster", "pos": Vector2i(9, 3), "level": 4},
-		{"data": peddler, "name": "Fortune Teller", "pos": Vector2i(8, 3), "level": 4},
-		{"data": prowler, "name": "Harlequin", "pos": Vector2i(8, 2), "level": 4},
-		{"data": prowler, "name": "Fire Eater", "pos": Vector2i(8, 4), "level": 4},
+		{"data": harlequin, "name": "Louis", "pos": Vector2i(8, 1), "level": lvl},
+		{"data": chanteuse, "name": "Erembour", "pos": Vector2i(8, 2), "level": lvl},
+		{"data": chanteuse, "name": "Colombine", "pos": Vector2i(8, 4), "level": lvl},
+		{"data": harlequin, "name": "Pierrot", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": ringmaster, "name": "Gaspard", "pos": Vector2i(9, 3), "level": lvl},
 	]
 	return config
 
@@ -374,15 +394,20 @@ static func create_army_battle() -> BattleConfig:
 	config.grid_height = 8
 	_build_party_units(config)
 
-	var captain := load("res://resources/enemies/captain.tres")
-	var tough := load("res://resources/enemies/street_tough.tres")
-	var prowler := load("res://resources/enemies/night_prowler.tres")
+	var node_data: Dictionary = MapData.get_node("army_battle")
+	var progression: int = node_data.get("progression", 4)
+	var lvl: int = maxi(1, progression)
+
+	# C# ArmyBattle: Commander (Varro), Draconian (Theron), Chaplain (Cristole). Commander and his troops — use C# types only.
+	var commander := load("res://resources/enemies/commander.tres")
+	var draconian := load("res://resources/enemies/draconian.tres")
+	var chaplain := load("res://resources/enemies/chaplain.tres")
 	config.enemy_units = [
-		{"data": tough, "name": "Encampment Soldier", "pos": Vector2i(8, 1), "level": 4},
-		{"data": tough, "name": "Encampment Guard", "pos": Vector2i(8, 5), "level": 4},
-		{"data": prowler, "name": "Scout", "pos": Vector2i(8, 2), "level": 4},
-		{"data": prowler, "name": "Outrider", "pos": Vector2i(8, 4), "level": 4},
-		{"data": captain, "name": "Commander", "pos": Vector2i(9, 3), "level": 4},
+		{"data": draconian, "name": "Theron", "pos": Vector2i(8, 1), "level": lvl},
+		{"data": chaplain, "name": "Cristole", "pos": Vector2i(8, 2), "level": lvl},
+		{"data": draconian, "name": "Sentinel", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": chaplain, "name": "Vestal", "pos": Vector2i(9, 2), "level": lvl},
+		{"data": commander, "name": "Varro", "pos": Vector2i(9, 3), "level": lvl},
 	]
 	return config
 
@@ -394,15 +419,20 @@ static func create_lab_battle() -> BattleConfig:
 	config.grid_height = 8
 	_build_party_units(config)
 
-	var peddler := load("res://resources/enemies/hex_peddler.tres")
-	var tough := load("res://resources/enemies/street_tough.tres")
-	var prowler := load("res://resources/enemies/night_prowler.tres")
+	var node_data: Dictionary = MapData.get_node("lab_battle")
+	var progression: int = node_data.get("progression", 4)
+	var lvl: int = maxi(1, progression)
+
+	# C# LabBattle: Android (Deus), Machinist (Ananiah), Ironclad (Acrid). Lab = constructs only — no imps/fiendlings.
+	var android := load("res://resources/enemies/android.tres")
+	var machinist := load("res://resources/enemies/machinist.tres")
+	var ironclad := load("res://resources/enemies/ironclad.tres")
 	config.enemy_units = [
-		{"data": tough, "name": "Lab Guard", "pos": Vector2i(8, 1), "level": 4},
-		{"data": tough, "name": "Lab Sentry", "pos": Vector2i(8, 5), "level": 4},
-		{"data": peddler, "name": "Head Tinker", "pos": Vector2i(9, 3), "level": 4},
-		{"data": peddler, "name": "Alchemist", "pos": Vector2i(8, 3), "level": 4},
-		{"data": prowler, "name": "Lab Assistant", "pos": Vector2i(9, 2), "level": 4},
+		{"data": android, "name": "Deus", "pos": Vector2i(8, 1), "level": lvl},
+		{"data": machinist, "name": "Ananiah", "pos": Vector2i(8, 2), "level": lvl},
+		{"data": ironclad, "name": "Acrid", "pos": Vector2i(9, 3), "level": lvl},
+		{"data": android, "name": "Unit Seven", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": machinist, "name": "Cog", "pos": Vector2i(8, 4), "level": lvl},
 	]
 	return config
 
@@ -414,16 +444,21 @@ static func create_mirror_battle() -> BattleConfig:
 	config.grid_height = 10
 	_build_party_units(config)
 
+	var node_data: Dictionary = MapData.get_node("mirror_battle")
+	var progression: int = node_data.get("progression", 5)
+	var lvl: int = maxi(1, progression)
+
+	# C# MirrorBattle: shadow clones of party (no fixed enemy list). Tactical: shadow_hound, night_prowler, gloom_stalker, dusk_moth. Unique names fitting shadow/dark.
 	var hound := load("res://resources/enemies/shadow_hound.tres")
 	var prowler := load("res://resources/enemies/night_prowler.tres")
 	var stalker := load("res://resources/enemies/gloom_stalker.tres")
 	var moth := load("res://resources/enemies/dusk_moth.tres")
 	config.enemy_units = [
-		{"data": hound, "name": "Shadow Hound", "pos": Vector2i(12, 1), "level": 5},
-		{"data": hound, "name": "Dark Hound", "pos": Vector2i(12, 7), "level": 5},
-		{"data": prowler, "name": "Night Prowler", "pos": Vector2i(12, 2), "level": 5},
-		{"data": moth, "name": "Dusk Moth", "pos": Vector2i(12, 5), "level": 5},
-		{"data": stalker, "name": "Gloom Stalker", "pos": Vector2i(13, 4), "level": 5},
+		{"data": hound, "name": "Vesper", "pos": Vector2i(12, 1), "level": lvl},
+		{"data": hound, "name": "Umbra", "pos": Vector2i(12, 7), "level": lvl},
+		{"data": prowler, "name": "Noctis", "pos": Vector2i(12, 2), "level": lvl},
+		{"data": moth, "name": "Dusk", "pos": Vector2i(12, 5), "level": lvl},
+		{"data": stalker, "name": "Tenebris", "pos": Vector2i(13, 4), "level": lvl},
 	]
 	return config
 
@@ -444,6 +479,90 @@ static func create_gate_ambush() -> BattleConfig:
 		{"data": tough, "name": "Gate Thug", "pos": Vector2i(8, 5), "level": 5},
 		{"data": peddler, "name": "Cursed Peddler", "pos": Vector2i(9, 2), "level": 5},
 		{"data": prowler, "name": "Shadow at the Gate", "pos": Vector2i(9, 4), "level": 5},
+	]
+	return config
+
+
+static func create_return_city_1() -> BattleConfig:
+	# East Gate — C# Seraph/Fiend; tactical: city defenders (guard types)
+	var config := BattleConfig.new()
+	config.battle_id = "return_city_1"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var squire := load("res://resources/enemies/guard_squire.tres")
+	var mage := load("res://resources/enemies/guard_mage.tres")
+	var entertainer := load("res://resources/enemies/guard_entertainer.tres")
+	config.enemy_units = [
+		{"data": mage, "name": "East Gate Mage", "pos": Vector2i(9, 3), "level": 6},
+		{"data": squire, "name": "East Gate Squire", "pos": Vector2i(8, 1), "level": 6},
+		{"data": squire, "name": "Gate Guard", "pos": Vector2i(8, 5), "level": 6},
+		{"data": mage, "name": "Gate Warden", "pos": Vector2i(8, 3), "level": 6},
+		{"data": entertainer, "name": "East Gate Sentinel", "pos": Vector2i(9, 4), "level": 6},
+	]
+	return config
+
+
+static func create_return_city_2() -> BattleConfig:
+	# North Gate — C# Druid/Necromancer; tactical: scholar/hex/shadow
+	var config := BattleConfig.new()
+	config.battle_id = "return_city_2"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var scholar := load("res://resources/enemies/guard_scholar.tres")
+	var peddler := load("res://resources/enemies/hex_peddler.tres")
+	var prowler := load("res://resources/enemies/night_prowler.tres")
+	config.enemy_units = [
+		{"data": scholar, "name": "North Gate Scholar", "pos": Vector2i(9, 3), "level": 6},
+		{"data": scholar, "name": "Gate Keeper", "pos": Vector2i(8, 2), "level": 6},
+		{"data": peddler, "name": "Hex Keeper", "pos": Vector2i(8, 4), "level": 6},
+		{"data": peddler, "name": "North Gate Cursed", "pos": Vector2i(8, 5), "level": 6},
+		{"data": prowler, "name": "Shadow at North Gate", "pos": Vector2i(9, 4), "level": 6},
+	]
+	return config
+
+
+static func create_return_city_3() -> BattleConfig:
+	# West Gate — C# Psion/Runewright; tactical: street/thug/goblin
+	var config := BattleConfig.new()
+	config.battle_id = "return_city_3"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var tough := load("res://resources/enemies/street_tough.tres")
+	var thug := load("res://resources/enemies/thug.tres")
+	var goblin := load("res://resources/enemies/goblin.tres")
+	config.enemy_units = [
+		{"data": tough, "name": "West Gate Raider", "pos": Vector2i(9, 3), "level": 6},
+		{"data": tough, "name": "Gate Brute", "pos": Vector2i(8, 1), "level": 6},
+		{"data": thug, "name": "West Gate Thug", "pos": Vector2i(8, 4), "level": 6},
+		{"data": thug, "name": "Gate Ruffian", "pos": Vector2i(8, 5), "level": 6},
+		{"data": goblin, "name": "Gate Scout", "pos": Vector2i(9, 4), "level": 6},
+	]
+	return config
+
+
+static func create_return_city_4() -> BattleConfig:
+	# South Gate — C# Shaman/Warlock; tactical: shadow (hound/moth/stalker)
+	var config := BattleConfig.new()
+	config.battle_id = "return_city_4"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var hound := load("res://resources/enemies/shadow_hound.tres")
+	var moth := load("res://resources/enemies/dusk_moth.tres")
+	var stalker := load("res://resources/enemies/gloom_stalker.tres")
+	config.enemy_units = [
+		{"data": stalker, "name": "South Gate Stalker", "pos": Vector2i(9, 3), "level": 6},
+		{"data": hound, "name": "Gate Hound", "pos": Vector2i(8, 1), "level": 6},
+		{"data": hound, "name": "South Gate Shadow", "pos": Vector2i(8, 5), "level": 6},
+		{"data": moth, "name": "Dusk at the Gate", "pos": Vector2i(8, 3), "level": 6},
+		{"data": stalker, "name": "Gloom Keeper", "pos": Vector2i(9, 4), "level": 6},
 	]
 	return config
 
@@ -598,5 +717,14 @@ static func get_terrain_overrides(config: BattleConfig) -> Array:
 			for pos in pillars:
 				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
 					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+		"return_city_1", "return_city_2", "return_city_3", "return_city_4":
+			# City gate: gatehouse walls (blocking), gate platform (elevation), 10x8
+			var gate_walls: Array[Vector2i] = [Vector2i(6, 0), Vector2i(6, 7), Vector2i(7, 0), Vector2i(7, 7)]
+			for pos in gate_walls:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": false, "cost": 999, "elevation": 0, "blocks_los": true, "destructible_hp": 0})
+			for pos in [Vector2i(7, 3), Vector2i(7, 4)]:
+				if pos.x >= 0 and pos.x < w and pos.y >= 0 and pos.y < h and not occupied.get(pos, false):
+					out.append({"pos": pos, "walkable": true, "cost": 1, "elevation": 1, "blocks_los": false, "destructible_hp": 0})
 
 	return out

@@ -168,7 +168,7 @@ const NODES: Dictionary = {
 	# --- Progression 4: Three paths (two battles each) ---
 	"shore": {
 		"display_name": "The Shore",
-		"description": "The coast road. Salt hangs heavy in the air; sirens and pirates lurk by the water. Past them, the beach and a shipwreck await.",
+		"description": "The coast road. Salt hangs heavy in the air; sirens and their kind lurk by the water. Past them, the beach and a shipwreck await.",
 		"pos": Vector2(1060, 520),
 		"terrain": Terrain.SHORE,
 		"prev_nodes": ["crossroads_inn"],
@@ -216,7 +216,7 @@ const NODES: Dictionary = {
 	},
 	"lab_battle": {
 		"display_name": "The Laboratory",
-		"description": "Past the encampment, the laboratory. The head tinker and guards defend the workshop. Beyond the lab, the road leads to the Mirror—then Gate Town.",
+		"description": "Past the encampment, the laboratory. Androids and machinists defend the workshop; the ironclad holds the line. Beyond the lab, the road leads to the Mirror—then Gate Town.",
 		"pos": Vector2(1180, 230),
 		"terrain": Terrain.LAB,
 		"prev_nodes": ["army_battle"],
@@ -254,7 +254,7 @@ const NODES: Dictionary = {
 	},
 	"gate_town": {
 		"display_name": "Gate Town",
-		"description": "The last settlement before the city gates. Rest and resupply before the final push. Four gates lead back to the city—each with its own defenders. Rumors speak of an assault at the gates.",
+		"description": "The last settlement before the city gates. Rest and resupply before the final push. Four gates lead back to the city—each with its own defenders. Choose which gate to assault.",
 		"pos": Vector2(1300, 320),
 		"terrain": Terrain.CITY,
 		"prev_nodes": ["mirror_battle"],

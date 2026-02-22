@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/smash.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/fortify.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/abilities/bulwark.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+class_id = "ironclad"
+class_display_name = "Ironclad"
+base_max_health = 62
+base_max_mana = 18
+base_physical_attack = 18
+base_physical_defense = 22
+base_magic_attack = 12
+base_magic_defense = 22
+base_speed = 14
+base_crit_chance = 1
+base_crit_damage = 1
+base_dodge_chance = 1
+growth_health = 0
+growth_mana = 0
+growth_physical_attack = 0
+growth_physical_defense = 0
+growth_magic_attack = 0
+growth_magic_defense = 0
+growth_speed = 0
+movement = 3
+jump = 1
+reaction_types = []
+abilities = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+upgrade_options = []
