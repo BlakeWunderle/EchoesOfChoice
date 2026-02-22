@@ -24,7 +24,11 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `reaction_system.gd` -- All 6 reaction types with trigger logic, defensive reaction chaining (bodyguard then mitigation before damage applies)
 
 ### Autoload (`scripts/autoload/`)
-- `game_state.gd` -- Singleton: party data, progression stage, story flags, JSON save/load
+- `game_state.gd` -- Singleton: party data, progression stage, story flags, gold, inventory, equipment, unlocked classes, JSON save/load
+
+### Progression data (`scripts/data/` continued)
+- `xp_config.gd` -- XP/JP constants, level curve (xp_to_next_level), catchup multiplier, JP calculation and class identity actions
+- `map_data.gd` -- Map node definitions including `gold_reward` per battle node
 
 ### Battle (`scenes/battle/`)
 - `BattleMap.gd/.tscn` -- Main battle scene: grid rendering, turn flow (act-then-move), action menu, targeting with AoE preview, facing chooser, AI, reaction integration
