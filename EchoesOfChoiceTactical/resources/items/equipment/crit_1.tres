@@ -13,7 +13,7 @@ sell_price_override = -1
 stat_bonuses = {
 12: 2
 }
-unlock_tier = 1
+unlock_tier = 2
 unlock_class_ids = PackedStringArray("cavalry", "mercenary", "hunter", "ninja", "monk", "electromancer")
 consumable_effect = 0
 consumable_value = 0

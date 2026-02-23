@@ -14,7 +14,7 @@ stat_bonuses = {
 10: 15
 }
 unlock_tier = 2
-unlock_class_ids = []
+unlock_class_ids = PackedStringArray("thaumaturge", "siegemaster", "knight", "bastion")
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

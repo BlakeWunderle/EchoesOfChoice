@@ -4,17 +4,15 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "dodge_1"
-display_name = "Evasion Cloak II"
-description = "Greatly increases dodge chance. +2 Dodge%. Unlocked when you have a T1 unit from any tree."
+item_id = "speed_2"
+display_name = "Swift Boots III"
+description = "Masterwork boots that grant uncanny swiftness, adding +5 speed."
 item_type = 1
-buy_price = 200
+buy_price = 260
 sell_price_override = -1
-stat_bonuses = {
-8: 2
-}
+stat_bonuses = {7: 5}
 unlock_tier = 2
-unlock_class_ids = PackedStringArray("ninja", "tempest", "hunter", "illusionist", "pyromancer", "hydromancer")
+unlock_class_ids = PackedStringArray(["automaton", "technomancer", "mercenary", "electromancer"])
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

@@ -13,7 +13,7 @@ sell_price_override = -1
 stat_bonuses = {
 12: 1
 }
-unlock_tier = 0
+unlock_tier = 1
 unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0

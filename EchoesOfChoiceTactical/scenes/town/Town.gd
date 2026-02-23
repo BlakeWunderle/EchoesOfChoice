@@ -32,25 +32,53 @@ const TOWN_BATTLES: Dictionary = {
 
 const TOWN_SHOPS: Dictionary = {
 	"forest_village": [
-		# Tier 0 consumables only
+		# Consumables — Tier 0
 		"health_potion", "mana_potion",
 		"strength_tonic", "magic_tonic", "guard_tonic",
+		# Equipment — Tier 0
+		"equipment/health_0", "equipment/mana_0",
+		"equipment/phys_atk_0", "equipment/phys_def_0",
+		"equipment/mag_atk_0", "equipment/mag_def_0",
+		"equipment/speed_0",
 	],
 	"crossroads_inn": [
-		# Tier 0 + Tier 1 consumables
+		# Consumables — Tier 0+1
 		"health_potion", "mana_potion",
 		"strength_tonic", "magic_tonic", "guard_tonic",
 		"greater_health_potion", "greater_mana_potion",
 		"greater_strength_tonic", "greater_magic_tonic", "greater_guard_tonic",
+		# Equipment — Tier 0+1 + first 2-tier items
+		"equipment/health_0", "equipment/mana_0",
+		"equipment/phys_atk_0", "equipment/phys_def_0",
+		"equipment/mag_atk_0", "equipment/mag_def_0", "equipment/speed_0",
+		"equipment/health_1", "equipment/mana_1",
+		"equipment/phys_atk_1", "equipment/phys_def_1",
+		"equipment/mag_atk_1", "equipment/mag_def_1", "equipment/speed_1",
+		"equipment/crit_0", "equipment/dodge_0",
+		"equipment/movement_1", "equipment/jump_1",
 	],
 	"gate_town": [
-		# Tier 0 + Tier 1 + Tier 2 consumables
+		# Consumables — all tiers
 		"health_potion", "mana_potion",
 		"strength_tonic", "magic_tonic", "guard_tonic",
 		"greater_health_potion", "greater_mana_potion",
 		"greater_strength_tonic", "greater_magic_tonic", "greater_guard_tonic",
 		"superior_health_potion", "superior_mana_potion",
 		"superior_strength_tonic", "superior_magic_tonic", "superior_guard_tonic",
+		# Equipment — all tiers (T2 class-locked items hidden until right class in party)
+		"equipment/health_0", "equipment/mana_0",
+		"equipment/phys_atk_0", "equipment/phys_def_0",
+		"equipment/mag_atk_0", "equipment/mag_def_0", "equipment/speed_0",
+		"equipment/health_1", "equipment/mana_1",
+		"equipment/phys_atk_1", "equipment/phys_def_1",
+		"equipment/mag_atk_1", "equipment/mag_def_1", "equipment/speed_1",
+		"equipment/crit_0", "equipment/dodge_0",
+		"equipment/movement_1", "equipment/jump_1",
+		"equipment/health_2", "equipment/mana_2",
+		"equipment/phys_atk_2", "equipment/phys_def_2",
+		"equipment/mag_atk_2", "equipment/mag_def_2", "equipment/speed_2",
+		"equipment/crit_1", "equipment/dodge_1",
+		"equipment/movement_2", "equipment/jump_2",
 	],
 }
 
@@ -147,10 +175,17 @@ func _on_shop_pressed() -> void:
 	var shop: Control = shop_scene.instantiate()
 	var item_ids: Array = TOWN_SHOPS.get(_town_id, [])
 	var items: Array = []
-	for id in item_ids:
-		var path := "res://resources/items/%s.tres" % id
-		if ResourceLoader.exists(path):
-			items.append(load(path))
+	for raw_id in item_ids:
+		var path := "res://resources/items/%s.tres" % raw_id
+		if not ResourceLoader.exists(path):
+			continue
+		var item: Resource = load(path) as Resource
+		if not item:
+			continue
+		if item.get("item_type") == 1:  # Enums.ItemType.EQUIPMENT
+			if not GameState.is_item_unlocked(item):
+				continue
+		items.append(item)
 	shop.setup(items)
 	shop.shop_closed.connect(func():
 		shop.queue_free()
