@@ -25,7 +25,10 @@ var unlocked_classes: Array[String] = []
 var selected_party: Array[String] = []
 var player_level: int = 1
 
+var fired_travel_event_ids: Array[String] = []
+
 const SAVE_PATH := "user://savegame.json"
+const REST_HEAL_FRACTION := 0.30
 
 
 func set_player_info(p_name: String, p_gender: String) -> void:
@@ -47,6 +50,8 @@ func add_party_member(p_name: String, p_gender: String, class_id: String, level:
 		"level": level,
 		"xp": 0,
 		"jp": 0,
+		"current_hp": -1,
+		"current_mp": -1,
 	})
 	unlock_class(class_id)
 
@@ -143,6 +148,8 @@ func update_party_after_battle(player_units: Array) -> Array[String]:
 				party_members[i]["level"] = unit.level
 				party_members[i]["xp"] = unit.xp
 				party_members[i]["jp"] = unit.jp
+				party_members[i]["current_hp"] = unit.health
+				party_members[i]["current_mp"] = unit.mana
 				break
 	return fallen
 
@@ -150,6 +157,54 @@ func update_party_after_battle(player_units: Array) -> Array[String]:
 func advance_progression(battle_progression: int) -> void:
 	if battle_progression > progression_stage:
 		progression_stage = battle_progression
+
+
+# --- HP/MP Tracking ---
+
+func get_member_max_hp(member: Dictionary) -> int:
+	var path := "res://resources/classes/%s.tres" % member.get("class_id", "")
+	if ResourceLoader.exists(path):
+		var data: Resource = load(path) as Resource
+		if data and data.has_method("get_stats_at_level"):
+			var stats: Dictionary = data.get_stats_at_level(member.get("level", 1))
+			return int(stats.get("max_health", 0))
+	return 0
+
+
+func get_member_max_mp(member: Dictionary) -> int:
+	var path := "res://resources/classes/%s.tres" % member.get("class_id", "")
+	if ResourceLoader.exists(path):
+		var data: Resource = load(path) as Resource
+		if data and data.has_method("get_stats_at_level"):
+			var stats: Dictionary = data.get_stats_at_level(member.get("level", 1))
+			return int(stats.get("max_mana", 0))
+	return 0
+
+
+func get_tracked_hp_mp(unit_name: String) -> Dictionary:
+	for member in party_members:
+		if member.get("name", "") == unit_name:
+			return {
+				"hp": member.get("current_hp", -1),
+				"mp": member.get("current_mp", -1),
+			}
+	return {"hp": -1, "mp": -1}
+
+
+func heal_party_partial(hp_frac: float, mp_frac: float) -> void:
+	for member in party_members:
+		var max_hp: int = get_member_max_hp(member)
+		var max_mp: int = get_member_max_mp(member)
+		var cur_hp: int = member.get("current_hp", -1)
+		var cur_mp: int = member.get("current_mp", -1)
+		if cur_hp < 0:
+			cur_hp = max_hp
+		if cur_mp < 0:
+			cur_mp = max_mp
+		if max_hp > 0:
+			member["current_hp"] = mini(cur_hp + int(max_hp * hp_frac), max_hp)
+		if max_mp > 0:
+			member["current_mp"] = mini(cur_mp + int(max_mp * mp_frac), max_mp)
 
 
 # --- Gold ---
@@ -344,6 +399,7 @@ func reset_for_new_game() -> void:
 	equipment.clear()
 	unlocked_classes.clear()
 	selected_party.clear()
+	fired_travel_event_ids.clear()
 
 
 func save_game() -> void:
@@ -362,6 +418,7 @@ func save_game() -> void:
 		"inventory": inventory,
 		"equipment": equipment,
 		"unlocked_classes": unlocked_classes,
+		"fired_travel_event_ids": fired_travel_event_ids,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -404,6 +461,10 @@ func load_game() -> bool:
 	unlocked_classes.clear()
 	for c in uc:
 		unlocked_classes.append(str(c))
+	var fe: Array = data.get("fired_travel_event_ids", [])
+	fired_travel_event_ids.clear()
+	for e in fe:
+		fired_travel_event_ids.append(str(e))
 	return true
 
 
