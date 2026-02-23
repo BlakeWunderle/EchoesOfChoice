@@ -464,21 +464,21 @@ static func create_cemetery_battle() -> BattleConfig:
 	var progression: int = node_data.get("progression", 4)
 	var lvl: int = maxi(1, progression)
 
-	# C# CemeteryBattle: 3 Zombies (Mort--, Rave--, Jori--). Tactical fit: 2 zombies + 2 ghosts + 1 wraith → bone_sentry (zombie), shade (ghost), wraith (lead). C# names.
-	var bone_sentry := load("res://resources/enemies/bone_sentry.tres")
-	var shade := load("res://resources/enemies/shade.tres")
+	# C# CemeteryBattle: 3 Zombies (Mort--, Rave--, Jori--). Tactical: corporeal zombies + ranged specters + wraith lead. Distinct from ruins (ethereal shades/wraiths only).
+	var zombie := load("res://resources/enemies/zombie.tres")
+	var specter := load("res://resources/enemies/specter.tres")
 	var wraith := load("res://resources/enemies/wraith.tres")
 	config.enemy_units = [
-		{"data": bone_sentry, "name": "Mortis", "pos": Vector2i(8, 1), "level": lvl},
-		{"data": bone_sentry, "name": "Ravenna", "pos": Vector2i(8, 5), "level": lvl},
-		{"data": shade, "name": "Duskward", "pos": Vector2i(8, 2), "level": lvl},
-		{"data": shade, "name": "Hollow", "pos": Vector2i(8, 4), "level": lvl},
+		{"data": zombie, "name": "Mortis", "pos": Vector2i(8, 1), "level": lvl},
+		{"data": zombie, "name": "Ravenna", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": specter, "name": "Duskward", "pos": Vector2i(8, 2), "level": lvl},
+		{"data": specter, "name": "Hollow", "pos": Vector2i(8, 4), "level": lvl},
 		{"data": wraith, "name": "Joris", "pos": Vector2i(9, 3), "level": lvl},
 	]
-	
+
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "The old cemetery. Headstones lean at wrong angles, names worn away by rain."},
-		{"speaker": "Elara", "text": "The dead here... they are not resting."}
+		{"speaker": "Elara", "text": "These were woken deliberately. Someone prepared this road."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "The last revenant crumbles. Beyond the cemetery wall, lantern light from a carnival tent sways in the wind."}
@@ -515,7 +515,8 @@ static func create_box_battle() -> BattleConfig:
 		{"speaker": "Gaspard", "text": "What a perfect addition to tonight's show."}
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The troupe collapses. The road beyond the tents converges with the others — the Mirror."}
+		{"speaker": "", "text": "The troupe collapses. In the ringmaster's coat: a sealed note and a sum of coin — payment for services."},
+		{"speaker": "Thane", "text": "Someone placed a trap on every road out of the crossroads."}
 	]
 	return config
 
@@ -583,8 +584,8 @@ static func create_lab_battle() -> BattleConfig:
 		{"speaker": "Deus", "text": "Unauthorized personnel detected. Engaging."}
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The constructs power down. The lab is quiet — but its records speak of something the encampment was protecting."},
-		{"speaker": "Elara", "text": "The Mirror crossing is ahead. All three roads meet there."}
+		{"speaker": "", "text": "The constructs power down. The lab's notes are dated years back — these machines were not built for war. Built for custody."},
+		{"speaker": "Elara", "text": "Something was being kept here for a very long time. The Guild was paid to make sure it stayed."}
 	]
 	return config
 
@@ -600,22 +601,23 @@ static func create_mirror_battle() -> BattleConfig:
 	var progression: int = node_data.get("progression", 5)
 	var lvl: int = maxi(1, progression)
 
-	# C# MirrorBattle: shadow clones of party (no fixed enemy list). Tactical: shadow_hound, night_prowler, gloom_stalker, dusk_moth. Unique names fitting shadow/dark.
-	var hound := load("res://resources/enemies/shadow_hound.tres")
+	# C# MirrorBattle: shadow clones of party (no fixed enemy list). Tactical: void_stalker (commanding lead), gloom_stalker, night_prowler × 2, dusk_moth. No shadow_hound — this is the watcher's real force, not a scouting pack.
+	var void_stalker := load("res://resources/enemies/void_stalker.tres")
 	var prowler := load("res://resources/enemies/night_prowler.tres")
 	var stalker := load("res://resources/enemies/gloom_stalker.tres")
 	var moth := load("res://resources/enemies/dusk_moth.tres")
 	config.enemy_units = [
-		{"data": hound, "name": "Vesper", "pos": Vector2i(12, 1), "level": lvl},
-		{"data": hound, "name": "Umbra", "pos": Vector2i(12, 7), "level": lvl},
-		{"data": prowler, "name": "Noctis", "pos": Vector2i(12, 2), "level": lvl},
+		{"data": void_stalker, "name": "Tenebris", "pos": Vector2i(13, 4), "level": lvl},
+		{"data": stalker, "name": "Vesper", "pos": Vector2i(12, 2), "level": lvl},
+		{"data": prowler, "name": "Noctis", "pos": Vector2i(12, 1), "level": lvl},
+		{"data": prowler, "name": "Penumbra", "pos": Vector2i(12, 7), "level": lvl},
 		{"data": moth, "name": "Dusk", "pos": Vector2i(12, 5), "level": lvl},
-		{"data": stalker, "name": "Tenebris", "pos": Vector2i(13, 4), "level": lvl},
 	]
-	
+
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "All three roads converge at a dark crossing. Shadows move in the space between the lights."},
-		{"speaker": "Lyris", "text": "Those shadows have our shapes."}
+		{"speaker": "Lyris", "text": "Those shadows have our shapes."},
+		{"speaker": "Aldric", "text": "The same shadows as the inn. It has been watching us since the crossroads."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "The shadow-selves dissolve. The crossing clears."},
@@ -631,23 +633,26 @@ static func create_gate_ambush() -> BattleConfig:
 	config.grid_height = 8
 	_build_party_units(config)
 
-	var tough := load("res://resources/enemies/street_tough.tres")
-	var peddler := load("res://resources/enemies/hex_peddler.tres")
+	# By gate_town, the watcher deploys shadow agents — not street muscle. gloom_stalker leads with two fast prowlers flanking; hex_peddler is the one hired specialist (keeps "paid ambush" flavor).
+	var stalker := load("res://resources/enemies/gloom_stalker.tres")
 	var prowler := load("res://resources/enemies/night_prowler.tres")
+	var peddler := load("res://resources/enemies/hex_peddler.tres")
+	var moth := load("res://resources/enemies/dusk_moth.tres")
 	config.enemy_units = [
-		{"data": tough, "name": "Gate Raider", "pos": Vector2i(8, 1), "level": 5},
-		{"data": tough, "name": "Gate Brute", "pos": Vector2i(8, 3), "level": 5},
-		{"data": tough, "name": "Gate Thug", "pos": Vector2i(8, 5), "level": 5},
+		{"data": stalker, "name": "Shadow at the Gate", "pos": Vector2i(9, 3), "level": 5},
+		{"data": prowler, "name": "Gate Prowler", "pos": Vector2i(8, 1), "level": 5},
+		{"data": prowler, "name": "Gate Hunter", "pos": Vector2i(8, 5), "level": 5},
 		{"data": peddler, "name": "Cursed Peddler", "pos": Vector2i(9, 2), "level": 5},
-		{"data": prowler, "name": "Shadow at the Gate", "pos": Vector2i(9, 4), "level": 5},
+		{"data": moth, "name": "Gate Moth", "pos": Vector2i(8, 3), "level": 5},
 	]
-	
+
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "Gate Town's outer road. Someone knew you were coming."},
-		{"speaker": "", "text": "Night prowlers drop from the rooftops."}
+		{"speaker": "", "text": "Shadow hunters drop from the rooftops. A cursed peddler steps from the alley."}
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The last of them flees. Gate Town is secure — for now."}
+		{"speaker": "", "text": "The last of them flees. Street muscle and a shadow watcher — hired hands and sent creatures, working the same job."},
+		{"speaker": "Aldric", "text": "Whoever is behind this is not running low on resources."}
 	]
 	return config
 

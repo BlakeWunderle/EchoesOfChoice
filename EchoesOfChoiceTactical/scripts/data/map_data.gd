@@ -244,7 +244,7 @@ const NODES: Dictionary = {
 		"gold_reward": 200,
 	},
 	"box_battle": {
-		"display_name": "The Carnival",
+		"display_name": "The Dark Carnival",
 		"description": "Past the cemetery, the carnival. The ringmaster and his troupe put on a deadly show. Beyond the tents, the road converges at the Mirror—then Gate Town.",
 		"pos": Vector2(1180, 360),
 		"terrain": Terrain.CIRCUS,
