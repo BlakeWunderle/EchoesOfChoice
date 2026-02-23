@@ -899,6 +899,42 @@ static func create_elemental_4() -> BattleConfig:
 	]
 	return config
 
+static func create_final_castle() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "final_castle"
+	config.grid_width = 14
+	config.grid_height = 12
+	_build_party_units(config)
+
+	# The Stranger — a fallen court mage, now corrupted — plus elite royal guards.
+	# Level 8 to match progression 8.
+	var mage := load("res://resources/enemies/mage.tres")
+	var fighter := load("res://resources/enemies/fighter.tres")
+	config.enemy_units = [
+		{"data": mage, "name": "The Stranger", "pos": Vector2i(12, 5), "level": 8},
+		{"data": fighter, "name": "Royal Guard", "pos": Vector2i(11, 3), "level": 8},
+		{"data": fighter, "name": "Royal Guard", "pos": Vector2i(11, 7), "level": 8},
+		{"data": mage, "name": "Court Mage", "pos": Vector2i(12, 2), "level": 8},
+		{"data": mage, "name": "Court Mage", "pos": Vector2i(12, 8), "level": 8},
+	]
+
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The throne room. The Stranger stands at its center, hood down at last. A face you have not seen before — but a voice you recognize from the note in the forest."},
+		{"speaker": "The Stranger", "text": "You made it. All of you. The forest, the shrines, the Mirror. I watched every step."},
+		{"speaker": "Aldric", "text": "You set those elementals loose. You built the encampment. Why?"},
+		{"speaker": "The Stranger", "text": "Because the city needed defenders, not mourners. I built the trials. You passed them. Now comes the final test — whether you can stop me."},
+		{"speaker": "", "text": "He raises his staff. The royal guard falls into formation."},
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "The Stranger", "text": "...Good. That is the answer I needed."},
+		{"speaker": "", "text": "He lowers his staff. The corruption fades from his eyes — whatever drove him to this, it is over."},
+		{"speaker": "The Stranger", "text": "The city is safe. You have proven that. Whatever comes next — you are ready for it."},
+		{"speaker": "", "text": "The throne room is quiet. Outside, the city breathes."},
+		{"speaker": "", "text": "Every choice left an echo. Yours will ring through the ages."},
+	]
+	return config
+
+
 static func create_placeholder(battle_id: String) -> BattleConfig:
 	var config := BattleConfig.new()
 	config.battle_id = battle_id
