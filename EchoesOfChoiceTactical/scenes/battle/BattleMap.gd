@@ -53,6 +53,7 @@ static var _config_creators: Dictionary = {
 	"lab_battle": BattleConfig.create_lab_battle,
 	"mirror_battle": BattleConfig.create_mirror_battle,
 	"gate_ambush": BattleConfig.create_gate_ambush,
+	"city_gate_ambush": BattleConfig.create_city_gate_ambush,
 	"return_city_1": BattleConfig.create_return_city_1,
 	"return_city_2": BattleConfig.create_return_city_2,
 	"return_city_3": BattleConfig.create_return_city_3,

@@ -311,7 +311,7 @@ const NODES: Dictionary = {
 		"pos": Vector2(1300, 320),
 		"terrain": Terrain.CITY,
 		"prev_nodes": ["mirror_battle"],
-		"next_nodes": ["return_city_1", "return_city_2", "return_city_3", "return_city_4"],
+		"next_nodes": ["city_gate_ambush"],
 		"branch_group": "",
 		"progression": 5,
 		"is_battle": false,
@@ -344,13 +344,27 @@ const NODES: Dictionary = {
 		],
 	},
 
-	# --- Progression 6: Return to City ---
-	"return_city_1": {
-		"display_name": "City — East Gate",
-		"description": "A seraph and fiend clash at the eastern approach.",
-		"pos": Vector2(1380, 200),
+	# --- Progression 6: City Gate Ambush (shared) ---
+	"city_gate_ambush": {
+		"display_name": "The City Gates",
+		"description": "Shadow agents have taken position inside the city walls. The Watcher's Hand from the mirror crossing stands at their head — this time with a turned city warden at its side.",
+		"pos": Vector2(1360, 320),
 		"terrain": Terrain.CITY_GATE,
 		"prev_nodes": ["gate_town"],
+		"next_nodes": ["return_city_1", "return_city_2", "return_city_3", "return_city_4"],
+		"branch_group": "",
+		"progression": 6,
+		"is_battle": true,
+		"gold_reward": 300,
+	},
+
+	# --- Progression 6: Return to City ---
+	"return_city_1": {
+		"display_name": "City — The East Rampart",
+		"description": "A divine warrior and a fire lord guard the eastern passage side by side — different powers, same orders.",
+		"pos": Vector2(1380, 200),
+		"terrain": Terrain.CITY_GATE,
+		"prev_nodes": ["city_gate_ambush"],
 		"next_nodes": ["elemental_1"],
 		"branch_group": "return_branch",
 		"progression": 6,
@@ -358,11 +372,11 @@ const NODES: Dictionary = {
 		"gold_reward": 300,
 	},
 	"return_city_2": {
-		"display_name": "City — North Gate",
-		"description": "A druid and necromancer vie for control of the northern road.",
+		"display_name": "City — The Scholar Quarter",
+		"description": "A necromancer and a witch have filled the scholar quarter streets with their workings — dead and nature, tangled together.",
 		"pos": Vector2(1380, 300),
 		"terrain": Terrain.CITY_GATE,
-		"prev_nodes": ["gate_town"],
+		"prev_nodes": ["city_gate_ambush"],
 		"next_nodes": ["elemental_2"],
 		"branch_group": "return_branch",
 		"progression": 6,
@@ -370,11 +384,11 @@ const NODES: Dictionary = {
 		"gold_reward": 300,
 	},
 	"return_city_3": {
-		"display_name": "City — West Gate",
-		"description": "A psion and runewright guard the western passage.",
+		"display_name": "City — The Forge District",
+		"description": "Warding circles on every wall. A psion and a runewright have locked the forge district road down — mind and rune working in concert.",
 		"pos": Vector2(1380, 400),
 		"terrain": Terrain.CITY_GATE,
-		"prev_nodes": ["gate_town"],
+		"prev_nodes": ["city_gate_ambush"],
 		"next_nodes": ["elemental_3"],
 		"branch_group": "return_branch",
 		"progression": 6,
@@ -382,11 +396,11 @@ const NODES: Dictionary = {
 		"gold_reward": 300,
 	},
 	"return_city_4": {
-		"display_name": "City — South Gate",
-		"description": "A shaman and warlock hold the southern bridge.",
+		"display_name": "City — The Temple Road",
+		"description": "A warlock and a shaman hold the temple road crossing — pact and spirit, pulling in the same direction.",
 		"pos": Vector2(1380, 500),
 		"terrain": Terrain.CITY_GATE,
-		"prev_nodes": ["gate_town"],
+		"prev_nodes": ["city_gate_ambush"],
 		"next_nodes": ["elemental_4"],
 		"branch_group": "return_branch",
 		"progression": 6,
@@ -396,8 +410,8 @@ const NODES: Dictionary = {
 
 	# --- Progression 7: Final Elemental Battles ---
 	"elemental_1": {
-		"display_name": "Shrine of Storms",
-		"description": "Air, water, and fire elementals converge in a final assault.",
+		"display_name": "Shrine of Flames",
+		"description": "A fire elemental towers above the shrine — four lesser flames circle it. The air itself is burning.",
 		"pos": Vector2(1540, 200),
 		"terrain": Terrain.SHRINE,
 		"prev_nodes": ["return_city_1"],
@@ -409,7 +423,7 @@ const NODES: Dictionary = {
 	},
 	"elemental_2": {
 		"display_name": "Shrine of Tides",
-		"description": "Water and fire elementals rise from the deep.",
+		"description": "The shrine floods with water. An immense elemental rises — four currents circle it.",
 		"pos": Vector2(1540, 300),
 		"terrain": Terrain.SHRINE,
 		"prev_nodes": ["return_city_2"],
@@ -421,7 +435,7 @@ const NODES: Dictionary = {
 	},
 	"elemental_3": {
 		"display_name": "Shrine of Winds",
-		"description": "Air and water elementals swirl in a vortex.",
+		"description": "A vortex fills the shrine chamber. The lead elemental is at its center — four lesser winds orbit in a tightening spiral.",
 		"pos": Vector2(1540, 400),
 		"terrain": Terrain.SHRINE,
 		"prev_nodes": ["return_city_3"],
@@ -432,8 +446,8 @@ const NODES: Dictionary = {
 		"gold_reward": 400,
 	},
 	"elemental_4": {
-		"display_name": "Shrine of Flames",
-		"description": "Air and fire elementals blaze with fury.",
+		"display_name": "Shrine of Stone",
+		"description": "The temple floor has split open. An earth elemental rose from below — and four lesser forms with it.",
 		"pos": Vector2(1540, 500),
 		"terrain": Terrain.SHRINE,
 		"prev_nodes": ["return_city_4"],

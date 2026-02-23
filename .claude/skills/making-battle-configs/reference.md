@@ -13,6 +13,15 @@ For each battle, look at `EchoesOfChoice/Battles/<BattleName>.cs` for enemy clas
 | ArmyBattle | Commander (Varro), Draconian (Theron), Chaplain (Cristole) | **Commander and his troops**: 1 commander (lead) + 2 draconians + 2 chaplains | Commander → commander.tres (Varro, lead); Draconian → draconian.tres (Theron, Sentinel); Chaplain → chaplain.tres (Cristole, Vestal). Use only army/C# types — no goblins. |
 | LabBattle | Android (Deus), Machinist (Ananiah), Ironclad (Acrid) | **Lab constructs only**: 2 androids + 2 machinists + 1 ironclad (lead) | Android → android.tres (Deus, Unit Seven); Machinist → machinist.tres (Ananiah, Cog); Ironclad → ironclad.tres (Acrid, lead). Use only construct types — no imps or fiendlings. |
 | MirrorBattle | shadow clones of party | shadow roster (no fixed C# list) | void_stalker.tres (Tenebris, commanding lead), gloom_stalker.tres (Vesper), night_prowler.tres × 2 (Noctis, Penumbra), dusk_moth.tres (Dusk). No shadow_hound — mirror_battle is the watcher's real force, not a scouting pack (inn_ambush used hounds). |
+| city_gate_ambush | (shared ambush, prog 6; hired force + turned city warden) | void_stalker lead + 2 gloom_stalker + guard_mage + night_prowler | void_stalker ("The Watcher's Hand") — same commander from mirror, now inside walls; gloom_stalker × 2 ("Gate Shadow"); guard_mage ("Turned Warden"); night_prowler ("City Runner"). All level 6. |
+| return_city_1 (East Rampart) | C# Seraph + Hellion pair | seraph + hellion leads + guard support | seraph.tres ("Sera", lead); hellion.tres ("Ares"); guard_squire.tres × 2 ("Centurion"); guard_mage.tres ("Gate Mage"). Level 6. |
+| return_city_2 (Scholar Quarter) | C# Necromancer + Witch pair | necromancer + witch leads + undead support | necromancer.tres ("Arin", lead); witch.tres ("Nira"); wisp.tres × 2 ("Pale Wisp"); wraith.tres ("Street Shade"). Level 6. |
+| return_city_3 (Forge District) | C# Psion + Runewright pair | psion + guard_scholar leads + guard support | psion.tres ("Elan", lead); guard_scholar.tres ("Nale" — runewright); guard_mage.tres × 2 ("Arcanist"); guard_squire.tres ("Ward Guard"). Level 6. No street_tough/thug/goblin here — prog 6. |
+| return_city_4 (Temple Road) | C# Warlock + Shaman pair | warlock + shaman leads + infernal support | warlock.tres ("Alis", lead); shaman.tres ("Sila"); imp.tres × 2 ("Bound Imp"); fiendling.tres ("Gate Fiend"). Level 6. |
+| elemental_1 (Shrine of Flames) | fire elementals only | mono-fire: 1 lead lvl 8 + 4 lesser lvl 7 | fire_elemental.tres ("Pyraxis" lead lvl 8; "Ember", "Cinder", "Flicker", "Ash" lvl 7). |
+| elemental_2 (Shrine of Tides) | water elementals only | mono-water: 1 lead lvl 8 + 4 lesser lvl 7 | water_elemental.tres ("Undine the Deep" lead lvl 8; "Ripple", "Surge", "Torrent", "Tide" lvl 7). |
+| elemental_3 (Shrine of Winds) | air elementals only | mono-air: 1 lead lvl 8 + 4 lesser lvl 7 | air_elemental.tres ("Gale Lord" lead lvl 8; "Gust", "Squall", "Zephyr", "Drift" lvl 7). |
+| elemental_4 (Shrine of Stone) | earth elementals only | mono-earth: 1 lead lvl 8 + 4 lesser lvl 7 | earth_elemental.tres ("Terrath" lead lvl 8; "Rubble", "Gravel", "Shard", "Stone" lvl 7). Use earth_elemental — not fire/water/air (no element repeats). |
 
 **Workflow (use every time):** 1) Open the C# battle file; 2) Use the **tactical fit** column for composition (exact types and counts); 3) Use the **.tres mapping** — if a .tres is listed but missing, create it (setting-enemy-abilities skill) before building the config; 4) Use only those types (no unrelated stand-ins, e.g. no fae for circus); 5) Use C# character names; 6) Ensure uniqueness across the stretch (no duplicate enemy types between battles in same stretch).
 
@@ -36,17 +45,17 @@ For each battle, look at `EchoesOfChoice/Battles/<BattleName>.cs` for enemy clas
 | LAB           | (automatons/creators: add .tres or reuse)    | 10×8       |
 | ARMY_CAMP     | (military/draconian: captain or add .tres)   | 10×8–12×10 |
 | MIRROR        | (shadow party: special logic)                | 14×10      |
-| CITY_GATE     | gloom_stalker, night_prowler, hex_peddler, dusk_moth | 10×8 | By prog 5 the watcher sends shadow agents, not street muscle. Keep hex_peddler for one "hired specialist" flavor; replace street_tough entirely. |
-| SHRINE        | (elementals: add .tres or reuse)            | 14×10      |
+| CITY_GATE     | gloom_stalker, night_prowler, hex_peddler, dusk_moth | 10×8 | city_gate_ambush (prog 6 shared): shadow squad led by void_stalker with turned guard_mage. return_city_1–4 (prog 6 pair fights): use named C# class pairs (seraph+hellion, necromancer+witch, psion+guard_scholar, warlock+shaman) — not shadow types. |
+| SHRINE        | fire_elemental, water_elemental, air_elemental, earth_elemental | 14×10 | **Mono-element**: each shrine uses ONE elemental type only (no mixing). 1 powerful named lead (lvl 8) + 4 lesser of the same type (lvl 7). Fire → east, Water → north, Air → west, Earth → south. No element repeats across shrines. |
 
 Enemy files live in `EchoesOfChoiceTactical/resources/enemies/`. Use existing .tres that fit the theme; add new ones if a theme has no match. **Uniqueness**: Prefer enemy types not already used in other battles in the same stretch so each fight feels unique. **Progression**: Pick enemy types and levels that match the node's `progression` (0–7 in map_data.gd) — early (0–2) = basic/street/beast; mid (3–5) = mixed/specialists; late (6–7) = elite/peak so battles feel like the game is advancing.
 
 ## Battle ID Registration
 
-**Dedicated config** (in `BattleMap._config_creators`):  
-tutorial, city_street, forest, village_raid, smoke, deep_forest, clearing, ruins, cave, portal, inn_ambush, shore, beach, cemetery_battle, box_battle, army_battle, lab_battle, mirror_battle, gate_ambush.
+**Dedicated config** (in `BattleMap._config_creators`):
+tutorial, city_street, forest, village_raid, smoke, deep_forest, clearing, ruins, cave, portal, inn_ambush, shore, beach, cemetery_battle, box_battle, army_battle, lab_battle, mirror_battle, gate_ambush, city_gate_ambush, return_city_1, return_city_2, return_city_3, return_city_4, elemental_1, elemental_2, elemental_3, elemental_4, final_castle.
 
-**Placeholder** (use `BattleConfig.create_placeholder(battle_id)` until a dedicated config is added):  
-return_city_1, return_city_2, return_city_3, return_city_4, elemental_1, elemental_2, elemental_3, elemental_4.
+**Placeholder** (use `BattleConfig.create_placeholder(battle_id)` until a dedicated config is added):
+*(none — all battles have dedicated configs)*
 
 When adding a dedicated config for a placeholder battle_id, add a `create_<battle_id>` in `battle_config.gd` and register it in `BattleMap._config_creators`.

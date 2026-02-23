@@ -657,118 +657,151 @@ static func create_gate_ambush() -> BattleConfig:
 	return config
 
 
+static func create_city_gate_ambush() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "city_gate_ambush"
+	config.grid_width = 10
+	config.grid_height = 8
+	_build_party_units(config)
+
+	var void_stalker := load("res://resources/enemies/void_stalker.tres")
+	var gloom_stalker := load("res://resources/enemies/gloom_stalker.tres")
+	var guard_mage := load("res://resources/enemies/guard_mage.tres")
+	var night_prowler := load("res://resources/enemies/night_prowler.tres")
+	config.enemy_units = [
+		{"data": void_stalker, "name": "The Watcher's Hand", "pos": Vector2i(9, 3), "level": 6},
+		{"data": gloom_stalker, "name": "Gate Shadow", "pos": Vector2i(8, 1), "level": 6},
+		{"data": gloom_stalker, "name": "Gate Shadow", "pos": Vector2i(8, 5), "level": 6},
+		{"data": guard_mage, "name": "Turned Warden", "pos": Vector2i(9, 2), "level": 6},
+		{"data": night_prowler, "name": "City Runner", "pos": Vector2i(8, 4), "level": 6},
+	]
+
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "Inside the walls. Shadow agents and a city mage — working together."},
+		{"speaker": "Aldric", "text": "The same commander as the mirror crossing. It followed us in."},
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "They scatter. The city's four districts open ahead — each held by someone who will not let you through."},
+	]
+	return config
+
+
 static func create_return_city_1() -> BattleConfig:
-	# East Gate — C# Seraph/Fiend; tactical: city defenders (guard types)
+	# East Gate — The East Rampart: Seraph + Hellion pair
 	var config := BattleConfig.new()
 	config.battle_id = "return_city_1"
 	config.grid_width = 10
 	config.grid_height = 8
 	_build_party_units(config)
 
+	var seraph := load("res://resources/enemies/seraph.tres")
+	var hellion := load("res://resources/enemies/hellion.tres")
 	var squire := load("res://resources/enemies/guard_squire.tres")
 	var mage := load("res://resources/enemies/guard_mage.tres")
-	var entertainer := load("res://resources/enemies/guard_entertainer.tres")
 	config.enemy_units = [
-		{"data": mage, "name": "East Gate Mage", "pos": Vector2i(9, 3), "level": 6},
-		{"data": squire, "name": "East Gate Squire", "pos": Vector2i(8, 1), "level": 6},
-		{"data": squire, "name": "Gate Guard", "pos": Vector2i(8, 5), "level": 6},
-		{"data": mage, "name": "Gate Warden", "pos": Vector2i(8, 3), "level": 6},
-		{"data": entertainer, "name": "East Gate Sentinel", "pos": Vector2i(9, 4), "level": 6},
+		{"data": seraph, "name": "Sera", "pos": Vector2i(9, 3), "level": 6},
+		{"data": hellion, "name": "Ares", "pos": Vector2i(9, 5), "level": 6},
+		{"data": squire, "name": "Centurion", "pos": Vector2i(8, 1), "level": 6},
+		{"data": squire, "name": "Centurion", "pos": Vector2i(8, 5), "level": 6},
+		{"data": mage, "name": "Gate Mage", "pos": Vector2i(8, 3), "level": 6},
 	]
-	
+
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The eastern approach. Light and dark clash in the streets ahead."},
-		{"speaker": "Aldric", "text": "Push through. We take the gate."}
+		{"speaker": "", "text": "The eastern rampart. A divine warrior and a fire lord guard the passage side by side."},
+		{"speaker": "Thane", "text": "Different powers, same orders. Whoever hired them has reach."},
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The gate falls. The road to the shrine opens."}
+		{"speaker": "Sera", "text": "The gate is yours. What stands at the fire shrine beyond — that was not our doing."},
 	]
 	return config
 
 
 static func create_return_city_2() -> BattleConfig:
-	# North Gate — C# Druid/Necromancer; tactical: scholar/hex/shadow
+	# North Gate — The Scholar Quarter: Necromancer + Witch pair
 	var config := BattleConfig.new()
 	config.battle_id = "return_city_2"
 	config.grid_width = 10
 	config.grid_height = 8
 	_build_party_units(config)
 
-	var scholar := load("res://resources/enemies/guard_scholar.tres")
-	var peddler := load("res://resources/enemies/hex_peddler.tres")
-	var prowler := load("res://resources/enemies/night_prowler.tres")
+	var necromancer := load("res://resources/enemies/necromancer.tres")
+	var witch := load("res://resources/enemies/witch.tres")
+	var wisp := load("res://resources/enemies/wisp.tres")
+	var wraith := load("res://resources/enemies/wraith.tres")
 	config.enemy_units = [
-		{"data": scholar, "name": "North Gate Scholar", "pos": Vector2i(9, 3), "level": 6},
-		{"data": scholar, "name": "Gate Keeper", "pos": Vector2i(8, 2), "level": 6},
-		{"data": peddler, "name": "Hex Keeper", "pos": Vector2i(8, 4), "level": 6},
-		{"data": peddler, "name": "North Gate Cursed", "pos": Vector2i(8, 5), "level": 6},
-		{"data": prowler, "name": "Shadow at North Gate", "pos": Vector2i(9, 4), "level": 6},
+		{"data": necromancer, "name": "Arin", "pos": Vector2i(9, 3), "level": 6},
+		{"data": witch, "name": "Nira", "pos": Vector2i(9, 5), "level": 6},
+		{"data": wisp, "name": "Pale Wisp", "pos": Vector2i(8, 1), "level": 6},
+		{"data": wisp, "name": "Pale Wisp", "pos": Vector2i(8, 5), "level": 6},
+		{"data": wraith, "name": "Street Shade", "pos": Vector2i(8, 3), "level": 6},
 	]
-	
+
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The northern road. Druids and necromancers vie for control of the approach."},
-		{"speaker": "Thane", "text": "They are using the ley lines beneath the street. This is planned."}
+		{"speaker": "", "text": "The scholar quarter. A necromancer and a witch have filled the streets with their workings — dead and nature, tangled together."},
+		{"speaker": "Elara", "text": "The tides shrine lies beyond. We have to break through."},
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The north road is clear. The shrine ahead."}
+		{"speaker": "", "text": "Nature and death both go silent. The north road is open."},
 	]
 	return config
 
 
 static func create_return_city_3() -> BattleConfig:
-	# West Gate — C# Psion/Runewright; tactical: street/thug/goblin
+	# West Gate — The Forge District: Psion + Runewright (guard_scholar) pair
 	var config := BattleConfig.new()
 	config.battle_id = "return_city_3"
 	config.grid_width = 10
 	config.grid_height = 8
 	_build_party_units(config)
 
-	var tough := load("res://resources/enemies/street_tough.tres")
-	var thug := load("res://resources/enemies/thug.tres")
-	var goblin := load("res://resources/enemies/goblin.tres")
+	var psion := load("res://resources/enemies/psion.tres")
+	var scholar := load("res://resources/enemies/guard_scholar.tres")
+	var mage := load("res://resources/enemies/guard_mage.tres")
+	var squire := load("res://resources/enemies/guard_squire.tres")
 	config.enemy_units = [
-		{"data": tough, "name": "West Gate Raider", "pos": Vector2i(9, 3), "level": 6},
-		{"data": tough, "name": "Gate Brute", "pos": Vector2i(8, 1), "level": 6},
-		{"data": thug, "name": "West Gate Thug", "pos": Vector2i(8, 4), "level": 6},
-		{"data": thug, "name": "Gate Ruffian", "pos": Vector2i(8, 5), "level": 6},
-		{"data": goblin, "name": "Gate Scout", "pos": Vector2i(9, 4), "level": 6},
+		{"data": psion, "name": "Elan", "pos": Vector2i(9, 3), "level": 6},
+		{"data": scholar, "name": "Nale", "pos": Vector2i(9, 5), "level": 6},
+		{"data": mage, "name": "Arcanist", "pos": Vector2i(8, 1), "level": 6},
+		{"data": mage, "name": "Arcanist", "pos": Vector2i(8, 5), "level": 6},
+		{"data": squire, "name": "Ward Guard", "pos": Vector2i(8, 3), "level": 6},
 	]
-	
+
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The western passage. Street toughs and shadow-workers block the way."},
-		{"speaker": "Lyris", "text": "More of them than I would like."}
+		{"speaker": "", "text": "The forge district. Warding circles on every wall — a psion and a runewright have locked the road down."},
+		{"speaker": "Lyris", "text": "Mind and rune. Do not stand still."},
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "West gate is ours."}
+		{"speaker": "", "text": "The wards collapse. West road clear."},
 	]
 	return config
 
 
 static func create_return_city_4() -> BattleConfig:
-	# South Gate — C# Shaman/Warlock; tactical: shadow (hound/moth/stalker)
+	# South Gate — The Temple Road: Warlock + Shaman pair
 	var config := BattleConfig.new()
 	config.battle_id = "return_city_4"
 	config.grid_width = 10
 	config.grid_height = 8
 	_build_party_units(config)
 
-	var hound := load("res://resources/enemies/shadow_hound.tres")
-	var moth := load("res://resources/enemies/dusk_moth.tres")
-	var stalker := load("res://resources/enemies/gloom_stalker.tres")
+	var warlock := load("res://resources/enemies/warlock.tres")
+	var shaman := load("res://resources/enemies/shaman.tres")
+	var imp := load("res://resources/enemies/imp.tres")
+	var fiendling := load("res://resources/enemies/fiendling.tres")
 	config.enemy_units = [
-		{"data": stalker, "name": "South Gate Stalker", "pos": Vector2i(9, 3), "level": 6},
-		{"data": hound, "name": "Gate Hound", "pos": Vector2i(8, 1), "level": 6},
-		{"data": hound, "name": "South Gate Shadow", "pos": Vector2i(8, 5), "level": 6},
-		{"data": moth, "name": "Dusk at the Gate", "pos": Vector2i(8, 3), "level": 6},
-		{"data": stalker, "name": "Gloom Keeper", "pos": Vector2i(9, 4), "level": 6},
+		{"data": warlock, "name": "Alis", "pos": Vector2i(9, 3), "level": 6},
+		{"data": shaman, "name": "Sila", "pos": Vector2i(9, 5), "level": 6},
+		{"data": imp, "name": "Bound Imp", "pos": Vector2i(8, 1), "level": 6},
+		{"data": imp, "name": "Bound Imp", "pos": Vector2i(8, 5), "level": 6},
+		{"data": fiendling, "name": "Gate Fiend", "pos": Vector2i(8, 3), "level": 6},
 	]
-	
+
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The southern bridge. A shaman and warlock hold either end."},
-		{"speaker": "Elara", "text": "Coordinated attack. They are expecting us."}
+		{"speaker": "", "text": "The temple road. A warlock and a shaman hold the crossing — pact and spirit, pulling in the same direction."},
+		{"speaker": "Aldric", "text": "The stone shrine lies under the temple. We go through them."},
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The bridge is clear. The last shrine awaits."}
+		{"speaker": "", "text": "The pact unravels. The temple road is ours."},
 	]
 	return config
 
@@ -781,29 +814,24 @@ static func create_elemental_1() -> BattleConfig:
 	config.grid_height = 10
 	_build_party_units(config)
 
-	var node_data: Dictionary = MapData.get_node("elemental_1")
-	var progression: int = node_data.get("progression", 7)
-	var lvl: int = maxi(1, progression)
-
-	# Shrine of Storms: mix of elemental types
-	var air_elem := load("res://resources/enemies/air_elemental.tres")
+	# Shrine of Flames: mono-fire (1 lead lvl 8 + 4 lesser lvl 7)
 	var fire_elem := load("res://resources/enemies/fire_elemental.tres")
-	var water_elem := load("res://resources/enemies/water_elemental.tres")
 	config.enemy_units = [
-		{"data": air_elem, "name": "Zephyr", "pos": Vector2i(10, 2), "level": lvl},
-		{"data": water_elem, "name": "Tide", "pos": Vector2i(10, 5), "level": lvl},
-		{"data": fire_elem, "name": "Inferno", "pos": Vector2i(10, 8), "level": lvl},
-		{"data": air_elem, "name": "Gale", "pos": Vector2i(11, 4), "level": lvl},
-		{"data": fire_elem, "name": "Pyre", "pos": Vector2i(11, 6), "level": lvl},
+		{"data": fire_elem, "name": "Pyraxis", "pos": Vector2i(11, 5), "level": 8},
+		{"data": fire_elem, "name": "Ember", "pos": Vector2i(10, 2), "level": 7},
+		{"data": fire_elem, "name": "Cinder", "pos": Vector2i(10, 5), "level": 7},
+		{"data": fire_elem, "name": "Flicker", "pos": Vector2i(10, 8), "level": 7},
+		{"data": fire_elem, "name": "Ash", "pos": Vector2i(11, 3), "level": 7},
 	]
 
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The Shrine of Storms. Air, water, and fire called here by something that wants the city to burn."},
-		{"speaker": "Elara", "text": "Three at once. We have faced worse. Have we not?"}
+		{"speaker": "", "text": "A fire elemental towers above the shrine — four lesser flames circle it. The air itself is burning."},
+		{"speaker": "Elara", "text": "We end this."},
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The elementals disperse. The shrine goes dark. Whatever called them here is gone."},
-		{"speaker": "Aldric", "text": "It is over. We made it."}
+		{"speaker": "", "text": "Pyraxis crashes down. Sunlight breaks through smoke."},
+		{"speaker": "", "text": "On a rooftop above — a figure. Watching. A single nod. Then gone."},
+		{"speaker": "Aldric", "text": "Every step. That same presence."},
 	]
 	return config
 
@@ -814,29 +842,23 @@ static func create_elemental_2() -> BattleConfig:
 	config.grid_height = 10
 	_build_party_units(config)
 
-	var node_data: Dictionary = MapData.get_node("elemental_2")
-	var progression: int = node_data.get("progression", 7)
-	var lvl: int = maxi(1, progression)
-
-	# Shrine of Tides: mix of elemental types
-	var air_elem := load("res://resources/enemies/air_elemental.tres")
-	var fire_elem := load("res://resources/enemies/fire_elemental.tres")
+	# Shrine of Tides: mono-water (1 lead lvl 8 + 4 lesser lvl 7)
 	var water_elem := load("res://resources/enemies/water_elemental.tres")
 	config.enemy_units = [
-		{"data": water_elem, "name": "Deluge", "pos": Vector2i(10, 2), "level": lvl},
-		{"data": fire_elem, "name": "Scorch", "pos": Vector2i(10, 5), "level": lvl},
-		{"data": water_elem, "name": "Surge", "pos": Vector2i(10, 8), "level": lvl},
-		{"data": fire_elem, "name": "Ember Lord", "pos": Vector2i(11, 3), "level": lvl},
-		{"data": water_elem, "name": "Maelstrom", "pos": Vector2i(11, 7), "level": lvl},
+		{"data": water_elem, "name": "Undine the Deep", "pos": Vector2i(11, 5), "level": 8},
+		{"data": water_elem, "name": "Ripple", "pos": Vector2i(10, 2), "level": 7},
+		{"data": water_elem, "name": "Surge", "pos": Vector2i(10, 5), "level": 7},
+		{"data": water_elem, "name": "Torrent", "pos": Vector2i(10, 8), "level": 7},
+		{"data": water_elem, "name": "Tide", "pos": Vector2i(11, 3), "level": 7},
 	]
 
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The Shrine of Tides. The water rises — something vast stirs beneath."},
-		{"speaker": "Thane", "text": "Fire and water. Opposing forces turned against the city. Intentional."}
+		{"speaker": "", "text": "The shrine floods with water. An immense elemental rises — four currents circle it."},
+		{"speaker": "Thane", "text": "Someone pulled every elemental in the city to the same purpose."},
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The tides recede. The shrine falls silent."},
-		{"speaker": "", "text": "Every choice made along the way echoes here, in this stillness."}
+		{"speaker": "", "text": "The tides recede. Water drains away."},
+		{"speaker": "", "text": "On the rooftop — a nod. The same one."},
 	]
 	return config
 
@@ -847,28 +869,23 @@ static func create_elemental_3() -> BattleConfig:
 	config.grid_height = 10
 	_build_party_units(config)
 
-	var node_data: Dictionary = MapData.get_node("elemental_3")
-	var progression: int = node_data.get("progression", 7)
-	var lvl: int = maxi(1, progression)
-
-	# Shrine of Winds: mix of elemental types
+	# Shrine of Winds: mono-air (1 lead lvl 8 + 4 lesser lvl 7)
 	var air_elem := load("res://resources/enemies/air_elemental.tres")
-	var fire_elem := load("res://resources/enemies/fire_elemental.tres")
-	var water_elem := load("res://resources/enemies/water_elemental.tres")
 	config.enemy_units = [
-		{"data": air_elem, "name": "Cyclone", "pos": Vector2i(10, 2), "level": lvl},
-		{"data": water_elem, "name": "Torrent", "pos": Vector2i(10, 5), "level": lvl},
-		{"data": air_elem, "name": "Squall", "pos": Vector2i(10, 8), "level": lvl},
-		{"data": water_elem, "name": "Riptide", "pos": Vector2i(11, 4), "level": lvl},
-		{"data": air_elem, "name": "Vortex", "pos": Vector2i(11, 6), "level": lvl},
+		{"data": air_elem, "name": "Gale Lord", "pos": Vector2i(11, 5), "level": 8},
+		{"data": air_elem, "name": "Gust", "pos": Vector2i(10, 2), "level": 7},
+		{"data": air_elem, "name": "Squall", "pos": Vector2i(10, 5), "level": 7},
+		{"data": air_elem, "name": "Zephyr", "pos": Vector2i(10, 8), "level": 7},
+		{"data": air_elem, "name": "Drift", "pos": Vector2i(11, 3), "level": 7},
 	]
 
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The Shrine of Winds. A vortex of air and water fills the chamber."},
-		{"speaker": "Lyris", "text": "We are in the eye of it. No retreating now."}
+		{"speaker": "", "text": "A vortex fills the shrine chamber. The lead elemental is at its center — four lesser winds orbit in a tightening spiral."},
+		{"speaker": "Lyris", "text": "We are in the eye of it. No retreating."},
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The vortex dies. The city breathes again."}
+		{"speaker": "", "text": "The vortex dies. Wind fades. The city breathes."},
+		{"speaker": "", "text": "A figure on the rooftop gives one nod — then disappears."},
 	]
 	return config
 
@@ -879,29 +896,25 @@ static func create_elemental_4() -> BattleConfig:
 	config.grid_height = 10
 	_build_party_units(config)
 
-	var node_data: Dictionary = MapData.get_node("elemental_4")
-	var progression: int = node_data.get("progression", 7)
-	var lvl: int = maxi(1, progression)
-
-	# Shrine of Flames: mix of elemental types
-	var air_elem := load("res://resources/enemies/air_elemental.tres")
-	var fire_elem := load("res://resources/enemies/fire_elemental.tres")
-	var water_elem := load("res://resources/enemies/water_elemental.tres")
+	# Shrine of Stone: mono-earth (1 lead lvl 8 + 4 lesser lvl 7)
+	var earth_elem := load("res://resources/enemies/earth_elemental.tres")
 	config.enemy_units = [
-		{"data": air_elem, "name": "Tempest", "pos": Vector2i(10, 2), "level": lvl},
-		{"data": fire_elem, "name": "Blaze", "pos": Vector2i(10, 5), "level": lvl},
-		{"data": air_elem, "name": "Sirocco", "pos": Vector2i(10, 8), "level": lvl},
-		{"data": fire_elem, "name": "Conflagration", "pos": Vector2i(11, 3), "level": lvl},
-		{"data": air_elem, "name": "Whirlwind", "pos": Vector2i(11, 7), "level": lvl},
+		{"data": earth_elem, "name": "Terrath", "pos": Vector2i(11, 5), "level": 8},
+		{"data": earth_elem, "name": "Rubble", "pos": Vector2i(10, 2), "level": 7},
+		{"data": earth_elem, "name": "Gravel", "pos": Vector2i(10, 5), "level": 7},
+		{"data": earth_elem, "name": "Shard", "pos": Vector2i(10, 8), "level": 7},
+		{"data": earth_elem, "name": "Stone", "pos": Vector2i(11, 3), "level": 7},
 	]
 
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The Shrine of Flames. Air and fire converge in a blaze that should be impossible to survive."},
-		{"speaker": "Aldric", "text": "If this is how it ends, it ends fighting."}
+		{"speaker": "", "text": "The temple floor has split open. An earth elemental rose from below — and four lesser forms with it."},
+		{"speaker": "Aldric", "text": "If this is how it ends —"},
+		{"speaker": "Thane", "text": "It is not."},
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The flames gutter out. Silence falls across the city."},
-		{"speaker": "", "text": "The darkness has been vanquished. Every choice left an echo — and yours will ring through the ages."}
+		{"speaker": "", "text": "Terrath crumbles. The ground goes still."},
+		{"speaker": "", "text": "The figure that has been watching since the crossroads — always the same rooftop, always the same nod — is gone."},
+		{"speaker": "Elara", "text": "The castle."},
 	]
 	return config
 
@@ -912,16 +925,16 @@ static func create_final_castle() -> BattleConfig:
 	config.grid_height = 12
 	_build_party_units(config)
 
-	# The Stranger — a fallen court mage, now corrupted — plus elite royal guards.
-	# Level 8 to match progression 8.
-	var mage := load("res://resources/enemies/mage.tres")
-	var fighter := load("res://resources/enemies/fighter.tres")
+	# The Stranger — final boss — plus elite castle guard. Level 8.
+	var stranger := load("res://resources/enemies/the_stranger.tres")
+	var guard_mage := load("res://resources/enemies/guard_mage.tres")
+	var guard_squire := load("res://resources/enemies/guard_squire.tres")
 	config.enemy_units = [
-		{"data": mage, "name": "The Stranger", "pos": Vector2i(12, 5), "level": 8},
-		{"data": fighter, "name": "Royal Guard", "pos": Vector2i(11, 3), "level": 8},
-		{"data": fighter, "name": "Royal Guard", "pos": Vector2i(11, 7), "level": 8},
-		{"data": mage, "name": "Court Mage", "pos": Vector2i(12, 2), "level": 8},
-		{"data": mage, "name": "Court Mage", "pos": Vector2i(12, 8), "level": 8},
+		{"data": stranger, "name": "The Stranger", "pos": Vector2i(12, 5), "level": 8},
+		{"data": guard_mage, "name": "Valdris", "pos": Vector2i(12, 2), "level": 8},
+		{"data": guard_mage, "name": "Valdris", "pos": Vector2i(12, 8), "level": 8},
+		{"data": guard_squire, "name": "Aldous", "pos": Vector2i(11, 3), "level": 8},
+		{"data": guard_squire, "name": "Edmund", "pos": Vector2i(11, 7), "level": 8},
 	]
 
 	config.pre_battle_dialogue = [
