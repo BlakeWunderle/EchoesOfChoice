@@ -77,6 +77,12 @@ func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: 
 
 	if p_team == Enums.Team.PLAYER:
 		_apply_equipment()
+		# Restore persisted HP/MP if available (carries damage from previous battles)
+		var tracked := GameState.get_tracked_hp_mp(p_name)
+		if tracked["hp"] >= 0:
+			health = mini(tracked["hp"], max_health)
+		if tracked["mp"] >= 0:
+			mana = mini(tracked["mp"], max_mana)
 
 
 func initialize_xp(p_xp: int, p_jp: int) -> void:
