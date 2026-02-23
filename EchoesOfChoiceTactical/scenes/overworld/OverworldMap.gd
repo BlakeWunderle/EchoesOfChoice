@@ -18,6 +18,9 @@ const NODE_COMPLETED_COLOR := Color(0.35, 0.7, 0.35)
 var _node_buttons: Dictionary = {}
 var _selected_node_id: String = ""
 var _pulse_time: float = 0.0
+var _last_event_node: String = ""
+
+var _travel_event_scene: PackedScene = preload("res://scenes/story/TravelEvent.tscn")
 
 
 func _ready() -> void:
@@ -158,12 +161,44 @@ func _on_enter_battle() -> void:
 	if siblings.size() > 0:
 		GameState.lock_nodes(siblings)
 
+	# Roll for travel event before entering the node
+	var travel_event: Dictionary = _roll_travel_event(_selected_node_id)
+	if not travel_event.is_empty():
+		_last_event_node = _selected_node_id
+		var popup: Control = _travel_event_scene.instantiate()
+		add_child(popup)
+		popup.show_event(travel_event)
+		await popup.event_finished
+		popup.queue_free()
+
 	if node_data.get("is_battle", true):
 		GameState.current_battle_id = _selected_node_id
 		SceneManager.go_to_party_select()
 	else:
 		GameState.complete_battle(_selected_node_id)
 		SceneManager.go_to_town(_selected_node_id)
+
+
+func _roll_travel_event(node_id: String) -> Dictionary:
+	# No back-to-back events on the same node
+	if node_id == _last_event_node:
+		return {}
+
+	var eligible: Array = []
+	for event in TravelEventData.EVENTS:
+		var node_range: Array = event.get("node_range", [])
+		if node_range.is_empty() or node_id in node_range:
+			eligible.append(event)
+
+	# Shuffle so the same event does not always fire first
+	eligible.shuffle()
+
+	for event in eligible:
+		var chance: float = event.get("trigger_chance", 0.2)
+		if randf() < chance:
+			return event
+
+	return {}
 
 
 func _center_camera_on_latest() -> void:
