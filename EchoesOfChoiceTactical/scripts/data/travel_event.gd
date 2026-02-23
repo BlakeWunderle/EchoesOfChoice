@@ -13,6 +13,7 @@ extends Resource
 # so events can be defined here without creating .tres files.
 const EVENTS: Array = [
 	{
+		"id": "story_stranger",
 		"event_type": "story",
 		"title": "The Stranger",
 		"trigger_chance": 0.25,
@@ -24,6 +25,7 @@ const EVENTS: Array = [
 		],
 	},
 	{
+		"id": "rumor_overheard",
 		"event_type": "rumor",
 		"title": "Overheard at Camp",
 		"trigger_chance": 0.2,
@@ -35,6 +37,7 @@ const EVENTS: Array = [
 		],
 	},
 	{
+		"id": "rest_hollow",
 		"event_type": "rest",
 		"title": "A Quiet Hollow",
 		"trigger_chance": 0.3,
@@ -46,6 +49,7 @@ const EVENTS: Array = [
 		],
 	},
 	{
+		"id": "rumor_lookout",
 		"event_type": "rumor",
 		"title": "The Lookout's Warning",
 		"trigger_chance": 0.2,
@@ -57,6 +61,7 @@ const EVENTS: Array = [
 		],
 	},
 	{
+		"id": "story_what_came_through",
 		"event_type": "story",
 		"title": "What Came Through",
 		"trigger_chance": 0.25,
@@ -68,6 +73,7 @@ const EVENTS: Array = [
 		],
 	},
 	{
+		"id": "merchant_wandering",
 		"event_type": "merchant",
 		"title": "Wandering Merchant",
 		"trigger_chance": 0.15,
@@ -79,6 +85,7 @@ const EVENTS: Array = [
 		],
 	},
 	{
+		"id": "ambush",
 		"event_type": "ambush",
 		"title": "Ambush!",
 		"trigger_chance": 0.12,

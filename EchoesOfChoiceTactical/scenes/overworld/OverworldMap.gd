@@ -207,8 +207,15 @@ func _roll_travel_event(node_id: String) -> Dictionary:
 	eligible.shuffle()
 
 	for event in eligible:
+		# Story and rumor events are one-shot — skip if already fired this run
+		var event_id: String = event.get("id", "")
+		var is_one_shot: bool = event.get("event_type", "") in ["story", "rumor"]
+		if is_one_shot and event_id in GameState.fired_travel_event_ids:
+			continue
 		var chance: float = event.get("trigger_chance", 0.2)
 		if randf() < chance:
+			if not event_id.is_empty():
+				GameState.fired_travel_event_ids.append(event_id)
 			return event
 
 	return {}
