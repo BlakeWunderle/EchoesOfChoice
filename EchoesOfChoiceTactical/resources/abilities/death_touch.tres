@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1")
-ability_name = "Shadow Bolt"
-flavor_text = "A dart of concentrated shadow fired from a dark pact."
+ability_name = "Death Touch"
+flavor_text = "Life force ripped out at the roots."
 modified_stat = 2
-modifier = 5
+modifier = 6
 impacted_turns = 0
 use_on_enemy = true
-mana_cost = 3
-ability_range = 3
+mana_cost = 4
+ability_range = 1
 aoe_shape = 0
 aoe_size = 0
 ability_type = 0

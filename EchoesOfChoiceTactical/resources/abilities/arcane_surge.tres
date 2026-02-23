@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1")
-ability_name = "Shadow Bolt"
-flavor_text = "A dart of concentrated shadow fired from a dark pact."
+ability_name = "Arcane Surge"
+flavor_text = "A burst of raw arcane energy radiates outward in a diamond of force."
 modified_stat = 2
-modifier = 5
+modifier = 7
 impacted_turns = 0
 use_on_enemy = true
-mana_cost = 3
-ability_range = 3
-aoe_shape = 0
-aoe_size = 0
+mana_cost = 5
+ability_range = 2
+aoe_shape = 3
+aoe_size = 1
 ability_type = 0
