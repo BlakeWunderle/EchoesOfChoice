@@ -6,6 +6,7 @@ var turns_remaining: int
 var original_walkable: bool
 var original_movement_cost: int
 var original_elevation: int
+var triggered: bool = false
 
 
 static func create(pos: Vector2i, type: Enums.TileType, duration: int) -> TerrainEffect:

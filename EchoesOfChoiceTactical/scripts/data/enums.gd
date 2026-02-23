@@ -44,6 +44,7 @@ enum TileType {
 	DESTRUCTIBLE,
 	ICE_WALL,
 	FIRE_TILE,
+	TRAP,
 }
 
 enum Facing {

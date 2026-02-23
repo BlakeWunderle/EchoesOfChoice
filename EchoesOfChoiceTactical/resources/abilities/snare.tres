@@ -5,13 +5,15 @@
 [resource]
 script = ExtResource("1")
 ability_name = "Snare"
-flavor_text = "Entangle the enemy, reducing their speed."
+flavor_text = "Place a hidden snare on a tile. The first unit to step on it is stopped in their tracks and loses their action."
 modified_stat = 7
-modifier = 4
-impacted_turns = 2
-use_on_enemy = true
+modifier = 0
+impacted_turns = 0
+use_on_enemy = false
 mana_cost = 3
 ability_range = 4
 aoe_shape = 0
 aoe_size = 0
-ability_type = 3
+ability_type = 4
+terrain_tile = 3
+terrain_duration = 2

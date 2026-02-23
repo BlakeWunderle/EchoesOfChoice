@@ -319,24 +319,28 @@ func place_terrain(pos: Vector2i, tile_type: Enums.TileType, duration: int) -> T
 		Enums.TileType.ICE_WALL:
 			_walkable[i] = false
 			_blocks_los[i] = true
-		Enums.TileType.FIRE_TILE:
-			_movement_cost[i] = 2
 		Enums.TileType.WALL:
 			_walkable[i] = false
 			_blocks_los[i] = true
+		Enums.TileType.FIRE_TILE:
+			_movement_cost[i] = 2
+		Enums.TileType.WATER:
+			_movement_cost[i] = 3
+		Enums.TileType.ROUGH_TERRAIN:
+			_movement_cost[i] = 2
 
 	_terrain_effects.append(effect)
 	return effect
 
 
-# Tick terrain effects at end of round, removing expired ones
+# Tick terrain effects at end of round, removing expired or triggered ones
 func tick_terrain_effects() -> Array[Vector2i]:
 	var removed_positions: Array[Vector2i] = []
 
 	var remaining: Array[TerrainEffect] = []
 	for effect in _terrain_effects:
 		effect.turns_remaining -= 1
-		if effect.turns_remaining <= 0:
+		if effect.turns_remaining <= 0 or effect.triggered:
 			var i := _idx(effect.grid_position)
 			_walkable[i] = effect.original_walkable
 			_movement_cost[i] = effect.original_movement_cost
@@ -347,3 +351,21 @@ func tick_terrain_effects() -> Array[Vector2i]:
 
 	_terrain_effects = remaining
 	return removed_positions
+
+
+# Get all active terrain tile positions of a given type
+func get_active_terrain_positions(tile_type: Enums.TileType) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	for effect in _terrain_effects:
+		if effect.tile_type == tile_type and not effect.triggered:
+			result.append(effect.grid_position)
+	return result
+
+
+# Trigger a trap at a position, marking it for removal. Returns true if a trap was found.
+func trigger_trap(pos: Vector2i) -> bool:
+	for effect in _terrain_effects:
+		if effect.tile_type == Enums.TileType.TRAP and effect.grid_position == pos and not effect.triggered:
+			effect.triggered = true
+			return true
+	return false

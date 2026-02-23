@@ -572,11 +572,24 @@ func _on_wait_pressed() -> void:
 func _on_unit_turn_started(unit: Unit) -> void:
 	camera.position = unit.position
 
+	# Fire tile damage at start of turn
+	var fire_positions := grid.get_active_terrain_positions(Enums.TileType.FIRE_TILE)
+	if unit.grid_position in fire_positions:
+		_apply_fire_damage(unit)
+		if not unit.is_alive:
+			unit.end_turn()
+			return
+
 	if unit.team == Enums.Team.PLAYER:
 		_current_phase = Enums.TurnPhase.AWAITING_INPUT
 		_show_action_menu(unit)
 	else:
 		_start_ai_turn(unit)
+
+
+func _apply_fire_damage(unit: Unit) -> void:
+	var dmg := max(1, 10 - unit.mag_def)
+	unit.take_damage(dmg)
 
 
 func _enter_move_phase(unit: Unit) -> void:
@@ -617,10 +630,10 @@ func _show_targeting(ability: AbilityData, unit: Unit) -> void:
 	var valid: Array[Vector2i] = []
 	for tile in _attack_tiles:
 		var occupant = grid.get_occupant(tile)
-		if ability.use_on_enemy:
+		if ability.is_terrain_ability():
+			valid.append(tile)  # terrain can be placed on any in-range tile
+		elif ability.use_on_enemy:
 			if occupant is Unit and occupant.team != unit.team and occupant.is_alive:
-				valid.append(tile)
-			elif ability.is_terrain_ability():
 				valid.append(tile)
 		else:
 			if occupant is Unit and occupant.team == unit.team and occupant.is_alive:
@@ -681,9 +694,23 @@ func _execute_move(unit: Unit, target_pos: Vector2i) -> void:
 
 	grid.clear_occupant(unit.grid_position)
 
-	# Process reactions along movement path
+	# Check for trap tiles along the path; truncate movement there
+	var trap_positions := grid.get_active_terrain_positions(Enums.TileType.TRAP)
+	var trap_step_idx := -1
+	for i in range(path.size()):
+		if path[i] in trap_positions:
+			trap_step_idx = i
+			break
+
+	var actual_path := path
+	var actual_dest := target_pos
+	if trap_step_idx >= 0:
+		actual_path = path.slice(0, trap_step_idx + 1)
+		actual_dest = path[trap_step_idx]
+
+	# Process reactions along actual movement path
 	var prev := unit.grid_position
-	for step in path:
+	for step in actual_path:
 		# Opportunity attacks when leaving threatened tiles
 		reaction_system.check_opportunity_attacks(unit, prev, step)
 		if not unit.is_alive:
@@ -694,12 +721,19 @@ func _execute_move(unit: Unit, target_pos: Vector2i) -> void:
 			break
 		prev = step
 
-	await unit.animate_move_along_path(path)
-	grid.set_occupant(target_pos, unit)
+	await unit.animate_move_along_path(actual_path)
+	grid.set_occupant(actual_dest, unit)
 	unit.has_moved = true
 
 	if not unit.is_alive:
 		unit.end_turn()
+		return
+
+	# Trigger trap if unit stepped on one — forfeits their action
+	if trap_step_idx >= 0 and grid.trigger_trap(actual_dest):
+		queue_redraw()
+		unit.has_acted = true
+		_enter_facing_phase(unit)
 		return
 
 	if not unit.has_acted:
@@ -812,11 +846,19 @@ func _execute_buff_ability(caster: Unit, ability: AbilityData, tiles: Array[Vect
 	caster.award_ability_xp_jp(ability, false, false)
 
 
-func _execute_terrain_ability(_caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
+func _execute_terrain_ability(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
+	var blocks_movement := ability.terrain_tile == Enums.TileType.WALL \
+		or ability.terrain_tile == Enums.TileType.ICE_WALL
 	for tile in tiles:
-		if grid.is_occupied(tile):
+		if blocks_movement and grid.is_occupied(tile):
 			continue
 		grid.place_terrain(tile, ability.terrain_tile, ability.terrain_duration)
+		# Deal immediate fire damage to any unit already on a lava tile
+		if ability.terrain_tile == Enums.TileType.FIRE_TILE:
+			var occupant = grid.get_occupant(tile)
+			if occupant is Unit and occupant.is_alive:
+				_apply_fire_damage(occupant)
+	caster.award_ability_xp_jp(ability, false, false)
 	queue_redraw()
 
 
@@ -875,8 +917,22 @@ func _start_ai_turn(unit: Unit) -> void:
 		if move_dest != unit.grid_position:
 			var path := grid.find_path(unit.grid_position, move_dest, unit.movement, unit.jump)
 			grid.clear_occupant(unit.grid_position)
+
+			# Check for traps along AI movement path
+			var ai_trap_positions := grid.get_active_terrain_positions(Enums.TileType.TRAP)
+			var ai_trap_idx := -1
+			for i in range(path.size()):
+				if path[i] in ai_trap_positions:
+					ai_trap_idx = i
+					break
+			var ai_actual_path := path
+			var ai_actual_dest := move_dest
+			if ai_trap_idx >= 0:
+				ai_actual_path = path.slice(0, ai_trap_idx + 1)
+				ai_actual_dest = path[ai_trap_idx]
+
 			var prev := unit.grid_position
-			for step in path:
+			for step in ai_actual_path:
 				reaction_system.check_opportunity_attacks(unit, prev, step)
 				if not unit.is_alive:
 					break
@@ -885,8 +941,11 @@ func _start_ai_turn(unit: Unit) -> void:
 					break
 				prev = step
 			if unit.is_alive:
-				await unit.animate_move_along_path(path)
-				grid.set_occupant(move_dest, unit)
+				await unit.animate_move_along_path(ai_actual_path)
+				grid.set_occupant(ai_actual_dest, unit)
+				if ai_trap_idx >= 0 and grid.trigger_trap(ai_actual_dest):
+					queue_redraw()
+					unit.has_acted = true
 			unit.has_moved = true
 
 	# Act-after-move: if didn't act before moving, try from new position
@@ -932,7 +991,14 @@ func _ai_score_action(unit: Unit, ability: AbilityData, target_tile: Vector2i, f
 			var target = grid.get_occupant(tile)
 			if target is Unit and target.is_alive and target.team != unit.team:
 				score += 8.0
-	elif not ability.is_terrain_ability():
+	elif ability.is_terrain_ability():
+		# Score terrain by how many enemies are near the target area
+		for player_unit in turn_manager.player_units:
+			if player_unit.is_alive:
+				var dist := _manhattan_distance(target_tile, player_unit.grid_position)
+				if dist <= 2:
+					score += 6.0
+	else:
 		for tile in aoe_tiles:
 			var target = grid.get_occupant(tile)
 			if target is Unit and target.is_alive and target.team != unit.team:
@@ -1152,3 +1218,13 @@ func _draw() -> void:
 				var elev_pos := Vector2(x * 64 + 2, y * 64 + 12)
 				draw_string(ThemeDB.fallback_font, elev_pos, "h%d" % elevation,
 					HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.5))
+
+	# Draw active terrain effect overlays on top of base tiles
+	for pos in grid.get_active_terrain_positions(Enums.TileType.FIRE_TILE):
+		draw_rect(Rect2(Vector2(pos.x * 64, pos.y * 64), Vector2(64, 64)), Color(1.0, 0.3, 0.0, 0.4), true)
+	for pos in grid.get_active_terrain_positions(Enums.TileType.WATER):
+		draw_rect(Rect2(Vector2(pos.x * 64, pos.y * 64), Vector2(64, 64)), Color(0.1, 0.4, 1.0, 0.4), true)
+	for pos in grid.get_active_terrain_positions(Enums.TileType.ROUGH_TERRAIN):
+		draw_rect(Rect2(Vector2(pos.x * 64, pos.y * 64), Vector2(64, 64)), Color(0.5, 0.35, 0.1, 0.4), true)
+	for pos in grid.get_active_terrain_positions(Enums.TileType.TRAP):
+		draw_rect(Rect2(Vector2(pos.x * 64, pos.y * 64), Vector2(64, 64)), Color(0.8, 0.2, 0.8, 0.45), true)
