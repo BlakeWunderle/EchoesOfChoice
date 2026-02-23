@@ -7,9 +7,9 @@
 script = ExtResource("1")
 class_id = "bone_sentry"
 class_display_name = "Bone Sentry"
-base_max_health = 65
+base_max_health = 52
 base_max_mana = 4
-base_physical_attack = 14
+base_physical_attack = 27
 base_physical_defense = 16
 base_magic_attack = 2
 base_magic_defense = 10

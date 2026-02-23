@@ -8,9 +8,9 @@
 script = ExtResource("1")
 class_id = "satyr"
 class_display_name = "Satyr"
-base_max_health = 56
+base_max_health = 48
 base_max_mana = 8
-base_physical_attack = 17
+base_physical_attack = 25
 base_physical_defense = 12
 base_magic_attack = 6
 base_magic_defense = 8

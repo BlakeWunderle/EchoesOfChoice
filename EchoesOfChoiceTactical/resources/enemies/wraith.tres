@@ -8,11 +8,11 @@
 script = ExtResource("1")
 class_id = "wraith"
 class_display_name = "Wraith"
-base_max_health = 50
+base_max_health = 44
 base_max_mana = 14
 base_physical_attack = 6
 base_physical_defense = 8
-base_magic_attack = 18
+base_magic_attack = 24
 base_magic_defense = 16
 base_speed = 11
 base_crit_chance = 1
