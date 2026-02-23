@@ -32,18 +32,25 @@ const TOWN_BATTLES: Dictionary = {
 
 const TOWN_SHOPS: Dictionary = {
 	"forest_village": [
+		# Tier 0 consumables only
 		"health_potion", "mana_potion",
-		"iron_sword", "oak_staff", "leather_armor",
+		"strength_tonic", "magic_tonic", "guard_tonic",
 	],
 	"crossroads_inn": [
-		"health_potion", "mana_potion", "strength_tonic", "magic_tonic",
-		"iron_sword", "oak_staff", "leather_armor",
-		"iron_shield", "speed_boots", "mage_ring",
+		# Tier 0 + Tier 1 consumables
+		"health_potion", "mana_potion",
+		"strength_tonic", "magic_tonic", "guard_tonic",
+		"greater_health_potion", "greater_mana_potion",
+		"greater_strength_tonic", "greater_magic_tonic", "greater_guard_tonic",
 	],
 	"gate_town": [
-		"health_potion", "mana_potion", "strength_tonic", "magic_tonic",
-		"iron_sword", "oak_staff", "leather_armor",
-		"iron_shield", "speed_boots", "mage_ring",
+		# Tier 0 + Tier 1 + Tier 2 consumables
+		"health_potion", "mana_potion",
+		"strength_tonic", "magic_tonic", "guard_tonic",
+		"greater_health_potion", "greater_mana_potion",
+		"greater_strength_tonic", "greater_magic_tonic", "greater_guard_tonic",
+		"superior_health_potion", "superior_mana_potion",
+		"superior_strength_tonic", "superior_magic_tonic", "superior_guard_tonic",
 	],
 }
 

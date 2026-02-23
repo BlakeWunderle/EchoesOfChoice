@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "superior_guard_tonic"
+display_name = "Superior Guard Tonic"
+description = "A masterwork brew that turns skin to iron, granting +14 physical defense for 3 turns."
+item_type = 0
+buy_price = 170
+sell_price_override = -1
+stat_bonuses = {}
+consumable_effect = 2
+consumable_value = 14
+buff_stat = 1
+buff_turns = 3
