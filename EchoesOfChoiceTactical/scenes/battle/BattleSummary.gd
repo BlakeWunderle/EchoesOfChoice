@@ -14,7 +14,7 @@ func _ready() -> void:
 	)
 
 
-func setup(player_units: Array, gold_earned: int = 0, perma_fallen: Array[String] = []) -> void:
+func setup(player_units: Array, gold_earned: int = 0, perma_fallen: Array[String] = [], item_rewards: Array[String] = []) -> void:
 	for child in unit_list.get_children():
 		child.queue_free()
 
@@ -27,6 +27,19 @@ func setup(player_units: Array, gold_earned: int = 0, perma_fallen: Array[String
 		gold_label.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))
 		gold_row.add_child(gold_label)
 		unit_list.add_child(gold_row)
+
+	for item_id in item_rewards:
+		var item_row := HBoxContainer.new()
+		var item_label := Label.new()
+		var item_res: Resource = GameState.get_item_resource(item_id)
+		var display: String = item_res.display_name if item_res and item_res.get("display_name") else item_id
+		item_label.text = "Item obtained: %s" % display
+		item_label.add_theme_font_size_override("font_size", 15)
+		item_label.add_theme_color_override("font_color", Color(0.6, 1.0, 0.7))
+		item_row.add_child(item_label)
+		unit_list.add_child(item_row)
+
+	if gold_earned > 0 or item_rewards.size() > 0:
 		var sep := HSeparator.new()
 		sep.add_theme_constant_override("separation", 4)
 		unit_list.add_child(sep)

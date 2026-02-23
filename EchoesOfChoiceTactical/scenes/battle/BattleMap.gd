@@ -61,6 +61,7 @@ static var _config_creators: Dictionary = {
 	"elemental_2": BattleConfig.create_elemental_2,
 	"elemental_3": BattleConfig.create_elemental_3,
 	"elemental_4": BattleConfig.create_elemental_4,
+	"final_castle": BattleConfig.create_final_castle,
 }
 
 
@@ -977,13 +978,18 @@ func _on_battle_ended(player_won: bool) -> void:
 			player_units_list.append(child)
 
 	var gold_earned := 0
+	var item_rewards_earned: Array[String] = []
 	if player_won:
 		var node_data: Dictionary = MapData.get_node(GameState.current_battle_id)
 		var battle_prog: int = node_data.get("progression", 0)
-		GameState.advance_progression(battle_prog)
+		if battle_prog >= 0:
+			GameState.advance_progression(battle_prog)
 		gold_earned = int(node_data.get("gold_reward", 0))
 		if gold_earned > 0:
 			GameState.add_gold(gold_earned)
+		for item_id in node_data.get("item_rewards", []):
+			GameState.add_item(item_id)
+			item_rewards_earned.append(item_id)
 
 	var fallen: Array[String] = GameState.update_party_after_battle(player_units_list)
 	var mc_died := fallen.size() > 0 and fallen[0] == GameState.player_name
@@ -1001,8 +1007,8 @@ func _on_battle_ended(player_won: bool) -> void:
 		GameState.set_flag("tutorial_complete")
 		SceneManager.go_to_class_selection()
 	else:
-		if player_won and (_has_xp_gains(player_units_list) or gold_earned > 0 or fallen.size() > 0):
-			_show_battle_summary(player_units_list, gold_earned, fallen)
+		if player_won and (_has_xp_gains(player_units_list) or gold_earned > 0 or fallen.size() > 0 or item_rewards_earned.size() > 0):
+			_show_battle_summary(player_units_list, gold_earned, fallen, item_rewards_earned)
 		elif player_won:
 			GameState.complete_battle(GameState.current_battle_id)
 			SceneManager.go_to_overworld()
@@ -1017,10 +1023,10 @@ func _has_xp_gains(units: Array) -> bool:
 	return false
 
 
-func _show_battle_summary(units: Array, gold_earned: int = 0, fallen: Array[String] = []) -> void:
+func _show_battle_summary(units: Array, gold_earned: int = 0, fallen: Array[String] = [], item_rewards: Array[String] = []) -> void:
 	var summary_scene := preload("res://scenes/battle/BattleSummary.tscn")
 	var summary: Control = summary_scene.instantiate()
-	summary.setup(units, gold_earned, fallen)
+	summary.setup(units, gold_earned, fallen, item_rewards)
 	summary.summary_closed.connect(func():
 		GameState.complete_battle(GameState.current_battle_id)
 		SceneManager.go_to_overworld()

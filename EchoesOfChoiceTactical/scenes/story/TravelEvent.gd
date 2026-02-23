@@ -69,6 +69,12 @@ func _build_ui() -> void:
 		line_label.custom_minimum_size.x = 440
 		vbox.add_child(line_label)
 
+	if event_type == "merchant":
+		var shop_btn := Button.new()
+		shop_btn.text = "Browse Wares"
+		shop_btn.pressed.connect(_on_browse_merchant)
+		vbox.add_child(shop_btn)
+
 	var continue_btn := Button.new()
 	continue_btn.text = "Continue"
 	continue_btn.pressed.connect(_on_continue)
@@ -85,5 +91,26 @@ func _type_color(event_type: String) -> Color:
 		_:         return Color(1.0, 1.0, 1.0)
 
 
+func _on_browse_merchant() -> void:
+	var item_ids: Array = _event_data.get("merchant_items", [])
+	var items: Array = []
+	for item_id in item_ids:
+		var res: Resource = GameState.get_item_resource(item_id)
+		if res:
+			items.append(res)
+	if items.is_empty():
+		return
+	var shop_scene: PackedScene = preload("res://scenes/ui/ShopUI.tscn")
+	var shop: Control = shop_scene.instantiate()
+	shop.setup(items)
+	shop.shop_closed.connect(func():
+		shop.queue_free()
+	)
+	add_child(shop)
+
+
 func _on_continue() -> void:
+	var gold_reward: int = _event_data.get("gold_reward", 0)
+	if gold_reward > 0:
+		GameState.add_gold(gold_reward)
 	event_finished.emit()

@@ -67,4 +67,27 @@ const EVENTS: Array = [
 			{"speaker": "Elara", "text": "Then we are not ending this journey. We are finishing what someone else started."},
 		],
 	},
+	{
+		"event_type": "merchant",
+		"title": "Wandering Merchant",
+		"trigger_chance": 0.15,
+		"node_range": [],
+		"merchant_items": ["phoenix_feather", "elixir", "shadow_cloak"],
+		"dialogue": [
+			{"speaker": "Merchant", "text": "A lucky crossing for both of us. I carry things you will not find in any settled market."},
+			{"speaker": "Merchant", "text": "Take a look. I move on before sunrise."},
+		],
+	},
+	{
+		"event_type": "ambush",
+		"title": "Ambush!",
+		"trigger_chance": 0.12,
+		"node_range": [],
+		"gold_reward": 60,
+		"dialogue": [
+			{"speaker": "", "text": "Footsteps behind. Too fast, too close. Bandits step out from the shadows."},
+			{"speaker": "", "text": "The fight is quick and brutal — but you come out ahead. They were carrying coin."},
+			{"speaker": "", "text": "Gold +60"},
+		],
+	},
 ]

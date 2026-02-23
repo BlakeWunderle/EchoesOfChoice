@@ -313,6 +313,10 @@ func is_item_unlocked(item: Resource) -> bool:
 	return false
 
 
+func get_item_resource(item_id: String) -> Resource:
+	return _load_item(item_id)
+
+
 func _load_item(item_id: String) -> Resource:
 	var path := "res://resources/items/%s.tres" % item_id
 	if ResourceLoader.exists(path):
