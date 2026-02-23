@@ -113,4 +113,7 @@ func _on_continue() -> void:
 	var gold_reward: int = _event_data.get("gold_reward", 0)
 	if gold_reward > 0:
 		GameState.add_gold(gold_reward)
+	var event_type: String = _event_data.get("event_type", "")
+	if event_type == "rest":
+		GameState.heal_party_partial(GameState.REST_HEAL_FRACTION, GameState.REST_HEAL_FRACTION)
 	event_finished.emit()
