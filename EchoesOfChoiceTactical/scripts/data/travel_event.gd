@@ -83,11 +83,9 @@ const EVENTS: Array = [
 		"title": "Ambush!",
 		"trigger_chance": 0.12,
 		"node_range": [],
-		"gold_reward": 60,
 		"dialogue": [
-			{"speaker": "", "text": "Footsteps behind. Too fast, too close. Bandits step out from the shadows."},
-			{"speaker": "", "text": "The fight is quick and brutal — but you come out ahead. They were carrying coin."},
-			{"speaker": "", "text": "Gold +60"},
+			{"speaker": "", "text": "Footsteps behind. Too fast, too close. Enemies step out from the shadows."},
+			{"speaker": "", "text": "There is no way through but forward."},
 		],
 	},
 ]

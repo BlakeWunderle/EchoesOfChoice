@@ -1,6 +1,7 @@
 extends Control
 
 signal event_finished
+signal ambush_battle_requested
 
 var _event_data: Dictionary = {}
 
@@ -76,7 +77,7 @@ func _build_ui() -> void:
 		vbox.add_child(shop_btn)
 
 	var continue_btn := Button.new()
-	continue_btn.text = "Continue"
+	continue_btn.text = "Fight!" if event_type == "ambush" else "Continue"
 	continue_btn.pressed.connect(_on_continue)
 	vbox.add_child(continue_btn)
 
@@ -116,4 +117,7 @@ func _on_continue() -> void:
 	var event_type: String = _event_data.get("event_type", "")
 	if event_type == "rest":
 		GameState.heal_party_partial(GameState.REST_HEAL_FRACTION, GameState.REST_HEAL_FRACTION)
+	elif event_type == "ambush":
+		ambush_battle_requested.emit()
+		return  # OverworldMap handles teardown and routing
 	event_finished.emit()

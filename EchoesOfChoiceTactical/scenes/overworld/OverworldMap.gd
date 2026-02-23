@@ -168,8 +168,21 @@ func _on_enter_battle() -> void:
 		var popup: Control = _travel_event_scene.instantiate()
 		add_child(popup)
 		popup.show_event(travel_event)
+
+		# If the event is an ambush, intercept and reroute to the ambush battle
+		var ambush_triggered := false
+		popup.ambush_battle_requested.connect(func() -> void:
+			ambush_triggered = true
+			popup.event_finished.emit()  # unblock the await below
+		)
+
 		await popup.event_finished
 		popup.queue_free()
+
+		if ambush_triggered:
+			GameState.current_battle_id = "travel_ambush"
+			SceneManager.go_to_party_select()
+			return
 
 	if node_data.get("is_battle", true):
 		GameState.current_battle_id = _selected_node_id
