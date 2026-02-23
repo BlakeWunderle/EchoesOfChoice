@@ -4,15 +4,16 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "shadow_sigil"
-display_name = "Shadow Sigil"
-description = "Taken from the assassin who came in the night. Ghostly swiftness — hard to hit, harder to catch."
+item_id = "guardian_torc"
+display_name = "Guardian's Torc"
+description = "Worn by warriors sworn to protect. Balanced, unwavering defense. Only found with wandering merchants."
 item_type = 1
-buy_price = 0
-sell_price_override = 100
+buy_price = 450
+sell_price_override = 170
 stat_bonuses = {
-8: 3,
-7: 3
+1: 4,
+3: 4,
+10: 8
 }
 unlock_tier = 0
 unlock_class_ids = []

@@ -72,7 +72,7 @@ const EVENTS: Array = [
 		"title": "Wandering Merchant",
 		"trigger_chance": 0.15,
 		"node_range": [],
-		"merchant_items": ["phoenix_feather", "elixir", "shadow_cloak"],
+		"merchant_items": ["phoenix_feather", "elixir", "shadow_cloak", "battlemage_stone", "guardian_torc"],
 		"dialogue": [
 			{"speaker": "Merchant", "text": "A lucky crossing for both of us. I carry things you will not find in any settled market."},
 			{"speaker": "Merchant", "text": "Take a look. I move on before sunrise."},

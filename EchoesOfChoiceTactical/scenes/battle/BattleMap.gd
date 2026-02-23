@@ -980,6 +980,7 @@ func _on_battle_ended(player_won: bool) -> void:
 
 	var gold_earned := 0
 	var item_rewards_earned: Array[String] = []
+	var pending_reward_choices: Array = []
 	if player_won:
 		var node_data: Dictionary = MapData.get_node(GameState.current_battle_id)
 		var battle_prog: int = node_data.get("progression", 0)
@@ -991,6 +992,7 @@ func _on_battle_ended(player_won: bool) -> void:
 		for item_id in node_data.get("item_rewards", []):
 			GameState.add_item(item_id)
 			item_rewards_earned.append(item_id)
+		pending_reward_choices = node_data.get("reward_choices", [])
 
 	var fallen: Array[String] = GameState.update_party_after_battle(player_units_list)
 	var mc_died := fallen.size() > 0 and fallen[0] == GameState.player_name
@@ -1003,6 +1005,12 @@ func _on_battle_ended(player_won: bool) -> void:
 
 	if player_won and _battle_config and _battle_config.post_battle_dialogue.size() > 0:
 		await _show_dialogue(_battle_config.post_battle_dialogue)
+
+	if player_won and pending_reward_choices.size() > 0:
+		var chosen_id: String = await _show_reward_choice(pending_reward_choices)
+		if not chosen_id.is_empty():
+			GameState.add_item(chosen_id)
+			item_rewards_earned.append(chosen_id)
 
 	if GameState.current_battle_id == "tutorial":
 		GameState.set_flag("tutorial_complete")
@@ -1033,6 +1041,21 @@ func _show_battle_summary(units: Array, gold_earned: int = 0, fallen: Array[Stri
 		SceneManager.go_to_overworld()
 	)
 	$HUD.add_child(summary)
+
+
+func _show_reward_choice(choices: Array) -> String:
+	var choice_scene := preload("res://scenes/ui/RewardChoiceUI.tscn")
+	var choice_ui: Control = choice_scene.instantiate()
+	var choice_items: Array = []
+	for item_id: String in choices:
+		var item: Resource = GameState.get_item_resource(item_id)
+		if item:
+			choice_items.append(item)
+	choice_ui.setup(choice_items)
+	$HUD.add_child(choice_ui)
+	var chosen_id: String = await choice_ui.item_chosen
+	choice_ui.queue_free()
+	return chosen_id
 
 
 # --- Grid Drawing ---

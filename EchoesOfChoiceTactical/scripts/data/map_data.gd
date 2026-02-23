@@ -484,7 +484,7 @@ const NODES: Dictionary = {
 		"progression": -1,
 		"is_battle": true,
 		"gold_reward": 75,
-		"item_rewards": ["village_charm"],
+		"reward_choices": ["village_charm", "raiders_bracer", "scouts_hood"],
 	},
 	"inn_ambush": {
 		"display_name": "Inn Ambush",
@@ -497,7 +497,7 @@ const NODES: Dictionary = {
 		"progression": -1,
 		"is_battle": true,
 		"gold_reward": 100,
-		"item_rewards": ["shadow_sigil"],
+		"reward_choices": ["shadow_sigil", "duelist_signet", "scholars_brooch"],
 	},
 	"gate_ambush": {
 		"display_name": "Gate Ambush",
@@ -510,7 +510,7 @@ const NODES: Dictionary = {
 		"progression": -1,
 		"is_battle": true,
 		"gold_reward": 150,
-		"item_rewards": ["gate_seal"],
+		"reward_choices": ["gate_seal", "warlord_crest", "archmage_pendant"],
 	},
 }
 

@@ -4,15 +4,15 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "shadow_sigil"
-display_name = "Shadow Sigil"
-description = "Taken from the assassin who came in the night. Ghostly swiftness — hard to hit, harder to catch."
+item_id = "raiders_bracer"
+display_name = "Raiders' Bracer"
+description = "Stripped from the goblin chieftain after the raid. Radiates raw aggression and quickness."
 item_type = 1
 buy_price = 0
-sell_price_override = 100
+sell_price_override = 70
 stat_bonuses = {
-8: 3,
-7: 3
+0: 4,
+7: 2
 }
 unlock_tier = 0
 unlock_class_ids = []

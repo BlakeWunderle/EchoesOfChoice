@@ -4,15 +4,15 @@
 
 [resource]
 script = ExtResource("1")
-item_id = "shadow_sigil"
-display_name = "Shadow Sigil"
-description = "Taken from the assassin who came in the night. Ghostly swiftness — hard to hit, harder to catch."
+item_id = "duelist_signet"
+display_name = "Duelist's Signet"
+description = "Worn by the blade-for-hire who came in the night. Channels aggression into precise, lethal strikes."
 item_type = 1
 buy_price = 0
-sell_price_override = 100
+sell_price_override = 110
 stat_bonuses = {
-8: 3,
-7: 3
+0: 5,
+12: 2
 }
 unlock_tier = 0
 unlock_class_ids = []

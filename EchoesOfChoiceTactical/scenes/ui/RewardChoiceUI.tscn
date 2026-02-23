@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://reward_choice_ui"]
+
+[ext_resource type="Script" path="res://scenes/ui/RewardChoiceUI.gd" id="1"]
+
+[node name="RewardChoiceUI" type="Control"]
+script = ExtResource("1")
