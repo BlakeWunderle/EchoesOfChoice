@@ -63,6 +63,7 @@ static var _config_creators: Dictionary = {
 	"elemental_3": BattleConfig.create_elemental_3,
 	"elemental_4": BattleConfig.create_elemental_4,
 	"final_castle": BattleConfig.create_final_castle,
+	"travel_ambush": BattleConfig.create_travel_ambush,
 }
 
 
