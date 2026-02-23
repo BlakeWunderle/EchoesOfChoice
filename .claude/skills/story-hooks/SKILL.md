@@ -70,7 +70,7 @@ config.post_battle_dialogue = [
 
 - **Source material**: Use the C# battle's `PreBattleInteraction()` and `PostBattleInteraction()` methods (`EchoesOfChoice/Battles/<Name>Battle.cs`) as inspiration. The tone and key beats should feel the same, but condense to **2–4 exchanges** — the tactical game moves faster than the text version.
 - **Speaker names**: Assign names to characters. Player party members use their class archetype names or the player character's name from `GameState`. Named enemies (e.g. Gaspard the Ringmaster) can speak too.
-- **Pre-battle**: Establish **why the party is here** and what they're about to face. One line of tension is enough.
+- **Pre-battle**: Establish **why the party is here** and what they're about to face. One line of tension is enough. If enemies are displaced, driven, or summoned — say so. One line about *why* they're here (not just *what* they are) makes the encounter feel like story rather than a random encounter. E.g. "Two wyrmlings share this hoard — a fire and a frost, together. They never share." is stronger than "Wyrmlings nest in the cave."
 - **Post-battle**: **Reference the reward** (item, upgrade, gold) and **hint at the next location**. Should feel like closure and a bridge forward.
 - **Tactical tone**: Shorter and punchier than the C# version. Visual combat replaces long descriptions; dialogue handles the emotional beats only.
 - **Not a 1:1 port**: The tactical game's branching structure means some battles occur in different order or context. Adapt the C# narrative beats to the tactical game's actual flow rather than copying verbatim.

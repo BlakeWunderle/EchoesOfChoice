@@ -29,6 +29,8 @@ When adding or editing a battle config, **follow this order**. Skipping steps le
 6. **Add story dialogue**
    Set `config.pre_battle_dialogue` and `config.post_battle_dialogue` arrays. Read the C# `PreBattleInteraction()` / `PostBattleInteraction()` for tone and key beats, then condense to 2–4 exchanges with speaker names. See [story-hooks](../story-hooks/SKILL.md) for the full writing guide and per-battle porting status.
 
+   Ask: **why is this enemy group here, now?** If they were displaced by a larger threat, driven from their territory, or summoned by an unseen hand — add one line of pre-battle dialogue that hints at it. The answer doesn't need to name the cause; it just needs to signal that something is wrong. E.g. "They never share. Something drove them both here." is stronger than simply establishing the encounter.
+
 ## Enemy Units
 
 - **Count**: Use **4 or 5** enemy units per battle.

@@ -142,13 +142,13 @@ static func create_forest() -> BattleConfig:
 	]
 	
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The party makes camp in the forest. No one thinks to hang the food."},
-		{"speaker": "Elara", "text": "Something large is moving toward us."},
-		{"speaker": "", "text": "A mother bear and her pack emerge from the tree line."}
+		{"speaker": "", "text": "The forest goes still — not the quiet of morning, but the kind before something large has already made its decision."},
+		{"speaker": "Elara", "text": "Something drove them from the deeper wood. They are not spooked."},
+		{"speaker": "", "text": "A mother bear crashes through the undergrowth. Her cubs flank the path behind her."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "Thane", "text": "An old house, just off the path. Unlocked."},
-		{"speaker": "", "text": "Inside, each chest holds relics of a past adventurer, waiting for someone who needs them."}
+		{"speaker": "", "text": "Something drove them out of the deeper wood. The village ahead — their chimney smoke is still visible through the trees."}
 	]
 	return config
 
@@ -203,7 +203,7 @@ static func create_smoke() -> BattleConfig:
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "The smoke was a smear on the horizon from the village. Up close it feeds on something big."},
 		{"speaker": "Lyris", "text": "I hear cackling."},
-		{"speaker": "", "text": "Three imps cluster around a growing fire, feeding it everything in reach."}
+		{"speaker": "", "text": "Three imps cluster around a growing fire, chanting in rhythm. They are not just feeding it — they are building something, and it is nearly ready."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "The fire dies to embers. Behind where it burned brightest, a portal pulses with dark energy."},
@@ -232,12 +232,13 @@ static func create_deep_forest() -> BattleConfig:
 	
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "The trees here are ancient, close-set, their canopy blocking the sky. The path narrows to a trail."},
-		{"speaker": "Thane", "text": "A ritual circle. Fresh."},
+		{"speaker": "Thane", "text": "A ritual circle — fresh chalk, recent candles. She is not just living here. She is searching for something."},
 		{"speaker": "", "text": "Lightning splits the sky. A cackle fills the air."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "The witch falls. The forest goes still."},
-		{"speaker": "Aldric", "text": "Storm is coming in fast. That cave mouth up the hill, we make for it."}
+		{"speaker": "Aldric", "text": "Storm is coming in fast. That cave mouth up the hill, we make for it."},
+		{"speaker": "", "text": "Morwen says nothing as she falls. Her ritual circle was oriented east — toward the ruins. Whatever she was tracking, she was not the only one looking."}
 	]
 	return config
 
@@ -267,7 +268,8 @@ static func create_clearing() -> BattleConfig:
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "The enchantment shatters. The clearing flickers and fades like a candle going out."},
-		{"speaker": "", "text": "A path leads downhill into the rocks and a cave mouth, half-hidden by vines."}
+		{"speaker": "", "text": "A path leads downhill into the rocks and a cave mouth, half-hidden by vines."},
+		{"speaker": "Sylvan", "text": "'We were pushed,' the satyr says, before the fae mist takes him. 'From the old wood. Something older was already there.'"}
 	]
 	return config
 
@@ -292,7 +294,7 @@ static func create_ruins() -> BattleConfig:
 	
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "The ruins glow faintly from inside. Every breath comes out as mist."},
-		{"speaker": "Elara", "text": "Shades. The old stonework is full of them."}
+		{"speaker": "Elara", "text": "Shades — but stirred, active. Old shades do not move without a cause. Something disturbed their rest and pointed them outward."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "The last shade dissolves. The glow at the ruins heart intensifies — a portal, pulsing."}
@@ -318,9 +320,8 @@ static func create_cave() -> BattleConfig:
 	]
 	
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "Gold everywhere. Coins, goblets, jewels heaped in glittering mounds."},
-		{"speaker": "Thane", "text": "Something very large lives here. These are not decorative, they are a hoard."},
-		{"speaker": "", "text": "A shadow stretches across the walls. A deep voice rumbles a warning."}
+		{"speaker": "", "text": "Gold everywhere — but two wyrmlings share this hoard. A fire and a frost, together."},
+		{"speaker": "Thane", "text": "They never share. Something drove them both here, something neither of them could face alone."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "Silence. Just the sound of coins sliding off the fallen beasts."},
@@ -347,8 +348,8 @@ static func create_portal() -> BattleConfig:
 	]
 	
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The rift crackles with infernal energy. Whatever is on the other side wants through."},
-		{"speaker": "Aldric", "text": "Hold the line."}
+		{"speaker": "", "text": "A rift, already open. Not breaking through from the other side — held open, from this one, by someone who knew exactly how."},
+		{"speaker": "Aldric", "text": "This was not an accident."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "The last hellion falls. The rift seals shut, but not before something slips through the cracks."},
