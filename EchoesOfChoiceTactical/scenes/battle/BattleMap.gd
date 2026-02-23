@@ -860,62 +860,20 @@ func _on_cursor_cancelled() -> void:
 
 func _start_ai_turn(unit: Unit) -> void:
 	_update_turn_info(unit)
+	await get_tree().create_timer(0.3).timeout
 
-	var closest_player: Unit = null
-	var closest_dist := 999
+	# Act-then-move: try best ability from current position first
+	var pre_action := _ai_best_action(unit, unit.grid_position)
+	if pre_action.size() > 0:
+		_ai_perform_action(unit, pre_action)
+		await get_tree().create_timer(0.3).timeout
 
-	for player in turn_manager.player_units:
-		if player.is_alive:
-			var dist := _manhattan_distance(unit.grid_position, player.grid_position)
-			if dist < closest_dist:
-				closest_dist = dist
-				closest_player = player
-
-	# Try to attack first (act-then-move)
-	var attacked := false
-	if closest_player:
-		for dir in Grid.DIRECTIONS:
-			var adj := unit.grid_position + dir
-			var occupant = grid.get_occupant(adj)
-			if occupant is Unit and occupant.team == Enums.Team.PLAYER and occupant.is_alive:
-				var damage := Combat.calculate_physical_damage(
-					unit.physical_attack, occupant.physical_defense)
-				if Combat.roll_crit(unit.crit_chance):
-					damage += unit.crit_damage
-				if not Combat.roll_dodge(occupant.dodge_chance):
-					damage = reaction_system.process_defensive_reactions(occupant, damage)
-					occupant.take_damage(damage)
-					reaction_system.check_flanking_strikes(unit, occupant)
-					if occupant.is_alive:
-						reaction_system.check_reactive_heal(occupant, damage)
-				unit.set_facing_toward(adj)
-				attacked = true
-				break
-
-	# Then move
-	if closest_player and closest_player.is_alive:
-		var reachable := grid.get_reachable_tiles(unit.grid_position, unit.movement, unit.jump)
-		var best_tile := unit.grid_position
-		var best_dist := _manhattan_distance(unit.grid_position, closest_player.grid_position)
-
-		for tile in reachable:
-			if grid.is_occupied(tile):
-				continue
-			var dist := _manhattan_distance(tile, closest_player.grid_position)
-			if attacked:
-				# If already attacked, move away or stay (basic kiting for ranged)
-				if unit.has_reaction_type(Enums.ReactionType.SNAP_SHOT) and dist > best_dist:
-					best_dist = dist
-					best_tile = tile
-			else:
-				if dist < best_dist:
-					best_dist = dist
-					best_tile = tile
-
-		if best_tile != unit.grid_position:
-			var path := grid.find_path(unit.grid_position, best_tile, unit.movement, unit.jump)
+	# Move to optimal position
+	if unit.is_alive and not unit.has_moved:
+		var move_dest := _ai_best_move(unit)
+		if move_dest != unit.grid_position:
+			var path := grid.find_path(unit.grid_position, move_dest, unit.movement, unit.jump)
 			grid.clear_occupant(unit.grid_position)
-
 			var prev := unit.grid_position
 			for step in path:
 				reaction_system.check_opportunity_attacks(unit, prev, step)
@@ -925,32 +883,135 @@ func _start_ai_turn(unit: Unit) -> void:
 				if not unit.is_alive:
 					break
 				prev = step
-
 			if unit.is_alive:
 				await unit.animate_move_along_path(path)
-				grid.set_occupant(best_tile, unit)
+				grid.set_occupant(move_dest, unit)
+			unit.has_moved = true
 
-		# Attack again if not yet attacked and now adjacent
-		if not attacked and unit.is_alive:
-			for dir in Grid.DIRECTIONS:
-				var adj := unit.grid_position + dir
-				var occupant = grid.get_occupant(adj)
-				if occupant is Unit and occupant.team == Enums.Team.PLAYER and occupant.is_alive:
-					var damage := Combat.calculate_physical_damage(
-						unit.physical_attack, occupant.physical_defense)
-					if Combat.roll_crit(unit.crit_chance):
-						damage += unit.crit_damage
-					if not Combat.roll_dodge(occupant.dodge_chance):
-						damage = reaction_system.process_defensive_reactions(occupant, damage)
-						occupant.take_damage(damage)
-						reaction_system.check_flanking_strikes(unit, occupant)
-						if occupant.is_alive:
-							reaction_system.check_reactive_heal(occupant, damage)
-					unit.set_facing_toward(adj)
-					break
+	# Act-after-move: if didn't act before moving, try from new position
+	if unit.is_alive and not unit.has_acted:
+		var post_action := _ai_best_action(unit, unit.grid_position)
+		if post_action.size() > 0:
+			_ai_perform_action(unit, post_action)
+			await get_tree().create_timer(0.3).timeout
 
-	await get_tree().create_timer(0.6).timeout
+	await get_tree().create_timer(0.4).timeout
 	unit.end_turn()
+
+
+func _ai_best_action(unit: Unit, from_pos: Vector2i) -> Dictionary:
+	var best_score := 0.0
+	var best := {}
+	for ability in unit.get_affordable_abilities():
+		var elev := grid.get_elevation(from_pos)
+		var in_range := grid.get_tiles_in_range(from_pos, ability.ability_range, elev)
+		for tile in in_range:
+			var score := _ai_score_action(unit, ability, tile, from_pos)
+			if score > best_score:
+				best_score = score
+				best = {"ability": ability, "target_pos": tile}
+	return best
+
+
+func _ai_score_action(unit: Unit, ability: AbilityData, target_tile: Vector2i, from_pos: Vector2i) -> float:
+	var aoe_tiles := grid.get_aoe_tiles(target_tile, ability.aoe_shape, ability.aoe_size, from_pos)
+	var score := 0.0
+	if ability.is_heal():
+		for tile in aoe_tiles:
+			var target = grid.get_occupant(tile)
+			if target is Unit and target.is_alive and target.team == unit.team:
+				score += float(target.max_health - target.health)
+	elif ability.ability_type == Enums.AbilityType.BUFF:
+		for tile in aoe_tiles:
+			var target = grid.get_occupant(tile)
+			if target is Unit and target.is_alive and target.team == unit.team:
+				score += 8.0
+	elif ability.ability_type == Enums.AbilityType.DEBUFF:
+		for tile in aoe_tiles:
+			var target = grid.get_occupant(tile)
+			if target is Unit and target.is_alive and target.team != unit.team:
+				score += 8.0
+	elif not ability.is_terrain_ability():
+		for tile in aoe_tiles:
+			var target = grid.get_occupant(tile)
+			if target is Unit and target.is_alive and target.team != unit.team:
+				var damage := Combat.calculate_ability_damage(ability, unit.get_stats_dict(), target.get_stats_dict())
+				var hp_ratio := float(target.health) / float(target.max_health)
+				score += float(damage) * (2.0 - hp_ratio)
+	return score
+
+
+func _ai_perform_action(unit: Unit, action: Dictionary) -> void:
+	var ability: AbilityData = action["ability"]
+	var target_pos: Vector2i = action["target_pos"]
+	unit.set_facing_toward(target_pos)
+	unit.spend_mana(ability.mana_cost)
+	var aoe_tiles := grid.get_aoe_tiles(target_pos, ability.aoe_shape, ability.aoe_size, unit.grid_position)
+	if ability.is_terrain_ability():
+		_execute_terrain_ability(unit, ability, aoe_tiles)
+	elif ability.is_heal():
+		_execute_heal_ability(unit, ability, aoe_tiles)
+	elif ability.is_buff_or_debuff():
+		_execute_buff_ability(unit, ability, aoe_tiles)
+	else:
+		_execute_damage_ability(unit, ability, aoe_tiles)
+	unit.has_acted = true
+
+
+func _ai_best_move(unit: Unit) -> Vector2i:
+	var reachable := grid.get_reachable_tiles(unit.grid_position, unit.movement, unit.jump)
+	var best_tile := unit.grid_position
+	var best_score := -INF
+	for tile in reachable:
+		if grid.is_occupied(tile):
+			continue
+		var score := _ai_score_move_tile(unit, tile)
+		if score > best_score:
+			best_score = score
+			best_tile = tile
+	return best_tile
+
+
+func _ai_score_move_tile(unit: Unit, tile: Vector2i) -> float:
+	var max_range := 1
+	var has_heal := false
+	for ability in unit.abilities:
+		if ability.is_heal():
+			has_heal = true
+		elif not ability.is_buff_or_debuff() and not ability.is_terrain_ability():
+			if ability.ability_range > max_range:
+				max_range = ability.ability_range
+
+	if has_heal:
+		var heal_score := 0.0
+		for ally in turn_manager.enemy_units:
+			if ally.is_alive and ally != unit:
+				var missing := ally.max_health - ally.health
+				if missing > 0:
+					var dist := _manhattan_distance(tile, ally.grid_position)
+					heal_score += float(missing) / float(dist + 1)
+		if heal_score > 0.0:
+			return heal_score
+
+	var weakest: Unit = null
+	var lowest_hp := INF
+	for player in turn_manager.player_units:
+		if player.is_alive and float(player.health) < lowest_hp:
+			lowest_hp = float(player.health)
+			weakest = player
+	if weakest == null:
+		return 0.0
+
+	var dist := _manhattan_distance(tile, weakest.grid_position)
+	if max_range >= 2:
+		var score := 100.0 - float(absi(dist - max_range)) * 10.0
+		if dist == 1:
+			score -= 20.0
+		return score
+	else:
+		if dist == 1:
+			return 100.0
+		return 100.0 - float(dist) * 10.0
 
 
 func _find_party_member_xp(unit_name: String) -> Array:
