@@ -8,9 +8,9 @@
 script = ExtResource("1")
 class_id = "gloom_stalker"
 class_display_name = "Gloom Stalker"
-base_max_health = 70
+base_max_health = 62
 base_max_mana = 8
-base_physical_attack = 20
+base_physical_attack = 32
 base_physical_defense = 14
 base_magic_attack = 6
 base_magic_defense = 10

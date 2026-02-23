@@ -7,9 +7,9 @@
 script = ExtResource("1")
 class_id = "shadow_hound"
 class_display_name = "Shadow Hound"
-base_max_health = 38
+base_max_health = 44
 base_max_mana = 0
-base_physical_attack = 16
+base_physical_attack = 29
 base_physical_defense = 8
 base_magic_attack = 4
 base_magic_defense = 6

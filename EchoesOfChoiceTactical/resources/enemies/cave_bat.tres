@@ -8,9 +8,9 @@
 script = ExtResource("1")
 class_id = "cave_bat"
 class_display_name = "Cave Bat"
-base_max_health = 20
+base_max_health = 26
 base_max_mana = 4
-base_physical_attack = 8
+base_physical_attack = 28
 base_physical_defense = 4
 base_magic_attack = 4
 base_magic_defense = 6

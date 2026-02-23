@@ -7,9 +7,9 @@
 script = ExtResource("1")
 class_id = "night_prowler"
 class_display_name = "Night Prowler"
-base_max_health = 36
+base_max_health = 44
 base_max_mana = 6
-base_physical_attack = 18
+base_physical_attack = 30
 base_physical_defense = 7
 base_magic_attack = 4
 base_magic_defense = 6

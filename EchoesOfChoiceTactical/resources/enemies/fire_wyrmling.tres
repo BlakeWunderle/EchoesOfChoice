@@ -8,11 +8,11 @@
 script = ExtResource("1")
 class_id = "fire_wyrmling"
 class_display_name = "Fire Wyrmling"
-base_max_health = 72
+base_max_health = 62
 base_max_mana = 16
 base_physical_attack = 12
 base_physical_defense = 14
-base_magic_attack = 20
+base_magic_attack = 28
 base_magic_defense = 16
 base_speed = 10
 base_crit_chance = 2
