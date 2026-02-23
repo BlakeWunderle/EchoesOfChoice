@@ -8,6 +8,10 @@ class_name BattleConfig extends Resource
 @export var player_units: Array[Dictionary] = []
 @export var enemy_units: Array[Dictionary] = []
 
+@export_group("Dialogue")
+@export var pre_battle_dialogue: Array[Dictionary] = []   # [{speaker, text}, ...] shown before combat
+@export var post_battle_dialogue: Array[Dictionary] = []  # [{speaker, text}, ...] shown after victory
+
 
 static func create_tutorial() -> BattleConfig:
 	var config := BattleConfig.new()
@@ -105,6 +109,16 @@ static func create_city_street() -> BattleConfig:
 		{"data": tough, "name": "Gang Enforcer", "pos": Vector2i(9, 3), "level": 1},
 		{"data": peddler, "name": "Hex Peddler", "pos": Vector2i(9, 1), "level": 1},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The city streets are quiet tonight. Too quiet."},
+		{"speaker": "Aldric", "text": "Eyes up. Someone has been watching us since we left the gates."},
+		{"speaker": "", "text": "A gang steps out of the shadows and blocks the road to the forest."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "Lyris", "text": "Well. Adventure started sooner than expected."},
+		{"speaker": "Aldric", "text": "Keep moving. Whatever is stirring out there is worse than street thugs."}
+	]
 	return config
 
 
@@ -125,6 +139,16 @@ static func create_forest() -> BattleConfig:
 		{"data": wolf, "name": "Grey Wolf", "pos": Vector2i(8, 1), "level": 1},
 		{"data": wolf, "name": "Timber Wolf", "pos": Vector2i(8, 5), "level": 1},
 		{"data": boar, "name": "Wild Boar", "pos": Vector2i(9, 2), "level": 1},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The party makes camp in the forest. No one thinks to hang the food."},
+		{"speaker": "Elara", "text": "Something large is moving toward us."},
+		{"speaker": "", "text": "A mother bear and her pack emerge from the tree line."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "Thane", "text": "An old house, just off the path. Unlocked."},
+		{"speaker": "", "text": "Inside, each chest holds relics of a past adventurer, waiting for someone who needs them."}
 	]
 	return config
 
@@ -147,6 +171,15 @@ static func create_village_raid() -> BattleConfig:
 		{"data": shaman, "name": "Goblin Shaman", "pos": Vector2i(9, 5), "level": 1},
 		{"data": hobgob, "name": "Hobgoblin Chief", "pos": Vector2i(9, 3), "level": 1},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The forest village is under attack. Goblins have broken through the fence line."},
+		{"speaker": "Villager", "text": "Please, drive them off! They are taking everything!"}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The goblins scatter. The village catches its breath."},
+		{"speaker": "Aldric", "text": "They were organized. Someone sent them."}
+	]
 	return config
 
 
@@ -165,6 +198,16 @@ static func create_smoke() -> BattleConfig:
 		{"data": spirit, "name": "Cinder", "pos": Vector2i(8, 2), "level": 2},
 		{"data": spirit, "name": "Flamekin", "pos": Vector2i(8, 4), "level": 2},
 		{"data": spirit, "name": "Ember", "pos": Vector2i(9, 3), "level": 2},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The smoke was a smear on the horizon from the village. Up close it feeds on something big."},
+		{"speaker": "Lyris", "text": "I hear cackling."},
+		{"speaker": "", "text": "Three imps cluster around a growing fire, feeding it everything in reach."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The fire dies to embers. Behind where it burned brightest, a portal pulses with dark energy."},
+		{"speaker": "Elara", "text": "Nowhere else to go. We step through."}
 	]
 	return config
 
@@ -186,6 +229,16 @@ static func create_deep_forest() -> BattleConfig:
 		{"data": sprite, "name": "Briar", "pos": Vector2i(8, 2), "level": 2},
 		{"data": sprite, "name": "Thorn", "pos": Vector2i(8, 4), "level": 2},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The trees here are ancient, close-set, their canopy blocking the sky. The path narrows to a trail."},
+		{"speaker": "Thane", "text": "A ritual circle. Fresh."},
+		{"speaker": "", "text": "Lightning splits the sky. A cackle fills the air."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The witch falls. The forest goes still."},
+		{"speaker": "Aldric", "text": "Storm is coming in fast. That cave mouth up the hill, we make for it."}
+	]
 	return config
 
 
@@ -205,6 +258,16 @@ static func create_clearing() -> BattleConfig:
 		{"data": pixie, "name": "Jinx", "pos": Vector2i(12, 1), "level": 2},
 		{"data": pixie, "name": "Flitz", "pos": Vector2i(12, 7), "level": 2},
 		{"data": satyr, "name": "Sylvan", "pos": Vector2i(13, 4), "level": 2},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "Music drifts from the clearing. Catchy. A little too catchy."},
+		{"speaker": "Lyris", "text": "My feet are moving on their own. That is not good."},
+		{"speaker": "", "text": "Chains of light snap around the party's wrists. The performers' smiles stretch too wide."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The enchantment shatters. The clearing flickers and fades like a candle going out."},
+		{"speaker": "", "text": "A path leads downhill into the rocks and a cave mouth, half-hidden by vines."}
 	]
 	return config
 
@@ -226,6 +289,14 @@ static func create_ruins() -> BattleConfig:
 		{"data": wraith, "name": "Shade Wraith", "pos": Vector2i(10, 7), "level": 2},
 		{"data": sentry, "name": "Bone Sentry", "pos": Vector2i(11, 2), "level": 2},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The ruins glow faintly from inside. Every breath comes out as mist."},
+		{"speaker": "Elara", "text": "Shades. The old stonework is full of them."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The last shade dissolves. The glow at the ruins heart intensifies — a portal, pulsing."}
+	]
 	return config
 
 
@@ -245,6 +316,16 @@ static func create_cave() -> BattleConfig:
 		{"data": fire_wyrm, "name": "Raysses", "pos": Vector2i(7, 2), "level": 3},
 		{"data": frost_wyrm, "name": "Sythara", "pos": Vector2i(7, 4), "level": 3},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "Gold everywhere. Coins, goblets, jewels heaped in glittering mounds."},
+		{"speaker": "Thane", "text": "Something very large lives here. These are not decorative, they are a hoard."},
+		{"speaker": "", "text": "A shadow stretches across the walls. A deep voice rumbles a warning."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "Silence. Just the sound of coins sliding off the fallen beasts."},
+		{"speaker": "Elara", "text": "Two wyrmlings. Old ones. They do not nest near nothing — something darker stirred them here."}
+	]
 	return config
 
 
@@ -263,6 +344,15 @@ static func create_portal() -> BattleConfig:
 		{"data": fiendling, "name": "Dantalion", "pos": Vector2i(8, 7), "level": 3},
 		{"data": hellion, "name": "Abyzou", "pos": Vector2i(9, 3), "level": 3},
 		{"data": hellion, "name": "Purson", "pos": Vector2i(9, 5), "level": 3},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The rift crackles with infernal energy. Whatever is on the other side wants through."},
+		{"speaker": "Aldric", "text": "Hold the line."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The last hellion falls. The rift seals shut, but not before something slips through the cracks."},
+		{"speaker": "Thane", "text": "The crossroads cannot be far. We need to regroup."}
 	]
 	return config
 
@@ -284,6 +374,14 @@ static func create_inn_ambush() -> BattleConfig:
 		{"data": prowler, "name": "Night Prowler", "pos": Vector2i(8, 3), "level": 3},
 		{"data": moth, "name": "Dusk Moth", "pos": Vector2i(9, 2), "level": 3},
 		{"data": stalker, "name": "Gloom Stalker", "pos": Vector2i(9, 4), "level": 3},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The inn goes quiet the wrong way. Shadows peel away from the walls."},
+		{"speaker": "Lyris", "text": "We were followed."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The creatures dissolve into nothing. Whoever sent them knows exactly where you are."}
 	]
 	return config
 
@@ -308,6 +406,15 @@ static func create_shore() -> BattleConfig:
 		{"data": nymph, "name": "Nerida", "pos": Vector2i(8, 2), "level": lvl},
 		{"data": nymph, "name": "Coralie", "pos": Vector2i(8, 4), "level": lvl},
 		{"data": siren, "name": "Lorelei", "pos": Vector2i(9, 3), "level": lvl},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "Salt hangs heavy in the air. The coast road is beautiful — and something beneath the waves is watching."},
+		{"speaker": "", "text": "Sirens break the surface, their song cutting through the sound of the waves."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The last siren slips beneath the water. The coast opens ahead."},
+		{"speaker": "Aldric", "text": "The beach. And something on the horizon — a shipwreck."}
 	]
 	return config
 
@@ -334,6 +441,14 @@ static func create_beach() -> BattleConfig:
 		{"data": captain, "name": "Greybeard", "pos": Vector2i(9, 2), "level": lvl},
 		{"data": kraken, "name": "Abyssal", "pos": Vector2i(9, 3), "level": lvl},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "A shipwreck juts from the shallows. Too intact to have washed in naturally."},
+		{"speaker": "Lyris", "text": "Figures dropping from the rigging. That is a crew."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The pirates scatter. The coast road converges ahead — a crossing where all three paths meet."}
+	]
 	return config
 
 
@@ -358,6 +473,14 @@ static func create_cemetery_battle() -> BattleConfig:
 		{"data": shade, "name": "Duskward", "pos": Vector2i(8, 2), "level": lvl},
 		{"data": shade, "name": "Hollow", "pos": Vector2i(8, 4), "level": lvl},
 		{"data": wraith, "name": "Joris", "pos": Vector2i(9, 3), "level": lvl},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The old cemetery. Headstones lean at wrong angles, names worn away by rain."},
+		{"speaker": "Elara", "text": "The dead here... they are not resting."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The last revenant crumbles. Beyond the cemetery wall, lantern light from a carnival tent sways in the wind."}
 	]
 	return config
 
@@ -384,6 +507,15 @@ static func create_box_battle() -> BattleConfig:
 		{"data": harlequin, "name": "Pierrot", "pos": Vector2i(8, 5), "level": lvl},
 		{"data": ringmaster, "name": "Gaspard", "pos": Vector2i(9, 3), "level": lvl},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The carnival has set up between the cemetery and the road. Bright colors, loud music."},
+		{"speaker": "Thane", "text": "The ringmaster is watching us. He knows we came through the cemetery."},
+		{"speaker": "Gaspard", "text": "What a perfect addition to tonight's show."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The troupe collapses. The road beyond the tents converges with the others — the Mirror."}
+	]
 	return config
 
 
@@ -409,6 +541,15 @@ static func create_army_battle() -> BattleConfig:
 		{"data": chaplain, "name": "Vestal", "pos": Vector2i(9, 2), "level": lvl},
 		{"data": commander, "name": "Varro", "pos": Vector2i(9, 3), "level": lvl},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "An encampment blocks the road. Organized — tents in rows, a command post at center."},
+		{"speaker": "Varro", "text": "This road is closed by order of the Commanders Guild. Turn back."},
+		{"speaker": "Aldric", "text": "We are not turning back."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The commander falls. The encampment scatters. The laboratory beyond the tree line waits."}
+	]
 	return config
 
 
@@ -433,6 +574,16 @@ static func create_lab_battle() -> BattleConfig:
 		{"data": ironclad, "name": "Acrid", "pos": Vector2i(9, 3), "level": lvl},
 		{"data": android, "name": "Unit Seven", "pos": Vector2i(8, 5), "level": lvl},
 		{"data": machinist, "name": "Cog", "pos": Vector2i(8, 4), "level": lvl},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The laboratory. Clean lines and locked doors — and things inside that move without being alive."},
+		{"speaker": "Thane", "text": "Androids. Machinists. Someone built this place for a purpose."},
+		{"speaker": "Deus", "text": "Unauthorized personnel detected. Engaging."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The constructs power down. The lab is quiet — but its records speak of something the encampment was protecting."},
+		{"speaker": "Elara", "text": "The Mirror crossing is ahead. All three roads meet there."}
 	]
 	return config
 
@@ -460,6 +611,15 @@ static func create_mirror_battle() -> BattleConfig:
 		{"data": moth, "name": "Dusk", "pos": Vector2i(12, 5), "level": lvl},
 		{"data": stalker, "name": "Tenebris", "pos": Vector2i(13, 4), "level": lvl},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "All three roads converge at a dark crossing. Shadows move in the space between the lights."},
+		{"speaker": "Lyris", "text": "Those shadows have our shapes."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The shadow-selves dissolve. The crossing clears."},
+		{"speaker": "Aldric", "text": "Gate Town is ahead. Last chance to rest before we take the city gates."}
+	]
 	return config
 
 
@@ -479,6 +639,14 @@ static func create_gate_ambush() -> BattleConfig:
 		{"data": tough, "name": "Gate Thug", "pos": Vector2i(8, 5), "level": 5},
 		{"data": peddler, "name": "Cursed Peddler", "pos": Vector2i(9, 2), "level": 5},
 		{"data": prowler, "name": "Shadow at the Gate", "pos": Vector2i(9, 4), "level": 5},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "Gate Town's outer road. Someone knew you were coming."},
+		{"speaker": "", "text": "Night prowlers drop from the rooftops."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The last of them flees. Gate Town is secure — for now."}
 	]
 	return config
 
@@ -501,6 +669,14 @@ static func create_return_city_1() -> BattleConfig:
 		{"data": mage, "name": "Gate Warden", "pos": Vector2i(8, 3), "level": 6},
 		{"data": entertainer, "name": "East Gate Sentinel", "pos": Vector2i(9, 4), "level": 6},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The eastern approach. Light and dark clash in the streets ahead."},
+		{"speaker": "Aldric", "text": "Push through. We take the gate."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The gate falls. The road to the shrine opens."}
+	]
 	return config
 
 
@@ -521,6 +697,14 @@ static func create_return_city_2() -> BattleConfig:
 		{"data": peddler, "name": "Hex Keeper", "pos": Vector2i(8, 4), "level": 6},
 		{"data": peddler, "name": "North Gate Cursed", "pos": Vector2i(8, 5), "level": 6},
 		{"data": prowler, "name": "Shadow at North Gate", "pos": Vector2i(9, 4), "level": 6},
+	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The northern road. Druids and necromancers vie for control of the approach."},
+		{"speaker": "Thane", "text": "They are using the ley lines beneath the street. This is planned."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The north road is clear. The shrine ahead."}
 	]
 	return config
 
@@ -543,6 +727,14 @@ static func create_return_city_3() -> BattleConfig:
 		{"data": thug, "name": "Gate Ruffian", "pos": Vector2i(8, 5), "level": 6},
 		{"data": goblin, "name": "Gate Scout", "pos": Vector2i(9, 4), "level": 6},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The western passage. Street toughs and shadow-workers block the way."},
+		{"speaker": "Lyris", "text": "More of them than I would like."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "West gate is ours."}
+	]
 	return config
 
 
@@ -564,8 +756,148 @@ static func create_return_city_4() -> BattleConfig:
 		{"data": moth, "name": "Dusk at the Gate", "pos": Vector2i(8, 3), "level": 6},
 		{"data": stalker, "name": "Gloom Keeper", "pos": Vector2i(9, 4), "level": 6},
 	]
+	
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The southern bridge. A shaman and warlock hold either end."},
+		{"speaker": "Elara", "text": "Coordinated attack. They are expecting us."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The bridge is clear. The last shrine awaits."}
+	]
 	return config
 
+
+
+static func create_elemental_1() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "elemental_1"
+	config.grid_width = 12
+	config.grid_height = 10
+	_build_party_units(config)
+
+	var node_data: Dictionary = MapData.get_node("elemental_1")
+	var progression: int = node_data.get("progression", 7)
+	var lvl: int = maxi(1, progression)
+
+	# Shrine of Storms: mix of elemental types
+	var air_elem := load("res://resources/enemies/air_elemental.tres")
+	var fire_elem := load("res://resources/enemies/fire_elemental.tres")
+	var water_elem := load("res://resources/enemies/water_elemental.tres")
+	config.enemy_units = [
+		{"data": air_elem, "name": "Zephyr", "pos": Vector2i(10, 2), "level": lvl},
+		{"data": water_elem, "name": "Tide", "pos": Vector2i(10, 5), "level": lvl},
+		{"data": fire_elem, "name": "Inferno", "pos": Vector2i(10, 8), "level": lvl},
+		{"data": air_elem, "name": "Gale", "pos": Vector2i(11, 4), "level": lvl},
+		{"data": fire_elem, "name": "Pyre", "pos": Vector2i(11, 6), "level": lvl},
+	]
+
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The Shrine of Storms. Air, water, and fire called here by something that wants the city to burn."},
+		{"speaker": "Elara", "text": "Three at once. We have faced worse. Have we not?"}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The elementals disperse. The shrine goes dark. Whatever called them here is gone."},
+		{"speaker": "Aldric", "text": "It is over. We made it."}
+	]
+	return config
+
+static func create_elemental_2() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "elemental_2"
+	config.grid_width = 12
+	config.grid_height = 10
+	_build_party_units(config)
+
+	var node_data: Dictionary = MapData.get_node("elemental_2")
+	var progression: int = node_data.get("progression", 7)
+	var lvl: int = maxi(1, progression)
+
+	# Shrine of Tides: mix of elemental types
+	var air_elem := load("res://resources/enemies/air_elemental.tres")
+	var fire_elem := load("res://resources/enemies/fire_elemental.tres")
+	var water_elem := load("res://resources/enemies/water_elemental.tres")
+	config.enemy_units = [
+		{"data": water_elem, "name": "Deluge", "pos": Vector2i(10, 2), "level": lvl},
+		{"data": fire_elem, "name": "Scorch", "pos": Vector2i(10, 5), "level": lvl},
+		{"data": water_elem, "name": "Surge", "pos": Vector2i(10, 8), "level": lvl},
+		{"data": fire_elem, "name": "Ember Lord", "pos": Vector2i(11, 3), "level": lvl},
+		{"data": water_elem, "name": "Maelstrom", "pos": Vector2i(11, 7), "level": lvl},
+	]
+
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The Shrine of Tides. The water rises — something vast stirs beneath."},
+		{"speaker": "Thane", "text": "Fire and water. Opposing forces turned against the city. Intentional."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The tides recede. The shrine falls silent."},
+		{"speaker": "", "text": "Every choice made along the way echoes here, in this stillness."}
+	]
+	return config
+
+static func create_elemental_3() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "elemental_3"
+	config.grid_width = 12
+	config.grid_height = 10
+	_build_party_units(config)
+
+	var node_data: Dictionary = MapData.get_node("elemental_3")
+	var progression: int = node_data.get("progression", 7)
+	var lvl: int = maxi(1, progression)
+
+	# Shrine of Winds: mix of elemental types
+	var air_elem := load("res://resources/enemies/air_elemental.tres")
+	var fire_elem := load("res://resources/enemies/fire_elemental.tres")
+	var water_elem := load("res://resources/enemies/water_elemental.tres")
+	config.enemy_units = [
+		{"data": air_elem, "name": "Cyclone", "pos": Vector2i(10, 2), "level": lvl},
+		{"data": water_elem, "name": "Torrent", "pos": Vector2i(10, 5), "level": lvl},
+		{"data": air_elem, "name": "Squall", "pos": Vector2i(10, 8), "level": lvl},
+		{"data": water_elem, "name": "Riptide", "pos": Vector2i(11, 4), "level": lvl},
+		{"data": air_elem, "name": "Vortex", "pos": Vector2i(11, 6), "level": lvl},
+	]
+
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The Shrine of Winds. A vortex of air and water fills the chamber."},
+		{"speaker": "Lyris", "text": "We are in the eye of it. No retreating now."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The vortex dies. The city breathes again."}
+	]
+	return config
+
+static func create_elemental_4() -> BattleConfig:
+	var config := BattleConfig.new()
+	config.battle_id = "elemental_4"
+	config.grid_width = 12
+	config.grid_height = 10
+	_build_party_units(config)
+
+	var node_data: Dictionary = MapData.get_node("elemental_4")
+	var progression: int = node_data.get("progression", 7)
+	var lvl: int = maxi(1, progression)
+
+	# Shrine of Flames: mix of elemental types
+	var air_elem := load("res://resources/enemies/air_elemental.tres")
+	var fire_elem := load("res://resources/enemies/fire_elemental.tres")
+	var water_elem := load("res://resources/enemies/water_elemental.tres")
+	config.enemy_units = [
+		{"data": air_elem, "name": "Tempest", "pos": Vector2i(10, 2), "level": lvl},
+		{"data": fire_elem, "name": "Blaze", "pos": Vector2i(10, 5), "level": lvl},
+		{"data": air_elem, "name": "Sirocco", "pos": Vector2i(10, 8), "level": lvl},
+		{"data": fire_elem, "name": "Conflagration", "pos": Vector2i(11, 3), "level": lvl},
+		{"data": air_elem, "name": "Whirlwind", "pos": Vector2i(11, 7), "level": lvl},
+	]
+
+	config.pre_battle_dialogue = [
+		{"speaker": "", "text": "The Shrine of Flames. Air and fire converge in a blaze that should be impossible to survive."},
+		{"speaker": "Aldric", "text": "If this is how it ends, it ends fighting."}
+	]
+	config.post_battle_dialogue = [
+		{"speaker": "", "text": "The flames gutter out. Silence falls across the city."},
+		{"speaker": "", "text": "The darkness has been vanquished. Every choice left an echo — and yours will ring through the ages."}
+	]
+	return config
 
 static func create_placeholder(battle_id: String) -> BattleConfig:
 	var config := BattleConfig.new()

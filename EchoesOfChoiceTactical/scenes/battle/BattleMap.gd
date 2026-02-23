@@ -12,7 +12,9 @@ extends Node2D
 var grid: Grid
 var reaction_system: ReactionSystem
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
+var _dialogue_box_scene: PackedScene = preload("res://scenes/ui/DialogueBox.tscn")
 
+var _battle_config: BattleConfig
 var _current_phase: Enums.TurnPhase = Enums.TurnPhase.AWAITING_INPUT
 var _selected_ability: AbilityData = null
 var _selected_item: ItemData = null
@@ -55,6 +57,10 @@ static var _config_creators: Dictionary = {
 	"return_city_2": BattleConfig.create_return_city_2,
 	"return_city_3": BattleConfig.create_return_city_3,
 	"return_city_4": BattleConfig.create_return_city_4,
+	"elemental_1": BattleConfig.create_elemental_1,
+	"elemental_2": BattleConfig.create_elemental_2,
+	"elemental_3": BattleConfig.create_elemental_3,
+	"elemental_4": BattleConfig.create_elemental_4,
 }
 
 
@@ -128,11 +134,11 @@ func _setup_test_battle() -> void:
 	grid_cursor.cancelled.connect(_on_cursor_cancelled)
 
 	_build_action_panel()
-
-	turn_manager.run_battle()
+	_begin_battle()
 
 
 func _setup_from_config(config: BattleConfig) -> void:
+	_battle_config = config
 	grid = Grid.new(config.grid_width, config.grid_height)
 	reaction_system = ReactionSystem.new(grid)
 
@@ -167,7 +173,21 @@ func _setup_from_config(config: BattleConfig) -> void:
 	grid_cursor.cancelled.connect(_on_cursor_cancelled)
 
 	_build_action_panel()
+	_begin_battle()
+
+
+func _begin_battle() -> void:
+	if _battle_config and _battle_config.pre_battle_dialogue.size() > 0:
+		await _show_dialogue(_battle_config.pre_battle_dialogue)
 	turn_manager.run_battle()
+
+
+func _show_dialogue(lines: Array[Dictionary]) -> void:
+	var dialogue_box: Control = _dialogue_box_scene.instantiate()
+	$HUD.add_child(dialogue_box)
+	dialogue_box.show_dialogue(lines)
+	await dialogue_box.dialogue_finished
+	dialogue_box.queue_free()
 
 
 func _create_test_fighter(display_name: String, hp: int, mp: int, p_atk: int, p_def: int,
@@ -973,6 +993,9 @@ func _on_battle_ended(player_won: bool) -> void:
 	if mc_died:
 		SceneManager.go_to_game_over()
 		return
+
+	if player_won and _battle_config and _battle_config.post_battle_dialogue.size() > 0:
+		await _show_dialogue(_battle_config.post_battle_dialogue)
 
 	if GameState.current_battle_id == "tutorial":
 		GameState.set_flag("tutorial_complete")
