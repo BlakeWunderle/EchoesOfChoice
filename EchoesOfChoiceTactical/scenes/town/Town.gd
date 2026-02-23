@@ -10,6 +10,7 @@ extends Control
 @onready var continue_button: Button = $Panel/MarginContainer/VBox/Buttons/ContinueButton
 
 var _town_id: String = ""
+var _dialogue_box_scene: PackedScene = preload("res://scenes/ui/DialogueBox.tscn")
 
 const TOWN_BATTLES: Dictionary = {
 	"forest_village": {
@@ -72,6 +73,8 @@ func _ready() -> void:
 		shop_button.visible = false
 
 	recruit_button.pressed.connect(_on_recruit_pressed)
+
+	_populate_npcs(node_data)
 
 	continue_button.pressed.connect(_on_continue)
 
@@ -158,6 +161,56 @@ func _on_recruit_pressed() -> void:
 		_populate_party_list()
 	)
 	add_child(recruit)
+
+
+func _populate_npcs(node_data: Dictionary) -> void:
+	var npcs: Array = node_data.get("npcs", [])
+	if npcs.is_empty():
+		return
+
+	var buttons_container: Node = optional_battle_button.get_parent()
+	var vbox: Node = buttons_container.get_parent()
+
+	var separator := HSeparator.new()
+	vbox.add_child(separator)
+	vbox.move_child(separator, buttons_container.get_index())
+
+	var npc_header := Label.new()
+	npc_header.text = "— Townsfolk —"
+	npc_header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	npc_header.add_theme_font_size_override("font_size", 16)
+	vbox.add_child(npc_header)
+	vbox.move_child(npc_header, separator.get_index() + 1)
+
+	var npc_container := VBoxContainer.new()
+	npc_container.add_theme_constant_override("separation", 6)
+	vbox.add_child(npc_container)
+	vbox.move_child(npc_container, npc_header.get_index() + 1)
+
+	for npc in npcs:
+		var requires_flag: String = npc.get("requires_flag", "")
+		if not requires_flag.is_empty() and not GameState.story_flags.get(requires_flag, false):
+			continue
+
+		var btn := Button.new()
+		btn.text = "%s (%s)" % [npc.get("name", "???"), npc.get("role", "")]
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		var npc_copy: Dictionary = npc
+		btn.pressed.connect(func(): _on_npc_pressed(npc_copy))
+		npc_container.add_child(btn)
+
+
+func _on_npc_pressed(npc: Dictionary) -> void:
+	var lines_raw: Array = npc.get("lines", [])
+	var lines: Array[Dictionary] = []
+	for text in lines_raw:
+		lines.append({"speaker": npc.get("name", ""), "text": text})
+
+	var dialogue_box: Control = _dialogue_box_scene.instantiate()
+	add_child(dialogue_box)
+	dialogue_box.show_dialogue(lines)
+	await dialogue_box.dialogue_finished
+	dialogue_box.queue_free()
 
 
 func _on_continue() -> void:

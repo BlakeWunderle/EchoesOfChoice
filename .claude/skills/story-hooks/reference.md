@@ -39,31 +39,31 @@ Status per battle: **desc** = node description written, **dlg** = pre/post battl
 
 | Battle ID | Act | desc | dlg | C# Source |
 |-----------|-----|------|-----|-----------|
-| city_street | 1 | ✅ | ⬜ | CityStreetBattle.cs |
-| forest | 1 | ✅ | ⬜ | ForestBattle.cs |
-| village_raid | 1 | ✅ | ⬜ | (town: forest_village) |
-| smoke | 2 | ✅ | ⬜ | SmokeBattle.cs |
-| deep_forest | 2 | ✅ | ⬜ | DeepForestBattle.cs |
-| clearing | 2 | ✅ | ⬜ | ClearingBattle.cs |
-| ruins | 2 | ✅ | ⬜ | RuinsBattle.cs |
-| cave | 2 | ✅ | ⬜ | CaveBattle.cs |
-| inn_ambush | 2 | ✅ | ⬜ | (crossroads_inn ambush) |
-| portal | 2→3 | ✅ | ⬜ | PortalBattle.cs |
-| shore | 3 | ✅ | ⬜ | ShoreBattle.cs |
-| beach | 3 | ✅ | ⬜ | BeachBattle.cs |
-| cemetery_battle | 3 | ✅ | ⬜ | CemeteryBattle.cs |
-| box_battle | 4 | ✅ | ⬜ | BoxBattle.cs |
-| army_battle | 4 | ✅ | ⬜ | ArmyBattle.cs |
-| lab_battle | 4 | ✅ | ⬜ | LabBattle.cs |
-| mirror_battle | 4 | ✅ | ⬜ | MirrorBattle.cs |
-| gate_ambush | 5 | ✅ | ⬜ | (gate_town) |
-| return_city_1 | 5 | ✅ | ⬜ | ReturnToCityBattle1.cs |
-| return_city_2 | 5 | ✅ | ⬜ | ReturnToCityBattle2.cs |
-| return_city_3 | 5 | ✅ | ⬜ | ReturnToCityBattle3.cs |
-| return_city_4 | 5 | ✅ | ⬜ | ReturnToCityBattle4.cs |
-| elemental_1 | 5 | ⬜ | ⬜ | ElementalBattle1.cs |
-| elemental_2 | 5 | ⬜ | ⬜ | ElementalBattle2.cs |
-| elemental_3 | 5 | ⬜ | ⬜ | ElementalBattle3.cs |
-| elemental_4 | 5 | ⬜ | ⬜ | ElementalBattle4.cs |
+| city_street | 1 | ✅ | ✅ | CityStreetBattle.cs |
+| forest | 1 | ✅ | ✅ | ForestBattle.cs |
+| village_raid | 1 | ✅ | ✅ | (town: forest_village) |
+| smoke | 2 | ✅ | ✅ | SmokeBattle.cs |
+| deep_forest | 2 | ✅ | ✅ | DeepForestBattle.cs |
+| clearing | 2 | ✅ | ✅ | ClearingBattle.cs |
+| ruins | 2 | ✅ | ✅ | RuinsBattle.cs |
+| cave | 2 | ✅ | ✅ | CaveBattle.cs |
+| inn_ambush | 2 | ✅ | ✅ | (crossroads_inn ambush) |
+| portal | 2→3 | ✅ | ✅ | PortalBattle.cs |
+| shore | 3 | ✅ | ✅ | ShoreBattle.cs |
+| beach | 3 | ✅ | ✅ | BeachBattle.cs |
+| cemetery_battle | 3 | ✅ | ✅ | CemeteryBattle.cs |
+| box_battle | 4 | ✅ | ✅ | BoxBattle.cs |
+| army_battle | 4 | ✅ | ✅ | ArmyBattle.cs |
+| lab_battle | 4 | ✅ | ✅ | LabBattle.cs |
+| mirror_battle | 4 | ✅ | ✅ | MirrorBattle.cs |
+| gate_ambush | 5 | ✅ | ✅ | (gate_town) |
+| return_city_1 | 5 | ✅ | ✅ | ReturnToCityBattle1.cs |
+| return_city_2 | 5 | ✅ | ✅ | ReturnToCityBattle2.cs |
+| return_city_3 | 5 | ✅ | ✅ | ReturnToCityBattle3.cs |
+| return_city_4 | 5 | ✅ | ✅ | ReturnToCityBattle4.cs |
+| elemental_1 | 5 | ✅ | ✅ | ElementalBattle1.cs |
+| elemental_2 | 5 | ✅ | ✅ | ElementalBattle2.cs |
+| elemental_3 | 5 | ✅ | ✅ | ElementalBattle3.cs |
+| elemental_4 | 5 | ✅ | ✅ | ElementalBattle4.cs |
 
 Mark ⬜ → ✅ as work is done. Update this table when adding or completing dialogue for a battle.

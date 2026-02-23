@@ -75,6 +75,33 @@ const NODES: Dictionary = {
 		"progression": 1,
 		"is_battle": false,
 		"gold_reward": 0,
+		"npcs": [
+			{
+				"name": "Maren",
+				"role": "Innkeeper",
+				"lines": [
+					"The cave in the hills? Aye, it's there. Good shelter — unless the wyrmlings have already claimed it.",
+					"Word from the east: there's a portal shrine along the smoke road. Old magic. Hard to say what's on the other side.",
+				],
+			},
+			{
+				"name": "Corvin",
+				"role": "Scout",
+				"lines": [
+					"I followed tracks three hours into the deep wood before I turned back. Something big. Something old.",
+					"Take the clearing path if you fancy dancing. The fae there put on quite a show — last party didn't make it offstage.",
+				],
+			},
+			{
+				"name": "Sela",
+				"role": "Village Elder",
+				"lines": [
+					"Four paths out of here. Two lead to the cave, two lead to a portal. All of them lead somewhere dangerous.",
+					"We defended this village when the goblins came. Make sure it meant something.",
+				],
+				"requires_flag": "village_defended",
+			},
+		],
 	},
 
 	# --- Progression 2: Four-way branch ---
@@ -163,6 +190,32 @@ const NODES: Dictionary = {
 		"progression": 3,
 		"is_battle": false,
 		"gold_reward": 0,
+		"npcs": [
+			{
+				"name": "Bram",
+				"role": "Innkeeper",
+				"lines": [
+					"Three roads from here. The shore has sirens — beautiful, deadly. The cemetery is worse. The encampment is organized trouble.",
+					"First safe bed since the forest village. Sleep well. The Mirror is ahead, and nothing is right past it.",
+				],
+			},
+			{
+				"name": "Lyra",
+				"role": "Merchant",
+				"lines": [
+					"The army at the encampment is not random — they are guarding something at the laboratory. I have seen the supply lines.",
+					"The carnival past the cemetery changes locations. Do not let the music in.",
+				],
+			},
+			{
+				"name": "Wyn",
+				"role": "Weary Traveler",
+				"lines": [
+					"I came through the shore road. Lost two companions to the sirens. The beach past them is not much better — pirates waiting at the shipwreck.",
+					"The Mirror is where the roads converge. Something lives in that crossing. I did not linger.",
+				],
+			},
+		],
 	},
 
 	# --- Progression 4: Three paths (two battles each) ---
@@ -263,6 +316,32 @@ const NODES: Dictionary = {
 		"progression": 5,
 		"is_battle": false,
 		"gold_reward": 0,
+		"npcs": [
+			{
+				"name": "Donal",
+				"role": "Gatekeeper",
+				"lines": [
+					"Four gates into the city. East has a seraph and a fiend clashing — you would be caught in the middle. North is druid versus necromancer. Pick your nightmare.",
+					"Beyond the gates, the shrines are active. Elementals. The city has been sealed from the inside.",
+				],
+			},
+			{
+				"name": "Petra",
+				"role": "Merchant",
+				"lines": [
+					"I have heard the elemental shrines stirring for weeks. Someone woke them deliberately.",
+					"Supplies are short but I still have stock. Last chance before the walls.",
+				],
+			},
+			{
+				"name": "Holt",
+				"role": "Soldier",
+				"lines": [
+					"The Mirror crossing — you made it through. Most do not come out the other side intact. What came through with you?",
+					"We are the last settlement. Beyond Gate Town, you are on your own.",
+				],
+			},
+		],
 	},
 
 	# --- Progression 6: Return to City ---
