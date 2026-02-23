@@ -7,9 +7,9 @@
 script = ExtResource("1")
 class_id = "hobgoblin"
 class_display_name = "Hobgoblin"
-base_max_health = 55
+base_max_health = 62
 base_max_mana = 6
-base_physical_attack = 16
+base_physical_attack = 20
 base_physical_defense = 12
 base_magic_attack = 4
 base_magic_defense = 8
