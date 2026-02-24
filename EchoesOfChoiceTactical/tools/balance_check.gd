@@ -19,19 +19,19 @@ const SQUIRE_PHYS_ATK: Dictionary = {
 	0: 21, 1: 23, 2: 25, 3: 27, 4: 27, 5: 29, 6: 31, 7: 31, 8: 33
 }
 
-# ─── Party defense profiles (P.Def equipment only, no M.Def equipment bonus) ─
-# Base L1 stats:  Squire P15/M11  Mage P11/M18  Scholar P12/M20  Ent P12/M18
-# Growth per level: all +2 P.Def / +2 M.Def, Entertainer M.Def +3/level
+# ─── Party profiles: [P.Def, M.Def, HP] (P.Def includes equipment bonus) ─────
+# Base L1:  Squire P15/M11/HP55  Mage P11/M18/HP49  Scholar P12/M20/HP44  Ent P12/M18/HP49
+# Growth:   Squire HP+12, Mage/Scholar/Ent HP+9; all +2 PD/+2 MD, Ent MD+3
 const PARTY: Dictionary = {
-	0: {"level": 1, "squire": [15, 11], "mage": [11, 18], "scholar": [12, 20], "entertainer": [12, 18]},
-	1: {"level": 2, "squire": [20, 13], "mage": [16, 20], "scholar": [17, 22], "entertainer": [17, 21]},
-	2: {"level": 3, "squire": [22, 15], "mage": [18, 22], "scholar": [19, 24], "entertainer": [19, 24]},
-	3: {"level": 4, "squire": [26, 17], "mage": [22, 24], "scholar": [23, 26], "entertainer": [23, 27]},
-	4: {"level": 4, "squire": [26, 17], "mage": [22, 24], "scholar": [23, 26], "entertainer": [23, 27]},
-	5: {"level": 5, "squire": [33, 19], "mage": [29, 26], "scholar": [30, 28], "entertainer": [30, 30]},
-	6: {"level": 6, "squire": [35, 21], "mage": [31, 28], "scholar": [32, 30], "entertainer": [32, 33]},
-	7: {"level": 6, "squire": [38, 21], "mage": [34, 28], "scholar": [35, 30], "entertainer": [35, 33]},
-	8: {"level": 7, "squire": [41, 23], "mage": [37, 30], "scholar": [38, 32], "entertainer": [38, 36]},
+	0: {"level": 1, "squire": [15, 11, 55], "mage": [11, 18, 49], "scholar": [12, 20, 44], "entertainer": [12, 18, 49]},
+	1: {"level": 2, "squire": [20, 13, 67], "mage": [16, 20, 58], "scholar": [17, 22, 53], "entertainer": [17, 21, 58]},
+	2: {"level": 3, "squire": [22, 15, 79], "mage": [18, 22, 67], "scholar": [19, 24, 62], "entertainer": [19, 24, 67]},
+	3: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "scholar": [23, 26, 71], "entertainer": [23, 27, 76]},
+	4: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "scholar": [23, 26, 71], "entertainer": [23, 27, 76]},
+	5: {"level": 5, "squire": [33, 19, 103], "mage": [29, 26, 85], "scholar": [30, 28, 80], "entertainer": [30, 30, 85]},
+	6: {"level": 6, "squire": [35, 21, 115], "mage": [31, 28, 94], "scholar": [32, 30, 89], "entertainer": [32, 33, 94]},
+	7: {"level": 6, "squire": [38, 21, 115], "mage": [34, 28, 94], "scholar": [35, 30, 89], "entertainer": [35, 33, 94]},
+	8: {"level": 7, "squire": [41, 23, 127], "mage": [37, 30, 103], "scholar": [38, 32, 98], "entertainer": [38, 36, 103]},
 }
 
 const CLASS_ORDER: Array = ["squire", "mage", "scholar", "entertainer"]
@@ -573,6 +573,7 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 			var def_pair: Array = profile[cls]
 			var cls_phys_def: int = def_pair[0]
 			var cls_mag_def: int  = def_pair[1]
+			var cls_hp: int       = def_pair[2]
 
 			var phys_dmg: int = maxi(0, best_phys_mod + e_phys_atk - cls_phys_def)
 			var mag_dmg: int  = 0
@@ -584,7 +585,7 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 
 			var max_dmg: int = maxi(phys_dmg, mag_dmg)
 			if max_dmg > 0:
-				min_hp_ratio = minf(min_hp_ratio, float(e_hp) / float(max_dmg))
+				min_hp_ratio = minf(min_hp_ratio, float(cls_hp) / float(max_dmg))
 
 			class_cells.append("%dp/%dm" % [phys_dmg, mag_dmg])
 

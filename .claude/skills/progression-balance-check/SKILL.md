@@ -85,13 +85,13 @@ Run once per battle at this progression. Read the full output.
 
 **T1 defenders (Prog 1+):**
 - All 6 T1 reps (Warden, Acolyte, Ranger, Firebrand, Dervish, Martial Artist) threatened by at least 1 enemy
-- Per-enemy `⚠` on a single T1 class is OK if another enemy covers it
-- Battle-level `⚠T1TANK` or `⚠T1MAGE` means no enemy threatens that extreme -- check design-intent exceptions before fixing
+- Per-enemy `--` on a single T1 class is OK if another enemy covers it
+- `⚠T1ZERO — no enemy threatens: <list>` means those T1 classes are immune to all enemies in the battle -- check design-intent exceptions before fixing
 
 **T2 defenders (Prog 3+):**
 - All 8 T2 reps (Bastion, Paladin, Ninja, Cavalry, Pyromancer, Priest, Mercenary, Illusionist) threatened by at least 1 enemy
-- Same logic: per-enemy `⚠` OK if another enemy covers it
-- `⚠T2TANK` (Bastion immune to all) or `⚠T2MAGE` (Priest immune to all) are the battle-level flags to watch
+- Same logic: per-enemy `--` OK if another enemy covers it
+- `⚠T2ZERO — no enemy threatens: <list>` — same as T1, check exceptions
 
 ### Fix Recipes
 
@@ -99,11 +99,11 @@ Run once per battle at this progression. Read the full output.
 |------|-----|
 | `⚠ZERO` (attack too low) | Raise `base_physical_attack` or `base_magic_attack` in enemy .tres. Target: `scholar_phys_def + 3` for phys, `squire_mag_def - ability_modifier + 3` for magic. |
 | `⚠ZERO` (no DAMAGE ability) | Enemy only has DEBUFF/HEAL abilities. Add a DAMAGE ability (e.g. `spirit_touch.tres`, `slash.tres`). |
-| `⚠SPIKE` | Reduce `base_physical_attack` or `base_magic_attack` by 3-5 until ratio >= 3.0. |
+| `⚠SPIKE` | Reduce `base_physical_attack` or `base_magic_attack` by 3-5 until party_HP/damage >= 3.0. |
 | `⚠SLOW` | Reduce `base_max_health` until TTK <= 10. |
 | `⚠EASY` | Raise `base_max_health` until TTK >= 2. Min HP = `(squire_dmg * 2) - 1`. |
-| `⚠T1TANK`/`⚠T2TANK` | Add or strengthen a magic enemy. Warden/Bastion are phys tanks -- only magic threats penetrate. |
-| `⚠T1MAGE`/`⚠T2MAGE` | Add or strengthen a physical enemy. Acolyte/Priest are mag tanks -- only physical threats penetrate. |
+| `⚠T1ZERO`/`⚠T2ZERO` for phys tanks (Ward, Bast) | Add or strengthen a magic enemy. Warden/Bastion have extreme P.Def -- only magic threats penetrate. |
+| `⚠T1ZERO`/`⚠T2ZERO` for mag tanks (Aco, Prie) | Add or strengthen a physical enemy. Acolyte/Priest have extreme M.Def -- only physical threats penetrate. |
 
 ### Design-Intent Exceptions
 
@@ -111,11 +111,10 @@ These flags are expected and should NOT be fixed:
 
 | Flag | Battle | Why OK |
 |------|--------|--------|
-| `⚠T1MAGE` | `smoke` (P2) | Acolyte is the magic-counter class. Pure-magic battle is where it shines. Raising magic to threaten Acolyte would spike base Squire. |
-| `⚠T1TANK` | `forest`, `village_raid` (P1) | Warden requires ~50 JP. Players extremely unlikely to have promoted by Prog 1. |
-| `⚠ZERO` | `Goblin Shaman` in `village_raid` | Pure healer/support design. Intentional. |
-| `⚠SLOW` | `Street Tough` in `city_street` | TTK=11, borderline. Tutorial battle, intentionally forgiving. Fix: reduce HP to 48 if desired. |
-| `⚠ZERO` | `Goblin Archer` in `village_raid` | arrow_shot mod=2 + low phys_atk barely misses Scholar PD=17. Deferred; Prog 1 already easy. |
+| `⚠ZERO` | `Goblin Shaman` in `village_raid` (P1) | Pure healer/support design. Intentional. |
+| `⚠T1ZERO` for Ward | `forest`, `village_raid` (P1) | Pure-physical battles; Warden PD=27 blocks all. Players extremely unlikely to have promoted by Prog 1. |
+| `⚠T1ZERO` for Aco, Fire | `smoke` (P2) | Pure-magic battle. Acolyte (MD 29) and Firebrand (MD 24) block all magic. Raising magic to threaten them would spike base Squire. |
+| `⚠T1ZERO` for Aco | `deep_forest` (P2) | Pure-magic battle. Acolyte (MD 29) blocks all. Witch threatens Firebrand (0/5), but not Acolyte. Same reasoning as smoke. |
 
 ---
 
