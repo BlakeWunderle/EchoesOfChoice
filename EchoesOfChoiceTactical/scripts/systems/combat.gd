@@ -1,7 +1,7 @@
 class_name Combat extends RefCounted
 
-const CRIT_ROLL_MAX := 10
-const DODGE_ROLL_MAX := 10
+const CRIT_ROLL_MAX := 100
+const DODGE_ROLL_MAX := 100
 const FLANKING_DAMAGE_MULTIPLIER := 0.5
 const SNAP_SHOT_DAMAGE_MULTIPLIER := 0.5
 const REACTIVE_HEAL_MULTIPLIER := 0.35
