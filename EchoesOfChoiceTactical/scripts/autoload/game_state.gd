@@ -24,6 +24,8 @@ var equipment: Dictionary = {}
 var unlocked_classes: Array[String] = []
 var selected_party: Array[String] = []
 var player_level: int = 1
+var player_xp: int = 0
+var player_jp: int = 0
 
 var fired_travel_event_ids: Array[String] = []
 
@@ -149,6 +151,8 @@ func update_party_after_battle(player_units: Array) -> Array[String]:
 			continue
 		if unit.unit_name == player_name:
 			player_level = unit.level
+			player_xp = unit.xp
+			player_jp = unit.jp
 			continue
 		for i in range(party_members.size()):
 			if party_members[i]["name"] == unit.unit_name:
@@ -339,11 +343,114 @@ func _load_item(item_id: String) -> Resource:
 	return null
 
 
+# --- Class Promotion ---
+
+const _TIER_1_JP_THRESHOLD := 50
+const _TIER_2_JP_THRESHOLD := 100
+
+
+func get_jp_threshold(current_tier: int) -> int:
+	match current_tier:
+		0: return _TIER_1_JP_THRESHOLD
+		1: return _TIER_2_JP_THRESHOLD
+		_: return -1
+
+
+func can_promote(unit_name: String) -> bool:
+	var class_id: String = ""
+	var jp: int = 0
+	if unit_name == player_name:
+		class_id = player_class_id
+		jp = player_jp
+	else:
+		for member in party_members:
+			if member.get("name", "") == unit_name:
+				class_id = member.get("class_id", "")
+				jp = member.get("jp", 0)
+				break
+	if class_id.is_empty():
+		return false
+	var path := "res://resources/classes/%s.tres" % class_id
+	if not ResourceLoader.exists(path):
+		return false
+	var data: Resource = load(path) as Resource
+	if not data or not ("upgrade_options" in data):
+		return false
+	if data.upgrade_options.size() == 0:
+		return false
+	var threshold := get_jp_threshold(data.tier)
+	if threshold < 0:
+		return false
+	return jp >= threshold
+
+
+func promote_member(unit_name: String, new_class_id: String) -> bool:
+	var class_id: String = ""
+	var level: int = 1
+	if unit_name == player_name:
+		class_id = player_class_id
+		level = player_level
+	else:
+		for member in party_members:
+			if member.get("name", "") == unit_name:
+				class_id = member.get("class_id", "")
+				level = member.get("level", 1)
+				break
+	if class_id.is_empty():
+		return false
+
+	var path := "res://resources/classes/%s.tres" % class_id
+	if not ResourceLoader.exists(path):
+		return false
+	var old_data: Resource = load(path) as Resource
+	if not old_data or not ("upgrade_options" in old_data):
+		return false
+
+	var valid := false
+	for opt in old_data.upgrade_options:
+		if opt.class_id == new_class_id:
+			valid = true
+			break
+	if not valid:
+		return false
+
+	unlock_class(new_class_id)
+
+	if unit_name == player_name:
+		player_class_id = new_class_id
+		player_jp = 0
+	else:
+		for member in party_members:
+			if member.get("name", "") == unit_name:
+				member["class_id"] = new_class_id
+				member["jp"] = 0
+				var new_path := "res://resources/classes/%s.tres" % new_class_id
+				var new_data: Resource = load(new_path) as Resource
+				if new_data and new_data.has_method("get_stats_at_level"):
+					var stats: Dictionary = new_data.get_stats_at_level(level)
+					member["current_hp"] = stats["max_health"]
+					member["current_mp"] = stats["max_mana"]
+				break
+
+	return true
+
+
+func has_any_promotable_member() -> bool:
+	if can_promote(player_name):
+		return true
+	for member in party_members:
+		if can_promote(member.get("name", "")):
+			return true
+	return false
+
+
 func reset_for_new_game() -> void:
 	player_name = ""
 	player_gender = ""
 	player_class_id = ""
 	player_level = 1
+	player_xp = 0
+	player_jp = 0
 	party_members.clear()
 	progression_stage = 0
 	current_battle_id = ""
@@ -368,6 +475,8 @@ func save_game() -> void:
 		"player_gender": player_gender,
 		"player_class_id": player_class_id,
 		"player_level": player_level,
+		"player_xp": player_xp,
+		"player_jp": player_jp,
 		"party_members": party_members,
 		"progression_stage": progression_stage,
 		"current_battle": current_battle_id,
@@ -406,6 +515,8 @@ func load_game(slot: int) -> bool:
 	inventory = data.get("inventory", {})
 	equipment = data.get("equipment", {})
 	player_level = int(data.get("player_level", 1))
+	player_xp = int(data.get("player_xp", 0))
+	player_jp = int(data.get("player_jp", 0))
 	var uc: Array = data.get("unlocked_classes", [])
 	unlocked_classes.clear()
 	for c in uc:

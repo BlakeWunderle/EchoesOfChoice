@@ -658,6 +658,8 @@ func _ai_execute_ability(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vect
 
 
 func _find_party_member_xp(unit_name: String) -> Array:
+	if unit_name == GameState.player_name:
+		return [GameState.player_xp, GameState.player_jp]
 	for member in GameState.party_members:
 		if member["name"] == unit_name:
 			return [member.get("xp", 0), member.get("jp", 0)]
