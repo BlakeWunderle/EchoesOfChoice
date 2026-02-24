@@ -10,7 +10,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Ringmaster(int level = 6)
         {
             Level = level;
-            Health = Stat(93, 103, 0, 0, 6);
+            Health = Stat(96, 106, 0, 0, 6);
             MaxHealth = Health;
             PhysicalAttack = Stat(23, 27, 0, 0, 6);
             PhysicalDefense = Stat(21, 25, 0, 0, 6);

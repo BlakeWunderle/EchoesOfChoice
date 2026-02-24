@@ -26,8 +26,10 @@ namespace EchoesOfChoice.CharacterClasses.Scholar
 
         protected override void ApplyUpgradeBonuses()
         {
-            MagicAttack += 3;
-            Speed += 2;
+            Health += 3;
+            MaxHealth += 3;
+            MagicAttack += 4;
+            Speed += 3;
         }
 
         public override void IncreaseLevel()

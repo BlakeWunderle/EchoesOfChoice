@@ -44,7 +44,7 @@ namespace EchoesOfChoice.CharacterClasses.Scholar
             PhysicalDefense += random.Next(4, 7);
             MagicAttack += random.Next(5, 8);
             MagicDefense += random.Next(4, 7);
-            Speed += random.Next(2, 4);
+            Speed += random.Next(3, 5);
         }
 
         public override BaseFighter UpgradeClass(UpgradeItemEnum upgradeItem)
