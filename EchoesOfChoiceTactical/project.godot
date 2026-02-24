@@ -20,6 +20,7 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 GameState="*res://scripts/autoload/game_state.gd"
 SceneManager="*res://scripts/autoload/scene_manager.gd"
 MusicManager="*res://scripts/autoload/music_manager.gd"
+SFXManager="*res://scripts/autoload/sfx_manager.gd"
 
 [display]
 
