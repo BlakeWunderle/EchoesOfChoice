@@ -17,48 +17,78 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `modified_stat.gd` -- Buff/debuff with turn countdown
 - `terrain_effect.gd` -- Dynamically placed terrain (ice walls, fire tiles) with duration
 
-### Systems (`scripts/systems/`)
-- `grid.gd` -- Grid engine: BFS movement with elevation+jump, A* pathfinding, range/AoE calculation, line-of-sight (Bresenham), dynamic terrain placement/removal
-- `combat.gd` -- All damage formulas, crit/dodge rolls, reaction damage calculations (flanking 50%, snap shot 50%, reactive heal 35%, mitigation 25%, bodyguard 45%)
-- `reaction_system.gd` -- All 6 reaction types with trigger logic, defensive reaction chaining (bodyguard then mitigation before damage applies)
-
-### Autoload (`scripts/autoload/`)
-- `game_state.gd` -- Singleton: party data, progression stage, story flags, gold, inventory, equipment, unlocked classes, JSON save/load
-
-### Progression data (`scripts/data/` continued)
+### Progression Data (`scripts/data/` continued)
 - `xp_config.gd` -- XP/JP constants, level curve (xp_to_next_level), catchup multiplier, JP calculation and class identity actions
 - `map_data.gd` -- Map node definitions including `gold_reward`, `npcs` (Array[Dictionary] of town NPCs with name/role/lines), per battle node
 - `travel_event.gd` -- TravelEvent resource: event_type (ambush/merchant/rest/story/rumor), title, dialogue Array[Dictionary], trigger_chance, node_range
 
+### Battle Configuration (`scripts/data/` continued)
+- `battle_config.gd` -- Base battle configuration class
+- `battle_config_prog_01.gd` -- Progression 0-1 battle configs (tutorial, city_street, forest, village_raid)
+- `battle_config_prog_23.gd` -- Progression 2-3 battle configs (smoke, deep_forest, clearing, ruins, cave, portal, inn_ambush)
+- `battle_config_prog_45.gd` -- Progression 4-5 battle configs (shore, beach, cemetery, carnival, encampment, lab, mirror, gate_ambush)
+- `battle_config_prog_67.gd` -- Progression 6-7 battle configs (city_gate, return_city battles, elemental shrines, final_castle)
+- `terrain_overrides.gd` -- Per-battle terrain customization
+
+### Systems (`scripts/systems/`)
+- `grid.gd` -- Grid engine: BFS movement with elevation+jump, A* pathfinding, range/AoE calculation, line-of-sight (Bresenham), dynamic terrain placement/removal
+- `combat.gd` -- All damage formulas, crit/dodge rolls, reaction damage calculations (flanking 50%, snap shot 50%, reactive heal 35%, mitigation 25%, bodyguard 45%)
+- `reaction_system.gd` -- All 6 reaction types with trigger logic, defensive reaction chaining (bodyguard then mitigation before damage applies)
+- `battle_ai.gd` -- Enemy AI: target scoring, ability selection, movement positioning, trap avoidance
+- `ability_executor.gd` -- Ability execution: damage/heal/buff/debuff/terrain application
+
+### Autoload (`scripts/autoload/`)
+- `game_state.gd` -- Singleton: party data, progression stage, story flags, gold, inventory, equipment, unlocked classes
+- `equipment_manager.gd` -- Equipment slot management, tier-based slot limits (tier+1), item unlock checks
+- `save_load_manager.gd` -- JSON save/load with 3 slots
+- `scene_manager.gd` -- Scene transitions, new game / continue / load routing
+
 ### Battle (`scenes/battle/`)
-- `BattleMap.gd/.tscn` -- Main battle scene: grid rendering, turn flow (act-then-move), action menu, targeting with AoE preview, facing chooser, AI, reaction integration
+- `BattleMap.gd/.tscn` -- Main battle scene: grid rendering, turn flow (act-then-move), targeting with AoE preview, facing chooser, AI, reaction integration
 - `TurnManager.gd` -- ATB system (speed -> 100 threshold), turn order preview, battle end detection
+- `ActionMenuController.gd` -- Battle action menu (Attack, Ability, Item, Move, Wait, Facing selection)
 - `GridOverlay.gd` -- Colored tile overlays (movement=blue, attack=red, AoE=orange, threatened=red border, path=cyan)
 - `GridCursor.gd/.tscn` -- Keyboard cursor (WASD/arrows, Enter/Z=select, Esc/X=cancel)
 - `PartySelect.gd/.tscn` -- Pre-battle party composition screen
-- `BattleSummary.gd/.tscn` -- Post-battle XP/loot/promotion results
+- `BattleSummary.gd/.tscn` -- Post-battle XP/JP/loot/promotion results
 
 ### Story (`scenes/story/`)
-- `TitleScreen.gd/.tscn` -- Title screen (new game / continue / quit)
-- `CharacterCreation.gd/.tscn` -- Player name/gender/class selection (main scene)
+- `TitleScreen.gd/.tscn` -- Title screen (new game / continue / load / quit) with save slot selection
+- `CharacterCreation.gd/.tscn` -- Player name/gender selection
 - `ClassSelection.gd/.tscn` -- Class picker UI
-- `Barracks.gd/.tscn` -- Party management and class upgrade screen
+- `Barracks.gd/.tscn` -- Initial party recruitment (4-guard flow with class/gender/name selection)
 - `ThroneRoom.gd/.tscn` -- Opening story cutscene
-- `TravelEvent.gd/.tscn` -- Overworld travel event popup (ambush/merchant/rest/story/rumor) [PENDING Phase 11]
+- `TravelEvent.gd/.tscn` -- Overworld travel event popup (ambush/merchant/rest/story/rumor)
+
+### Overworld (`scenes/overworld/`)
+- `OverworldMap.gd/.tscn` -- Overworld map with node traversal, fog-of-war, progression gating
+- `terrain_drawer.gd` -- Overworld terrain visualization
 
 ### Town (`scenes/town/`)
-- `Town.gd/.tscn` -- Town hub: shop, recruit, NPC conversations, story flag gating
-- `RecruitUI.gd/.tscn` -- Enemy recruitment list and confirmation
-- `ShopUI.gd/.tscn` -- Buy/sell items, equipment upgrades
+- `Town.gd/.tscn` -- Town hub: shop, recruit, promote, NPC conversations, rest, story flag gating, optional battles
+- `RecruitUI.gd/.tscn` -- Class recruitment list with gender/name selection
+- `PromoteUI.gd/.tscn` -- Class promotion UI: JP-based tier upgrades with stat comparison
+
+### UI (`scenes/ui/`)
+- `DialogueBox.gd/.tscn` -- Dialogue display system
+- `ShopUI.gd/.tscn` -- Buy/sell items and equipment
+- `ItemsUI.gd/.tscn` -- Inventory management
+- `RewardChoiceUI.gd/.tscn` -- Post-battle reward selection
+- `GameOver.gd/.tscn` -- Game over screen
 
 ### Units (`scenes/units/`)
 - `Unit.gd/.tscn` -- Unit node: all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
 
 ### Resources (`resources/`)
-- `classes/` -- FighterData .tres files per class (to be populated in Phase 10)
-- `abilities/` -- AbilityData .tres files per ability (to be populated in Phase 10)
-- `enemies/` -- FighterData .tres files per enemy type
+- `classes/` -- 54 FighterData .tres files (4 base + 16 T1 + 32 T2 + 2 royal)
+- `abilities/` -- 170+ AbilityData .tres files
+- `enemies/` -- 67 FighterData .tres files
+- `items/` -- 59 item .tres files (consumables + equipment across 3 progression tiers)
 - `tilesets/` -- TileSet resources for terrain
+
+### Tools (`tools/`)
+- `balance_check.gd` -- Headless battle simulator for enemy vs. party damage analysis per progression
+- `item_check.gd` -- Equipment balance verification via mirror-fight static analysis
 
 ## Build Progress
 
@@ -66,10 +96,10 @@ Phases 1-7 COMPLETE (project setup, grid, units, movement, turns, abilities, com
 
 | Phase | Status | Scope |
 |-------|--------|-------|
-| 8 | PENDING | Tactical AI — enemy decision-making (move toward weakest, use abilities, reactions) |
-| 9 | PENDING | UI Polish — health bars, action menu clarity, turn order display, animations |
-| 10 | PENDING | Class porting — all 52 player classes as FighterData .tres; full ability .tres set |
-| 11 | PENDING | Story/world — pre/post battle dialogue in BattleConfig; NPC conversations in towns; travel events on overworld |
+| 8 | COMPLETE | Tactical AI — enemy decision-making, ability scoring, movement positioning |
+| 9 | MOSTLY COMPLETE | UI — health bars, action menu, turn order, battle summary; missing: combat animations, audio |
+| 10 | COMPLETE | Class porting — all 54 player classes, 170+ abilities, 67 enemies, 59 items as .tres |
+| 11 | MOSTLY COMPLETE | Story/world — battle configs, NPC conversations, travel events; missing: some dialogue polish |
 | 12 | PENDING | Final balance pass — all battles tuned; XP/JP curve verified; win-rate targets met |
 
 ## Reference Codebase
