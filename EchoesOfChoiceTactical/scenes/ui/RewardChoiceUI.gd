@@ -91,7 +91,10 @@ func _make_card(item: Resource) -> Control:
 	var choose_btn := Button.new()
 	choose_btn.text = "Choose"
 	var id: String = item.get("item_id")
-	choose_btn.pressed.connect(func() -> void: item_chosen.emit(id))
+	choose_btn.pressed.connect(func() -> void:
+		SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
+		item_chosen.emit(id)
+	)
 	vbox.add_child(choose_btn)
 
 	return panel

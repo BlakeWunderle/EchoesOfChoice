@@ -164,6 +164,7 @@ func _show_class_selection() -> void:
 
 
 func _on_guard_class_selected(class_id: String) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_current_class = class_id
 	_show_gender_selection()
 
@@ -194,7 +195,10 @@ func _show_gender_selection() -> void:
 	var back_btn := Button.new()
 	back_btn.text = "Back"
 	back_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	back_btn.pressed.connect(func(): _show_class_selection())
+	back_btn.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
+		_show_class_selection()
+	)
 	selection_content.add_child(back_btn)
 
 
@@ -224,6 +228,7 @@ func _create_gender_option(gender_label: String, class_name_str: String, color: 
 
 
 func _on_gender_selected(gender: String) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_current_gender = gender
 	selection_panel.visible = false
 	_ask_for_name()
@@ -278,6 +283,7 @@ func _on_name_confirmed() -> void:
 	var n := name_input.text.strip_edges()
 	if n.is_empty():
 		return
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	_entered_name = n
 	_name_submitted = true
 

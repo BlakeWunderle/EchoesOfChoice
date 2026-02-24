@@ -14,8 +14,10 @@ func _ready() -> void:
 
 
 func _on_load() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	SceneManager.load_game_slot(GameState.current_slot)
 
 
 func _on_title() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	SceneManager.go_to_title_screen()

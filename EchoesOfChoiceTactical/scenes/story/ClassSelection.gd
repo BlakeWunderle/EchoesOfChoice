@@ -95,6 +95,7 @@ func _build_class_buttons() -> void:
 
 
 func _on_class_selected(class_id: String) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_selected_class = class_id
 	var data: Dictionary = CLASS_DATA[class_id]
 

@@ -23,6 +23,7 @@ func _ready() -> void:
 
 
 func _on_prince_selected() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_selected_gender = "prince"
 	selection_label.text = "You have chosen the path of the Prince."
 	selection_label.visible = true
@@ -36,6 +37,7 @@ func _on_prince_selected() -> void:
 
 
 func _on_princess_selected() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_selected_gender = "princess"
 	selection_label.text = "You have chosen the path of the Princess."
 	selection_label.visible = true
@@ -55,6 +57,7 @@ func _on_confirm() -> void:
 	if _selected_gender.is_empty():
 		return
 
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	GameState.set_player_info(player_name, _selected_gender)
 	SceneManager.go_to_tutorial_battle()
 

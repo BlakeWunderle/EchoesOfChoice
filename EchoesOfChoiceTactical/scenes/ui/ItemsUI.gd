@@ -8,7 +8,10 @@ signal items_closed
 
 
 func _ready() -> void:
-	close_button.pressed.connect(func(): items_closed.emit())
+	close_button.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
+		items_closed.emit()
+	)
 	_refresh_list()
 
 
@@ -84,6 +87,7 @@ func _create_item_row(item: ItemData, qty: int) -> HBoxContainer:
 
 
 func _use_full_rest(item: ItemData) -> void:
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	GameState.remove_item(item.item_id)
 	GameState.full_rest_party()
 	_refresh_list()
@@ -91,6 +95,7 @@ func _use_full_rest(item: ItemData) -> void:
 
 
 func _show_target_select(item: ItemData) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	for child in item_list.get_children():
 		child.queue_free()
 	detail_label.text = "Choose a party member to use %s on:" % item.display_name
@@ -98,7 +103,10 @@ func _show_target_select(item: ItemData) -> void:
 	var back_btn := Button.new()
 	back_btn.text = "← Back"
 	back_btn.add_theme_font_size_override("font_size", 13)
-	back_btn.pressed.connect(_refresh_list)
+	back_btn.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
+		_refresh_list()
+	)
 	item_list.add_child(back_btn)
 
 	for member in GameState.party_members:
@@ -145,6 +153,7 @@ func _show_target_select(item: ItemData) -> void:
 func _apply_to_member(item: ItemData, member: Dictionary) -> void:
 	if not GameState.remove_item(item.item_id):
 		return
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	var unit_name: String = member.get("name", "")
 	match item.consumable_effect:
 		Enums.ConsumableEffect.HEAL_HP:

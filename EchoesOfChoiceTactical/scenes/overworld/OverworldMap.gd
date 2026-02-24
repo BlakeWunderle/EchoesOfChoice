@@ -114,6 +114,7 @@ func _on_node_hovered(node_id: String) -> void:
 
 
 func _on_node_clicked(node_id: String) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_selected_node_id = node_id
 	_show_info(node_id)
 
@@ -156,6 +157,7 @@ func _show_info(node_id: String) -> void:
 func _on_enter_battle() -> void:
 	if _selected_node_id.is_empty():
 		return
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	var node_data: Dictionary = MapData.get_node(_selected_node_id)
 	if node_data.is_empty():
 		return
