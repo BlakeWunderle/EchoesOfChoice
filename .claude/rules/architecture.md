@@ -97,6 +97,8 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `jp_check.gd` -- JP economy balance verification per class and progression
 - `create_spriteframes.gd` -- Generates SpriteFrames .tres from CraftPix-style sprite sheet PNGs (configurable frame size, row order, animations)
 - `orphan_check.gd` -- Detects orphaned .tres resources and .tscn scenes with zero external references (full-path + quoted-basename search strategies)
+- `download_craftpix.py` -- Python script to download all 58 CraftPix asset packs via cookie auth (two-step URL resolution: product page → download page → files.craftpix.net ZIP)
+- `palette_swap.py` -- Python hue-based sprite recoloring tool with analyze, single, and batch modes for creating class variants from base archetypes
 
 ## Build Progress
 
