@@ -20,7 +20,10 @@ const STAT_ENTRIES: Array = [
 
 
 func _ready() -> void:
-	close_button.pressed.connect(func(): promote_closed.emit())
+	close_button.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
+		promote_closed.emit()
+	)
 	_show_member_list()
 
 
@@ -88,6 +91,7 @@ func _add_member_row(unit_name: String, class_id: String, jp: int) -> void:
 
 
 func _on_member_selected(unit_name: String, class_id: String) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_selected_unit_name = unit_name
 	_selected_class_id = class_id
 	_show_promotion_options()
@@ -214,6 +218,7 @@ func _add_upgrade_option(option: FighterData, current_stats: Dictionary, level: 
 func _on_promote_confirmed(new_class_id: String, display_name: String) -> void:
 	if not GameState.promote_member(_selected_unit_name, new_class_id):
 		return
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 
 	_clear_children(detail_panel)
 	var success := Label.new()

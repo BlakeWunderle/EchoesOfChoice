@@ -9,6 +9,7 @@ signal summary_closed
 
 func _ready() -> void:
 	continue_button.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 		summary_closed.emit()
 		queue_free()
 	)

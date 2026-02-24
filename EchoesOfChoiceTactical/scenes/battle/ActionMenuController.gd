@@ -121,6 +121,7 @@ func _has_usable_items() -> bool:
 func _on_attack_pressed() -> void:
 	if _current_unit == null or _current_unit.has_acted:
 		return
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	hide_menu()
 	attack_chosen.emit()
 
@@ -128,6 +129,7 @@ func _on_attack_pressed() -> void:
 func _on_ability_pressed() -> void:
 	if _current_unit == null or _current_unit.has_acted:
 		return
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 
 	for child in _ability_container.get_children():
 		child.queue_free()
@@ -146,6 +148,7 @@ func _on_ability_pressed() -> void:
 	var back_btn := Button.new()
 	back_btn.text = "Back"
 	back_btn.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
 		_ability_container.visible = false
 		show_menu(_current_unit)
 	)
@@ -160,6 +163,7 @@ func _on_ability_pressed() -> void:
 
 
 func _on_ability_picked(ability: AbilityData) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	hide_menu()
 	ability_chosen.emit(ability)
 
@@ -167,6 +171,7 @@ func _on_ability_picked(ability: AbilityData) -> void:
 func _on_item_pressed() -> void:
 	if _current_unit == null or _current_unit.has_acted:
 		return
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 
 	for child in _item_container.get_children():
 		child.queue_free()
@@ -185,6 +190,7 @@ func _on_item_pressed() -> void:
 	var back_btn := Button.new()
 	back_btn.text = "Back"
 	back_btn.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
 		_item_container.visible = false
 		show_menu(_current_unit)
 	)
@@ -199,6 +205,7 @@ func _on_item_pressed() -> void:
 
 
 func _on_item_picked(item: ItemData) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	hide_menu()
 	item_chosen.emit(item)
 
@@ -206,6 +213,7 @@ func _on_item_picked(item: ItemData) -> void:
 func _on_move_pressed() -> void:
 	if _current_unit == null or _current_unit.has_moved:
 		return
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	hide_menu()
 	move_chosen.emit()
 
@@ -213,10 +221,12 @@ func _on_move_pressed() -> void:
 func _on_wait_pressed() -> void:
 	if _current_unit == null:
 		return
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	hide_menu()
 	wait_chosen.emit()
 
 
 func _on_facing_selected(dir: int) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	hide_menu()
 	facing_chosen.emit(dir)

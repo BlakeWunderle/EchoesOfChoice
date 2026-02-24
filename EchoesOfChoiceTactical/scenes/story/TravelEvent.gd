@@ -10,6 +10,7 @@ func show_event(event: Dictionary) -> void:
 	_event_data = event
 	_build_ui()
 	visible = true
+	SFXManager.play(SFXManager.Category.UI_POPUP, 0.6)
 
 
 func _build_ui() -> void:
@@ -103,6 +104,7 @@ func _type_color(event_type: String) -> Color:
 
 
 func _on_browse_merchant() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	var item_ids: Array = _event_data.get("merchant_items", [])
 	var items: Array = []
 	for item_id in item_ids:
@@ -121,6 +123,7 @@ func _on_browse_merchant() -> void:
 
 
 func _on_continue() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	var gold_reward: int = _event_data.get("gold_reward", 0)
 	if gold_reward > 0:
 		GameState.add_gold(gold_reward)

@@ -217,18 +217,22 @@ func _show_confirm(slot: int) -> void:
 # --- Button callbacks ---
 
 func _on_new_game_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_show_slot_picker(_MenuState.SLOT_PICKER_NEW)
 
 
 func _on_continue_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	SceneManager.continue_game()
 
 
 func _on_load_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_show_slot_picker(_MenuState.SLOT_PICKER_LOAD)
 
 
 func _on_slot_pressed(slot: int) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	if _state == _MenuState.SLOT_PICKER_NEW:
 		if GameState.has_save(slot):
 			_show_confirm(slot)
@@ -239,10 +243,12 @@ func _on_slot_pressed(slot: int) -> void:
 
 
 func _on_overwrite_confirmed() -> void:
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	SceneManager.start_new_game(_pending_slot)
 
 
 func _on_overwrite_cancelled() -> void:
+	SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
 	_show_slot_picker(_MenuState.SLOT_PICKER_NEW)
 
 
@@ -269,6 +275,7 @@ func _input(event: InputEvent) -> void:
 	if _state == _MenuState.ANIMATING:
 		return
 	if event.is_action_pressed("ui_cancel"):
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
 		match _state:
 			_MenuState.SLOT_PICKER_NEW, _MenuState.SLOT_PICKER_LOAD:
 				_show_main_menu()

@@ -201,6 +201,7 @@ func _make_member_row(unit_name: String, class_id: String, level: int) -> HBoxCo
 
 
 func _on_optional_battle() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	var battle_info: Dictionary = TOWN_BATTLES.get(_town_id, {})
 	if battle_info.is_empty():
 		return
@@ -210,6 +211,7 @@ func _on_optional_battle() -> void:
 
 
 func _on_shop_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	var shop_scene := preload("res://scenes/ui/ShopUI.tscn")
 	var shop: Control = shop_scene.instantiate()
 	var item_ids: Array = TOWN_SHOPS.get(_town_id, [])
@@ -234,6 +236,7 @@ func _on_shop_pressed() -> void:
 
 
 func _on_promote_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	var promote_scene := preload("res://scenes/town/PromoteUI.tscn")
 	var promote_ui: Control = promote_scene.instantiate()
 	promote_ui.promote_closed.connect(func():
@@ -245,6 +248,7 @@ func _on_promote_pressed() -> void:
 
 
 func _on_recruit_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	var recruit_scene := preload("res://scenes/town/RecruitUI.tscn")
 	var recruit: Control = recruit_scene.instantiate()
 	recruit.recruit_closed.connect(func():
@@ -256,6 +260,7 @@ func _on_recruit_pressed() -> void:
 
 
 func _on_items_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	var items_scene := preload("res://scenes/ui/ItemsUI.tscn")
 	var items_ui: Control = items_scene.instantiate()
 	items_ui.items_closed.connect(func(): items_ui.queue_free())
@@ -300,6 +305,7 @@ func _populate_npcs(node_data: Dictionary) -> void:
 
 
 func _on_npc_pressed(npc: Dictionary) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	var lines_raw: Array = npc.get("lines", [])
 	var lines: Array[Dictionary] = []
 	for text in lines_raw:
@@ -315,10 +321,12 @@ func _on_npc_pressed(npc: Dictionary) -> void:
 func _on_rest_pressed() -> void:
 	if not GameState.can_afford(REST_COST):
 		return
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	GameState.spend_gold(REST_COST)
 	GameState.full_rest_party()
 	gold_label.text = "Gold: %d" % GameState.gold
 
 
 func _on_continue() -> void:
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	SceneManager.go_to_overworld()

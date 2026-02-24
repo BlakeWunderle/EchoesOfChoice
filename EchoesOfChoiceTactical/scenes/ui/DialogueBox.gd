@@ -62,4 +62,5 @@ func _handle_advance() -> void:
 		_typing = false
 		continue_indicator.visible = true
 	else:
+		SFXManager.play(SFXManager.Category.UI_SELECT, 0.3)
 		_advance()

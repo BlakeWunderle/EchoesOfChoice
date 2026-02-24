@@ -86,8 +86,10 @@ func _input(event: InputEvent) -> void:
 				_move_cursor(Vector2i(1, 0))
 			KEY_ENTER, KEY_SPACE, KEY_Z:
 				if grid_position in valid_cells:
+					SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 					cell_selected.emit(grid_position)
 			KEY_ESCAPE, KEY_X:
+				SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
 				cancelled.emit()
 
 
@@ -95,6 +97,7 @@ func _move_cursor(dir: Vector2i) -> void:
 	var new_pos := grid_position + dir
 	grid_position = new_pos
 	_update_position()
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.3)
 	cell_hovered.emit(grid_position)
 
 

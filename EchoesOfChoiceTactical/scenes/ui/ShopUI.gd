@@ -16,7 +16,10 @@ var _mode: String = "buy"
 func _ready() -> void:
 	buy_button.pressed.connect(func(): _switch_mode("buy"))
 	sell_button.pressed.connect(func(): _switch_mode("sell"))
-	close_button.pressed.connect(func(): shop_closed.emit())
+	close_button.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
+		shop_closed.emit()
+	)
 	_update_gold()
 	_refresh_list()
 
@@ -26,6 +29,7 @@ func setup(items: Array) -> void:
 
 
 func _switch_mode(mode: String) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_mode = mode
 	buy_button.disabled = (mode == "buy")
 	sell_button.disabled = (mode == "sell")
@@ -175,6 +179,7 @@ func _create_sell_row(item: ItemData, qty: int) -> HBoxContainer:
 func _on_buy_pressed(item: ItemData) -> void:
 	if not GameState.spend_gold(item.buy_price):
 		return
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	GameState.add_item(item.item_id)
 	_update_gold()
 	_refresh_list()
@@ -183,6 +188,7 @@ func _on_buy_pressed(item: ItemData) -> void:
 func _on_sell_pressed(item: ItemData) -> void:
 	if not GameState.remove_item(item.item_id):
 		return
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	GameState.add_gold(item.get_sell_price())
 	_update_gold()
 	_refresh_list()

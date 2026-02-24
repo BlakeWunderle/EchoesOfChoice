@@ -95,6 +95,7 @@ func _make_member_row(unit_name: String, class_id: String, level: int, is_mc: bo
 
 
 func _on_toggle_member(unit_name: String, btn: Button) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	if unit_name in _selected_names:
 		_selected_names.erase(unit_name)
 		btn.text = "[ ]"
@@ -122,6 +123,7 @@ func _update_count() -> void:
 
 
 func _on_start_battle() -> void:
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	GameState.selected_party = _selected_names.duplicate()
 	SceneManager.change_scene("res://scenes/battle/BattleMap.tscn")
 

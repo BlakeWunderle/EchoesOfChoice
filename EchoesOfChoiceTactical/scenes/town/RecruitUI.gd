@@ -16,7 +16,10 @@ var _selected_gender: String = ""
 
 
 func _ready() -> void:
-	close_button.pressed.connect(func(): recruit_closed.emit())
+	close_button.pressed.connect(func():
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
+		recruit_closed.emit()
+	)
 	_update_gold()
 	_show_class_list()
 
@@ -89,6 +92,7 @@ func _add_class_row(data: FighterData) -> void:
 
 
 func _on_class_selected(data: FighterData) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_selected_class_id = data.class_id
 	_show_class_detail(data)
 
@@ -167,6 +171,7 @@ func _show_class_detail(data: FighterData) -> void:
 
 
 func _on_recruit_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_phase = Phase.GENDER_SELECT
 	_clear_children(detail_panel)
 
@@ -198,6 +203,7 @@ func _on_recruit_pressed() -> void:
 
 
 func _on_gender_chosen(gender: String) -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_selected_gender = gender
 	_phase = Phase.NAME_INPUT
 	_clear_children(detail_panel)
@@ -241,6 +247,7 @@ func _on_name_confirmed(name_input: LineEdit) -> void:
 	var cost := GameState.get_recruit_cost(_selected_class_id)
 	if not GameState.spend_gold(cost):
 		return
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 
 	var recruit_level := GameState.get_lowest_party_level()
 	GameState.add_party_member(recruit_name, _selected_gender, _selected_class_id, recruit_level)
