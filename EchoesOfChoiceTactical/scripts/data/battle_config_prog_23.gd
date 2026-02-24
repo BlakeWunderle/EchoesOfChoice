@@ -153,6 +153,7 @@ static func create_portal() -> BattleConfig:
 	config.battle_id = "portal"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
 	BattleConfig._build_party_units(config)
 
 	var hellion := load("res://resources/enemies/hellion.tres")

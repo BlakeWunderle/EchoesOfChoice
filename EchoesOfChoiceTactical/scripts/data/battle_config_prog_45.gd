@@ -72,6 +72,7 @@ static func create_cemetery_battle() -> BattleConfig:
 	config.battle_id = "cemetery_battle"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("cemetery_battle")

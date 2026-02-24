@@ -47,6 +47,14 @@ Reconstruct the asset tree from the original zips in `Assets/` if needed.
 - **Contents**: 24 tracks (action, cantina, exploration sci-fi themes)
 - **Used for**: Lab battle (sci-fi setting in a fantasy world)
 
+### Dark Battle Music (`audio/music/battle_dark/`)
+- **Sources**:
+  - `Assets/horrorbundle_row.zip` — Hollow Tales Music Pack: 18 music tracks (6 themes: Antique Graveyard, Black Moon, Haunted Chase, Nostalgic Mystery, Secret Garden, Sweet Melancholy) + 9 stingers
+  - `Assets/nightfallhorrorambientmusicbundle_row.zip` — 8 ambient tracks + 4 loops (Static Presence, Psychosis, Eyes in the Woods, Mouth of the Void, etc.)
+- **Format**: WAV
+- **Contents**: 39 tracks (dark atmosphere, horror ambient, tension loops)
+- **Used for**: Cemetery battle, portal battle, late-game shadow creature ambushes
+
 ### Exploration Music (`audio/music/exploration/`)
 - **Sources**:
   - `Assets/completefantasyactionrpgmusicbundle_row.zip` (Exploration/ + Dungeons/ subfolders)
@@ -94,5 +102,11 @@ Reconstruct the asset tree from the original zips in `Assets/` if needed.
 
 ## Not Yet Extracted
 
+### Medium Priority
+- `Assets/malecharactersbundle_row.zip` - 11 male character voice packs (2.1 GB)
+- `Assets/femalecharactersbundle_row.zip` - 12 female character voice packs (2.1 GB)
+- `Assets/bowandarrowsounds_row.zip` - Bow/arrow SFX for ranged combat (128 MB)
+
 ### Low Priority
 - `Assets/industrialsoundeffectsbundle_row.zip` - Industrial SFX (1.2 GB)
+- `Assets/bulletsoundfxcollection_row.zip` - Bullet impact SFX (86 MB)

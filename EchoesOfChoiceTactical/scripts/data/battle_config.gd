@@ -119,6 +119,7 @@ static func create_travel_ambush() -> BattleConfig:
 			{"speaker": "Thane", "text": "Someone sent them. These were not random opportunists."},
 		]
 	else:
+		config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
 		var prowler: FighterData = load("res://resources/enemies/night_prowler.tres")
 		var hound: FighterData = load("res://resources/enemies/shadow_hound.tres")
 		var stalker: FighterData = load("res://resources/enemies/gloom_stalker.tres")
