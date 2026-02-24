@@ -174,6 +174,7 @@ func _setup_from_config(config: BattleConfig) -> void:
 		var unit := _spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"])
 		var member_xp := _find_party_member_xp(entry["name"])
 		unit.initialize_xp(member_xp[0], member_xp[1])
+		unit.voice_pack = GameState.get_voice_pack(entry["name"])
 
 	for entry in config.enemy_units:
 		_spawn_unit(entry["data"], entry["name"], Enums.Team.ENEMY, entry["pos"], entry["level"])

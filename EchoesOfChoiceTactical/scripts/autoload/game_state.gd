@@ -6,6 +6,7 @@ const _enums = preload("res://scripts/data/enums.gd")
 var player_name: String = ""
 var player_gender: String = ""
 var player_class_id: String = ""
+var player_voice_pack: String = ""
 
 var party_members: Array[Dictionary] = []
 
@@ -43,6 +44,7 @@ func _ready() -> void:
 func set_player_info(p_name: String, p_gender: String) -> void:
 	player_name = p_name
 	player_gender = p_gender
+	player_voice_pack = _assign_voice_pack(p_gender)
 	unlock_class(p_gender)
 
 
@@ -61,6 +63,7 @@ func add_party_member(p_name: String, p_gender: String, class_id: String, level:
 		"jp": 0,
 		"current_hp": -1,
 		"current_mp": -1,
+		"voice_pack": _assign_voice_pack(p_gender),
 	})
 	unlock_class(class_id)
 
@@ -74,6 +77,25 @@ func remove_party_member(member_name: String) -> void:
 
 func get_party_size() -> int:
 	return party_members.size()
+
+
+func get_voice_pack(unit_name: String) -> String:
+	if unit_name == player_name:
+		return player_voice_pack
+	for member in party_members:
+		if member.get("name", "") == unit_name:
+			return member.get("voice_pack", "")
+	return ""
+
+
+const _MALE_VOICE_PACKS: Array[String] = ["male_01", "male_02", "male_03", "male_04"]
+const _FEMALE_VOICE_PACKS: Array[String] = ["female_01", "female_02", "female_03", "female_04"]
+
+
+func _assign_voice_pack(gender: String) -> String:
+	if gender in ["prince", "male"]:
+		return _MALE_VOICE_PACKS[randi() % _MALE_VOICE_PACKS.size()]
+	return _FEMALE_VOICE_PACKS[randi() % _FEMALE_VOICE_PACKS.size()]
 
 
 # --- Class Unlock ---
@@ -448,6 +470,7 @@ func reset_for_new_game() -> void:
 	player_name = ""
 	player_gender = ""
 	player_class_id = ""
+	player_voice_pack = ""
 	player_level = 1
 	player_xp = 0
 	player_jp = 0
@@ -474,6 +497,7 @@ func save_game() -> void:
 		"player_name": player_name,
 		"player_gender": player_gender,
 		"player_class_id": player_class_id,
+		"player_voice_pack": player_voice_pack,
 		"player_level": player_level,
 		"player_xp": player_xp,
 		"player_jp": player_jp,
@@ -499,6 +523,7 @@ func load_game(slot: int) -> bool:
 	player_name = data.get("player_name", "")
 	player_gender = data.get("player_gender", "")
 	player_class_id = data.get("player_class_id", "")
+	player_voice_pack = data.get("player_voice_pack", "")
 	party_members.assign(data.get("party_members", []))
 	progression_stage = data.get("progression_stage", 0)
 	current_battle_id = data.get("current_battle", "")

@@ -1,5 +1,7 @@
 extends Node
 
+const Enums = preload("res://scripts/data/enums.gd")
+
 enum Category {
 	# Combat — melee/physical
 	STRIKE,
@@ -160,6 +162,59 @@ func set_sfx_volume(linear: float) -> void:
 func stop_all() -> void:
 	for player in _players:
 		player.stop()
+
+
+func play_ability_sfx(ability: Resource) -> void:
+	if ability.is_heal():
+		play(Category.SHIMMER)
+		return
+	if ability.is_buff_or_debuff():
+		play(Category.SHIMMER, 0.8)
+		return
+	if ability.is_terrain_ability():
+		match ability.terrain_tile:
+			Enums.TileType.FIRE_TILE:
+				play(Category.FIRE)
+			Enums.TileType.ICE_WALL:
+				play(Category.SPELL)
+			Enums.TileType.WALL, Enums.TileType.DESTRUCTIBLE:
+				play(Category.EARTH)
+			Enums.TileType.TRAP:
+				play(Category.SPELL, 0.7)
+			_:
+				play(Category.SPELL)
+		return
+	# Ranged physical
+	if ability.ability_range >= 2 and ability.modified_stat == Enums.StatType.PHYSICAL_ATTACK:
+		play(Category.RANGED_IMPACT)
+		return
+	# Damage by stat type
+	match ability.modified_stat:
+		Enums.StatType.PHYSICAL_ATTACK, Enums.StatType.ATTACK:
+			play(Category.STRIKE)
+		Enums.StatType.MAGIC_ATTACK:
+			play(_resolve_magic_sfx(ability.ability_name))
+		Enums.StatType.MIXED_ATTACK:
+			play(Category.CHARGED)
+		_:
+			play(Category.IMPACT)
+
+
+func _resolve_magic_sfx(ability_name: String) -> int:
+	var lower := ability_name.to_lower()
+	for keyword in ["fire", "flame", "burn", "ignite", "inferno", "blaze", "scorch"]:
+		if lower.contains(keyword):
+			return Category.FIRE
+	for keyword in ["lightning", "thunder", "shock", "bolt", "storm", "jolt"]:
+		if lower.contains(keyword):
+			return Category.LIGHTNING
+	for keyword in ["beam", "ray", "laser", "pulse"]:
+		if lower.contains(keyword):
+			return Category.BEAM
+	for keyword in ["vortex", "void", "dark", "shadow", "drain", "siphon", "necrotic"]:
+		if lower.contains(keyword):
+			return Category.VORTEX
+	return Category.SPELL
 
 
 func _get_available_player() -> AudioStreamPlayer:

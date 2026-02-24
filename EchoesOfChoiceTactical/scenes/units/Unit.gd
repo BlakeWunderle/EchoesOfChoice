@@ -32,6 +32,7 @@ var dodge_chance: int
 var movement: int
 var jump: int
 
+var voice_pack: String = ""
 var grid_position: Vector2i
 var facing: Enums.Facing = Enums.Facing.SOUTH
 var abilities: Array[AbilityData] = []
