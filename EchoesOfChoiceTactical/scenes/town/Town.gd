@@ -42,6 +42,7 @@ const TOWN_SHOPS: Dictionary = {
 	],
 	"crossroads_inn": [
 		# Consumables — Tier 0+1
+		"tent",
 		"health_potion", "mana_potion",
 		"strength_tonic", "magic_tonic", "guard_tonic",
 		"greater_health_potion", "greater_mana_potion",
@@ -53,7 +54,7 @@ const TOWN_SHOPS: Dictionary = {
 		"equipment/health_1", "equipment/mana_1",
 		"equipment/phys_atk_1", "equipment/phys_def_1",
 		"equipment/mag_atk_1", "equipment/mag_def_1", "equipment/speed_1",
-		"equipment/crit_0", "equipment/dodge_0",
+		"equipment/crit_1", "equipment/dodge_1",
 		"equipment/movement_1", "equipment/jump_1",
 	],
 	"gate_town": [
@@ -71,12 +72,12 @@ const TOWN_SHOPS: Dictionary = {
 		"equipment/health_1", "equipment/mana_1",
 		"equipment/phys_atk_1", "equipment/phys_def_1",
 		"equipment/mag_atk_1", "equipment/mag_def_1", "equipment/speed_1",
-		"equipment/crit_0", "equipment/dodge_0",
+		"equipment/crit_1", "equipment/dodge_1",
 		"equipment/movement_1", "equipment/jump_1",
 		"equipment/health_2", "equipment/mana_2",
 		"equipment/phys_atk_2", "equipment/phys_def_2",
 		"equipment/mag_atk_2", "equipment/mag_def_2", "equipment/speed_2",
-		"equipment/crit_1", "equipment/dodge_1",
+		"equipment/crit_2", "equipment/dodge_2",
 		"equipment/movement_2", "equipment/jump_2",
 	],
 }

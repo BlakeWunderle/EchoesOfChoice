@@ -5,16 +5,16 @@
 [resource]
 script = ExtResource("1")
 item_id = "dodge_1"
-display_name = "Wraith Cloak"
-description = "Woven from memory-silk; the body learns to slip away before the blow lands. +2 Dodge%."
+display_name = "Shadow Step"
+description = "A soft cloth token that trains the wearer to read attack angles. +1 Dodge%."
 item_type = 1
-buy_price = 200
+buy_price = 80
 sell_price_override = -1
 stat_bonuses = {
-8: 2
+8: 1
 }
-unlock_tier = 2
-unlock_class_ids = PackedStringArray("ninja", "tempest", "hunter", "illusionist", "pyromancer", "hydromancer")
+unlock_tier = 1
+unlock_class_ids = []
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0
