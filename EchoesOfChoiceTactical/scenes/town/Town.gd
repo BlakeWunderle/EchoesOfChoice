@@ -89,6 +89,7 @@ const TOWN_SHOPS: Dictionary = {
 
 
 func _ready() -> void:
+	MusicManager.play_context(MusicManager.MusicContext.TOWN)
 	_town_id = GameState.current_town_id
 	var node_data: Dictionary = MapData.get_node(_town_id)
 

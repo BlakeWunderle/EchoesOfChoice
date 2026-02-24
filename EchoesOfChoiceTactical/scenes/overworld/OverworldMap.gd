@@ -24,6 +24,7 @@ var _travel_event_scene: PackedScene = preload("res://scenes/story/TravelEvent.t
 
 
 func _ready() -> void:
+	MusicManager.play_context(MusicManager.MusicContext.EXPLORATION)
 	info_panel.visible = false
 	enter_button.pressed.connect(_on_enter_battle)
 

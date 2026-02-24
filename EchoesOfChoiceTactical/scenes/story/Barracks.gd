@@ -40,6 +40,7 @@ var _entered_name: String = ""
 
 
 func _ready() -> void:
+	MusicManager.play_context(MusicManager.MusicContext.MENU)
 	selection_panel.visible = false
 	name_panel.visible = false
 	dialogue_box.visible = false

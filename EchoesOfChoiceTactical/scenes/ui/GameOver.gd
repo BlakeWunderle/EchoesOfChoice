@@ -5,6 +5,7 @@ extends Control
 
 
 func _ready() -> void:
+	MusicManager.stop_music(0.5)
 	load_button.pressed.connect(_on_load)
 	title_button.pressed.connect(_on_title)
 

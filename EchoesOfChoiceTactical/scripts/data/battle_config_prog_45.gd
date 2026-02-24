@@ -174,6 +174,7 @@ static func create_lab_battle() -> BattleConfig:
 	config.battle_id = "lab_battle"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.music_context = 3  # MusicManager.MusicContext.BATTLE_SCIFI
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("lab_battle")

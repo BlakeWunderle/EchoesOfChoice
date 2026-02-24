@@ -155,6 +155,7 @@ static func create_elemental_1() -> BattleConfig:
 	config.battle_id = "elemental_1"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
 	# Shrine of Flames: mono-fire (1 lead lvl 8 + 4 lesser lvl 7)
@@ -184,6 +185,7 @@ static func create_elemental_2() -> BattleConfig:
 	config.battle_id = "elemental_2"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
 	# Shrine of Tides: mono-water (1 lead lvl 8 + 4 lesser lvl 7)
@@ -212,6 +214,7 @@ static func create_elemental_3() -> BattleConfig:
 	config.battle_id = "elemental_3"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
 	# Shrine of Winds: mono-air (1 lead lvl 8 + 4 lesser lvl 7)
@@ -240,6 +243,7 @@ static func create_elemental_4() -> BattleConfig:
 	config.battle_id = "elemental_4"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
 	# Shrine of Stone: mono-earth (1 lead lvl 8 + 4 lesser lvl 7)
@@ -270,6 +274,7 @@ static func create_final_castle() -> BattleConfig:
 	config.battle_id = "final_castle"
 	config.grid_width = 14
 	config.grid_height = 12
+	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
 	# The Stranger — final boss — plus elite castle guard. Level 8.

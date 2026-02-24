@@ -36,6 +36,7 @@ var _selected_class: String = ""
 
 
 func _ready() -> void:
+	MusicManager.play_context(MusicManager.MusicContext.MENU)
 	dialogue_box.visible = false
 	_build_class_buttons()
 

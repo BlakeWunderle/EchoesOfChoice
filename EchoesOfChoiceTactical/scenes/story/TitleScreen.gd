@@ -20,6 +20,7 @@ var _slot_buttons: Array[Button] = []
 
 
 func _ready() -> void:
+	MusicManager.play_context(MusicManager.MusicContext.MENU)
 	_title_label.modulate.a = 0.0
 	_subtitle_label.modulate.a = 0.0
 	_build_ui()

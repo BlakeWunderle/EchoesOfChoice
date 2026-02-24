@@ -189,6 +189,8 @@ func _setup_from_config(config: BattleConfig) -> void:
 	_executor = AbilityExecutor.new(grid, reaction_system)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
 	_connect_action_menu()
+
+	MusicManager.play_context(config.music_context)
 	_begin_battle()
 
 
@@ -670,6 +672,7 @@ func _on_battle_ended(player_won: bool) -> void:
 	grid_cursor.deactivate()
 	grid_overlay.clear_all()
 	_hide_action_menu()
+	MusicManager.stop_music(1.5)
 	if player_won:
 		turn_info.text = "VICTORY! The enemies have been vanquished."
 	else:

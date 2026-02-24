@@ -13,6 +13,7 @@ var _selected_gender: String = ""
 
 
 func _ready() -> void:
+	MusicManager.play_context(MusicManager.MusicContext.MENU)
 	name_container.visible = false
 	selection_label.visible = false
 	prince_button.pressed.connect(_on_prince_selected)
