@@ -11,6 +11,22 @@ Run this skill **once per progression stage**, lowest to highest. Each progressi
 
 ---
 
+## Balance Philosophy
+
+Balance is measured through **damage numbers and TTK**, not win rates.
+
+The core relationship: **attack growth outpaces defense growth**, so damage-per-hit increases each progression. HP growth compensates — keeping TTK in the 2-10 range even as raw damage climbs.
+
+| Concept | How It Works |
+|---------|-------------|
+| Damage scaling | Enemy attack stats should exceed the weakest party defense at each prog, producing positive damage. Higher prog = higher damage numbers. |
+| HP as the buffer | HP growth absorbs increasing damage. An enemy dealing 12p at Prog 3 isn't a problem if the target has 80+ HP (TTK=7). |
+| TTK is the metric | Squire hits-to-kill stays in 2-10 regardless of prog. If damage and HP both scale but TTK drifts outside this range, one side grew too fast. |
+| Threat coverage | Every base class should take damage from at least one enemy. T1/T2 extreme defenders (Warden, Bastion, Acolyte, Priest) may be immune to some enemies — that's by design, but the battle roster should still threaten them via mixed damage types. |
+| Items amplify, not dominate | Equipment should improve TTK by 1-3 hits, not halve it. Mirror-fight deltas (ΔKill, ΔSurv) catch items that break this. |
+
+---
+
 ## Godot Executable
 
 ```
@@ -191,9 +207,11 @@ Mark this progression as **LOCKED** and move to the next.
 Copy and fill per progression:
 
 ```
-PROGRESSION <N> (battles: <list>, target win rate: <X>%):
+PROGRESSION <N> (battles: <list>):
   STEP 1 -- Enemy Balance:
   - [ ] Run balance_check.gd for each battle
+  - [ ] Damage numbers positive vs weakest class, scaling from prior prog
+  - [ ] TTK 2-10 for all enemies
   - [ ] All flags either clean or in design-intent exceptions
   - [ ] Fix applied + re-run clean
   STEP 2 -- Item Balance:
@@ -272,7 +290,7 @@ No changes made in Steps 1-2. Nothing to cross-check. **STEP 3: PASS**
 ### Result
 
 ```
-PROGRESSION 0 (battles: city_street, target win rate: ~90%):
+PROGRESSION 0 (battles: city_street):
   STEP 1 -- Enemy Balance:
   - [x] Run balance_check.gd for city_street
   - [x] All flags clean (✓ All clear)

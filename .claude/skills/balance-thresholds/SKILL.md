@@ -1,6 +1,6 @@
 ---
 name: balance-thresholds
-description: Reference for EchoesOfChoiceTactical balance targets per progression stage. Use when interpreting balance_check.gd output, tuning enemy stats, or deciding if a number is acceptable. Contains win-rate targets, damage-per-hit ranges, TTK targets, party defense profiles, T1/T2 defender profiles, and fix recipes for each flag type.
+description: Reference for EchoesOfChoiceTactical balance targets per progression stage. Use when interpreting balance_check.gd output, tuning enemy stats, or deciding if a number is acceptable. Contains damage scaling philosophy, TTK targets, party defense profiles, T1/T2 defender profiles, and fix recipes for each flag type.
 ---
 
 # Balance Thresholds — Echoes of Choice Tactical
@@ -10,20 +10,26 @@ Use alongside `balance_check.gd` output when deciding if numbers need tuning.
 
 ---
 
-## Win-Rate Targets
+## Balance Philosophy — Damage Scaling
 
-| Prog | Stage Feel     | Target Win Rate |
-|------|----------------|-----------------|
-| 0    | Tutorial       | ~90%            |
-| 1    | Easy           | ~88%            |
-| 2    | Moderate       | ~83%            |
-| 3    | Challenge      | ~77%            |
-| 4    | Hard           | ~72%            |
-| 5    | Very Hard      | ~65%            |
-| 6    | Brutal         | ~60%            |
-| 7+   | Finale         | ~58%            |
+Balance is driven by **damage numbers and TTK**, not win rates.
 
-These are for **Normal difficulty**. See `difficulty-baseline` skill for Easy/Hard adjustments.
+**Attack growth outpaces defense growth.** This is by design — enemy attack stats should exceed party defense stats at each progression, producing positive damage per hit. As progression increases, raw damage numbers go up for both sides.
+
+**HP growth compensates.** Even though enemies hit harder at higher progs, party HP grows to absorb it. The result: TTK stays in the 2-10 range across all progressions. If TTK drifts outside this band, one side's growth rate is wrong.
+
+| Prog | Stage Feel | What Scales Up |
+|------|------------|---------------|
+| 0 | Tutorial | Low damage (2-12p), low HP. Enemies are fragile (TTK 3-6). |
+| 1-2 | Easy/Moderate | Damage climbs, HP keeps pace. First T1 defenders appear. |
+| 3-4 | Challenge | T2 defenders join. Extreme tanks (Bastion PD 49, Priest MD 33) start resisting. Enemies need mixed damage types. |
+| 5-6 | Hard/Brutal | High damage numbers but high HP. Equipment (+10 PD) narrows the gap — enemies need stronger attacks to stay threatening. |
+
+**What to check at each prog:**
+- Damage is positive vs the weakest base class (Mage for phys, Squire for mag)
+- Damage numbers are higher than the previous prog (growth is working)
+- TTK stays in 2-10 (HP is compensating)
+- T1/T2 extreme defenders are threatened by at least one enemy per battle
 
 ---
 
@@ -164,26 +170,26 @@ At ~100 JP (available from Prog 3+), players may have promoted to Tier 2 classes
 
 ---
 
-## Damage-per-Hit Targets
+## Damage-per-Hit Reference
 
-How much should an enemy deal to the **most vulnerable class** per hit?
+Enemy damage vs the **most vulnerable class** should be positive and scale upward. The table shows the weakest defense at each prog — this is the floor enemies must exceed to deal any damage.
 
-| Prog | Target Range | Most Vulnerable (phys) | Most Vulnerable (mag) |
-|------|-------------|------------------------|----------------------|
-| 0    | 2–5         | Mage (P.Def 11)        | Squire (M.Def 11)    |
-| 1    | 2–5         | Mage (P.Def 16)        | Squire (M.Def 13)    |
-| 2    | 3–6         | Mage (P.Def 18)        | Squire (M.Def 15)    |
-| 3    | 4–7         | Mage (P.Def 22)        | Squire (M.Def 17)    |
-| 4    | 4–8         | Mage (P.Def 22)        | Squire (M.Def 17)    |
-| 5    | 5–9         | Mage (P.Def 29)        | Squire (M.Def 19)    |
-| 6    | 5–10        | Mage (P.Def 31)        | Squire (M.Def 21)    |
-| 7    | 6–12        | Mage (P.Def 34)        | Squire (M.Def 21)    |
+| Prog | Weakest Phys Def | Weakest Mag Def | Expected Damage Range (vs weakest) |
+|------|-----------------|-----------------|-----------------------------------|
+| 0    | Mage PD 11      | Squire MD 11    | 2-8 (low stats, small numbers)    |
+| 1    | Mage PD 16      | Squire MD 13    | 1-8 (slight growth, equip +3 PD) |
+| 2    | Mage PD 18      | Squire MD 15    | 3-10 (scaling up)                 |
+| 3    | Mage PD 22      | Squire MD 17    | 4-12 (T1 equip, larger numbers)   |
+| 4    | Mage PD 22      | Squire MD 17    | 4-12 (same level as P3)           |
+| 5    | Mage PD 29      | Squire MD 19    | 5-14 (equip +10 PD, big jump)     |
+| 6    | Mage PD 31      | Squire MD 21    | 5-15 (late-game numbers)          |
+| 7    | Mage PD 34      | Squire MD 21    | 6-18 (finale)                     |
 
-It is **OK** for an enemy to deal 0 damage to some classes (e.g., Entertainer with high M.Def
-resisting a weak magic attack is fine). The floor is: damage >= 1 to **at least one base class**.
+**Key rule:** Damage must be positive (> 0) vs at least one base class. It's OK for an enemy to deal 0 to some classes — a physical enemy dealing 0 to Entertainer (high M.Def) while hitting Mage for 10p is fine. The flags catch the problems:
+- `⚠ZERO` = 0 damage to ALL classes (enemy is toothless)
+- `⚠SPIKE` = too MUCH damage (kills a class in <3 hits — HP can't compensate)
 
-Support units (healers, buffers) may legitimately deal 0 damage to all — that's a design choice,
-not a bug. Review the `⚠ZERO` flag in context.
+Support units (healers, buffers) may legitimately deal 0 damage to all — that's a design choice, not a bug. Review the `⚠ZERO` flag in context.
 
 ---
 
