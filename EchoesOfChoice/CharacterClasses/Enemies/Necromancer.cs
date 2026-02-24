@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Necromancer(int level = 9)
         {
             Level = level;
-            Health = Stat(103, 131, 5, 10, 9);
+            Health = Stat(103, 139, 5, 10, 9);
             MaxHealth = Health;
             PhysicalAttack = Stat(23, 33, 1, 3, 9);
             PhysicalDefense = Stat(24, 34, 2, 4, 9);

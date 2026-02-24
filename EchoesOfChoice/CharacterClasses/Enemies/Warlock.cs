@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Warlock(int level = 9)
         {
             Level = level;
-            Health = Stat(91, 119, 5, 10, 9);
+            Health = Stat(91, 122, 5, 10, 9);
             MaxHealth = Health;
             PhysicalAttack = Stat(21, 31, 1, 3, 9);
             PhysicalDefense = Stat(20, 30, 1, 3, 9);

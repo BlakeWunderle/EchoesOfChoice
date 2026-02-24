@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Druid(int level = 9)
         {
             Level = level;
-            Health = Stat(125, 153, 7, 12, 9);
+            Health = Stat(125, 161, 7, 12, 9);
             MaxHealth = Health;
             PhysicalAttack = Stat(29, 39, 2, 4, 9);
             PhysicalDefense = Stat(28, 38, 2, 4, 9);

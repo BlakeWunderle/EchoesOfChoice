@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Fiend(int level = 9)
         {
             Level = level;
-            Health = Stat(107, 127, 6, 12, 9);
+            Health = Stat(107, 135, 6, 12, 9);
             MaxHealth = Health;
             PhysicalAttack = Stat(26, 34, 1, 3, 9);
             PhysicalDefense = Stat(22, 30, 1, 3, 9);

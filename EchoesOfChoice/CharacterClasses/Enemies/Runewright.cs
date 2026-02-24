@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Runewright(int level = 10)
         {
             Level = level;
-            Health = Stat(128, 160, 7, 12, 10);
+            Health = Stat(128, 163, 7, 12, 10);
             MaxHealth = Health;
             PhysicalAttack = Stat(38, 49, 3, 5, 10);
             PhysicalDefense = Stat(35, 46, 3, 5, 10);

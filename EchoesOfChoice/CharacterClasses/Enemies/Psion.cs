@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Psion(int level = 10)
         {
             Level = level;
-            Health = Stat(108, 140, 5, 10, 10);
+            Health = Stat(108, 143, 5, 10, 10);
             MaxHealth = Health;
             PhysicalAttack = Stat(22, 33, 1, 3, 10);
             PhysicalDefense = Stat(21, 32, 1, 3, 10);

@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Seraph(int level = 9)
         {
             Level = level;
-            Health = Stat(136, 156, 8, 14, 9);
+            Health = Stat(136, 164, 8, 14, 9);
             MaxHealth = Health;
             PhysicalAttack = Stat(36, 46, 3, 6, 9);
             PhysicalDefense = Stat(30, 38, 3, 5, 9);

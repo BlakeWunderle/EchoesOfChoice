@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Shaman(int level = 9)
         {
             Level = level;
-            Health = Stat(124, 152, 8, 13, 9);
+            Health = Stat(124, 155, 8, 13, 9);
             MaxHealth = Health;
             PhysicalAttack = Stat(31, 41, 2, 4, 9);
             PhysicalDefense = Stat(34, 44, 3, 5, 9);
