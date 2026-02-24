@@ -54,9 +54,10 @@ static func roll_dodge(dodge_chance: int) -> bool:
 	return roll <= dodge_chance
 
 
-static func calculate_heal(ability: AbilityData, caster_mag_atk: int) -> int:
+static func calculate_heal(ability: AbilityData, caster_mag_atk: int, caster_phys_atk: int = 0) -> int:
 	if ability.modified_stat == Enums.StatType.MIXED_ATTACK:
-		return ability.modifier + caster_mag_atk
+		var atk_avg := (caster_phys_atk + caster_mag_atk) / 2
+		return ability.modifier + atk_avg
 	return ability.modifier + caster_mag_atk
 
 
