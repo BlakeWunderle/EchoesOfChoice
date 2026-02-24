@@ -4,8 +4,7 @@ extends SceneTree
 ##
 ## Optional filters (after --):
 ##   -- squire       show only Squire rows
-##   -- mage         show only Mage rows
-##   -- scholar      show only Scholar rows
+##   -- ranger       show only Ranger rows (any class in CLASS_PROFILES)
 ##   -- 0 / 1 / 2   show only that tier
 ##   -- squire 1     Squire at Tier 1 only
 ##
@@ -43,40 +42,97 @@ const INF_HITS: int = 9999  # sentinel for "cannot kill / cannot be killed"
 
 # ─── Reference class profiles ─────────────────────────────────────────────────
 # Base + growth*(level-1), no equipment.
-# Source: resources/classes/squire.tres, mage.tres, scholar.tres
 # Tier checkpoints: T0 → Lv2, T1 → Lv4, T2 → Lv6
+# T0 classes have Lv2/4/6, T1 classes have Lv4/6, T2 classes have Lv6 only.
 const CLASS_PROFILES: Dictionary = {
+	# ── T0 base classes ──────────────────────────────────────────────────────
 	"squire": {
-		# PA=18+2*(L-1), PD=15+2*(L-1), HP=55+8*(L-1), MA=9+2*(L-1), MD=13+2*(L-1)
-		# Spd=13+3*(L-1), Crit=2, CritDmg=2, Dodge=1, Move=4, Jump=2
-		2: {"pa": 20, "pd": 17, "ma": 11, "md": 15, "hp": 63, "mana": 11,
-			"speed": 16, "crit": 2, "crit_dmg": 2, "dodge": 1, "move": 4, "jump": 2},
-		4: {"pa": 24, "pd": 21, "ma": 15, "md": 19, "hp": 79, "mana": 15,
-			"speed": 22, "crit": 2, "crit_dmg": 2, "dodge": 1, "move": 4, "jump": 2},
-		6: {"pa": 28, "pd": 25, "ma": 19, "md": 23, "hp": 95, "mana": 19,
-			"speed": 28, "crit": 2, "crit_dmg": 2, "dodge": 1, "move": 4, "jump": 2},
+		# PA=21+2*(L-1), PD=15+2*(L-1), HP=55+8*(L-1), MA=9+2*(L-1), MD=11+2*(L-1)
+		# Spd=13+3*(L-1), Crit=15, CritDmg=2, Dodge=5, Move=4, Jump=2
+		2: {"pa": 23, "pd": 17, "ma": 11, "md": 13, "hp": 63, "mana": 11,
+			"speed": 16, "crit": 15, "crit_dmg": 2, "dodge": 5, "move": 4, "jump": 2},
+		4: {"pa": 27, "pd": 21, "ma": 15, "md": 17, "hp": 79, "mana": 15,
+			"speed": 22, "crit": 15, "crit_dmg": 2, "dodge": 5, "move": 4, "jump": 2},
+		6: {"pa": 31, "pd": 25, "ma": 19, "md": 21, "hp": 95, "mana": 19,
+			"speed": 28, "crit": 15, "crit_dmg": 2, "dodge": 5, "move": 4, "jump": 2},
 	},
 	"mage": {
-		# PA=14+2*(L-1), PD=13+2*(L-1), HP=49+6*(L-1), MA=20+2*(L-1), MD=18+2*(L-1)
-		# Spd=15+3*(L-1), Crit=1, CritDmg=1, Dodge=1, Move=3, Jump=1
-		2: {"pa": 16, "pd": 15, "ma": 22, "md": 20, "hp": 55, "mana": 22,
-			"speed": 18, "crit": 1, "crit_dmg": 1, "dodge": 1, "move": 3, "jump": 1},
-		4: {"pa": 20, "pd": 19, "ma": 26, "md": 24, "hp": 67, "mana": 25,
-			"speed": 24, "crit": 1, "crit_dmg": 1, "dodge": 1, "move": 3, "jump": 1},
-		6: {"pa": 24, "pd": 23, "ma": 30, "md": 28, "hp": 79, "mana": 28,
-			"speed": 30, "crit": 1, "crit_dmg": 1, "dodge": 1, "move": 3, "jump": 1},
+		# PA=11+2*(L-1), PD=11+2*(L-1), HP=49+6*(L-1), MA=23+2*(L-1), MD=18+2*(L-1)
+		# Spd=15+3*(L-1), Crit=5, CritDmg=1, Dodge=5, Move=3, Jump=1
+		2: {"pa": 13, "pd": 13, "ma": 25, "md": 20, "hp": 55, "mana": 22,
+			"speed": 18, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 3, "jump": 1},
+		4: {"pa": 17, "pd": 17, "ma": 29, "md": 24, "hp": 67, "mana": 28,
+			"speed": 24, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 3, "jump": 1},
+		6: {"pa": 21, "pd": 21, "ma": 33, "md": 28, "hp": 79, "mana": 31,
+			"speed": 30, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 3, "jump": 1},
 	},
 	"scholar": {
-		# PA=9+2*(L-1), PD=12+2*(L-1), HP=44+7*(L-1), MA=18+2*(L-1), MD=18+2*(L-1)
-		# Spd=13+3*(L-1), Crit=1, CritDmg=1, Dodge=1, Move=3, Jump=1
-		2: {"pa": 11, "pd": 14, "ma": 20, "md": 20, "hp": 51, "mana": 16,
-			"speed": 16, "crit": 1, "crit_dmg": 1, "dodge": 1, "move": 3, "jump": 1},
-		4: {"pa": 15, "pd": 18, "ma": 24, "md": 24, "hp": 65, "mana": 20,
-			"speed": 22, "crit": 1, "crit_dmg": 1, "dodge": 1, "move": 3, "jump": 1},
-		6: {"pa": 19, "pd": 22, "ma": 28, "md": 28, "hp": 79, "mana": 24,
-			"speed": 28, "crit": 1, "crit_dmg": 1, "dodge": 1, "move": 3, "jump": 1},
+		# PA=7+2*(L-1), PD=12+2*(L-1), HP=44+7*(L-1), MA=20+2*(L-1), MD=20+2*(L-1)
+		# Spd=13+3*(L-1), Crit=5, CritDmg=1, Dodge=5, Move=3, Jump=1
+		2: {"pa": 9, "pd": 14, "ma": 22, "md": 22, "hp": 51, "mana": 16,
+			"speed": 16, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 3, "jump": 1},
+		4: {"pa": 13, "pd": 18, "ma": 26, "md": 26, "hp": 65, "mana": 20,
+			"speed": 22, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 3, "jump": 1},
+		6: {"pa": 17, "pd": 22, "ma": 30, "md": 30, "hp": 79, "mana": 24,
+			"speed": 28, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 3, "jump": 1},
+	},
+	# ── T1 representatives ───────────────────────────────────────────────────
+	"ranger": {
+		# PA=24+3*(L-1), PD=17+2*(L-1), HP=59+10*(L-1), MA=9+3*(L-1), MD=11+2*(L-1)
+		# Spd=16+3*(L-1), Crit=20, CritDmg=3, Dodge=5, Move=5, Jump=3
+		4: {"pa": 33, "pd": 23, "ma": 18, "md": 17, "hp": 89, "mana": 15,
+			"speed": 25, "crit": 20, "crit_dmg": 3, "dodge": 5, "move": 5, "jump": 3},
+		6: {"pa": 39, "pd": 27, "ma": 24, "md": 21, "hp": 109, "mana": 19,
+			"speed": 31, "crit": 20, "crit_dmg": 3, "dodge": 5, "move": 5, "jump": 3},
+	},
+	"firebrand": {
+		# PA=14+2*(L-1), PD=10+2*(L-1), HP=49+7*(L-1), MA=28+7*(L-1), MD=18+3*(L-1)
+		# Spd=17+3*(L-1), Crit=10, CritDmg=2, Dodge=5, Move=3, Jump=1
+		4: {"pa": 20, "pd": 16, "ma": 49, "md": 27, "hp": 70, "mana": 34,
+			"speed": 26, "crit": 10, "crit_dmg": 2, "dodge": 5, "move": 3, "jump": 1},
+		6: {"pa": 24, "pd": 20, "ma": 63, "md": 33, "hp": 84, "mana": 44,
+			"speed": 32, "crit": 10, "crit_dmg": 2, "dodge": 5, "move": 3, "jump": 1},
+	},
+	"dervish": {
+		# PA=14+4*(L-1), PD=12+2*(L-1), HP=49+6*(L-1), MA=21+4*(L-1), MD=18+2*(L-1)
+		# Spd=20+4*(L-1), Crit=10, CritDmg=2, Dodge=15, Move=5, Jump=2
+		4: {"pa": 26, "pd": 18, "ma": 33, "md": 24, "hp": 67, "mana": 23,
+			"speed": 32, "crit": 10, "crit_dmg": 2, "dodge": 15, "move": 5, "jump": 2},
+		6: {"pa": 34, "pd": 22, "ma": 41, "md": 28, "hp": 79, "mana": 29,
+			"speed": 40, "crit": 10, "crit_dmg": 2, "dodge": 15, "move": 5, "jump": 2},
+	},
+	# ── T2 representatives ───────────────────────────────────────────────────
+	"ninja": {
+		# PA=27+5*(L-1), PD=14+2*(L-1), HP=59+10*(L-1), MA=9+2*(L-1), MD=10+2*(L-1)
+		# Spd=19+5*(L-1), Crit=25, CritDmg=3, Dodge=15, Move=5, Jump=3
+		6: {"pa": 52, "pd": 24, "ma": 19, "md": 20, "hp": 109, "mana": 22,
+			"speed": 44, "crit": 25, "crit_dmg": 3, "dodge": 15, "move": 5, "jump": 3},
+	},
+	"bastion": {
+		# PA=17+2*(L-1), PD=28+7*(L-1), HP=67+13*(L-1), MA=9+2*(L-1), MD=15+3*(L-1)
+		# Spd=14+2*(L-1), Crit=5, CritDmg=1, Dodge=0, Move=3, Jump=1
+		6: {"pa": 27, "pd": 63, "ma": 19, "md": 30, "hp": 132, "mana": 19,
+			"speed": 24, "crit": 5, "crit_dmg": 1, "dodge": 0, "move": 3, "jump": 1},
+	},
+	"illusionist": {
+		# PA=14+3*(L-1), PD=10+2*(L-1), HP=55+9*(L-1), MA=26+6*(L-1), MD=17+3*(L-1)
+		# Spd=18+5*(L-1), Crit=15, CritDmg=2, Dodge=20, Move=4, Jump=2
+		6: {"pa": 29, "pd": 20, "ma": 56, "md": 32, "hp": 100, "mana": 31,
+			"speed": 43, "crit": 15, "crit_dmg": 2, "dodge": 20, "move": 4, "jump": 2},
+	},
+	"mercenary": {
+		# PA=26+5*(L-1), PD=14+2*(L-1), HP=59+10*(L-1), MA=9+2*(L-1), MD=10+2*(L-1)
+		# Spd=18+5*(L-1), Crit=30, CritDmg=7, Dodge=5, Move=5, Jump=2
+		6: {"pa": 51, "pd": 24, "ma": 19, "md": 20, "hp": 109, "mana": 19,
+			"speed": 43, "crit": 30, "crit_dmg": 7, "dodge": 5, "move": 5, "jump": 2},
 	},
 }
+
+const CLASS_DISPLAY_ORDER: Array = [
+	"squire", "mage", "scholar",
+	"ranger", "firebrand", "dervish",
+	"ninja", "bastion", "illusionist", "mercenary",
+]
 
 # Tier → (level checkpoint, equipment slot count)
 const TIER_CHECKPOINTS: Dictionary = {
@@ -86,60 +142,98 @@ const TIER_CHECKPOINTS: Dictionary = {
 }
 
 # ─── Preset combo loadouts ────────────────────────────────────────────────────
-# Tested at T2 (Lv6, 3-slot). Each entry: {label, bonuses, slots}
+# Tested at Lv6. Each entry: {label, bonuses, slots}
 # bonuses = stat_key → total bonus amount
+# Equipment values: PA/PD/MA/MD 0:+3 1:+5 2:+8, HP 0:+5 1:+10 2:+15,
+#   Spd 0:+2 1:+3 2:+5, Crit 1:+5 2:+10, Dodge 1:+5 2:+10
 const COMBOS: Dictionary = {
 	"squire": [
-		# 2-slot (T1 character)
-		{"label": "2x PA T1",         "bonuses": {0: 10},              "slots": 2},
-		{"label": "PA1 + PD1",        "bonuses": {0: 5, 1: 5},         "slots": 2},
-		{"label": "PA1 + HP1",        "bonuses": {0: 5, 10: 10},       "slots": 2},
-		# 3-slot (T2 character)
-		{"label": "3x PA T2",         "bonuses": {0: 24},              "slots": 3},
-		{"label": "3x PD T2",         "bonuses": {1: 24},              "slots": 3},
-		{"label": "PA(0+1+2)",        "bonuses": {0: 16},              "slots": 3},
-		{"label": "PA2+Spd2+Crit2",   "bonuses": {0: 8, 7: 5, 12: 2}, "slots": 3},
-		{"label": "PD2+HP2+MD2",      "bonuses": {1: 8, 10: 15, 3: 8},"slots": 3},
-		{"label": "PA2+PD2+HP2",      "bonuses": {0: 8, 1: 8, 10: 15},"slots": 3},
+		{"label": "2x PA T1",         "bonuses": {0: 10},               "slots": 2},
+		{"label": "PA1 + PD1",        "bonuses": {0: 5, 1: 5},          "slots": 2},
+		{"label": "PA1 + HP1",        "bonuses": {0: 5, 10: 10},        "slots": 2},
+		{"label": "3x PA T2",         "bonuses": {0: 24},               "slots": 3},
+		{"label": "3x PD T2",         "bonuses": {1: 24},               "slots": 3},
+		{"label": "PA(0+1+2)",        "bonuses": {0: 16},               "slots": 3},
+		{"label": "PA2+Spd2+Crit2",   "bonuses": {0: 8, 7: 5, 12: 10}, "slots": 3},
+		{"label": "PD2+HP2+MD2",      "bonuses": {1: 8, 10: 15, 3: 8}, "slots": 3},
+		{"label": "PA2+PD2+HP2",      "bonuses": {0: 8, 1: 8, 10: 15}, "slots": 3},
 	],
 	"mage": [
-		{"label": "2x MA T1",         "bonuses": {2: 10},              "slots": 2},
-		{"label": "MA1 + MD1",        "bonuses": {2: 5, 3: 5},         "slots": 2},
-		{"label": "MA1 + HP1",        "bonuses": {2: 5, 10: 10},       "slots": 2},
-		{"label": "3x MA T2",         "bonuses": {2: 24},              "slots": 3},
-		{"label": "3x MD T2",         "bonuses": {3: 24},              "slots": 3},
-		{"label": "MA(0+1+2)",        "bonuses": {2: 16},              "slots": 3},
-		{"label": "MA2+Spd2+Crit2",   "bonuses": {2: 8, 7: 5, 12: 2}, "slots": 3},
-		{"label": "MD2+HP2+PD2",      "bonuses": {3: 8, 10: 15, 1: 8},"slots": 3},
-		{"label": "MA2+MD2+HP2",      "bonuses": {2: 8, 3: 8, 10: 15},"slots": 3},
+		{"label": "2x MA T1",         "bonuses": {2: 10},               "slots": 2},
+		{"label": "MA1 + MD1",        "bonuses": {2: 5, 3: 5},          "slots": 2},
+		{"label": "MA1 + HP1",        "bonuses": {2: 5, 10: 10},        "slots": 2},
+		{"label": "3x MA T2",         "bonuses": {2: 24},               "slots": 3},
+		{"label": "3x MD T2",         "bonuses": {3: 24},               "slots": 3},
+		{"label": "MA(0+1+2)",        "bonuses": {2: 16},               "slots": 3},
+		{"label": "MA2+Spd2+Crit2",   "bonuses": {2: 8, 7: 5, 12: 10}, "slots": 3},
+		{"label": "MD2+HP2+PD2",      "bonuses": {3: 8, 10: 15, 1: 8}, "slots": 3},
+		{"label": "MA2+MD2+HP2",      "bonuses": {2: 8, 3: 8, 10: 15}, "slots": 3},
 	],
 	"scholar": [
-		{"label": "2x MA T1",         "bonuses": {2: 10},              "slots": 2},
-		{"label": "MA1 + MD1",        "bonuses": {2: 5, 3: 5},         "slots": 2},
-		{"label": "MA1 + Dodge1",     "bonuses": {2: 5, 8: 1},         "slots": 2},
-		{"label": "3x MA T2",         "bonuses": {2: 24},              "slots": 3},
-		{"label": "3x MD T2",         "bonuses": {3: 24},              "slots": 3},
-		{"label": "MA(0+1+2)",        "bonuses": {2: 16},              "slots": 3},
-		{"label": "MA2+Dod2+HP2",     "bonuses": {2: 8, 8: 2, 10: 15},"slots": 3},
-		{"label": "MD2+HP2+Spd2",     "bonuses": {3: 8, 10: 15, 7: 5},"slots": 3},
-		{"label": "MA2+MD2+HP2",      "bonuses": {2: 8, 3: 8, 10: 15},"slots": 3},
+		{"label": "2x MA T1",         "bonuses": {2: 10},               "slots": 2},
+		{"label": "MA1 + MD1",        "bonuses": {2: 5, 3: 5},          "slots": 2},
+		{"label": "MA1 + Dodge1",     "bonuses": {2: 5, 8: 5},          "slots": 2},
+		{"label": "3x MA T2",         "bonuses": {2: 24},               "slots": 3},
+		{"label": "3x MD T2",         "bonuses": {3: 24},               "slots": 3},
+		{"label": "MA(0+1+2)",        "bonuses": {2: 16},               "slots": 3},
+		{"label": "MA2+Dod2+HP2",     "bonuses": {2: 8, 8: 10, 10: 15},"slots": 3},
+		{"label": "MD2+HP2+Spd2",     "bonuses": {3: 8, 10: 15, 7: 5}, "slots": 3},
+		{"label": "MA2+MD2+HP2",      "bonuses": {2: 8, 3: 8, 10: 15}, "slots": 3},
+	],
+	"ranger": [
+		{"label": "PA1 + Crit1",      "bonuses": {0: 5, 12: 5},         "slots": 2},
+		{"label": "PA1 + HP1",        "bonuses": {0: 5, 10: 10},        "slots": 2},
+		{"label": "PA2+Crit2+Spd2",   "bonuses": {0: 8, 12: 10, 7: 5}, "slots": 3},
+		{"label": "3x PA",            "bonuses": {0: 24},               "slots": 3},
+	],
+	"firebrand": [
+		{"label": "MA1 + HP1",        "bonuses": {2: 5, 10: 10},        "slots": 2},
+		{"label": "MA1 + MD1",        "bonuses": {2: 5, 3: 5},          "slots": 2},
+		{"label": "MA2+Crit2+Spd2",   "bonuses": {2: 8, 12: 10, 7: 5}, "slots": 3},
+		{"label": "MA2+HP2+MD2",      "bonuses": {2: 8, 10: 15, 3: 8}, "slots": 3},
+	],
+	"dervish": [
+		{"label": "MA1 + Dodge1",     "bonuses": {2: 5, 8: 5},          "slots": 2},
+		{"label": "MA1 + Spd1",       "bonuses": {2: 5, 7: 3},          "slots": 2},
+		{"label": "MA2+Dod2+Spd2",    "bonuses": {2: 8, 8: 10, 7: 5},  "slots": 3},
+		{"label": "MA2+MA1+Dod1",     "bonuses": {2: 13, 8: 5},         "slots": 3},
+	],
+	"ninja": [
+		{"label": "PA2+Crit2+Spd2",   "bonuses": {0: 8, 12: 10, 7: 5}, "slots": 3},
+		{"label": "3x PA",            "bonuses": {0: 24},               "slots": 3},
+		{"label": "PA2+Dod2+Spd2",    "bonuses": {0: 8, 8: 10, 7: 5},  "slots": 3},
+	],
+	"bastion": [
+		{"label": "3x PD",            "bonuses": {1: 24},               "slots": 3},
+		{"label": "PD2+HP2+MD2",      "bonuses": {1: 8, 10: 15, 3: 8}, "slots": 3},
+		{"label": "PD2+PD1+HP1",      "bonuses": {1: 13, 10: 10},      "slots": 3},
+	],
+	"illusionist": [
+		{"label": "MA2+Dod2+Spd2",    "bonuses": {2: 8, 8: 10, 7: 5},  "slots": 3},
+		{"label": "3x MA",            "bonuses": {2: 24},               "slots": 3},
+		{"label": "MA2+MA1+Dod1",     "bonuses": {2: 13, 8: 5},         "slots": 3},
+	],
+	"mercenary": [
+		{"label": "PA2+Crit2+Spd2",   "bonuses": {0: 8, 12: 10, 7: 5}, "slots": 3},
+		{"label": "3x PA",            "bonuses": {0: 24},               "slots": 3},
+		{"label": "PA2+Crit2+HP2",    "bonuses": {0: 8, 12: 10, 10: 15},"slots": 3},
 	],
 }
 
-# Initial best-fit class per primary stat (placeholder — update after first discovery run)
+# Best-fit class per primary stat for story item testing
 const BEST_FIT: Dictionary = {
-	0:  "squire",   # P.Atk → physical attacker
-	1:  "squire",   # P.Def → physical tank
-	2:  "mage",     # M.Atk → magic attacker
-	3:  "scholar",  # M.Def → magic defender
-	7:  "squire",   # Speed → Squire is slightly slower at base
-	8:  "scholar",  # Dodge% → squishiest class benefits most
-	10: "squire",   # HP → Squire has lowest HP growth relative to role
-	11: "mage",     # Mana → most mana-dependent class
-	12: "squire",   # Crit% → highest base damage
-	13: "squire",   # CritDmg → highest base damage
-	14: "scholar",  # Move → shortest-range class benefits most
-	15: "mage",     # Jump → lowest jump (1) classes benefit most
+	0:  "ranger",      # P.Atk → physical attacker
+	1:  "bastion",     # P.Def → physical tank
+	2:  "firebrand",   # M.Atk → magic glass cannon
+	3:  "scholar",     # M.Def → magic defender
+	7:  "dervish",     # Speed → dodge-based benefits most from speed
+	8:  "illusionist", # Dodge% → highest dodge base
+	10: "bastion",     # HP → tank benefits most from bulk
+	11: "firebrand",   # Mana → mana-hungry caster
+	12: "mercenary",   # Crit% → crit specialist
+	13: "mercenary",   # CritDmg → crit specialist
+	14: "bastion",     # Move → slowest class benefits most
+	15: "bastion",     # Jump → lowest jump (1) benefits most
 }
 
 
@@ -372,12 +466,13 @@ func _utility_note(bonuses: Dictionary, profile: Dictionary) -> String:
 			var base_c: int = profile["crit"]
 			var new_c: int  = base_c + delta
 			var cd: int     = profile["crit_dmg"]
-			# Expected dmg multiplier delta = delta/10 * crit_dmg/10
-			var add_pct: int = int(round(float(delta) / 10.0 * float(cd) / 10.0 * 100.0))
-			return "≈+%d%% E[dmg] (crit %d%%→%d%%)" % [add_pct, base_c * 10, new_c * 10]
+			# Expected flat dmg increase per hit = (delta/100) * crit_damage
+			var extra: float = float(delta) / 100.0 * float(cd)
+			return "crit %d%%→%d%% (≈+%.1f avg dmg, cd=%d)" % [base_c, new_c, extra, cd]
 		STAT_DODGE:
 			var base_d: int = profile["dodge"]
-			return "≈+%d0%% hit-avoid (%d%%→%d%%)" % [delta, base_d * 10, (base_d + delta) * 10]
+			var new_d: int  = base_d + delta
+			return "+%d%% dodge (%d%%→%d%%)" % [delta, base_d, new_d]
 	return ""
 
 
@@ -629,7 +724,7 @@ func _initialize() -> void:
 				tier_groups[t].append(item)
 
 	# ── Per-class, per-tier reports ───────────────────────────────────────────
-	var classes: Array = ["squire", "mage", "scholar"]
+	var classes: Array = CLASS_DISPLAY_ORDER.duplicate()
 	if not filter_class.is_empty():
 		classes = [filter_class]
 
@@ -645,12 +740,14 @@ func _initialize() -> void:
 		for tier: int in tiers:
 			var checkpoint: Dictionary = TIER_CHECKPOINTS[tier]
 			var level: int = checkpoint["level"]
+			if not class_profs.has(level):
+				continue  # T1/T2 classes don't have lower-tier checkpoints
 			var profile: Dictionary = class_profs[level]
 			var items: Array = tier_groups[tier]
 			_report_class_tier(cls, tier, level, items, profile)
 
-		# Combos always shown at T2 (unless filtering to tier 0 or 1 only)
-		if filter_tier < 0 or filter_tier == 2:
+		# Combos always shown at Lv6 (unless filtering to tier 0 or 1 only)
+		if (filter_tier < 0 or filter_tier == 2) and class_profs.has(6):
 			var t2_profile: Dictionary = class_profs[6]
 			_report_combos(cls, t2_profile)
 
