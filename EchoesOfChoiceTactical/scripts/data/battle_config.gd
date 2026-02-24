@@ -8,6 +8,9 @@ class_name BattleConfig extends Resource
 @export var player_units: Array[Dictionary] = []
 @export var enemy_units: Array[Dictionary] = []
 
+@export_group("Audio")
+@export var music_context: int = 1  # MusicManager.MusicContext.BATTLE
+
 @export_group("Dialogue")
 @export var pre_battle_dialogue: Array[Dictionary] = []   # [{speaker, text}, ...] shown before combat
 @export var post_battle_dialogue: Array[Dictionary] = []  # [{speaker, text}, ...] shown after victory
