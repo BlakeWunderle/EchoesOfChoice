@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-class_id = "void_stalker"
-class_display_name = "Void Stalker"
+class_id = "void_watcher"
+class_display_name = "Void Watcher"
 base_max_health = 85
 base_max_mana = 20
 base_physical_attack = 14

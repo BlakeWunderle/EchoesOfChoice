@@ -215,13 +215,13 @@ static func create_mirror_battle() -> BattleConfig:
 	var progression: int = node_data.get("progression", 5)
 	var lvl: int = maxi(1, progression)
 
-	# C# MirrorBattle: shadow clones of party (no fixed enemy list). Tactical: void_stalker (commanding lead), gloom_stalker, night_prowler × 2, dusk_moth. No shadow_hound — this is the watcher's real force, not a scouting pack.
-	var void_stalker := load("res://resources/enemies/void_stalker.tres")
-	var prowler := load("res://resources/enemies/shade_prowler.tres")
+	# C# MirrorBattle: shadow clones of party (no fixed enemy list). Tactical: void_watcher (commanding lead), mirror_stalker, dusk_prowler × 2, twilight_moth. No shadow_hound — this is the watcher's real force, not a scouting pack.
+	var void_watcher := load("res://resources/enemies/void_watcher.tres")
+	var prowler := load("res://resources/enemies/dusk_prowler.tres")
 	var stalker := load("res://resources/enemies/mirror_stalker.tres")
 	var moth := load("res://resources/enemies/twilight_moth.tres")
 	config.enemy_units = [
-		{"data": void_stalker, "name": "Tenebris", "pos": Vector2i(13, 4), "level": lvl},
+		{"data": void_watcher, "name": "Tenebris", "pos": Vector2i(13, 4), "level": lvl},
 		{"data": stalker, "name": "Vesper", "pos": Vector2i(12, 2), "level": lvl},
 		{"data": prowler, "name": "Noctis", "pos": Vector2i(12, 1), "level": lvl},
 		{"data": prowler, "name": "Penumbra", "pos": Vector2i(12, 7), "level": lvl},
@@ -249,7 +249,7 @@ static func create_gate_ambush() -> BattleConfig:
 
 	# By gate_town, the watcher deploys shadow agents — not street muscle. gloom_stalker leads with two fast prowlers flanking; cursed_peddler is the one hired specialist (keeps "paid ambush" flavor).
 	var stalker := load("res://resources/enemies/mirror_stalker.tres")
-	var prowler := load("res://resources/enemies/shade_prowler.tres")
+	var prowler := load("res://resources/enemies/dusk_prowler.tres")
 	var peddler := load("res://resources/enemies/cursed_peddler.tres")
 	var moth := load("res://resources/enemies/twilight_moth.tres")
 	config.enemy_units = [

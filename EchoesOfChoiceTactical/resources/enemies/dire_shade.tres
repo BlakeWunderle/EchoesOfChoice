@@ -6,8 +6,8 @@
 
 [resource]
 script = ExtResource("1")
-class_id = "void_shade"
-class_display_name = "Void Shade"
+class_id = "dire_shade"
+class_display_name = "Dire Shade"
 base_max_health = 64
 base_max_mana = 10
 base_physical_attack = 6

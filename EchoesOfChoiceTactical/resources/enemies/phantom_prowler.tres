@@ -6,8 +6,8 @@
 
 [resource]
 script = ExtResource("1")
-class_id = "void_prowler"
-class_display_name = "Void Prowler"
+class_id = "phantom_prowler"
+class_display_name = "Phantom Prowler"
 base_max_health = 64
 base_max_mana = 8
 base_physical_attack = 36

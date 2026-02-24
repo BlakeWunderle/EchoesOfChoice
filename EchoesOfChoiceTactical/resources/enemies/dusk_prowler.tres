@@ -6,8 +6,8 @@
 
 [resource]
 script = ExtResource("1")
-class_id = "shade_prowler"
-class_display_name = "Shade Prowler"
+class_id = "dusk_prowler"
+class_display_name = "Dusk Prowler"
 base_max_health = 58
 base_max_mana = 8
 base_physical_attack = 38

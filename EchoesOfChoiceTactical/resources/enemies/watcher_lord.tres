@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-class_id = "void_overlord"
-class_display_name = "Void Overlord"
+class_id = "watcher_lord"
+class_display_name = "Watcher Lord"
 base_max_health = 100
 base_max_mana = 24
 base_physical_attack = 16

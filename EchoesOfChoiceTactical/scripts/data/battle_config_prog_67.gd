@@ -8,16 +8,16 @@ static func create_city_gate_ambush() -> BattleConfig:
 	config.grid_height = 8
 	BattleConfig._build_party_units(config)
 
-	var void_overlord := load("res://resources/enemies/void_overlord.tres")
+	var watcher_lord := load("res://resources/enemies/watcher_lord.tres")
 	var dread_stalker := load("res://resources/enemies/dread_stalker.tres")
-	var void_shade := load("res://resources/enemies/void_shade.tres")
-	var void_prowler := load("res://resources/enemies/void_prowler.tres")
+	var dire_shade := load("res://resources/enemies/dire_shade.tres")
+	var phantom_prowler := load("res://resources/enemies/phantom_prowler.tres")
 	config.enemy_units = [
-		{"data": void_overlord, "name": "The Watcher's Hand", "pos": Vector2i(9, 3), "level": 6},
+		{"data": watcher_lord, "name": "The Watcher's Hand", "pos": Vector2i(9, 3), "level": 6},
 		{"data": dread_stalker, "name": "Gate Shadow", "pos": Vector2i(8, 1), "level": 6},
 		{"data": dread_stalker, "name": "Gate Shadow", "pos": Vector2i(8, 5), "level": 6},
-		{"data": void_shade, "name": "Turned Warden", "pos": Vector2i(9, 2), "level": 6},
-		{"data": void_prowler, "name": "City Runner", "pos": Vector2i(8, 4), "level": 6},
+		{"data": dire_shade, "name": "Turned Warden", "pos": Vector2i(9, 2), "level": 6},
+		{"data": phantom_prowler, "name": "City Runner", "pos": Vector2i(8, 4), "level": 6},
 	]
 
 	config.pre_battle_dialogue = [
@@ -40,13 +40,13 @@ static func create_return_city_1() -> BattleConfig:
 
 	var seraph := load("res://resources/enemies/seraph.tres")
 	var arch_hellion := load("res://resources/enemies/arch_hellion.tres")
-	var void_prowler := load("res://resources/enemies/void_prowler.tres")
+	var phantom_prowler := load("res://resources/enemies/phantom_prowler.tres")
 	var dread := load("res://resources/enemies/dread_stalker.tres")
 	config.enemy_units = [
 		{"data": seraph, "name": "Sera", "pos": Vector2i(9, 3), "level": 6},
 		{"data": arch_hellion, "name": "Ares", "pos": Vector2i(9, 5), "level": 6},
-		{"data": void_prowler, "name": "Shadow Guard", "pos": Vector2i(8, 1), "level": 6},
-		{"data": void_prowler, "name": "Shadow Guard", "pos": Vector2i(8, 5), "level": 6},
+		{"data": phantom_prowler, "name": "Shadow Guard", "pos": Vector2i(8, 1), "level": 6},
+		{"data": phantom_prowler, "name": "Shadow Guard", "pos": Vector2i(8, 5), "level": 6},
 		{"data": dread, "name": "Dread Warden", "pos": Vector2i(8, 3), "level": 6},
 	]
 
@@ -70,13 +70,13 @@ static func create_return_city_2() -> BattleConfig:
 
 	var necromancer := load("res://resources/enemies/necromancer.tres")
 	var elder_witch := load("res://resources/enemies/elder_witch.tres")
-	var void_shade := load("res://resources/enemies/void_shade.tres")
+	var dire_shade := load("res://resources/enemies/dire_shade.tres")
 	var dread_wraith := load("res://resources/enemies/dread_wraith.tres")
 	config.enemy_units = [
 		{"data": necromancer, "name": "Arin", "pos": Vector2i(9, 3), "level": 6},
 		{"data": elder_witch, "name": "Nira", "pos": Vector2i(9, 5), "level": 6},
-		{"data": void_shade, "name": "Pale Shade", "pos": Vector2i(8, 1), "level": 6},
-		{"data": void_shade, "name": "Pale Shade", "pos": Vector2i(8, 5), "level": 6},
+		{"data": dire_shade, "name": "Pale Shade", "pos": Vector2i(8, 1), "level": 6},
+		{"data": dire_shade, "name": "Pale Shade", "pos": Vector2i(8, 5), "level": 6},
 		{"data": dread_wraith, "name": "Street Shade", "pos": Vector2i(8, 3), "level": 6},
 	]
 
@@ -100,13 +100,13 @@ static func create_return_city_3() -> BattleConfig:
 
 	var psion := load("res://resources/enemies/psion.tres")
 	var scholar := load("res://resources/enemies/guard_scholar.tres")
-	var void_prowler := load("res://resources/enemies/void_prowler.tres")
+	var phantom_prowler := load("res://resources/enemies/phantom_prowler.tres")
 	var dread := load("res://resources/enemies/dread_stalker.tres")
 	config.enemy_units = [
 		{"data": psion, "name": "Elan", "pos": Vector2i(9, 3), "level": 6},
 		{"data": scholar, "name": "Nale", "pos": Vector2i(9, 5), "level": 6},
-		{"data": void_prowler, "name": "Shadow Guard", "pos": Vector2i(8, 1), "level": 6},
-		{"data": void_prowler, "name": "Shadow Guard", "pos": Vector2i(8, 5), "level": 6},
+		{"data": phantom_prowler, "name": "Shadow Guard", "pos": Vector2i(8, 1), "level": 6},
+		{"data": phantom_prowler, "name": "Shadow Guard", "pos": Vector2i(8, 5), "level": 6},
 		{"data": dread, "name": "Dread Warden", "pos": Vector2i(8, 3), "level": 6},
 	]
 
@@ -130,14 +130,14 @@ static func create_return_city_4() -> BattleConfig:
 
 	var warlock := load("res://resources/enemies/warlock.tres")
 	var shaman := load("res://resources/enemies/shaman.tres")
-	var void_shade := load("res://resources/enemies/void_shade.tres")
-	var void_o := load("res://resources/enemies/void_overlord.tres")
+	var dire_shade := load("res://resources/enemies/dire_shade.tres")
+	var watcher_lord := load("res://resources/enemies/watcher_lord.tres")
 	config.enemy_units = [
 		{"data": warlock, "name": "Alis", "pos": Vector2i(9, 3), "level": 6},
 		{"data": shaman, "name": "Sila", "pos": Vector2i(9, 5), "level": 6},
-		{"data": void_shade, "name": "Shadow Pact", "pos": Vector2i(8, 1), "level": 6},
-		{"data": void_shade, "name": "Shadow Pact", "pos": Vector2i(8, 5), "level": 6},
-		{"data": void_o, "name": "Void Gate", "pos": Vector2i(8, 3), "level": 6},
+		{"data": dire_shade, "name": "Shadow Pact", "pos": Vector2i(8, 1), "level": 6},
+		{"data": dire_shade, "name": "Shadow Pact", "pos": Vector2i(8, 5), "level": 6},
+		{"data": watcher_lord, "name": "Void Gate", "pos": Vector2i(8, 3), "level": 6},
 	]
 
 	config.pre_battle_dialogue = [
