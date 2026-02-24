@@ -22,6 +22,7 @@ var _reachable_tiles: Array[Vector2i] = []
 var _attack_tiles: Array[Vector2i] = []
 var _is_replay: bool = false
 var _ai: BattleAI
+var _executor: AbilityExecutor
 
 
 func _ready() -> void:
@@ -139,6 +140,7 @@ func _setup_test_battle() -> void:
 	grid_cursor.cell_hovered.connect(_on_cell_hovered)
 	grid_cursor.cancelled.connect(_on_cursor_cancelled)
 
+	_executor = AbilityExecutor.new(grid, reaction_system)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
 	_build_action_panel()
 	_begin_battle()
@@ -179,6 +181,7 @@ func _setup_from_config(config: BattleConfig) -> void:
 	grid_cursor.cell_hovered.connect(_on_cell_hovered)
 	grid_cursor.cancelled.connect(_on_cursor_cancelled)
 
+	_executor = AbilityExecutor.new(grid, reaction_system)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
 	_build_action_panel()
 	_begin_battle()
@@ -595,8 +598,7 @@ func _on_unit_turn_started(unit: Unit) -> void:
 
 
 func _apply_fire_damage(unit: Unit) -> void:
-	var dmg := max(1, 10 - unit.magic_defense)
-	unit.take_damage(dmg)
+	_executor.apply_fire_damage(unit)
 
 
 func _enter_move_phase(unit: Unit) -> void:
@@ -762,17 +764,10 @@ func _execute_action(unit: Unit, target_pos: Vector2i) -> void:
 	unit.spend_mana(ability.mana_cost)
 	unit.set_facing_toward(target_pos)
 
-	# Get all tiles in AoE
 	var aoe_tiles := grid.get_aoe_tiles(target_pos, ability.aoe_shape, ability.aoe_size, unit.grid_position)
-
-	if ability.is_terrain_ability():
-		_execute_terrain_ability(unit, ability, aoe_tiles)
-	elif ability.is_heal():
-		_execute_heal_ability(unit, ability, aoe_tiles)
-	elif ability.is_buff_or_debuff():
-		_execute_buff_ability(unit, ability, aoe_tiles)
-	else:
-		_execute_damage_ability(unit, ability, aoe_tiles)
+	var terrain_placed := _executor.execute(unit, ability, aoe_tiles)
+	if terrain_placed:
+		queue_redraw()
 
 	unit.has_acted = true
 
@@ -780,93 +775,6 @@ func _execute_action(unit: Unit, target_pos: Vector2i) -> void:
 		_show_action_menu(unit)
 	else:
 		_enter_facing_phase(unit)
-
-
-func _execute_damage_ability(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
-	var got_crit := false
-	var got_kill := false
-
-	for tile in tiles:
-		var target = grid.get_occupant(tile)
-		if not target is Unit or not target.is_alive:
-			continue
-		if target.team == attacker.team:
-			continue
-
-		var damage := Combat.calculate_ability_damage(ability, attacker.get_stats_dict(), target.get_stats_dict())
-
-		if Combat.roll_dodge(target.dodge_chance):
-			continue
-
-		var this_crit := Combat.roll_crit(attacker.crit_chance)
-		if this_crit:
-			damage += attacker.crit_damage
-			got_crit = true
-
-		damage = reaction_system.process_defensive_reactions(target, damage)
-
-		target.take_damage(damage)
-
-		if not target.is_alive:
-			got_kill = true
-
-		reaction_system.check_flanking_strikes(attacker, target)
-
-		if target.is_alive:
-			reaction_system.check_reactive_heal(target, damage)
-
-	attacker.award_ability_xp_jp(ability, got_crit, got_kill)
-
-
-func _execute_heal_ability(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
-	for tile in tiles:
-		var target = grid.get_occupant(tile)
-		if not target is Unit or not target.is_alive:
-			continue
-		if target.team != caster.team:
-			continue
-		var amount := Combat.calculate_heal(ability, caster.magic_attack, caster.physical_attack)
-		if ability.modified_stat == Enums.StatType.MAX_MANA:
-			target.restore_mana(amount)
-		else:
-			target.heal(amount)
-
-	caster.award_ability_xp_jp(ability, false, false)
-
-
-func _execute_buff_ability(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
-	for tile in tiles:
-		var target = grid.get_occupant(tile)
-		if not target is Unit or not target.is_alive:
-			continue
-
-		var is_debuff := ability.ability_type == Enums.AbilityType.DEBUFF
-		if is_debuff and target.team == caster.team:
-			continue
-		if not is_debuff and target.team != caster.team:
-			continue
-
-		var ms := ModifiedStat.create(ability.modified_stat, ability.modifier, ability.impacted_turns, is_debuff)
-		target.modified_stats.append(ms)
-		target.apply_stat_modifier(ability.modified_stat, ability.modifier, is_debuff)
-
-	caster.award_ability_xp_jp(ability, false, false)
-
-
-func _execute_terrain_ability(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
-	var blocks_movement := ability.terrain_tile == Enums.TileType.WALL \
-		or ability.terrain_tile == Enums.TileType.ICE_WALL
-	for tile in tiles:
-		if blocks_movement and grid.is_occupied(tile):
-			continue
-		grid.place_terrain(tile, ability.terrain_tile, ability.terrain_duration)
-		# Deal immediate fire damage to any unit already on a lava tile
-		if ability.terrain_tile == Enums.TileType.FIRE_TILE:
-			var occupant = grid.get_occupant(tile)
-			if occupant is Unit and occupant.is_alive:
-				_apply_fire_damage(occupant)
-	caster.award_ability_xp_jp(ability, false, false)
-	queue_redraw()
 
 
 # --- Cursor Feedback ---
@@ -907,14 +815,9 @@ func _on_cursor_cancelled() -> void:
 
 
 func _ai_execute_ability(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> void:
-	if ability.is_terrain_ability():
-		_execute_terrain_ability(unit, ability, aoe_tiles)
-	elif ability.is_heal():
-		_execute_heal_ability(unit, ability, aoe_tiles)
-	elif ability.is_buff_or_debuff():
-		_execute_buff_ability(unit, ability, aoe_tiles)
-	else:
-		_execute_damage_ability(unit, ability, aoe_tiles)
+	var terrain_placed := _executor.execute(unit, ability, aoe_tiles)
+	if terrain_placed:
+		queue_redraw()
 
 
 func _find_party_member_xp(unit_name: String) -> Array:
