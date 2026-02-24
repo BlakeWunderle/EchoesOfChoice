@@ -51,8 +51,10 @@ const TOWN_MILESTONES: Array = [
 ]
 
 # ─── Simulation defaults ─────────────────────────────────────────────────────
-const DEFAULT_USES := 6
+const BASE_USES := 6               # ability uses for the slowest class
 const UTILITY_CAP_PER_ABILITY := 2  # buff/debuff tactical reuse limit
+
+var _all_classes: Dictionary = {}  # populated after loading; used for speed baseline
 
 
 # ─── .tres text parser (same pattern as balance_check.gd) ────────────────────
@@ -160,6 +162,8 @@ func _load_class(class_id: String) -> Dictionary:
 		"class_id": class_id,
 		"mana": props.get("base_max_mana", 0),
 		"mana_growth": props.get("growth_mana", 0),
+		"speed": props.get("base_speed", 13),
+		"speed_growth": props.get("growth_speed", 0),
 		"abilities": abilities,
 		"basic_identity": _is_identity(class_id, AT_DAMAGE, ST_PHYS_ATK),
 	}
@@ -219,7 +223,29 @@ func _battle_detail(cd: Dictionary, level: int, uses: int) -> Dictionary:
 	}
 
 
-func _accumulate(cd: Dictionary, battle_count: int, uses: int) -> int:
+## Speed-adjusted ability uses for a class at a given level.
+## Uses the minimum speed across all loaded classes at that level as the baseline.
+func _speed_uses(cd: Dictionary, level: int) -> int:
+	var min_spd: int = 999
+	for cid: String in _all_classes:
+		var s: int = _all_classes[cid]["speed"] + _all_classes[cid]["speed_growth"] * (level - 1)
+		if s < min_spd:
+			min_spd = s
+	var spd: int = cd["speed"] + cd["speed_growth"] * (level - 1)
+	return maxi(BASE_USES, roundi(float(BASE_USES) * float(spd) / float(min_spd)))
+
+
+## Accumulate JP over N battles using speed-adjusted uses per battle.
+func _accumulate(cd: Dictionary, battle_count: int) -> int:
+	var total: int = 0
+	for i in range(battle_count):
+		var lvl: int = BATTLE_LEVELS[mini(i, BATTLE_LEVELS.size() - 1)]
+		total += _battle_detail(cd, lvl, _speed_uses(cd, lvl))["jp"]
+	return total
+
+
+## Accumulate JP with a fixed (manual) uses count — for sensitivity table.
+func _accumulate_fixed(cd: Dictionary, battle_count: int, uses: int) -> int:
 	var total: int = 0
 	for i in range(battle_count):
 		var lvl: int = BATTLE_LEVELS[mini(i, BATTLE_LEVELS.size() - 1)]
@@ -243,28 +269,36 @@ func _print_identity(classes: Dictionary) -> void:
 			var jp: int = IDENTITY_JP if ab["is_identity"] else BASE_JP
 			var tag: String = "identity" if ab["is_identity"] else "not identity"
 			print("    %-28s → %d JP (%s, %d mana)" % [ab["name"], jp, tag, ab["cost"]])
-		print("    Mana pool: %d (+%d/level)" % [cd["mana"], cd["mana_growth"]])
+		print("    Mana pool: %d (+%d/level)  |  Speed: %d (+%d/level)" % [
+			cd["mana"], cd["mana_growth"], cd["speed"], cd["speed_growth"]
+		])
 		print("")
 
 
 func _print_per_battle(classes: Dictionary) -> void:
-	print("── JP per Battle (%d ability uses) ──" % DEFAULT_USES)
+	var min_spd: int = 999
+	for cid2: String in _all_classes:
+		if _all_classes[cid2]["speed"] < min_spd:
+			min_spd = _all_classes[cid2]["speed"]
+	print("── JP per Battle (speed-weighted, base %d uses @ spd %d) ──" % [BASE_USES, min_spd])
 	print("")
-	print("  %-14s │ JP   Identity  Basic  Mana" % "Class")
-	print("  " + "─".repeat(52))
+	print("  %-14s │ Spd  Uses  JP   Identity  Basic  Mana" % "Class")
+	print("  " + "─".repeat(62))
 	for cid: String in CLASS_ORDER:
 		if not classes.has(cid):
 			continue
-		var d: Dictionary = _battle_detail(classes[cid], 1, DEFAULT_USES)
-		print("  %-14s │ %-4d %d×5      %d×1    %d/%d" % [
-			cid.capitalize(), d["jp"], d["identity"], d["plain"],
+		var cd: Dictionary = classes[cid]
+		var uses: int = _speed_uses(cd, 1)
+		var d: Dictionary = _battle_detail(cd, 1, uses)
+		print("  %-14s │ %-4d %-5d %-4d %d×5      %d×1    %d/%d" % [
+			cid.capitalize(), cd["speed"], uses, d["jp"], d["identity"], d["plain"],
 			d["mana_used"], d["mana_pool"]
 		])
 	print("")
 
 
 func _print_milestones(classes: Dictionary) -> void:
-	print("── JP at Town Milestones (%d uses/battle) ──" % DEFAULT_USES)
+	print("── JP at Town Milestones (speed-weighted) ──")
 	print("")
 	print("  %-14s │ Forest Village (2b) │ Crossroads Inn (4b) │ Gate Town (7b)" % "")
 	print("  %-14s │ JP    T1?           │ JP    T1?           │ JP    T1? T2?" % "Class")
@@ -275,9 +309,9 @@ func _print_milestones(classes: Dictionary) -> void:
 		if not classes.has(cid):
 			continue
 		var cd: Dictionary = classes[cid]
-		var fv: int = _accumulate(cd, 2, DEFAULT_USES)
-		var cr: int = _accumulate(cd, 4, DEFAULT_USES)
-		var gt: int = _accumulate(cd, 7, DEFAULT_USES)
+		var fv: int = _accumulate(cd, 2)
+		var cr: int = _accumulate(cd, 4)
+		var gt: int = _accumulate(cd, 7)
 
 		print("  %-14s │ %-5d %s              │ %-5d %s              │ %-5d %s   %s" % [
 			cid.capitalize(),
@@ -305,17 +339,19 @@ func _print_milestones(classes: Dictionary) -> void:
 
 	# Optional battle bonus
 	print("")
-	print("  Optional battle bonus (+1 battle at L1, %d uses):" % DEFAULT_USES)
+	print("  Optional battle bonus (+1 battle at L1):")
 	for cid: String in CLASS_ORDER:
 		if not classes.has(cid):
 			continue
-		var bonus: int = _battle_detail(classes[cid], 1, DEFAULT_USES)["jp"]
-		print("    %s: +%d JP" % [cid.capitalize(), bonus])
+		var cd: Dictionary = classes[cid]
+		var uses: int = _speed_uses(cd, 1)
+		var bonus: int = _battle_detail(cd, 1, uses)["jp"]
+		print("    %s: +%d JP (%d uses)" % [cid.capitalize(), bonus, uses])
 	print("")
 
 
 func _print_sensitivity(classes: Dictionary) -> void:
-	print("── Sensitivity: Uses/Battle → JP at Crossroads (4 battles) ──")
+	print("── Sensitivity: Fixed Uses/Battle → JP at Crossroads (4 battles) ──")
 	print("")
 	print("  %-14s │ 4 uses    5 uses    6 uses    7 uses    8 uses" % "Class")
 	print("  " + "─".repeat(68))
@@ -325,7 +361,7 @@ func _print_sensitivity(classes: Dictionary) -> void:
 		var cd: Dictionary = classes[cid]
 		var cells: Array = []
 		for u: int in [4, 5, 6, 7, 8]:
-			var jp: int = _accumulate(cd, 4, u)
+			var jp: int = _accumulate_fixed(cd, 4, u)
 			cells.append("%d %s" % [jp, "✓" if jp >= TIER_1_THRESHOLD else "✗"])
 		print("  %-14s │ %-9s %-9s %-9s %-9s %-9s" % [
 			cid.capitalize(), cells[0], cells[1], cells[2], cells[3], cells[4]
@@ -340,7 +376,7 @@ func _print_sensitivity(classes: Dictionary) -> void:
 		var cd: Dictionary = classes[cid]
 		var cells: Array = []
 		for u: int in [4, 5, 6, 7, 8]:
-			var jp: int = _accumulate(cd, 7, u)
+			var jp: int = _accumulate_fixed(cd, 7, u)
 			var t2: String = " T2" if jp >= TIER_2_THRESHOLD else ""
 			cells.append("%d %s%s" % [jp, "✓" if jp >= TIER_1_THRESHOLD else "✗", t2])
 		print("  %-14s │ %-9s %-9s %-9s %-9s %-9s" % [
@@ -367,7 +403,7 @@ func _print_thresholds(classes: Dictionary) -> void:
 		for cid: String in CLASS_ORDER:
 			if not classes.has(cid):
 				continue
-			var jp: int = _accumulate(classes[cid], battles, DEFAULT_USES)
+			var jp: int = _accumulate(classes[cid], battles)
 			if jp < min_jp:
 				min_jp = jp
 				min_cid = cid
@@ -404,10 +440,6 @@ func _initialize() -> void:
 
 	print("")
 	print("═══ JP Accumulation Simulation ═══")
-	print("Config: %d ability uses/battle, utility cap %d/ability, JP: base=%d identity=%d" % [
-		DEFAULT_USES, UTILITY_CAP_PER_ABILITY, BASE_JP, IDENTITY_JP
-	])
-	print("")
 
 	var classes: Dictionary = {}
 	for cid: String in CLASS_ORDER:
@@ -423,6 +455,19 @@ func _initialize() -> void:
 		print("No classes loaded. Available: %s" % ", ".join(CLASS_ORDER))
 		quit()
 		return
+
+	_all_classes = classes
+
+	# Find min base speed for display
+	var min_spd: int = 999
+	for cid: String in classes:
+		if classes[cid]["speed"] < min_spd:
+			min_spd = classes[cid]["speed"]
+
+	print("Config: base %d uses @ slowest spd %d, utility cap %d/ability, JP: base=%d identity=%d" % [
+		BASE_USES, min_spd, UTILITY_CAP_PER_ABILITY, BASE_JP, IDENTITY_JP
+	])
+	print("")
 
 	_print_identity(classes)
 	_print_per_battle(classes)
