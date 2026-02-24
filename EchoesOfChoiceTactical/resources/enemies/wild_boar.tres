@@ -7,6 +7,7 @@
 script = ExtResource("1")
 class_id = "wild_boar"
 class_display_name = "Wild Boar"
+sprite_id = "gnolls_3"
 base_max_health = 60
 base_max_mana = 4
 base_physical_attack = 19

@@ -9,6 +9,7 @@
 script = ExtResource("1")
 class_id = "mime"
 class_display_name = "Mime"
+sprite_id = "base_male_sword"
 base_max_health = 59
 base_max_mana = 14
 base_physical_attack = 18

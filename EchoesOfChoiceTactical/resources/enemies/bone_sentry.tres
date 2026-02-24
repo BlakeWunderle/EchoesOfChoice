@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "bone_sentry"
 class_display_name = "Bone Sentry"
+sprite_id = "skeleton_1"
 base_max_health = 52
 base_max_mana = 4
 base_physical_attack = 27

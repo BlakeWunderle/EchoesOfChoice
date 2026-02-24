@@ -10,6 +10,7 @@
 script = ExtResource("1")
 class_id = "mistweaver"
 class_display_name = "Mistweaver"
+sprite_id = "vampire_2"
 base_max_health = 49
 base_max_mana = 19
 base_physical_attack = 14

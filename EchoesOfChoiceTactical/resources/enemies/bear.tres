@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "bear"
 class_display_name = "Bear"
+sprite_id = "ent_1"
 base_max_health = 60
 base_max_mana = 0
 base_physical_attack = 18

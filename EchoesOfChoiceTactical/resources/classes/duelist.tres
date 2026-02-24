@@ -10,6 +10,7 @@
 script = ExtResource("1")
 class_id = "duelist"
 class_display_name = "Duelist"
+sprite_id = "swordsman_3"
 base_max_health = 59
 base_max_mana = 9
 base_physical_attack = 24

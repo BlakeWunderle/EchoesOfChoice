@@ -9,6 +9,7 @@
 script = ExtResource("1")
 class_id = "paladin"
 class_display_name = "Paladin"
+sprite_id = "swordsman_8"
 base_max_health = 63
 base_max_mana = 16
 base_physical_attack = 19

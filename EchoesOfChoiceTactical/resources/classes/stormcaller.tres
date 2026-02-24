@@ -10,6 +10,7 @@
 script = ExtResource("1")
 class_id = "stormcaller"
 class_display_name = "Stormcaller"
+sprite_id = "vampire_1"
 base_max_health = 49
 base_max_mana = 19
 base_physical_attack = 14

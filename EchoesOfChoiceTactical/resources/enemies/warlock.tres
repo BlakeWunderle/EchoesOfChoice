@@ -7,6 +7,7 @@
 script = ExtResource("1")
 class_id = "warlock"
 class_display_name = "Warlock"
+sprite_id = "lich_2"
 base_max_health = 58
 base_max_mana = 22
 base_physical_attack = 8

@@ -9,6 +9,7 @@
 script = ExtResource("1")
 class_id = "minstrel"
 class_display_name = "Minstrel"
+sprite_id = "base_male_sword"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

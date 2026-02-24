@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "water_elemental"
 class_display_name = "Water Elemental"
+sprite_id = "slime_enemies_1"
 base_max_health = 95
 base_max_mana = 22
 base_physical_attack = 8

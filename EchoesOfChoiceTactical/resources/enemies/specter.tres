@@ -7,6 +7,7 @@
 script = ExtResource("1")
 class_id = "specter"
 class_display_name = "Specter"
+sprite_id = "ghost_3"
 base_max_health = 42
 base_max_mana = 14
 base_physical_attack = 4

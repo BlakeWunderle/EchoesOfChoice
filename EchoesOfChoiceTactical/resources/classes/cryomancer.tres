@@ -9,6 +9,7 @@
 script = ExtResource("1")
 class_id = "cryomancer"
 class_display_name = "Cryomancer"
+sprite_id = "vampire_3"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

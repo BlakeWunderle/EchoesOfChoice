@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "fire_elemental"
 class_display_name = "Fire Elemental"
+sprite_id = "slime_mobs_1"
 base_max_health = 75
 base_max_mana = 20
 base_physical_attack = 10

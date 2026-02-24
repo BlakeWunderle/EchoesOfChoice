@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "shade"
 class_display_name = "Shade"
+sprite_id = "ghost_1"
 base_max_health = 28
 base_max_mana = 10
 base_physical_attack = 4

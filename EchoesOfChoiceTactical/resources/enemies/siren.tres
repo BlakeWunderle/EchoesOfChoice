@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "siren"
 class_display_name = "Siren"
+sprite_id = "predator_plant_3"
 base_max_health = 80
 base_max_mana = 26
 base_physical_attack = 10

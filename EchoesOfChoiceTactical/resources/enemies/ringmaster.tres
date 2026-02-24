@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "ringmaster"
 class_display_name = "Ringmaster"
+sprite_id = "demons_3"
 base_max_health = 60
 base_max_mana = 18
 base_physical_attack = 24

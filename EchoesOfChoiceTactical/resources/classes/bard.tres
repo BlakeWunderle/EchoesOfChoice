@@ -11,6 +11,7 @@
 script = ExtResource("1")
 class_id = "bard"
 class_display_name = "Bard"
+sprite_id = "base_male_sword"
 base_max_health = 49
 base_max_mana = 14
 base_physical_attack = 14

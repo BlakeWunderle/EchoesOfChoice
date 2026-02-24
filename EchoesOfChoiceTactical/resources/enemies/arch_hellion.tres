@@ -9,6 +9,7 @@
 script = ExtResource("1")
 class_id = "arch_hellion"
 class_display_name = "Arch Hellion"
+sprite_id = "demons_2"
 base_max_health = 80
 base_max_mana = 20
 base_physical_attack = 35

@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "runewright"
 class_display_name = "Runewright"
+sprite_id = "lich_3"
 base_max_health = 55
 base_max_mana = 10
 base_physical_attack = 6

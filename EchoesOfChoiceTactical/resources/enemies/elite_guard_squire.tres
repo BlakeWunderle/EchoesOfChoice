@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "elite_guard_squire"
 class_display_name = "Elite Royal Guard"
+sprite_id = "swordsman_4"
 base_max_health = 37
 base_max_mana = 6
 base_physical_attack = 12

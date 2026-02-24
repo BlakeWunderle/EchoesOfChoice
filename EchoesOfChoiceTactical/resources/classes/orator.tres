@@ -10,6 +10,7 @@
 script = ExtResource("1")
 class_id = "orator"
 class_display_name = "Orator"
+sprite_id = "base_male_sword"
 base_max_health = 49
 base_max_mana = 14
 base_physical_attack = 14

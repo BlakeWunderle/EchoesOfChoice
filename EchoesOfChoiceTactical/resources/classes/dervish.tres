@@ -10,6 +10,7 @@
 script = ExtResource("1")
 class_id = "dervish"
 class_display_name = "Dervish"
+sprite_id = "swordsman_3"
 base_max_health = 49
 base_max_mana = 14
 base_physical_attack = 14

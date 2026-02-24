@@ -9,6 +9,7 @@
 script = ExtResource("1")
 class_id = "ironclad"
 class_display_name = "Ironclad"
+sprite_id = "golem_2"
 base_max_health = 62
 base_max_mana = 18
 base_physical_attack = 22

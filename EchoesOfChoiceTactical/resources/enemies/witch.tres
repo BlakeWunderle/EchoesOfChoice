@@ -9,6 +9,7 @@
 script = ExtResource("1")
 class_id = "witch"
 class_display_name = "Witch"
+sprite_id = "lich_1"
 base_max_health = 42
 base_max_mana = 16
 base_physical_attack = 6

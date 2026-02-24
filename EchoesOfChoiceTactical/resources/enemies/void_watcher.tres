@@ -7,6 +7,7 @@
 script = ExtResource("1")
 class_id = "void_watcher"
 class_display_name = "Void Watcher"
+sprite_id = "beholder_2"
 base_max_health = 85
 base_max_mana = 20
 base_physical_attack = 14

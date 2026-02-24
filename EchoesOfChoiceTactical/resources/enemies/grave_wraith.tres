@@ -8,6 +8,7 @@
 script = ExtResource("1")
 class_id = "grave_wraith"
 class_display_name = "Grave Wraith"
+sprite_id = "ghost_1"
 base_max_health = 62
 base_max_mana = 18
 base_physical_attack = 8

@@ -9,6 +9,7 @@
 script = ExtResource("1")
 class_id = "fire_spirit"
 class_display_name = "Fire Spirit"
+sprite_id = "imp_3"
 base_max_health = 48
 base_max_mana = 12
 base_physical_attack = 6
