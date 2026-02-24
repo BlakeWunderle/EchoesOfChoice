@@ -4,8 +4,12 @@ signal turn_completed
 signal died(unit: Unit)
 signal took_damage(unit: Unit, amount: int)
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var health_bar: ProgressBar = $HealthBar
+
+const PLAYER_COLOR := Color(0.3, 0.5, 0.9)
+const ENEMY_COLOR := Color(0.9, 0.3, 0.3)
+const PLACEHOLDER_SIZE := 24.0
 
 var unit_name: String
 var unit_class: String
@@ -47,6 +51,15 @@ var has_moved: bool = false
 var is_alive: bool = true
 
 const TILE_SIZE := 64
+
+
+func _draw() -> void:
+	if sprite.sprite_frames and sprite.sprite_frames.get_animation_names().size() > 0:
+		return
+	var color := PLAYER_COLOR if team == Enums.Team.PLAYER else ENEMY_COLOR
+	var half := PLACEHOLDER_SIZE / 2.0
+	draw_rect(Rect2(-half, -half, PLACEHOLDER_SIZE, PLACEHOLDER_SIZE), color)
+	draw_rect(Rect2(-half, -half, PLACEHOLDER_SIZE, PLACEHOLDER_SIZE), color.lightened(0.3), false, 2.0)
 
 
 func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: int = 1) -> void:
@@ -141,6 +154,7 @@ func _apply_equipment() -> void:
 func place_on_grid(pos: Vector2i) -> void:
 	grid_position = pos
 	position = Vector2(pos.x * TILE_SIZE + TILE_SIZE / 2, pos.y * TILE_SIZE + TILE_SIZE / 2)
+	_update_facing_animation()
 
 
 func get_stats_dict() -> Dictionary:
@@ -222,6 +236,7 @@ func set_facing_toward(target_pos: Vector2i) -> void:
 		facing = Enums.Facing.EAST if diff.x > 0 else Enums.Facing.WEST
 	else:
 		facing = Enums.Facing.SOUTH if diff.y > 0 else Enums.Facing.NORTH
+	_update_facing_animation()
 
 
 func get_facing_direction() -> Vector2i:
@@ -298,15 +313,85 @@ func _update_health_bar() -> void:
 
 
 func animate_move_along_path(path: Array[Vector2i]) -> void:
-	for cell in path:
+	for i in range(path.size()):
+		var cell := path[i]
+		# Update facing toward the next cell for walk animation
+		if cell != grid_position:
+			var diff := cell - grid_position
+			if absi(diff.x) >= absi(diff.y):
+				facing = Enums.Facing.EAST if diff.x > 0 else Enums.Facing.WEST
+			else:
+				facing = Enums.Facing.SOUTH if diff.y > 0 else Enums.Facing.NORTH
+			_play_anim("walk")
 		grid_position = cell
 		var target_pos := Vector2(cell.x * TILE_SIZE + TILE_SIZE / 2, cell.y * TILE_SIZE + TILE_SIZE / 2)
 		var tween := create_tween()
 		tween.tween_property(self, "position", target_pos, 0.15)
 		await tween.finished
 
-	if path.size() > 1:
-		set_facing_toward(path[-1])
+	_update_facing_animation()
+
+
+# --- Animation ---
+
+func _facing_suffix() -> String:
+	match facing:
+		Enums.Facing.NORTH: return "up"
+		Enums.Facing.SOUTH: return "down"
+		Enums.Facing.EAST: return "right"
+		Enums.Facing.WEST: return "left"
+	return "down"
+
+
+func _has_anim(anim_name: String) -> bool:
+	return sprite.sprite_frames != null and sprite.sprite_frames.has_animation(anim_name)
+
+
+func _play_anim(action: String) -> void:
+	var anim_name := "%s_%s" % [action, _facing_suffix()]
+	if _has_anim(anim_name):
+		sprite.play(anim_name)
+	elif _has_anim(action):
+		sprite.play(action)
+
+
+func _update_facing_animation() -> void:
+	_play_anim("idle")
+
+
+func play_attack_animation() -> void:
+	var anim_name := "attack_%s" % _facing_suffix()
+	if _has_anim(anim_name):
+		sprite.play(anim_name)
+		await sprite.animation_finished
+		_update_facing_animation()
+	elif _has_anim("attack"):
+		sprite.play("attack")
+		await sprite.animation_finished
+		_update_facing_animation()
+
+
+func play_hurt_animation() -> void:
+	if _has_anim("hurt"):
+		sprite.play("hurt")
+		await sprite.animation_finished
+		_update_facing_animation()
+	else:
+		# Flash white as fallback
+		sprite.modulate = Color.WHITE
+		var tween := create_tween()
+		tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.15)
+		await tween.finished
+
+
+func play_death_animation() -> void:
+	if _has_anim("death"):
+		sprite.play("death")
+		await sprite.animation_finished
+	else:
+		var tween := create_tween()
+		tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.4)
+		await tween.finished
 
 
 # --- XP / JP ---
