@@ -7,6 +7,7 @@ extends Control
 @onready var optional_battle_button: Button = $Panel/MarginContainer/VBox/Buttons/OptionalBattleButton
 @onready var shop_button: Button = $Panel/MarginContainer/VBox/Buttons/ShopButton
 @onready var recruit_button: Button = $Panel/MarginContainer/VBox/Buttons/RecruitButton
+@onready var items_button: Button = $Panel/MarginContainer/VBox/Buttons/ItemsButton
 @onready var continue_button: Button = $Panel/MarginContainer/VBox/Buttons/ContinueButton
 
 var _town_id: String = ""
@@ -109,6 +110,7 @@ func _ready() -> void:
 		shop_button.visible = false
 
 	recruit_button.pressed.connect(_on_recruit_pressed)
+	items_button.pressed.connect(_on_items_pressed)
 
 	_populate_npcs(node_data)
 
@@ -204,6 +206,13 @@ func _on_recruit_pressed() -> void:
 		_populate_party_list()
 	)
 	add_child(recruit)
+
+
+func _on_items_pressed() -> void:
+	var items_scene := preload("res://scenes/ui/ItemsUI.tscn")
+	var items_ui: Control = items_scene.instantiate()
+	items_ui.items_closed.connect(func(): items_ui.queue_free())
+	add_child(items_ui)
 
 
 func _populate_npcs(node_data: Dictionary) -> void:

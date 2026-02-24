@@ -458,6 +458,8 @@ func _on_item_pressed() -> void:
 	var consumables := GameState.get_consumables_in_inventory()
 	for entry in consumables:
 		var item: ItemData = entry["item"]
+		if item.consumable_effect == Enums.ConsumableEffect.FULL_REST_ALL:
+			continue  # camp items can't be used in battle
 		var qty: int = entry["quantity"]
 		var btn := Button.new()
 		btn.text = "%s x%d  (%s)" % [item.display_name, qty, item.get_stat_summary()]
@@ -541,12 +543,6 @@ func _execute_item(unit: Unit, target_pos: Vector2i) -> void:
 			var ms := ModifiedStat.create(item.buff_stat, item.consumable_value, item.buff_turns, false)
 			target.modified_stats.append(ms)
 			target.apply_stat_modifier(item.buff_stat, item.consumable_value, false)
-		Enums.ConsumableEffect.FULL_REST_ALL:
-			for ally in turn_manager.player_units:
-				if ally.is_alive:
-					ally.heal(ally.max_health - ally.current_health)
-					ally.mana = ally.max_mana
-			GameState.full_rest_party()
 
 	unit.has_acted = true
 
