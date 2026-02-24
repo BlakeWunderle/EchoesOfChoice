@@ -179,7 +179,11 @@ func take_damage(amount: int) -> void:
 	_update_health_bar()
 	if health <= 0:
 		is_alive = false
+		if not voice_pack.is_empty():
+			SFXManager.play_voice(voice_pack, "battle_cry")
 		died.emit(self)
+	elif not voice_pack.is_empty():
+		SFXManager.play_voice(voice_pack, "vocal", 0.7)
 
 
 func heal(amount: int) -> void:
@@ -331,6 +335,7 @@ func animate_move_along_path(path: Array[Vector2i]) -> void:
 		var tween := create_tween()
 		tween.tween_property(self, "position", target_pos, 0.15)
 		await tween.finished
+		SFXManager.play(SFXManager.Category.FOOTSTEP, 0.4)
 
 	_update_facing_animation()
 

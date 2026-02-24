@@ -29,6 +29,9 @@ func check_opportunity_attacks(moving_unit: Unit, from_pos: Vector2i, to_pos: Ve
 			if critted:
 				damage += occupant.crit_damage
 			moving_unit.take_damage(damage)
+			SFXManager.play(SFXManager.Category.SLASH)
+		else:
+			SFXManager.play(SFXManager.Category.WHOOSH, 0.7)
 
 		occupant.use_reaction()
 		results.append({
@@ -63,6 +66,7 @@ func check_flanking_strikes(attacker: Unit, target: Unit) -> Array[Dictionary]:
 
 		if not Combat.roll_dodge(target.dodge_chance):
 			target.take_damage(damage)
+			SFXManager.play(SFXManager.Category.SLASH)
 			occupant.use_reaction()
 			results.append({
 				"reactor": occupant,
@@ -72,6 +76,7 @@ func check_flanking_strikes(attacker: Unit, target: Unit) -> Array[Dictionary]:
 				"dodged": false,
 			})
 		else:
+			SFXManager.play(SFXManager.Category.WHOOSH, 0.7)
 			occupant.use_reaction()
 			results.append({
 				"reactor": occupant,
@@ -103,6 +108,7 @@ func check_snap_shot(approaching_unit: Unit, from_pos: Vector2i, to_pos: Vector2
 
 		if not Combat.roll_dodge(approaching_unit.dodge_chance):
 			approaching_unit.take_damage(damage)
+			SFXManager.play(SFXManager.Category.RANGED_IMPACT)
 			occupant.use_reaction()
 			results.append({
 				"reactor": occupant,
@@ -112,6 +118,7 @@ func check_snap_shot(approaching_unit: Unit, from_pos: Vector2i, to_pos: Vector2
 				"dodged": false,
 			})
 		else:
+			SFXManager.play(SFXManager.Category.WHOOSH, 0.7)
 			occupant.use_reaction()
 			results.append({
 				"reactor": occupant,
@@ -139,6 +146,7 @@ func check_reactive_heal(damaged_unit: Unit, damage_amount: int) -> Array[Dictio
 
 		var heal_amount := Combat.calculate_reactive_heal(ally.magic_attack)
 		damaged_unit.heal(heal_amount)
+		SFXManager.play(SFXManager.Category.SHIMMER)
 		ally.use_reaction()
 		results.append({
 			"reactor": ally,
@@ -212,6 +220,7 @@ func process_defensive_reactions(target: Unit, raw_damage: int) -> int:
 	if bodyguard["active"]:
 		final_damage = bodyguard["damage_to_ally"]
 		bodyguard["reactor"].take_damage(bodyguard["damage_to_tank"])
+		SFXManager.play(SFXManager.Category.BODY_HIT)
 
 	# Check damage mitigation (support within 3 tiles reduces damage)
 	var mitigation := check_damage_mitigation(target, final_damage)

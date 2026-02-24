@@ -452,9 +452,13 @@ func _on_unit_turn_started(unit: Unit) -> void:
 			return
 
 	if unit.team == Enums.Team.PLAYER:
+		if not unit.voice_pack.is_empty():
+			SFXManager.play_voice(unit.voice_pack, "confirm", 0.6)
 		_current_phase = Enums.TurnPhase.AWAITING_INPUT
 		_show_action_menu(unit)
 	else:
+		if randf() < 0.3:
+			SFXManager.play(SFXManager.Category.MONSTER, 0.5)
 		_ai.run_turn(unit)
 
 
@@ -680,8 +684,10 @@ func _on_battle_ended(player_won: bool) -> void:
 	_hide_action_menu()
 	MusicManager.stop_music(1.5)
 	if player_won:
+		SFXManager.play(SFXManager.Category.UI_FANFARE)
 		turn_info.text = "VICTORY! The enemies have been vanquished."
 	else:
+		SFXManager.play(SFXManager.Category.UI_TRANSITION)
 		turn_info.text = "DEFEAT... The party has fallen."
 
 	var player_units_list: Array = []

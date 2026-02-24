@@ -38,6 +38,7 @@ func _execute_damage(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i
 		var damage := Combat.calculate_ability_damage(ability, attacker.get_stats_dict(), target.get_stats_dict())
 
 		if Combat.roll_dodge(target.dodge_chance):
+			SFXManager.play(SFXManager.Category.WHOOSH, 0.7)
 			continue
 
 		var this_crit := Combat.roll_crit(attacker.crit_chance)
@@ -48,6 +49,9 @@ func _execute_damage(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i
 		damage = _reaction_system.process_defensive_reactions(target, damage)
 
 		target.take_damage(damage)
+		SFXManager.play_ability_sfx(ability)
+		if this_crit:
+			SFXManager.play(SFXManager.Category.IMPACT, 0.8)
 
 		if not target.is_alive:
 			got_kill = true
@@ -72,6 +76,7 @@ func _execute_heal(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -
 			target.restore_mana(amount)
 		else:
 			target.heal(amount)
+		SFXManager.play(SFXManager.Category.SHIMMER)
 
 	caster.award_ability_xp_jp(ability, false, false)
 
@@ -91,6 +96,7 @@ func _execute_buff(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -
 		var ms := ModifiedStat.create(ability.modified_stat, ability.modifier, ability.impacted_turns, is_debuff)
 		target.modified_stats.append(ms)
 		target.apply_stat_modifier(ability.modified_stat, ability.modifier, is_debuff)
+		SFXManager.play(SFXManager.Category.SHIMMER, 0.8)
 
 	caster.award_ability_xp_jp(ability, false, false)
 
@@ -98,6 +104,7 @@ func _execute_buff(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -
 func _execute_terrain(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
 	var blocks_movement := ability.terrain_tile == Enums.TileType.WALL \
 		or ability.terrain_tile == Enums.TileType.ICE_WALL
+	SFXManager.play_ability_sfx(ability)
 	for tile in tiles:
 		if blocks_movement and _grid.is_occupied(tile):
 			continue
@@ -112,3 +119,4 @@ func _execute_terrain(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]
 func apply_fire_damage(unit: Unit) -> void:
 	var dmg := max(1, 10 - unit.magic_defense)
 	unit.take_damage(dmg)
+	SFXManager.play(SFXManager.Category.FIRE, 0.7)
