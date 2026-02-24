@@ -31,6 +31,11 @@ const REST_HEAL_FRACTION := 0.30
 
 var current_slot: int = -1  # -1 = not loaded from a slot yet
 var _save_manager = preload("res://scripts/autoload/save_load_manager.gd").new()
+var _equipment  # EquipmentManager — initialized in _ready()
+
+
+func _ready() -> void:
+	_equipment = preload("res://scripts/autoload/equipment_manager.gd").new(self)
 
 
 func set_player_info(p_name: String, p_gender: String) -> void:
@@ -290,114 +295,34 @@ func get_consumables_in_inventory() -> Array[Dictionary]:
 	return result
 
 
-# --- Equipment (generic slots: 1/2/3 by tier) ---
+# --- Equipment (delegated to EquipmentManager) ---
 
 func get_unit_tier(unit_name: String) -> int:
-	var class_id: String = ""
-	if unit_name == player_name:
-		class_id = player_class_id
-	else:
-		for member in party_members:
-			if member.get("name", "") == unit_name:
-				class_id = member.get("class_id", "")
-				break
-	if class_id.is_empty():
-		return 0
-	var path := "res://resources/classes/%s.tres" % class_id
-	if not ResourceLoader.exists(path):
-		return 0
-	var data: Resource = load(path) as Resource
-	var t = data.get("tier") if data else null
-	return int(t) if t != null else 0
+	return _equipment.get_unit_tier(unit_name)
 
 
 func get_max_slots(unit_name: String) -> int:
-	return get_unit_tier(unit_name) + 1
-
-
-func _ensure_equipment_array(unit_name: String) -> void:
-	if not equipment.has(unit_name):
-		equipment[unit_name] = []
-		return
-	# Migrate old save format: { "weapon": id, "armor": id, "accessory": id } -> [id, id, id]
-	var val = equipment[unit_name]
-	if val is Dictionary:
-		var arr: Array = []
-		for key in ["weapon", "armor", "accessory"]:
-			var id_str: String = val.get(key, "")
-			if not id_str.is_empty():
-				arr.append(id_str)
-		equipment[unit_name] = arr
+	return _equipment.get_max_slots(unit_name)
 
 
 func equip_item(unit_name: String, item_id: String) -> bool:
-	var item: Resource = _load_item(item_id) as Resource
-	if not item or not item.get("is_equipment") or not item.is_equipment():
-		return false
-	_ensure_equipment_array(unit_name)
-	var arr: Array = equipment[unit_name]
-	var max_slots: int = get_max_slots(unit_name)
-	if arr.size() >= max_slots:
-		return false
-	if not remove_item(item_id):
-		return false
-	arr.append(item_id)
-	return true
+	return _equipment.equip_item(unit_name, item_id)
 
 
 func unequip_item(unit_name: String, slot_index: int) -> void:
-	_ensure_equipment_array(unit_name)
-	var arr: Array = equipment[unit_name]
-	if slot_index < 0 or slot_index >= arr.size():
-		return
-	var item_id: String = arr[slot_index]
-	arr.remove_at(slot_index)
-	add_item(item_id)
+	_equipment.unequip_item(unit_name, slot_index)
 
 
 func get_equipped_item_at(unit_name: String, slot_index: int) -> Resource:
-	_ensure_equipment_array(unit_name)
-	var arr: Array = equipment[unit_name]
-	if slot_index < 0 or slot_index >= arr.size():
-		return null
-	var item_id: String = arr[slot_index]
-	return _load_item(item_id)
+	return _equipment.get_equipped_item_at(unit_name, slot_index)
 
 
 func get_all_equipped(unit_name: String) -> Array:
-	_ensure_equipment_array(unit_name)
-	var arr: Array = equipment[unit_name]
-	return arr.duplicate()
+	return _equipment.get_all_equipped(unit_name)
 
 
 func is_item_unlocked(item: Resource) -> bool:
-	if not item or not item.get("is_equipment") or not item.is_equipment():
-		return false
-	var party_class_ids: Array[String] = []
-	if not player_class_id.is_empty():
-		party_class_ids.append(player_class_id)
-	for member in party_members:
-		var cid: String = member.get("class_id", "")
-		if not cid.is_empty() and cid not in party_class_ids:
-			party_class_ids.append(cid)
-	var highest_tier: int = 0
-	for cid in party_class_ids:
-		var path := "res://resources/classes/%s.tres" % cid
-		if ResourceLoader.exists(path):
-			var data: Resource = load(path) as Resource
-			var dt = data.get("tier") if data else null
-			if data and dt != null and int(dt) > highest_tier:
-				highest_tier = int(dt)
-	var ut = item.get("unlock_tier")
-	if highest_tier < (int(ut) if ut != null else 0):
-		return false
-	var unlock_ids: Array = item.get("unlock_class_ids") if item.get("unlock_class_ids") != null else []
-	if unlock_ids.is_empty():
-		return true
-	for cid in unlock_ids:
-		if cid in party_class_ids:
-			return true
-	return false
+	return _equipment.is_item_unlocked(item)
 
 
 func get_item_resource(item_id: String) -> Resource:
