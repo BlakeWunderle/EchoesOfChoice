@@ -1,6 +1,6 @@
 ---
 name: balance-thresholds
-description: Reference for EchoesOfChoiceTactical balance targets per progression stage. Use when interpreting balance_check.gd output, tuning enemy stats, or deciding if a number is acceptable. Contains win-rate targets, damage-per-hit ranges, TTK targets, party defense profiles, and fix recipes for each flag type.
+description: Reference for EchoesOfChoiceTactical balance targets per progression stage. Use when interpreting balance_check.gd output, tuning enemy stats, or deciding if a number is acceptable. Contains win-rate targets, damage-per-hit ranges, TTK targets, party defense profiles, Tier 1 extreme defender profiles, and fix recipes for each flag type.
 ---
 
 # Balance Thresholds — Echoes of Choice Tactical
@@ -22,6 +22,8 @@ Use alongside `balance_check.gd` output when deciding if numbers need tuning.
 | 5    | Very Hard      | ~65%            |
 | 6    | Brutal         | ~60%            |
 | 7+   | Finale         | ~58%            |
+
+These are for **Normal difficulty**. See `difficulty-baseline` skill for Easy/Hard adjustments.
 
 ---
 
@@ -83,6 +85,38 @@ Squire base_physical_attack=18, growth=+2/level.
 
 ---
 
+## Tier 1 Extreme Defender Profiles
+
+At ~50 JP (available from Prog 1+), players may have promoted to **Warden** (best physical tank) or
+**Acolyte** (best magic tank). `balance_check.gd` checks both after the main damage matrix.
+
+**Class stats (after tuning):**
+- Warden: base P.Def=19, growth_phys_def=4, base M.Def=13, growth_mag_def=2
+- Acolyte: base P.Def=13, growth_phys_def=2, base M.Def=20, growth_mag_def=3
+
+**Tool uses no-equipment assumption** (T1 class may not have had time to buy gear after promotion).
+Values = base + growth×(level−1):
+
+| Prog | Lv | Warden P.Def | Warden M.Def | Acolyte P.Def | Acolyte M.Def |
+|------|----|-------------|-------------|--------------|--------------|
+| 1    | 2  | 23          | 15          | 15           | 23           |
+| 2    | 3  | 27          | 17          | 17           | 26           |
+| 3    | 4  | 31          | 19          | 19           | 29           |
+| 4    | 4  | 31          | 19          | 19           | 29           |
+| 5    | 5  | 35          | 21          | 21           | 32           |
+| 6    | 6  | 39          | 23          | 23           | 35           |
+| 7    | 6  | 39          | 23          | 23           | 35           |
+| 8    | 7  | 43          | 25          | 25           | 38           |
+
+**T1 flags:**
+- `⚠T1TANK` — no enemy threatens Warden (physical tank immune to all physical attacks)
+- `⚠T1MAGE` — no enemy threatens Acolyte (magic tank immune to all magic attacks)
+- `✓T1` — both classes are threatened by at least one enemy
+
+**Design-intent exceptions** — some T1 flags are expected and NOT action items (see below).
+
+---
+
 ## Damage-per-Hit Targets
 
 How much should an enemy deal to the **most vulnerable class** per hit?
@@ -108,12 +142,13 @@ not a bug. Review the `⚠ZERO` flag in context.
 
 ## TTK Targets (Squire hits to kill an enemy)
 
-| TTK Range | Classification | Notes                              |
-|-----------|---------------|------------------------------------|
-| 1–3       | Fodder        | Intended to fall quickly           |
-| 3–6       | Standard      | Main line — normal effort          |
-| 7–10      | Tanky         | Boss/miniboss — focus target       |
-| > 10      | ⚠ SLOW        | Review — HP likely too high        |
+| TTK   | Classification | Flag     | Notes                              |
+|-------|---------------|----------|------------------------------------|
+| = 1   | Glass cannon  | ⚠ EASY   | Squire one-shots — raise enemy HP  |
+| 2–3   | Fodder        | —        | Intended to fall quickly           |
+| 4–6   | Standard      | —        | Main line — normal effort          |
+| 7–10  | Tanky         | —        | Boss/miniboss — focus target       |
+| > 10  | Slugfest      | ⚠ SLOW   | HP likely too high; reduce it      |
 
 ---
 
@@ -162,17 +197,17 @@ vs Squire (lowest M.Def):  mag_atk = squire_mag_def - M + N
 
 ### ⚠ ZERO — enemy deals 0 to all classes
 
-**Cause:** attack stat too low relative to party defense at this progression.
+**Cause A — attack stat too low:** Raise `base_physical_attack` or `base_magic_attack`.
+```
+Fix phys: new_phys_atk = scholar_phys_def + 3      # Scholar takes 3 damage
+Fix mag:  new_mag_atk  = squire_mag_def - ability_modifier + 3   # Squire takes 3 magic
+```
 
-**Fix physical ZERO:** Raise `base_physical_attack` so Scholar takes ≥ 3 damage:
-```
-new_phys_atk = scholar_phys_def + 3
-```
-
-**Fix magic ZERO:** Raise `base_magic_attack` so Squire takes ≥ 3 magic damage:
-```
-new_mag_atk = squire_mag_def - ability_modifier + 3
-```
+**Cause B — only DEBUFF/HEAL abilities, no DAMAGE ability:** Check every ability's `ability_type`.
+`0=DAMAGE`, `1=HEAL`, `2=BUFF`, `3=DEBUFF`, `4=TERRAIN`. Only `ability_type=0` contributes to
+the damage calculation. If all abilities are DEBUFF/HEAL, add a `spirit_touch.tres` (magic DAMAGE)
+or `slash.tres` (physical DAMAGE) as the base attack. This was the root cause for Sprite and
+Dusk Moth — both had high `base_magic_attack` but only DEBUFF abilities.
 
 ### ⚠ SPIKE — kills a class in <3 hits
 
@@ -187,6 +222,43 @@ new_mag_atk = squire_mag_def - ability_modifier + 3
 **Formula:** `ttk = ceil(enemy_hp / max(1, squire_phys_atk - enemy_phys_def))`
 
 **Fix:** Reduce `base_max_health` until TTK ≤ 10.
+
+### ⚠ EASY — Squire one-shots (TTK = 1)
+
+**Cause:** enemy HP too low. Squire one-shot means the enemy may not even act before dying.
+
+**Fix:** Raise `base_max_health` until TTK ≥ 2. Target TTK = 2–3 for small/fragile units.
+```
+min_hp = squire_phys_atk - enemy_phys_def + 1     # at minimum; prefer TTK=2 → min_hp = (sq_dmg * 2) - 1
+```
+
+---
+
+## Design-Intent Flags (Acceptable ⚠s)
+
+Some flags are expected and should **not** be fixed:
+
+### ⚠T1MAGE in `smoke` (Prog 2)
+Acolyte (M.Def=26) is immune to Imp (fire_spark total=18) and Fire Spirit (flame_wave total=24).
+**Why OK:** Acolyte is the magic-counter class. Its entire identity is resisting magic. A pure-magic
+battle is exactly where Acolyte shines. Raising magic damage to threaten Acolyte here would
+create spike risk for base Squire (M.Def=17).
+
+### ⚠T1TANK in `forest` / `village_raid` (Prog 1)
+Bear (cleave total=22) and Wild Boar (basic total=14+?) can't penetrate Warden P.Def=23.
+**Why OK:** Tier 1 requires ~50 JP. Players are extremely unlikely to have promoted to Warden
+before completing Prog 1. The flag exists as a long-term coverage note, not a day-one problem.
+
+### ⚠ZERO for `Goblin Shaman` in `village_raid`
+Pure healer/support design. Intentional — this enemy exists to heal allies, not attack.
+
+### ⚠SLOW for `Street Tough` in `city_street` (TTK=11)
+Known borderline case (HP=52, TTK=11). A single-point fix: reduce HP to 48 → TTK=10.
+Not treated as urgent since it's the tutorial battle and Prog 0 is intentionally forgiving.
+
+### ⚠ZERO for `Goblin Archer` in `village_raid`
+Known bug. arrow_shot mod=2 + low phys_atk barely misses Scholar P.Def=17. Fix: raise
+`base_physical_attack` by 2–3 points. Deferred; Prog 1 is already easy enough.
 
 ---
 
@@ -207,7 +279,13 @@ Godot_v4.6.1-stable_win64_console.exe --path EchoesOfChoiceTactical --headless -
 - `⚠ZERO` = deals 0 to every class (needs fixing unless intentional support unit)
 - `⚠SPIKE` = kills a class in <3 hits (review)
 - `⚠SLOW` = Squire needs >10 hits to kill (HP may be too high)
-- `✓` = all clear
+- `⚠EASY` = Squire one-shots the enemy (HP too low, enemy may never act)
+- `✓` = all clear — damage present, no spikes, TTK 2–10
+- T1 section: `Warden Xp/Ym` / `Acolyte Xp/Ym` = damage vs each T1 extreme
+- T1 `⚠` per-enemy = that enemy can't threaten this T1 class at all
+- `⚠T1TANK` = no enemy in battle threatens Warden
+- `⚠T1MAGE` = no enemy in battle threatens Acolyte
+- `✓T1` = both T1 extremes are threatened by at least one enemy
 
 **Battles tracked:** city_street (P0), forest (P1), village_raid (P1), smoke (P2),
 deep_forest (P2), clearing (P2), ruins (P2), cave (P3), portal (P3), inn_ambush (P3)
