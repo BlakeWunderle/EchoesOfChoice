@@ -59,6 +59,7 @@ const TOWN_SHOPS: Dictionary = {
 	],
 	"gate_town": [
 		# Consumables — all tiers
+		"tent",
 		"health_potion", "mana_potion",
 		"strength_tonic", "magic_tonic", "guard_tonic",
 		"greater_health_potion", "greater_mana_potion",

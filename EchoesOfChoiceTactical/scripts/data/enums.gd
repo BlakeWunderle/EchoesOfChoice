@@ -85,4 +85,5 @@ enum ConsumableEffect {
 	HEAL_HP,
 	RESTORE_MANA,
 	BUFF_STAT,
+	FULL_REST_ALL,
 }

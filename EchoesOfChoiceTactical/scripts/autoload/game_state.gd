@@ -198,6 +198,36 @@ func get_tracked_hp_mp(unit_name: String) -> Dictionary:
 	return {"hp": -1, "mp": -1}
 
 
+func heal_unit(unit_name: String, amount: int) -> int:
+	for member in party_members:
+		if member.get("name", "") == unit_name:
+			var max_hp: int = get_member_max_hp(member)
+			var cur: int = member.get("current_hp", -1)
+			if cur < 0:
+				cur = max_hp
+			var new_hp: int = mini(cur + amount, max_hp)
+			member["current_hp"] = new_hp
+			return new_hp - cur
+	return 0
+
+
+func restore_mana(unit_name: String, amount: int) -> int:
+	for member in party_members:
+		if member.get("name", "") == unit_name:
+			var max_mp: int = get_member_max_mp(member)
+			var cur: int = member.get("current_mp", -1)
+			if cur < 0:
+				cur = max_mp
+			var new_mp: int = mini(cur + amount, max_mp)
+			member["current_mp"] = new_mp
+			return new_mp - cur
+	return 0
+
+
+func full_rest_party() -> void:
+	heal_party_partial(1.0, 1.0)
+
+
 func heal_party_partial(hp_frac: float, mp_frac: float) -> void:
 	for member in party_members:
 		var max_hp: int = get_member_max_hp(member)
