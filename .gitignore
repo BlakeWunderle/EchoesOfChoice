@@ -38,3 +38,4 @@ savegame.json
 *.pem
 *.key
 credentials.json
+*cookies*.txt
