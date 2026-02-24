@@ -45,7 +45,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `save_load_manager.gd` -- JSON save/load with 3 slots
 - `scene_manager.gd` -- Scene transitions, new game / continue / load routing
 - `music_manager.gd` -- Background music with crossfade, context-based track pools (battle, exploration, town, menu, boss, cutscene)
-- `sfx_manager.gd` -- Sound effects with category pools, voice system, polyphonic playback
+- `sfx_manager.gd` -- SFX playback: 28 category enum with folder-based pools, 8-player polyphonic pool, per-category cooldown (80ms), voice pack system (per-unit packs × 4 actions), play_ability_sfx() maps ability type/name to SFX category
 - `sprite_loader.gd` -- Loads and caches SpriteFrames resources by sprite_id for unit rendering
 
 ### Battle (`scenes/battle/`)
