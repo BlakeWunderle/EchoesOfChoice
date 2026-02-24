@@ -1,6 +1,6 @@
 ---
 name: balance-thresholds
-description: Reference for EchoesOfChoiceTactical balance targets per progression stage. Use when interpreting balance_check.gd output, tuning enemy stats, or deciding if a number is acceptable. Contains win-rate targets, damage-per-hit ranges, TTK targets, party defense profiles, Tier 1 extreme defender profiles, and fix recipes for each flag type.
+description: Reference for EchoesOfChoiceTactical balance targets per progression stage. Use when interpreting balance_check.gd output, tuning enemy stats, or deciding if a number is acceptable. Contains win-rate targets, damage-per-hit ranges, TTK targets, party defense profiles, T1/T2 defender profiles, and fix recipes for each flag type.
 ---
 
 # Balance Thresholds — Echoes of Choice Tactical
@@ -27,93 +27,140 @@ These are for **Normal difficulty**. See `difficulty-baseline` skill for Easy/Ha
 
 ---
 
-## Corrected Party Defense Profiles
+## Party Defense Profiles
 
 **Equipment assumption:** All classes prioritize P.Def equipment. No M.Def equipment bonus.
 M.Def grows only from class level growths.
 
-Equipment bonus to P.Def per progression (no M.Def bonus):
+Equipment PD bonus per progression (effective total from available shop + slot count):
 - Prog 0: +0 (no shop)
-- Prog 1–2: +3 (Forest Village — Tier 0 Guardian Seal ~60g)
-- Prog 3–4: +5 (Crossroads Inn — Tier 1 Guardian Seal ~140g)
-- Prog 5–6: +5 P.Def +10 HP (Gate Town — two equipment slots)
-- Prog 7–8: +8 P.Def +15 HP (Tier 2 unlocked — two-three slots)
+- Prog 1–2: +3 (Forest Village — T0 Guardian Seal, 1 slot)
+- Prog 3–4: +5 (Crossroads Inn — T1 Guardian Seal, 2 slots but 1 defense)
+- Prog 5–6: +10 (Gate Town — 2 defense slots, T0+T1 or T1×2)
+- Prog 7–8: +13/+14 (Tier 2 unlocked — 3 slots, T1+T2 defense mix)
 
 Base class stats (Level 1):
 
 | Class       | P.Def | M.Def | P.Def growth | M.Def growth |
 |-------------|-------|-------|--------------|--------------|
-| Squire      | 15    | 13    | +2/level     | +2/level     |
-| Mage        | 13    | 18    | +2/level     | +2/level     |
-| Scholar     | 12    | 18    | +2/level     | +2/level     |
-| Entertainer | 13    | 18    | +2/level     | +3/level     |
+| Squire      | 15    | 11    | +2/level     | +2/level     |
+| Mage        | 11    | 18    | +2/level     | +2/level     |
+| Scholar     | 12    | 20    | +2/level     | +2/level     |
+| Entertainer | 12    | 18    | +2/level     | +3/level     |
 
-**Full defense table (the constants used by balance_check.gd):**
+**Key insight:** Mage has the lowest P.Def (11) — physical enemies hurt Mage most.
+Squire has the lowest M.Def (11) — magic enemies hurt Squire most.
+
+**Full defense table (the constants used by balance_check.gd PARTY dict):**
 
 | Prog | Lv | Sq P.Def | Sq M.Def | Mg P.Def | Mg M.Def | Sc P.Def | Sc M.Def | En P.Def | En M.Def |
 |------|----|----------|----------|----------|----------|----------|----------|----------|----------|
-| 0    | 1  | 15       | 13       | 13       | 18       | 12       | 18       | 13       | 18       |
-| 1    | 2  | 20       | 15       | 18       | 20       | 17       | 20       | 18       | 21       |
-| 2    | 3  | 22       | 17       | 20       | 22       | 19       | 22       | 20       | 24       |
-| 3    | 4  | 26       | 19       | 24       | 24       | 23       | 24       | 24       | 27       |
-| 4    | 4  | 26       | 19       | 24       | 24       | 23       | 24       | 24       | 27       |
-| 5    | 5  | 33       | 21       | 31       | 26       | 30       | 26       | 31       | 30       |
-| 6    | 6  | 35       | 23       | 33       | 28       | 32       | 28       | 33       | 33       |
-| 7    | 6  | 38       | 23       | 36       | 28       | 35       | 28       | 36       | 33       |
-| 8    | 7  | 41       | 25       | 39       | 30       | 38       | 30       | 39       | 36       |
-
-**Key insight:** Squire has the lowest M.Def (no M.Def equipment), Scholar has the lowest P.Def.
-Magic enemies hurt Squire most. Physical enemies hurt Scholar most.
+| 0    | 1  | 15       | 11       | 11       | 18       | 12       | 20       | 12       | 18       |
+| 1    | 2  | 20       | 13       | 16       | 20       | 17       | 22       | 17       | 21       |
+| 2    | 3  | 22       | 15       | 18       | 22       | 19       | 24       | 19       | 24       |
+| 3    | 4  | 26       | 17       | 22       | 24       | 23       | 26       | 23       | 27       |
+| 4    | 4  | 26       | 17       | 22       | 24       | 23       | 26       | 23       | 27       |
+| 5    | 5  | 33       | 19       | 29       | 26       | 30       | 28       | 30       | 30       |
+| 6    | 6  | 35       | 21       | 31       | 28       | 32       | 30       | 32       | 33       |
+| 7    | 6  | 38       | 21       | 34       | 28       | 35       | 30       | 35       | 33       |
+| 8    | 7  | 41       | 23       | 37       | 30       | 38       | 32       | 38       | 36       |
 
 ---
 
 ## Squire Attack Output (for TTK calculation)
 
-Squire base_physical_attack=18, growth=+2/level.
+Squire base_physical_attack=21, growth=+2/level.
 
 | Prog | Level | Squire Phys Atk |
 |------|-------|-----------------|
-| 0    | 1     | 18              |
-| 1    | 2     | 20              |
-| 2    | 3     | 22              |
-| 3    | 4     | 24              |
-| 4    | 4     | 24              |
-| 5    | 5     | 26              |
-| 6    | 6     | 28              |
-| 7    | 6     | 28              |
-| 8    | 7     | 30              |
+| 0    | 1     | 21              |
+| 1    | 2     | 23              |
+| 2    | 3     | 25              |
+| 3    | 4     | 27              |
+| 4    | 4     | 27              |
+| 5    | 5     | 29              |
+| 6    | 6     | 31              |
+| 7    | 6     | 31              |
+| 8    | 7     | 33              |
 
 ---
 
-## Tier 1 Extreme Defender Profiles
+## Tier 1 Representative Defender Profiles
 
-At ~50 JP (available from Prog 1+), players may have promoted to **Warden** (best physical tank) or
-**Acolyte** (best magic tank). `balance_check.gd` checks both after the main damage matrix.
+At ~50 JP (available from Prog 1+), players may have promoted to Tier 1 classes.
+`balance_check.gd` checks 6 T1 representatives after the main damage matrix.
 
-**Class stats (after tuning):**
-- Warden: base P.Def=19, growth_phys_def=4, base M.Def=13, growth_mag_def=2
-- Acolyte: base P.Def=13, growth_phys_def=2, base M.Def=20, growth_mag_def=3
+**No equipment bonus assumed** (T1 class may not have had time to buy gear after promotion).
+Values = base + growth × (level − 1).
 
-**Tool uses no-equipment assumption** (T1 class may not have had time to buy gear after promotion).
-Values = base + growth×(level−1):
+**Class base stats:**
 
-| Prog | Lv | Warden P.Def | Warden M.Def | Acolyte P.Def | Acolyte M.Def |
-|------|----|-------------|-------------|--------------|--------------|
-| 1    | 2  | 23          | 15          | 15           | 23           |
-| 2    | 3  | 27          | 17          | 17           | 26           |
-| 3    | 4  | 31          | 19          | 19           | 29           |
-| 4    | 4  | 31          | 19          | 19           | 29           |
-| 5    | 5  | 35          | 21          | 21           | 32           |
-| 6    | 6  | 39          | 23          | 23           | 35           |
-| 7    | 6  | 39          | 23          | 23           | 35           |
-| 8    | 7  | 43          | 25          | 25           | 38           |
+| Class | Role | P.Def | P.Def growth | M.Def | M.Def growth |
+|-------|------|-------|-------------|-------|-------------|
+| Warden | Phys tank | 23 | +4 | 13 | +2 |
+| Acolyte | Mag tank | 13 | +2 | 23 | +3 |
+| Ranger | Phys mid | 17 | +2 | 11 | +2 |
+| Firebrand | Mag glass | 10 | +2 | 18 | +3 |
+| Dervish | Dodge/hybrid | 12 | +2 | 18 | +2 |
+| Martial Artist | Phys glass | 14 | +3 | 10 | +2 |
+
+**Full T1 defense table (PARTY_T1 in balance_check.gd):**
+
+| Prog | Lv | Ward PD | Ward MD | Aco PD | Aco MD | Rang PD | Rang MD | Fire PD | Fire MD | Derv PD | Derv MD | MArt PD | MArt MD |
+|------|----|---------|---------|--------|--------|---------|---------|---------|---------|---------|---------|---------|---------|
+| 1    | 2  | 27      | 15      | 15     | 26     | 19      | 13      | 12      | 21      | 14      | 20      | 17      | 12      |
+| 2    | 3  | 31      | 17      | 17     | 29     | 21      | 15      | 14      | 24      | 16      | 22      | 20      | 14      |
+| 3    | 4  | 35      | 19      | 19     | 32     | 23      | 17      | 16      | 27      | 18      | 24      | 23      | 16      |
+| 4    | 4  | 35      | 19      | 19     | 32     | 23      | 17      | 16      | 27      | 18      | 24      | 23      | 16      |
+| 5    | 5  | 39      | 21      | 21     | 35     | 25      | 19      | 18      | 30      | 20      | 26      | 26      | 18      |
+| 6    | 6  | 43      | 23      | 23     | 38     | 27      | 21      | 20      | 33      | 22      | 28      | 29      | 20      |
+| 7    | 6  | 43      | 23      | 23     | 38     | 27      | 21      | 20      | 33      | 22      | 28      | 29      | 20      |
+| 8    | 7  | 47      | 25      | 25     | 41     | 29      | 23      | 22      | 36      | 24      | 30      | 32      | 22      |
 
 **T1 flags:**
-- `⚠T1TANK` — no enemy threatens Warden (physical tank immune to all physical attacks)
-- `⚠T1MAGE` — no enemy threatens Acolyte (magic tank immune to all magic attacks)
-- `✓T1` — both classes are threatened by at least one enemy
+- Per-enemy `⚠` = that enemy can't threaten a specific T1 class (OK if another enemy covers it)
+- `⚠T1TANK` = no enemy in the battle threatens Warden (phys tank immune to all)
+- `⚠T1MAGE` = no enemy in the battle threatens Acolyte (mag tank immune to all)
+- `✓T1` = all 6 T1 classes are threatened by at least one enemy
 
-**Design-intent exceptions** — some T1 flags are expected and NOT action items (see below).
+---
+
+## Tier 2 Representative Defender Profiles
+
+At ~100 JP (available from Prog 3+), players may have promoted to Tier 2 classes.
+`balance_check.gd` checks 8 T2 representatives.
+
+**No equipment bonus assumed.**
+
+**Class base stats:**
+
+| Class | Role | P.Def | P.Def growth | M.Def | M.Def growth |
+|-------|------|-------|-------------|-------|-------------|
+| Bastion | Phys extreme | 28 | +7 | 15 | +3 |
+| Paladin | Balanced tank | 22 | +5 | 18 | +4 |
+| Ninja | Phys glass | 14 | +2 | 10 | +2 |
+| Cavalry | Phys attacker | 14 | +3 | 10 | +2 |
+| Pyromancer | Mag glass | 10 | +2 | 17 | +3 |
+| Priest | Mag extreme | 13 | +2 | 21 | +4 |
+| Mercenary | Crit glass | 14 | +2 | 10 | +2 |
+| Illusionist | Dodge glass | 10 | +2 | 17 | +3 |
+
+**Full T2 defense table (PARTY_T2 in balance_check.gd):**
+
+| Prog | Lv | Bast PD | Bast MD | Pala PD | Pala MD | Ninj PD | Ninj MD | Cav PD | Cav MD | Pyro PD | Pyro MD | Prie PD | Prie MD | Merc PD | Merc MD | Illu PD | Illu MD |
+|------|----|---------|---------|---------|---------|---------|---------|--------|--------|---------|---------|---------|---------|---------|---------|---------|---------|
+| 3    | 4  | 49      | 24      | 37      | 30      | 20      | 16      | 23     | 16     | 16      | 26      | 19      | 33      | 20      | 16      | 16      | 26      |
+| 4    | 4  | 49      | 24      | 37      | 30      | 20      | 16      | 23     | 16     | 16      | 26      | 19      | 33      | 20      | 16      | 16      | 26      |
+| 5    | 5  | 56      | 27      | 42      | 34      | 22      | 18      | 26     | 18     | 18      | 29      | 21      | 37      | 22      | 18      | 18      | 29      |
+| 6    | 6  | 63      | 30      | 47      | 38      | 24      | 20      | 29     | 20     | 20      | 32      | 23      | 41      | 24      | 20      | 20      | 32      |
+| 7    | 6  | 63      | 30      | 47      | 38      | 24      | 20      | 29     | 20     | 20      | 32      | 23      | 41      | 24      | 20      | 20      | 32      |
+| 8    | 7  | 70      | 33      | 52      | 42      | 26      | 22      | 32     | 22     | 22      | 35      | 25      | 45      | 26      | 22      | 22      | 35      |
+
+**T2 flags:**
+- Per-enemy `⚠` = that enemy can't threaten a specific T2 class
+- `⚠T2TANK` = no enemy threatens Bastion (phys extreme — P.Def 49+ at Prog 3)
+- `⚠T2MAGE` = no enemy threatens Priest (mag extreme — M.Def 33+ at Prog 3)
+- `✓T2` = all 8 T2 classes are threatened by at least one enemy
 
 ---
 
@@ -123,17 +170,17 @@ How much should an enemy deal to the **most vulnerable class** per hit?
 
 | Prog | Target Range | Most Vulnerable (phys) | Most Vulnerable (mag) |
 |------|-------------|------------------------|----------------------|
-| 0    | 2–5         | Scholar (P.Def 12)     | Squire (M.Def 13)    |
-| 1    | 2–5         | Scholar (P.Def 17)     | Squire (M.Def 15)    |
-| 2    | 3–6         | Scholar (P.Def 19)     | Squire (M.Def 17)    |
-| 3    | 4–7         | Scholar (P.Def 23)     | Squire (M.Def 19)    |
-| 4    | 4–8         | Scholar (P.Def 23)     | Squire (M.Def 19)    |
-| 5    | 5–9         | Scholar (P.Def 30)     | Squire (M.Def 21)    |
-| 6    | 5–10        | Scholar (P.Def 32)     | Squire (M.Def 23)    |
-| 7    | 6–12        | Scholar (P.Def 35)     | Squire (M.Def 23)    |
+| 0    | 2–5         | Mage (P.Def 11)        | Squire (M.Def 11)    |
+| 1    | 2–5         | Mage (P.Def 16)        | Squire (M.Def 13)    |
+| 2    | 3–6         | Mage (P.Def 18)        | Squire (M.Def 15)    |
+| 3    | 4–7         | Mage (P.Def 22)        | Squire (M.Def 17)    |
+| 4    | 4–8         | Mage (P.Def 22)        | Squire (M.Def 17)    |
+| 5    | 5–9         | Mage (P.Def 29)        | Squire (M.Def 19)    |
+| 6    | 5–10        | Mage (P.Def 31)        | Squire (M.Def 21)    |
+| 7    | 6–12        | Mage (P.Def 34)        | Squire (M.Def 21)    |
 
-It is **OK** for an enemy to deal 0 damage to some classes (e.g., Witch at Prog 2 dealing 0 mag
-to Entertainer with M.Def 24 is fine). The floor is: damage ≥ 1 to **at least one class**.
+It is **OK** for an enemy to deal 0 damage to some classes (e.g., Entertainer with high M.Def
+resisting a weak magic attack is fine). The floor is: damage >= 1 to **at least one base class**.
 
 Support units (healers, buffers) may legitimately deal 0 damage to all — that's a design choice,
 not a bug. Review the `⚠ZERO` flag in context.
@@ -170,8 +217,8 @@ spike = (enemy_hp / max_dmg_vs_class) < 3
 
 **Physical attack to deal N damage:**
 ```
-vs Scholar (lowest P.Def): phys_atk = scholar_phys_def + N
-vs Squire:                 phys_atk = squire_phys_def  + N
+vs Mage (lowest P.Def):    phys_atk = mage_phys_def + N
+vs Squire:                  phys_atk = squire_phys_def + N
 ```
 
 **Magic attack to deal N damage (with ability modifier M):**
@@ -179,17 +226,17 @@ vs Squire:                 phys_atk = squire_phys_def  + N
 vs Squire (lowest M.Def):  mag_atk = squire_mag_def - M + N
 ```
 
-**Examples at Prog 2 (Scholar P.Def=19, Squire M.Def=17, typical ability_modifier=2):**
-- 3 phys damage to Scholar: need phys_atk = 22
-- 5 phys damage to Scholar: need phys_atk = 24
-- 3 mag damage to Squire: need mag_atk = 18
-- 5 mag damage to Squire: need mag_atk = 20
+**Examples at Prog 2 (Mage P.Def=18, Squire M.Def=15, typical ability_modifier=2):**
+- 3 phys damage to Mage: need phys_atk = 21
+- 5 phys damage to Mage: need phys_atk = 23
+- 3 mag damage to Squire: need mag_atk = 16
+- 5 mag damage to Squire: need mag_atk = 18
 
-**Examples at Prog 3 (Scholar P.Def=23, Squire M.Def=19, typical ability_modifier=2):**
-- 4 phys damage to Scholar: need phys_atk = 27
-- 7 phys damage to Scholar: need phys_atk = 30
-- 4 mag damage to Squire: need mag_atk = 21
-- 7 mag damage to Squire: need mag_atk = 24
+**Examples at Prog 3 (Mage P.Def=22, Squire M.Def=17, typical ability_modifier=2):**
+- 4 phys damage to Mage: need phys_atk = 26
+- 7 phys damage to Mage: need phys_atk = 29
+- 4 mag damage to Squire: need mag_atk = 19
+- 7 mag damage to Squire: need mag_atk = 22
 
 ---
 
@@ -199,7 +246,7 @@ vs Squire (lowest M.Def):  mag_atk = squire_mag_def - M + N
 
 **Cause A — attack stat too low:** Raise `base_physical_attack` or `base_magic_attack`.
 ```
-Fix phys: new_phys_atk = scholar_phys_def + 3      # Scholar takes 3 damage
+Fix phys: new_phys_atk = mage_phys_def + 3         # Mage takes 3 damage
 Fix mag:  new_mag_atk  = squire_mag_def - ability_modifier + 3   # Squire takes 3 magic
 ```
 
@@ -213,7 +260,7 @@ Dusk Moth — both had high `base_magic_attack` but only DEBUFF abilities.
 
 **Cause:** too much damage or class HP too low.
 
-**Fix:** Reduce `base_physical_attack` or `base_magic_attack` by 3–5 points until ratio ≥ 3.0.
+**Fix:** Reduce `base_physical_attack` or `base_magic_attack` by 3–5 points until ratio >= 3.0.
 
 ### ⚠ SLOW — Squire needs >10 hits to kill
 
@@ -221,13 +268,13 @@ Dusk Moth — both had high `base_magic_attack` but only DEBUFF abilities.
 
 **Formula:** `ttk = ceil(enemy_hp / max(1, squire_phys_atk - enemy_phys_def))`
 
-**Fix:** Reduce `base_max_health` until TTK ≤ 10.
+**Fix:** Reduce `base_max_health` until TTK <= 10.
 
 ### ⚠ EASY — Squire one-shots (TTK = 1)
 
 **Cause:** enemy HP too low. Squire one-shot means the enemy may not even act before dying.
 
-**Fix:** Raise `base_max_health` until TTK ≥ 2. Target TTK = 2–3 for small/fragile units.
+**Fix:** Raise `base_max_health` until TTK >= 2. Target TTK = 2–3 for small/fragile units.
 ```
 min_hp = squire_phys_atk - enemy_phys_def + 1     # at minimum; prefer TTK=2 → min_hp = (sq_dmg * 2) - 1
 ```
@@ -239,25 +286,23 @@ min_hp = squire_phys_atk - enemy_phys_def + 1     # at minimum; prefer TTK=2 →
 Some flags are expected and should **not** be fixed:
 
 ### ⚠T1MAGE in `smoke` (Prog 2)
-Acolyte (M.Def=26) is immune to Imp (fire_spark total=18) and Fire Spirit (flame_wave total=24).
-**Why OK:** Acolyte is the magic-counter class. Its entire identity is resisting magic. A pure-magic
-battle is exactly where Acolyte shines. Raising magic damage to threaten Acolyte here would
-create spike risk for base Squire (M.Def=17).
+Acolyte (M.Def=29) is immune to Imp and Fire Spirit magic. Pure-magic
+battle is exactly where Acolyte shines. Raising magic damage to threaten Acolyte
+would create spike risk for base Squire (M.Def=15).
 
 ### ⚠T1TANK in `forest` / `village_raid` (Prog 1)
-Bear (cleave total=22) and Wild Boar (basic total=14+?) can't penetrate Warden P.Def=23.
-**Why OK:** Tier 1 requires ~50 JP. Players are extremely unlikely to have promoted to Warden
-before completing Prog 1. The flag exists as a long-term coverage note, not a day-one problem.
+Warden (P.Def=27) is immune to Bear/Wild Boar/Wolf physical attacks.
+Tier 1 requires ~50 JP. Players extremely unlikely to have promoted by Prog 1.
 
 ### ⚠ZERO for `Goblin Shaman` in `village_raid`
 Pure healer/support design. Intentional — this enemy exists to heal allies, not attack.
 
 ### ⚠SLOW for `Street Tough` in `city_street` (TTK=11)
-Known borderline case (HP=52, TTK=11). A single-point fix: reduce HP to 48 → TTK=10.
+Known borderline case. A single-point fix: reduce HP to 48 → TTK=10.
 Not treated as urgent since it's the tutorial battle and Prog 0 is intentionally forgiving.
 
 ### ⚠ZERO for `Goblin Archer` in `village_raid`
-Known bug. arrow_shot mod=2 + low phys_atk barely misses Scholar P.Def=17. Fix: raise
+Known bug. arrow_shot mod=2 + low phys_atk barely misses Mage P.Def=16. Fix: raise
 `base_physical_attack` by 2–3 points. Deferred; Prog 1 is already easy enough.
 
 ---
@@ -276,16 +321,41 @@ Godot_v4.6.1-stable_win64_console.exe --path EchoesOfChoiceTactical --headless -
 **Output legend:**
 - `Xp/Ym` = X phys damage / Y magic damage per hit vs that class
 - `TTK` = Squire basic-attack hits to kill the enemy
-- `⚠ZERO` = deals 0 to every class (needs fixing unless intentional support unit)
+- `⚠ZERO` = deals 0 to every base class (needs fixing unless intentional support unit)
 - `⚠SPIKE` = kills a class in <3 hits (review)
 - `⚠SLOW` = Squire needs >10 hits to kill (HP may be too high)
 - `⚠EASY` = Squire one-shots the enemy (HP too low, enemy may never act)
 - `✓` = all clear — damage present, no spikes, TTK 2–10
-- T1 section: `Warden Xp/Ym` / `Acolyte Xp/Ym` = damage vs each T1 extreme
-- T1 `⚠` per-enemy = that enemy can't threaten this T1 class at all
+- T1 section (Prog 1+): damage vs each of 6 T1 representatives
+- T1 per-enemy `⚠` = that enemy can't threaten a specific T1 class
 - `⚠T1TANK` = no enemy in battle threatens Warden
 - `⚠T1MAGE` = no enemy in battle threatens Acolyte
-- `✓T1` = both T1 extremes are threatened by at least one enemy
+- `✓T1` = all T1 classes threatened by at least one enemy
+- T2 section (Prog 3+): damage vs each of 8 T2 representatives
+- `⚠T2TANK` / `⚠T2MAGE` = battle-level T2 extreme flags
+- `✓T2` = all T2 classes threatened by at least one enemy
 
 **Battles tracked:** city_street (P0), forest (P1), village_raid (P1), smoke (P2),
-deep_forest (P2), clearing (P2), ruins (P2), cave (P3), portal (P3), inn_ambush (P3)
+deep_forest (P2), clearing (P2), ruins (P2), cave (P3), portal (P3), inn_ambush (P3),
+shore (P4), beach (P4), cemetery_battle (P4), box_battle (P4), army_battle (P4), lab_battle (P4),
+mirror_battle (P5), gate_ambush (P5), city_gate_ambush (P6), return_city_1-4 (P6)
+
+## Item Stat Reference (Crit/Dodge on 0-100 scale)
+
+Standard tiered items (shop-purchasable):
+
+| Group | T0 (+bonus, price) | T1 (+bonus, price) | T2 (+bonus, price) |
+|-------|-------------------|-------------------|-------------------|
+| HP | +5, 50 | +10, 120 | +15, 250 |
+| Mana | +3, 50 | +5, 120 | +8, 250 |
+| P.Atk | +3, 60 | +5, 140 | +8, 280 |
+| P.Def | +3, 60 | +5, 140 | +8, 280 |
+| M.Atk | +3, 60 | +5, 140 | +8, 280 |
+| M.Def | +3, 60 | +5, 140 | +8, 280 |
+| Speed | +2, 50 | +3, 120 | +5, 260 |
+| Crit% | — | +5, 80 | +10, 200 |
+| Dodge% | — | +5, 80 | +10, 200 |
+| Move | — | +1, 150 | +2, 300 |
+| Jump | — | +1, 150 | +2, 300 |
+
+Crit and Dodge are on a **0-100 percentage scale** (e.g., Squire base crit=15 means 15% crit chance).
