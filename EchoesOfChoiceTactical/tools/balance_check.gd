@@ -37,20 +37,44 @@ const PARTY: Dictionary = {
 const CLASS_ORDER: Array = ["squire", "mage", "scholar", "entertainer"]
 const CLASS_LABELS: Array = ["vs Squire", "vs Mage", "vs Scholar", "vs Ent"]
 
-# ─── Tier 1 extreme defenders (available from Prog 1, ~50 JP threshold) ───────
-# Warden (Tier 1 Squire path): base P.Def=23 growth=4, M.Def=13 growth=2
-# Acolyte (Tier 1 Scholar path): base P.Def=13 growth=2, M.Def=23 growth=3
-# No equipment bonus assumed — T1 class may not have had time to buy gear.
-# Format: [P.Def, M.Def] = base + growth*(level-1), no equip.
+# ─── Tier 1 representative defenders (available from Prog 1) ─────────────────
+# No equipment bonus assumed. Format: [P.Def, M.Def] = base + growth*(level-1).
+# Warden (phys tank): PD=23 g4, MD=13 g2 | Acolyte (mag tank): PD=13 g2, MD=23 g3
+# Ranger (phys mid):  PD=17 g2, MD=11 g2 | Firebrand (mag glass): PD=10 g2, MD=18 g3
+# Dervish (dodge):    PD=12 g2, MD=18 g2 | Martial Artist (phys glass): PD=14 g3, MD=10 g2
+const T1_ORDER: Array = ["warden", "acolyte", "ranger", "firebrand", "dervish", "martial_artist"]
 const PARTY_T1: Dictionary = {
-	1: {"warden": [27, 15], "acolyte": [15, 26]},
-	2: {"warden": [31, 17], "acolyte": [17, 29]},
-	3: {"warden": [35, 19], "acolyte": [19, 32]},
-	4: {"warden": [35, 19], "acolyte": [19, 32]},
-	5: {"warden": [39, 21], "acolyte": [21, 35]},
-	6: {"warden": [43, 23], "acolyte": [23, 38]},
-	7: {"warden": [43, 23], "acolyte": [23, 38]},
-	8: {"warden": [47, 25], "acolyte": [25, 41]},
+	1: {"warden": [27, 15], "acolyte": [15, 26], "ranger": [19, 13], "firebrand": [12, 21], "dervish": [14, 20], "martial_artist": [17, 12]},
+	2: {"warden": [31, 17], "acolyte": [17, 29], "ranger": [21, 15], "firebrand": [14, 24], "dervish": [16, 22], "martial_artist": [20, 14]},
+	3: {"warden": [35, 19], "acolyte": [19, 32], "ranger": [23, 17], "firebrand": [16, 27], "dervish": [18, 24], "martial_artist": [23, 16]},
+	4: {"warden": [35, 19], "acolyte": [19, 32], "ranger": [23, 17], "firebrand": [16, 27], "dervish": [18, 24], "martial_artist": [23, 16]},
+	5: {"warden": [39, 21], "acolyte": [21, 35], "ranger": [25, 19], "firebrand": [18, 30], "dervish": [20, 26], "martial_artist": [26, 18]},
+	6: {"warden": [43, 23], "acolyte": [23, 38], "ranger": [27, 21], "firebrand": [20, 33], "dervish": [22, 28], "martial_artist": [29, 20]},
+	7: {"warden": [43, 23], "acolyte": [23, 38], "ranger": [27, 21], "firebrand": [20, 33], "dervish": [22, 28], "martial_artist": [29, 20]},
+	8: {"warden": [47, 25], "acolyte": [25, 41], "ranger": [29, 23], "firebrand": [22, 36], "dervish": [24, 30], "martial_artist": [32, 22]},
+}
+
+# ─── Tier 2 representative defenders (available from Prog 3) ─────────────────
+# Bastion (phys extreme): PD=28 g7, MD=15 g3 | Paladin (balanced): PD=22 g5, MD=18 g4
+# Ninja (phys glass):     PD=14 g2, MD=10 g2 | Cavalry (phys atk): PD=14 g3, MD=10 g2
+# Pyromancer (mag glass): PD=10 g2, MD=17 g3 | Priest (mag extreme): PD=13 g2, MD=21 g4
+# Mercenary (crit):       PD=14 g2, MD=10 g2 | Illusionist (dodge): PD=10 g2, MD=17 g3
+const T2_ORDER: Array = ["bastion", "paladin", "ninja", "cavalry", "pyromancer", "priest", "mercenary", "illusionist"]
+
+# Short column labels for tier tables
+const T_LABELS: Dictionary = {
+	"warden": "Ward", "acolyte": "Aco", "ranger": "Rang",
+	"firebrand": "Fire", "dervish": "Derv", "martial_artist": "MArt",
+	"bastion": "Bast", "paladin": "Pala", "ninja": "Ninj", "cavalry": "Cav",
+	"pyromancer": "Pyro", "priest": "Prie", "mercenary": "Merc", "illusionist": "Illu",
+}
+const PARTY_T2: Dictionary = {
+	3: {"bastion": [49, 24], "paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "pyromancer": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
+	4: {"bastion": [49, 24], "paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "pyromancer": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
+	5: {"bastion": [56, 27], "paladin": [42, 34], "ninja": [22, 18], "cavalry": [26, 18], "pyromancer": [18, 29], "priest": [21, 37], "mercenary": [22, 18], "illusionist": [18, 29]},
+	6: {"bastion": [63, 30], "paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "pyromancer": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
+	7: {"bastion": [63, 30], "paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "pyromancer": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
+	8: {"bastion": [70, 33], "paladin": [52, 42], "ninja": [26, 22], "cavalry": [32, 22], "pyromancer": [22, 35], "priest": [25, 45], "mercenary": [26, 22], "illusionist": [22, 35]},
 }
 
 # ─── Battle roster ────────────────────────────────────────────────────────────
@@ -365,6 +389,95 @@ func _load_enemy(res_path: String) -> Dictionary:
 	}
 
 
+# ─── Tier damage helpers ─────────────────────────────────────────────────────
+
+## Returns best physical/magic modifiers and scaled attack stats for an enemy.
+func _best_mods(cf: Dictionary, e_lvl: int) -> Dictionary:
+	var e_pa: int = cf["base_physical_attack"] + cf["growth_physical_attack"] * (e_lvl - 1)
+	var e_ma: int = cf["base_magic_attack"] + cf["growth_magic_attack"] * (e_lvl - 1)
+	var bp: int = 0
+	var hm: bool = false
+	var bm: int = 0
+	for ab: Dictionary in cf["abilities"]:
+		if int(ab["ability_type"]) != ABILITY_TYPE_DAMAGE:
+			continue
+		var st: int = int(ab["modified_stat"])
+		var mo: int = ab["modifier"]
+		if st == STAT_PHYSICAL_ATTACK:
+			bp = maxi(bp, mo)
+		elif st == STAT_MAGIC_ATTACK:
+			if not hm:
+				hm = true
+				bm = mo
+			else:
+				bm = maxi(bm, mo)
+		elif st == STAT_MIXED_ATTACK:
+			bp = maxi(bp, mo)
+			if not hm:
+				hm = true
+				bm = mo
+			else:
+				bm = maxi(bm, mo)
+	return {"e_pa": e_pa, "e_ma": e_ma, "bp": bp, "hm": hm, "bm": bm}
+
+
+## Reports a damage table for a tier of representative defender classes.
+func _report_tier(tier_label: String, flag_prefix: String, order: Array,
+		profiles: Dictionary, prog: int, fighters_cache: Array) -> void:
+	if not profiles.has(prog):
+		return
+	var t: Dictionary = profiles[prog]
+
+	print("")
+	print("  %s:" % tier_label)
+
+	# Column header
+	var hdr: String = "    %-20s" % ""
+	for cls: String in order:
+		hdr += T_LABELS.get(cls, cls).rpad(9)
+	print(hdr)
+
+	# Defense reference row
+	var drow: String = "    %-20s" % "Def (P/M):"
+	for cls: String in order:
+		drow += ("%d/%d" % [t[cls][0], t[cls][1]]).rpad(9)
+	print(drow)
+
+	# Per-enemy damage rows
+	var class_any: Dictionary = {}
+	for cls: String in order:
+		class_any[cls] = false
+
+	for cached: Dictionary in fighters_cache:
+		var ce: Dictionary = cached["entry"]
+		var cf: Dictionary = cached["fighter"]
+		var mods: Dictionary = _best_mods(cf, ce["level"])
+		var cnt: int = ce["count"]
+		var lbl: String = ce["name"] if cnt <= 1 else "%s (x%d)" % [ce["name"], cnt]
+		var line: String = "    %-20s" % lbl
+
+		for cls: String in order:
+			var pdmg: int = maxi(0, mods["bp"] + mods["e_pa"] - t[cls][0])
+			var mdmg: int = 0
+			if mods["hm"]:
+				mdmg = maxi(0, mods["bm"] + mods["e_ma"] - t[cls][1])
+			if pdmg > 0 or mdmg > 0:
+				class_any[cls] = true
+			var cell: String = "%d/%d" % [pdmg, mdmg] if (pdmg > 0 or mdmg > 0) else "--"
+			line += cell.rpad(9)
+		print(line)
+
+	# Summary flags
+	var immune: Array = []
+	for cls: String in order:
+		if not class_any[cls]:
+			immune.append(T_LABELS.get(cls, cls))
+	if immune.is_empty():
+		print("  ✓ %s — all classes threatened" % tier_label)
+	else:
+		print("  ⚠ %sZERO — no enemy threatens: %s" % [flag_prefix, ", ".join(immune)])
+
+
 # ─── Main ─────────────────────────────────────────────────────────────────────
 func _initialize() -> void:
 	var filter: String = ""
@@ -511,75 +624,10 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 	if not easy_names.is_empty():
 		print("  ⚠ EASY  — Squire one-shots (TTK=1), needs more HP: " + ", ".join(easy_names))
 
-	# Tier 1 extreme class check (Warden = peak physical tank, Acolyte = peak magic tank)
-	if prog >= 1 and PARTY_T1.has(prog):
-		var t1: Dictionary = PARTY_T1[prog]
-		var w_pdef: int = t1["warden"][0]
-		var w_mdef: int = t1["warden"][1]
-		var a_pdef: int = t1["acolyte"][0]
-		var a_mdef: int = t1["acolyte"][1]
-		var warden_any: bool = false
-		var acolyte_any: bool = false
-		var t1_lines: Array = []
+	# Tier 1 representative class check (6 classes, available from Prog 1)
+	if prog >= 1:
+		_report_tier("Tier 1 defenders", "T1", T1_ORDER, PARTY_T1, prog, fighters_cache)
 
-		for cached: Dictionary in fighters_cache:
-			var ce: Dictionary = cached["entry"]
-			var cf: Dictionary = cached["fighter"]
-			var e_lvl2: int = ce["level"]
-			var e_pa: int = cf["base_physical_attack"] + cf["growth_physical_attack"] * (e_lvl2 - 1)
-			var e_ma: int = cf["base_magic_attack"]    + cf["growth_magic_attack"]    * (e_lvl2 - 1)
-			var bp: int = 0
-			var hm: bool = false
-			var bm: int = 0
-			for ab: Dictionary in cf["abilities"]:
-				if int(ab["ability_type"]) != ABILITY_TYPE_DAMAGE:
-					continue
-				var st: int = int(ab["modified_stat"])
-				var mo: int = ab["modifier"]
-				if st == STAT_PHYSICAL_ATTACK:
-					bp = maxi(bp, mo)
-				elif st == STAT_MAGIC_ATTACK:
-					if not hm:
-						hm = true
-						bm = mo
-					else:
-						bm = maxi(bm, mo)
-				elif st == STAT_MIXED_ATTACK:
-					bp = maxi(bp, mo)
-					if not hm:
-						hm = true
-						bm = mo
-					else:
-						bm = maxi(bm, mo)
-			var w_phys: int = maxi(0, bp + e_pa - w_pdef)
-			var w_mag: int  = 0
-			if hm:
-				w_mag = maxi(0, bm + e_ma - w_mdef)
-			var a_phys: int = maxi(0, bp + e_pa - a_pdef)
-			var a_mag: int  = 0
-			if hm:
-				a_mag = maxi(0, bm + e_ma - a_mdef)
-			if w_phys > 0 or w_mag > 0:
-				warden_any = true
-			if a_phys > 0 or a_mag > 0:
-				acolyte_any = true
-			var cnt: int = ce["count"]
-			var lbl: String = ce["name"] if cnt <= 1 else "%s (x%d)" % [ce["name"], cnt]
-			var wf: String = " ⚠" if (w_phys == 0 and w_mag == 0) else ""
-			var af: String = " ⚠" if (a_phys == 0 and a_mag == 0) else ""
-			t1_lines.append("    %-22s  Warden %2dp/%2dm%s  Acolyte %2dp/%2dm%s" % [
-				lbl + ":", w_phys, w_mag, wf, a_phys, a_mag, af
-			])
-
-		print("")
-		print("  Tier 1 extremes [Warden P%d/M%d | Acolyte P%d/M%d]:" % [
-			w_pdef, w_mdef, a_pdef, a_mdef
-		])
-		for line: String in t1_lines:
-			print(line)
-		if not warden_any:
-			print("  ⚠ T1TANK  — no enemy threatens Warden; physically immune at this prog")
-		if not acolyte_any:
-			print("  ⚠ T1MAGE  — no enemy threatens Acolyte; magically immune at this prog")
-		if warden_any and acolyte_any:
-			print("  ✓ T1 — both Warden and Acolyte threatened by at least one enemy")
+	# Tier 2 representative class check (8 classes, available from Prog 3)
+	if prog >= 3:
+		_report_tier("Tier 2 defenders", "T2", T2_ORDER, PARTY_T2, prog, fighters_cache)
