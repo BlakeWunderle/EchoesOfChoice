@@ -86,9 +86,9 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 
 ### Resources (`resources/`)
 - `classes/` -- 54 FighterData .tres files (4 base + 16 T1 + 32 T2 + 2 royal)
-- `abilities/` -- 170+ AbilityData .tres files
+- `abilities/` -- 168 AbilityData .tres files
 - `enemies/` -- 67 FighterData .tres files
-- `items/` -- 59 item .tres files (consumables + equipment across 3 progression tiers)
+- `items/` -- 58 item .tres files (consumables + equipment across 3 progression tiers)
 - `tilesets/` -- TileSet resources for terrain
 
 ### Tools (`tools/`)
@@ -96,6 +96,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `item_check.gd` -- Equipment balance verification via mirror-fight static analysis
 - `jp_check.gd` -- JP economy balance verification per class and progression
 - `create_spriteframes.gd` -- Generates SpriteFrames .tres from CraftPix-style sprite sheet PNGs (configurable frame size, row order, animations)
+- `orphan_check.gd` -- Detects orphaned .tres resources and .tscn scenes with zero external references (full-path + quoted-basename search strategies)
 
 ## Build Progress
 
