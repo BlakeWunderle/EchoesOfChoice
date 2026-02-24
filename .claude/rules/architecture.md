@@ -82,23 +82,26 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `GameOver.gd/.tscn` -- Game over screen
 
 ### Units (`scenes/units/`)
-- `Unit.gd/.tscn` -- Unit node: AnimatedSprite2D (2x scale for 32px art on 64px tiles), directional animations (idle/walk/attack/hurt/death), sprite loading via SpriteLoader, placeholder colored rectangles, all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
+- `Unit.gd/.tscn` -- Unit node: AnimatedSprite2D with 64x64 CraftPix sprites (128x128 for large enemies), directional animations (idle/walk/attack/hurt/death x 4 directions), sprite loading via SpriteLoader, placeholder colored rectangles fallback, all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
 
 ### Resources (`resources/`)
 - `classes/` -- 54 FighterData .tres files (4 base + 16 T1 + 32 T2 + 2 royal)
 - `abilities/` -- 168 AbilityData .tres files
-- `enemies/` -- 67 FighterData .tres files
+- `enemies/` -- 78 FighterData .tres files
 - `items/` -- 58 item .tres files (consumables + equipment across 3 progression tiers)
 - `tilesets/` -- TileSet resources for terrain
+- `spriteframes/` -- 68 SpriteFrames .tres files (in `assets/art/sprites/spriteframes/`, tracked in git); generated from CraftPix PNGs by `generate_all_sprites.py`
 
 ### Tools (`tools/`)
 - `balance_check.gd` -- Headless battle simulator for enemy vs. party damage analysis per progression
 - `item_check.gd` -- Equipment balance verification via mirror-fight static analysis
 - `jp_check.gd` -- JP economy balance verification per class and progression
-- `create_spriteframes.gd` -- Generates SpriteFrames .tres from CraftPix-style sprite sheet PNGs (configurable frame size, row order, animations)
+- `create_spriteframes.gd` -- Generates SpriteFrames .tres from sprite sheet PNGs; supports single-sheet and --dir mode for CraftPix multi-file format (per-animation PNGs with 4 direction rows)
 - `orphan_check.gd` -- Detects orphaned .tres resources and .tscn scenes with zero external references (full-path + quoted-basename search strategies)
 - `download_craftpix.py` -- Python script to download all 58 CraftPix asset packs via cookie auth (two-step URL resolution: product page → download page → files.craftpix.net ZIP)
 - `palette_swap.py` -- Python hue-based sprite recoloring tool with analyze, single, and batch modes for creating class variants from base archetypes
+- `generate_all_sprites.py` -- Python batch generator: reads CraftPix PNG sprite sheets, writes 68 SpriteFrames .tres files (14 character + 54 enemy sprites) with correct AtlasTexture regions
+- `set_sprite_ids.py` -- Python tool to set sprite_id on all 54 class and 78 enemy .tres files per a hard-coded mapping; also prints coverage gap report for PixelLab
 
 ## Build Progress
 
@@ -111,7 +114,7 @@ Phases 1-7 COMPLETE (project setup, grid, units, movement, turns, abilities, com
 | 10 | COMPLETE | Class porting — all 54 player classes, 170+ abilities, 67 enemies, 59 items as .tres |
 | 11 | MOSTLY COMPLETE | Story/world — battle configs, NPC conversations, travel events; missing: some dialogue polish |
 | 12 | PENDING | Final balance pass — all battles tuned; XP/JP curve verified; win-rate targets met |
-| 13 | IN PROGRESS | Art integration — pixel art pipeline (AnimatedSprite2D, SpriteLoader, create_spriteframes tool), terrain renderer (17 environments), overworld styling; pending: CraftPix asset purchase and import |
+| 13 | MOSTLY COMPLETE | Art integration — CraftPix sprites wired to all 54 classes and 78 enemies (68 SpriteFrames generated); terrain renderer (17 environments); overworld styling; missing: 16 entertainer/orator/engineer/royal classes need PixelLab sprites, tileset upgrade, GUI skinning |
 
 ## Reference Codebase
 
