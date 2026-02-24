@@ -38,35 +38,40 @@ func _ready() -> void:
 
 
 static var _config_creators: Dictionary = {
-	"tutorial": BattleConfig.create_tutorial,
-	"city_street": BattleConfig.create_city_street,
-	"forest": BattleConfig.create_forest,
-	"village_raid": BattleConfig.create_village_raid,
-	"smoke": BattleConfig.create_smoke,
-	"deep_forest": BattleConfig.create_deep_forest,
-	"clearing": BattleConfig.create_clearing,
-	"ruins": BattleConfig.create_ruins,
-	"cave": BattleConfig.create_cave,
-	"portal": BattleConfig.create_portal,
-	"inn_ambush": BattleConfig.create_inn_ambush,
-	"shore": BattleConfig.create_shore,
-	"beach": BattleConfig.create_beach,
-	"cemetery_battle": BattleConfig.create_cemetery_battle,
-	"box_battle": BattleConfig.create_box_battle,
-	"army_battle": BattleConfig.create_army_battle,
-	"lab_battle": BattleConfig.create_lab_battle,
-	"mirror_battle": BattleConfig.create_mirror_battle,
-	"gate_ambush": BattleConfig.create_gate_ambush,
-	"city_gate_ambush": BattleConfig.create_city_gate_ambush,
-	"return_city_1": BattleConfig.create_return_city_1,
-	"return_city_2": BattleConfig.create_return_city_2,
-	"return_city_3": BattleConfig.create_return_city_3,
-	"return_city_4": BattleConfig.create_return_city_4,
-	"elemental_1": BattleConfig.create_elemental_1,
-	"elemental_2": BattleConfig.create_elemental_2,
-	"elemental_3": BattleConfig.create_elemental_3,
-	"elemental_4": BattleConfig.create_elemental_4,
-	"final_castle": BattleConfig.create_final_castle,
+	# Progression 0-1
+	"tutorial": BattleConfigProg01.create_tutorial,
+	"city_street": BattleConfigProg01.create_city_street,
+	"forest": BattleConfigProg01.create_forest,
+	"village_raid": BattleConfigProg01.create_village_raid,
+	# Progression 2-3
+	"smoke": BattleConfigProg23.create_smoke,
+	"deep_forest": BattleConfigProg23.create_deep_forest,
+	"clearing": BattleConfigProg23.create_clearing,
+	"ruins": BattleConfigProg23.create_ruins,
+	"cave": BattleConfigProg23.create_cave,
+	"portal": BattleConfigProg23.create_portal,
+	"inn_ambush": BattleConfigProg23.create_inn_ambush,
+	# Progression 4-5
+	"shore": BattleConfigProg45.create_shore,
+	"beach": BattleConfigProg45.create_beach,
+	"cemetery_battle": BattleConfigProg45.create_cemetery_battle,
+	"box_battle": BattleConfigProg45.create_box_battle,
+	"army_battle": BattleConfigProg45.create_army_battle,
+	"lab_battle": BattleConfigProg45.create_lab_battle,
+	"mirror_battle": BattleConfigProg45.create_mirror_battle,
+	"gate_ambush": BattleConfigProg45.create_gate_ambush,
+	# Progression 6-7
+	"city_gate_ambush": BattleConfigProg67.create_city_gate_ambush,
+	"return_city_1": BattleConfigProg67.create_return_city_1,
+	"return_city_2": BattleConfigProg67.create_return_city_2,
+	"return_city_3": BattleConfigProg67.create_return_city_3,
+	"return_city_4": BattleConfigProg67.create_return_city_4,
+	"elemental_1": BattleConfigProg67.create_elemental_1,
+	"elemental_2": BattleConfigProg67.create_elemental_2,
+	"elemental_3": BattleConfigProg67.create_elemental_3,
+	"elemental_4": BattleConfigProg67.create_elemental_4,
+	"final_castle": BattleConfigProg67.create_final_castle,
+	# Shared
 	"travel_ambush": BattleConfig.create_travel_ambush,
 }
 
@@ -155,7 +160,7 @@ func _setup_from_config(config: BattleConfig) -> void:
 		for y in range(config.grid_height):
 			grid.set_tile(Vector2i(x, y), true, 1, 0)
 
-	var terrain_overrides: Array = BattleConfig.get_terrain_overrides(config)
+	var terrain_overrides: Array = TerrainOverrides.get_terrain_overrides(config)
 	for t in terrain_overrides:
 		var pos: Vector2i = t["pos"]
 		grid.set_tile(pos, t["walkable"], t["cost"], t["elevation"], t["blocks_los"], t.get("destructible_hp", 0))
