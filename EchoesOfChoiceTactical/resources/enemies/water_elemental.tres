@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/tsunami.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/undertow.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+class_id = "water_elemental"
+class_display_name = "Water Elemental"
+base_max_health = 95
+base_max_mana = 22
+base_physical_attack = 8
+base_physical_defense = 14
+base_magic_attack = 18
+base_magic_defense = 18
+base_speed = 6
+base_crit_chance = 1
+base_crit_damage = 2
+base_dodge_chance = 0
+growth_health = 0
+growth_mana = 0
+growth_physical_attack = 0
+growth_physical_defense = 0
+growth_magic_attack = 0
+growth_magic_defense = 0
+growth_speed = 0
+movement = 3
+jump = 1
+reaction_types = []
+abilities = [ExtResource("2"), ExtResource("3")]
+upgrade_options = []

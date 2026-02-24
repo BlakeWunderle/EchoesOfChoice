@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/inferno.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/flame_wave.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+class_id = "fire_elemental"
+class_display_name = "Fire Elemental"
+base_max_health = 75
+base_max_mana = 20
+base_physical_attack = 10
+base_physical_defense = 10
+base_magic_attack = 24
+base_magic_defense = 14
+base_speed = 9
+base_crit_chance = 2
+base_crit_damage = 3
+base_dodge_chance = 0
+growth_health = 0
+growth_mana = 0
+growth_physical_attack = 0
+growth_physical_defense = 0
+growth_magic_attack = 0
+growth_magic_defense = 0
+growth_speed = 0
+movement = 3
+jump = 1
+reaction_types = []
+abilities = [ExtResource("2"), ExtResource("3")]
+upgrade_options = []
