@@ -77,9 +77,19 @@ func _build_ui() -> void:
 		vbox.add_child(shop_btn)
 
 	var continue_btn := Button.new()
-	continue_btn.text = "Fight!" if event_type == "ambush" else "Continue"
-	continue_btn.pressed.connect(_on_continue)
-	vbox.add_child(continue_btn)
+	if event_type == "ambush":
+		continue_btn.text = "Fight!"
+		continue_btn.pressed.connect(_on_continue)
+		vbox.add_child(continue_btn)
+		if _event_data.get("can_decline", false):
+			var flee_btn := Button.new()
+			flee_btn.text = "Flee"
+			flee_btn.pressed.connect(func() -> void: event_finished.emit())
+			vbox.add_child(flee_btn)
+	else:
+		continue_btn.text = "Continue"
+		continue_btn.pressed.connect(_on_continue)
+		vbox.add_child(continue_btn)
 
 
 func _type_color(event_type: String) -> Color:

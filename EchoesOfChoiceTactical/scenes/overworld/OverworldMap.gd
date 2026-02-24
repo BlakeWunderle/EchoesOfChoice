@@ -129,7 +129,8 @@ func _show_info(node_id: String) -> void:
 	if is_completed:
 		info_status.text = "Completed"
 		info_status.add_theme_color_override("font_color", NODE_COMPLETED_COLOR)
-		enter_button.visible = false
+		enter_button.text = "Revisit Battle" if node_data.get("is_battle", true) else "Revisit Town"
+		enter_button.visible = true
 	elif is_available and node_data.get("is_battle", true):
 		info_status.text = "Available"
 		info_status.add_theme_color_override("font_color", NODE_AVAILABLE_COLOR)
@@ -154,15 +155,19 @@ func _on_enter_battle() -> void:
 	var node_data: Dictionary = MapData.get_node(_selected_node_id)
 	if node_data.is_empty():
 		return
-	if not MapData.is_node_available(_selected_node_id):
+	if not MapData.is_node_available(_selected_node_id) and not GameState.is_battle_completed(_selected_node_id):
 		return
 
-	var siblings := MapData.get_branch_siblings(_selected_node_id)
-	if siblings.size() > 0:
-		GameState.lock_nodes(siblings)
+	var is_replay := GameState.is_battle_completed(_selected_node_id)
+
+	# Branch-locking and travel events only apply on first entry
+	if not is_replay:
+		var siblings := MapData.get_branch_siblings(_selected_node_id)
+		if siblings.size() > 0:
+			GameState.lock_nodes(siblings)
 
 	# Roll for travel event before entering the node
-	var travel_event: Dictionary = _roll_travel_event(_selected_node_id)
+	var travel_event: Dictionary = _roll_travel_event(_selected_node_id, is_replay)
 	if not travel_event.is_empty():
 		_last_event_node = _selected_node_id
 		var popup: Control = _travel_event_scene.instantiate()
@@ -188,17 +193,21 @@ func _on_enter_battle() -> void:
 		GameState.current_battle_id = _selected_node_id
 		SceneManager.go_to_party_select()
 	else:
-		GameState.complete_battle(_selected_node_id)
+		if not is_replay:
+			GameState.complete_battle(_selected_node_id)
 		SceneManager.go_to_town(_selected_node_id)
 
 
-func _roll_travel_event(node_id: String) -> Dictionary:
+func _roll_travel_event(node_id: String, is_backward: bool = false) -> Dictionary:
 	# No back-to-back events on the same node
 	if node_id == _last_event_node:
 		return {}
 
 	var eligible: Array = []
 	for event in TravelEventData.EVENTS:
+		# Merchants don't appear when backtracking
+		if is_backward and event.get("event_type", "") == "merchant":
+			continue
 		var node_range: Array = event.get("node_range", [])
 		if node_range.is_empty() or node_id in node_range:
 			eligible.append(event)
@@ -216,6 +225,11 @@ func _roll_travel_event(node_id: String) -> Dictionary:
 		if randf() < chance:
 			if not event_id.is_empty():
 				GameState.fired_travel_event_ids.append(event_id)
+			# Backward ambushes can be declined
+			if is_backward and event.get("event_type", "") == "ambush":
+				var evt: Dictionary = event.duplicate()
+				evt["can_decline"] = true
+				return evt
 			return event
 
 	return {}

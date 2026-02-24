@@ -20,10 +20,12 @@ var _selected_ability: AbilityData = null
 var _selected_item: ItemData = null
 var _reachable_tiles: Array[Vector2i] = []
 var _attack_tiles: Array[Vector2i] = []
+var _is_replay: bool = false
 
 
 func _ready() -> void:
 	var battle_id := GameState.current_battle_id
+	_is_replay = GameState.is_battle_completed(battle_id)
 	var config := _get_battle_config(battle_id)
 	if config:
 		_setup_from_config(config)
@@ -1116,13 +1118,14 @@ func _on_battle_ended(player_won: bool) -> void:
 		var battle_prog: int = node_data.get("progression", 0)
 		if battle_prog >= 0:
 			GameState.advance_progression(battle_prog)
-		gold_earned = int(node_data.get("gold_reward", 0))
-		if gold_earned > 0:
-			GameState.add_gold(gold_earned)
-		for item_id in node_data.get("item_rewards", []):
-			GameState.add_item(item_id)
-			item_rewards_earned.append(item_id)
-		pending_reward_choices = node_data.get("reward_choices", [])
+		if not _is_replay:
+			gold_earned = int(node_data.get("gold_reward", 0))
+			if gold_earned > 0:
+				GameState.add_gold(gold_earned)
+			for item_id in node_data.get("item_rewards", []):
+				GameState.add_item(item_id)
+				item_rewards_earned.append(item_id)
+			pending_reward_choices = node_data.get("reward_choices", [])
 
 	var fallen: Array[String] = GameState.update_party_after_battle(player_units_list)
 	var mc_died := fallen.size() > 0 and fallen[0] == GameState.player_name

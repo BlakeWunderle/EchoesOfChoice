@@ -13,6 +13,8 @@ extends Control
 var _town_id: String = ""
 var _dialogue_box_scene: PackedScene = preload("res://scenes/ui/DialogueBox.tscn")
 
+const REST_COST := 50
+
 const TOWN_BATTLES: Dictionary = {
 	"forest_village": {
 		"battle_id": "village_raid",
@@ -111,6 +113,13 @@ func _ready() -> void:
 
 	recruit_button.pressed.connect(_on_recruit_pressed)
 	items_button.pressed.connect(_on_items_pressed)
+
+	var buttons_node: Node = continue_button.get_parent()
+	var rest_button := Button.new()
+	rest_button.text = "Rest Party (%dg)" % REST_COST
+	rest_button.pressed.connect(_on_rest_pressed)
+	buttons_node.add_child(rest_button)
+	buttons_node.move_child(rest_button, continue_button.get_index())
 
 	_populate_npcs(node_data)
 
@@ -263,6 +272,14 @@ func _on_npc_pressed(npc: Dictionary) -> void:
 	dialogue_box.show_dialogue(lines)
 	await dialogue_box.dialogue_finished
 	dialogue_box.queue_free()
+
+
+func _on_rest_pressed() -> void:
+	if not GameState.can_afford(REST_COST):
+		return
+	GameState.spend_gold(REST_COST)
+	GameState.full_rest_party()
+	gold_label.text = "Gold: %d" % GameState.gold
 
 
 func _on_continue() -> void:
