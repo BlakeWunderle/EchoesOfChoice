@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cbattle001"]
+[gd_scene load_steps=6 format=3 uid="uid://cbattle001"]
 
 [ext_resource type="Script" path="res://scenes/battle/BattleMap.gd" id="1_battle"]
 [ext_resource type="Script" path="res://scenes/battle/TurnManager.gd" id="2_turn"]
 [ext_resource type="Script" path="res://scenes/battle/GridOverlay.gd" id="3_overlay"]
 [ext_resource type="Script" path="res://scenes/battle/GridCursor.gd" id="4_cursor"]
+[ext_resource type="Script" path="res://scenes/battle/ActionMenuController.gd" id="5_menu"]
 
 [node name="BattleMap" type="Node2D"]
 script = ExtResource("1_battle")
@@ -41,6 +42,7 @@ offset_left = 10.0
 offset_top = 70.0
 offset_right = 200.0
 offset_bottom = 300.0
+script = ExtResource("5_menu")
 
 [node name="TurnManager" type="Node" parent="."]
 script = ExtResource("2_turn")

@@ -7,7 +7,7 @@ extends Node2D
 @onready var units_container: Node2D = $Units
 @onready var hud: CanvasLayer = $HUD
 @onready var turn_info: Label = $HUD/TurnInfo
-@onready var action_panel: VBoxContainer = $HUD/ActionPanel
+@onready var action_menu: ActionMenuController = $HUD/ActionPanel
 
 var grid: Grid
 var reaction_system: ReactionSystem
@@ -142,7 +142,7 @@ func _setup_test_battle() -> void:
 
 	_executor = AbilityExecutor.new(grid, reaction_system)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
-	_build_action_panel()
+	_connect_action_menu()
 	_begin_battle()
 
 
@@ -183,7 +183,7 @@ func _setup_from_config(config: BattleConfig) -> void:
 
 	_executor = AbilityExecutor.new(grid, reaction_system)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
-	_build_action_panel()
+	_connect_action_menu()
 	_begin_battle()
 
 
@@ -287,102 +287,22 @@ func _spawn_unit(data: FighterData, unit_name: String, team: Enums.Team, pos: Ve
 	return unit
 
 
-# --- Action Panel (placeholder UI until Phase 9) ---
-
-var _btn_attack: Button
-var _btn_ability: Button
-var _btn_item: Button
-var _btn_move: Button
-var _btn_wait: Button
-var _btn_facing_n: Button
-var _btn_facing_s: Button
-var _btn_facing_e: Button
-var _btn_facing_w: Button
-var _facing_container: HBoxContainer
-var _ability_container: VBoxContainer
-var _item_container: VBoxContainer
-
-
-func _build_action_panel() -> void:
-	_btn_attack = Button.new()
-	_btn_attack.text = "Attack"
-	_btn_attack.pressed.connect(_on_attack_pressed)
-	action_panel.add_child(_btn_attack)
-
-	_btn_ability = Button.new()
-	_btn_ability.text = "Ability"
-	_btn_ability.pressed.connect(_on_ability_pressed)
-	action_panel.add_child(_btn_ability)
-
-	_btn_item = Button.new()
-	_btn_item.text = "Item"
-	_btn_item.pressed.connect(_on_item_pressed)
-	action_panel.add_child(_btn_item)
-
-	_btn_move = Button.new()
-	_btn_move.text = "Move"
-	_btn_move.pressed.connect(_on_move_pressed)
-	action_panel.add_child(_btn_move)
-
-	_btn_wait = Button.new()
-	_btn_wait.text = "Wait"
-	_btn_wait.pressed.connect(_on_wait_pressed)
-	action_panel.add_child(_btn_wait)
-
-	_ability_container = VBoxContainer.new()
-	_ability_container.visible = false
-	action_panel.add_child(_ability_container)
-
-	_item_container = VBoxContainer.new()
-	_item_container.visible = false
-	action_panel.add_child(_item_container)
-
-	# Facing chooser
-	_facing_container = HBoxContainer.new()
-	_facing_container.visible = false
-	action_panel.add_child(_facing_container)
-
-	_btn_facing_n = Button.new()
-	_btn_facing_n.text = "N"
-	_btn_facing_n.pressed.connect(func(): _set_facing(Enums.Facing.NORTH))
-	_facing_container.add_child(_btn_facing_n)
-
-	_btn_facing_s = Button.new()
-	_btn_facing_s.text = "S"
-	_btn_facing_s.pressed.connect(func(): _set_facing(Enums.Facing.SOUTH))
-	_facing_container.add_child(_btn_facing_s)
-
-	_btn_facing_e = Button.new()
-	_btn_facing_e.text = "E"
-	_btn_facing_e.pressed.connect(func(): _set_facing(Enums.Facing.EAST))
-	_facing_container.add_child(_btn_facing_e)
-
-	_btn_facing_w = Button.new()
-	_btn_facing_w.text = "W"
-	_btn_facing_w.pressed.connect(func(): _set_facing(Enums.Facing.WEST))
-	_facing_container.add_child(_btn_facing_w)
+func _connect_action_menu() -> void:
+	action_menu.attack_chosen.connect(_on_attack_chosen)
+	action_menu.ability_chosen.connect(_on_ability_chosen)
+	action_menu.item_chosen.connect(_on_item_chosen)
+	action_menu.move_chosen.connect(_on_move_chosen)
+	action_menu.wait_chosen.connect(_on_wait_chosen)
+	action_menu.facing_chosen.connect(_on_facing_chosen)
 
 
 func _show_action_menu(unit: Unit) -> void:
-	action_panel.visible = true
-	_ability_container.visible = false
-	_item_container.visible = false
-	_facing_container.visible = false
-
-	_btn_attack.visible = not unit.has_acted
-	_btn_ability.visible = not unit.has_acted and unit.has_any_affordable_ability()
-	_btn_item.visible = not unit.has_acted and _has_usable_items()
-	_btn_move.visible = not unit.has_moved
-	_btn_wait.visible = true
-
+	action_menu.show_menu(unit)
 	_update_turn_info(unit)
 
 
 func _hide_action_menu() -> void:
-	action_panel.visible = false
-	_ability_container.visible = false
-	_item_container.visible = false
-	_facing_container.visible = false
+	action_menu.hide_menu()
 
 
 func _update_turn_info(unit: Unit) -> void:
@@ -394,108 +314,32 @@ func _update_turn_info(unit: Unit) -> void:
 
 # --- Action Handlers ---
 
-func _on_attack_pressed() -> void:
-	var unit := turn_manager.current_unit
-	if unit == null or unit.has_acted:
-		return
-	_hide_action_menu()
-	_current_phase = Enums.TurnPhase.ACT
-	_selected_ability = unit.abilities[0] if unit.abilities.size() > 0 else null
-
-	if _selected_ability == null:
-		_show_action_menu(unit)
-		return
-
-	_show_targeting(_selected_ability, unit)
-
-
-func _on_ability_pressed() -> void:
-	var unit := turn_manager.current_unit
-	if unit == null or unit.has_acted:
-		return
-
-	# Show ability list
-	for child in _ability_container.get_children():
-		child.queue_free()
-
-	var affordable := unit.get_affordable_abilities()
-	for i in range(affordable.size()):
-		var ability := affordable[i]
-		if ability.ability_name == "Strike":
-			continue
-		var btn := Button.new()
-		btn.text = "%s (MP: %d, Range: %d)" % [ability.ability_name, ability.mana_cost, ability.ability_range]
-		var idx := i
-		btn.pressed.connect(func(): _on_ability_selected(affordable[idx]))
-		_ability_container.add_child(btn)
-
-	var back_btn := Button.new()
-	back_btn.text = "Back"
-	back_btn.pressed.connect(func():
-		_ability_container.visible = false
-		_show_action_menu(unit)
-	)
-	_ability_container.add_child(back_btn)
-
-	_ability_container.visible = true
-	_btn_attack.visible = false
-	_btn_ability.visible = false
-	_btn_item.visible = false
-	_btn_move.visible = false
-	_btn_wait.visible = false
-
-
-func _on_ability_selected(ability: AbilityData) -> void:
+func _on_attack_chosen() -> void:
 	var unit := turn_manager.current_unit
 	if unit == null:
 		return
-	_hide_action_menu()
+	_current_phase = Enums.TurnPhase.ACT
+	_selected_ability = unit.abilities[0] if unit.abilities.size() > 0 else null
+	if _selected_ability == null:
+		_show_action_menu(unit)
+		return
+	_show_targeting(_selected_ability, unit)
+
+
+func _on_ability_chosen(ability: AbilityData) -> void:
+	var unit := turn_manager.current_unit
+	if unit == null:
+		return
 	_current_phase = Enums.TurnPhase.ACT
 	_selected_ability = ability
 	_show_targeting(ability, unit)
 
 
-func _on_item_pressed() -> void:
-	var unit := turn_manager.current_unit
-	if unit == null or unit.has_acted:
-		return
-
-	for child in _item_container.get_children():
-		child.queue_free()
-
-	var consumables := GameState.get_consumables_in_inventory()
-	for entry in consumables:
-		var item: ItemData = entry["item"]
-		if item.consumable_effect == Enums.ConsumableEffect.FULL_REST_ALL:
-			continue  # camp items can't be used in battle
-		var qty: int = entry["quantity"]
-		var btn := Button.new()
-		btn.text = "%s x%d  (%s)" % [item.display_name, qty, item.get_stat_summary()]
-		btn.pressed.connect(func(): _on_item_selected(item))
-		_item_container.add_child(btn)
-
-	var back_btn := Button.new()
-	back_btn.text = "Back"
-	back_btn.pressed.connect(func():
-		_item_container.visible = false
-		_show_action_menu(unit)
-	)
-	_item_container.add_child(back_btn)
-
-	_item_container.visible = true
-	_btn_attack.visible = false
-	_btn_ability.visible = false
-	_btn_item.visible = false
-	_btn_move.visible = false
-	_btn_wait.visible = false
-
-
-func _on_item_selected(item: ItemData) -> void:
+func _on_item_chosen(item: ItemData) -> void:
 	var unit := turn_manager.current_unit
 	if unit == null:
 		return
 	_selected_item = item
-	_hide_action_menu()
 	_current_phase = Enums.TurnPhase.ACT
 
 	var target_tiles: Array[Vector2i] = []
@@ -511,16 +355,37 @@ func _on_item_selected(item: ItemData) -> void:
 	grid_cursor.activate(target_tiles, unit.grid_position)
 
 
+func _on_move_chosen() -> void:
+	var unit := turn_manager.current_unit
+	if unit == null:
+		return
+	_enter_move_phase(unit)
+
+
+func _on_wait_chosen() -> void:
+	var unit := turn_manager.current_unit
+	if unit == null:
+		return
+	grid_overlay.clear_all()
+	_enter_facing_phase(unit)
+
+
+func _on_facing_chosen(dir: int) -> void:
+	var unit := turn_manager.current_unit
+	if unit == null:
+		return
+	unit.facing = dir
+	action_menu.hide_menu()
+	grid_overlay.clear_all()
+	unit.end_turn()
+
+
 func _get_ally_tiles(user: Unit) -> Array[Vector2i]:
 	var tiles: Array[Vector2i] = []
 	for child in units_container.get_children():
 		if child is Unit and child.is_alive and child.team == user.team:
 			tiles.append(child.grid_position)
 	return tiles
-
-
-func _has_usable_items() -> bool:
-	return GameState.get_consumables_in_inventory().size() > 0
 
 
 func _execute_item(unit: Unit, target_pos: Vector2i) -> void:
@@ -558,23 +423,6 @@ func _execute_item(unit: Unit, target_pos: Vector2i) -> void:
 		_show_action_menu(unit)
 	else:
 		_enter_facing_phase(unit)
-
-
-func _on_move_pressed() -> void:
-	var unit := turn_manager.current_unit
-	if unit == null or unit.has_moved:
-		return
-	_hide_action_menu()
-	_enter_move_phase(unit)
-
-
-func _on_wait_pressed() -> void:
-	var unit := turn_manager.current_unit
-	if unit == null:
-		return
-	_hide_action_menu()
-	grid_overlay.clear_all()
-	_enter_facing_phase(unit)
 
 
 # --- Turn Flow ---
@@ -656,23 +504,7 @@ func _show_targeting(ability: AbilityData, unit: Unit) -> void:
 func _enter_facing_phase(unit: Unit) -> void:
 	_current_phase = Enums.TurnPhase.CHOOSE_FACING
 	grid_cursor.deactivate()
-	action_panel.visible = true
-	_btn_attack.visible = false
-	_btn_ability.visible = false
-	_btn_item.visible = false
-	_btn_move.visible = false
-	_btn_wait.visible = false
-	_facing_container.visible = true
-
-
-func _set_facing(dir: Enums.Facing) -> void:
-	var unit := turn_manager.current_unit
-	if unit == null:
-		return
-	unit.facing = dir
-	_hide_action_menu()
-	grid_overlay.clear_all()
-	unit.end_turn()
+	action_menu.show_facing()
 
 
 # --- Input Handling ---
