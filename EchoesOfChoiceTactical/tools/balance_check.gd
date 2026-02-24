@@ -39,6 +39,21 @@ const PARTY: Dictionary = {
 const CLASS_ORDER: Array = ["squire", "mage", "scholar", "entertainer"]
 const CLASS_LABELS: Array = ["vs Squire", "vs Mage", "vs Scholar", "vs Ent"]
 
+# ─── Tier 1 extreme defenders (available from Prog 1, ~50 JP threshold) ───────
+# Warden (Tier 1 Squire path): base P.Def=19 growth=5, M.Def=13 growth=2
+# Acolyte (Tier 1 Scholar path): base P.Def=13 growth=2, M.Def=20 growth=4
+# Equipment same P.Def bonus as base classes; no M.Def equipment bonus.
+const PARTY_T1: Dictionary = {
+	1: {"warden": [27, 15], "acolyte": [18, 24]},
+	2: {"warden": [32, 17], "acolyte": [20, 28]},
+	3: {"warden": [39, 19], "acolyte": [24, 32]},
+	4: {"warden": [39, 19], "acolyte": [24, 32]},
+	5: {"warden": [49, 21], "acolyte": [31, 36]},
+	6: {"warden": [54, 23], "acolyte": [33, 40]},
+	7: {"warden": [57, 23], "acolyte": [36, 40]},
+	8: {"warden": [63, 25], "acolyte": [39, 44]},
+}
+
 # ─── Battle roster ────────────────────────────────────────────────────────────
 const BATTLES: Dictionary = {
 	"city_street": {
@@ -277,6 +292,7 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 	var zero_names: Array = []
 	var spike_names: Array = []
 	var slow_names: Array = []
+	var fighters_cache: Array = []  # {entry, fighter} — reused for Tier 1 check
 
 	for entry: Dictionary in bdata["enemies"]:
 		var res_path: String = entry["res"]
@@ -287,6 +303,7 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 		if fighter.is_empty():
 			print("  [MISSING: %s]" % res_path)
 			continue
+		fighters_cache.append({"entry": entry, "fighter": fighter})
 
 		var e_lvl: int = entry["level"]
 		var e_phys_atk: int = fighter["base_physical_attack"]  + fighter["growth_physical_attack"]  * (e_lvl - 1)
@@ -375,3 +392,76 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 		print("  ⚠ SPIKE — kills a class in <3 hits: " + ", ".join(spike_names))
 	if not slow_names.is_empty():
 		print("  ⚠ SLOW  — Squire needs >10 hits: " + ", ".join(slow_names))
+
+	# Tier 1 extreme class check (Warden = peak physical tank, Acolyte = peak magic tank)
+	if prog >= 1 and PARTY_T1.has(prog):
+		var t1: Dictionary = PARTY_T1[prog]
+		var w_pdef: int = t1["warden"][0]
+		var w_mdef: int = t1["warden"][1]
+		var a_pdef: int = t1["acolyte"][0]
+		var a_mdef: int = t1["acolyte"][1]
+		var warden_any: bool = false
+		var acolyte_any: bool = false
+		var t1_lines: Array = []
+
+		for cached: Dictionary in fighters_cache:
+			var ce: Dictionary = cached["entry"]
+			var cf: Dictionary = cached["fighter"]
+			var e_lvl2: int = ce["level"]
+			var e_pa: int = cf["base_physical_attack"] + cf["growth_physical_attack"] * (e_lvl2 - 1)
+			var e_ma: int = cf["base_magic_attack"]    + cf["growth_magic_attack"]    * (e_lvl2 - 1)
+			var bp: int = 0
+			var hm: bool = false
+			var bm: int = 0
+			for ab: Dictionary in cf["abilities"]:
+				if int(ab["ability_type"]) != ABILITY_TYPE_DAMAGE:
+					continue
+				var st: int = int(ab["modified_stat"])
+				var mo: int = ab["modifier"]
+				if st == STAT_PHYSICAL_ATTACK:
+					bp = maxi(bp, mo)
+				elif st == STAT_MAGIC_ATTACK:
+					if not hm:
+						hm = true
+						bm = mo
+					else:
+						bm = maxi(bm, mo)
+				elif st == STAT_MIXED_ATTACK:
+					bp = maxi(bp, mo)
+					if not hm:
+						hm = true
+						bm = mo
+					else:
+						bm = maxi(bm, mo)
+			var w_phys: int = maxi(0, bp + e_pa - w_pdef)
+			var w_mag: int  = 0
+			if hm:
+				w_mag = maxi(0, bm + e_ma - w_mdef)
+			var a_phys: int = maxi(0, bp + e_pa - a_pdef)
+			var a_mag: int  = 0
+			if hm:
+				a_mag = maxi(0, bm + e_ma - a_mdef)
+			if w_phys > 0 or w_mag > 0:
+				warden_any = true
+			if a_phys > 0 or a_mag > 0:
+				acolyte_any = true
+			var cnt: int = ce["count"]
+			var lbl: String = ce["name"] if cnt <= 1 else "%s (x%d)" % [ce["name"], cnt]
+			var wf: String = " ⚠" if (w_phys == 0 and w_mag == 0) else ""
+			var af: String = " ⚠" if (a_phys == 0 and a_mag == 0) else ""
+			t1_lines.append("    %-22s  Warden %2dp/%2dm%s  Acolyte %2dp/%2dm%s" % [
+				lbl + ":", w_phys, w_mag, wf, a_phys, a_mag, af
+			])
+
+		print("")
+		print("  Tier 1 extremes [Warden P%d/M%d | Acolyte P%d/M%d]:" % [
+			w_pdef, w_mdef, a_pdef, a_mdef
+		])
+		for line: String in t1_lines:
+			print(line)
+		if not warden_any:
+			print("  ⚠ T1TANK  — no enemy threatens Warden; physically immune at this prog")
+		if not acolyte_any:
+			print("  ⚠ T1MAGE  — no enemy threatens Acolyte; magically immune at this prog")
+		if warden_any and acolyte_any:
+			print("  ✓ T1 — both Warden and Acolyte threatened by at least one enemy")
