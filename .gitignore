@@ -14,11 +14,17 @@ EchoesOfChoiceTactical/.import/
 *.import
 *.uid
 
-# Game assets (large binaries — reconstruct from Assets/ zips)
-EchoesOfChoiceTactical/assets/
+# Game assets (large binaries — PNGs, WAVs, etc.)
+# But allow spriteframes/*.tres (generated metadata, small)
+EchoesOfChoiceTactical/assets/*
 !EchoesOfChoiceTactical/assets/MANIFEST.md
+!EchoesOfChoiceTactical/assets/art/
+EchoesOfChoiceTactical/assets/art/*
+!EchoesOfChoiceTactical/assets/art/sprites/
+EchoesOfChoiceTactical/assets/art/sprites/*
+!EchoesOfChoiceTactical/assets/art/sprites/spriteframes/
 Assets_Staged/
-Assets/
+/Assets/
 
 # IDE
 .vs/
