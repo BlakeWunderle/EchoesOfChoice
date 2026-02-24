@@ -6,6 +6,7 @@ static func create_shore() -> BattleConfig:
 	config.battle_id = "shore"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "shore"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("shore")
@@ -39,6 +40,7 @@ static func create_beach() -> BattleConfig:
 	config.battle_id = "beach"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "shore"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("beach")
@@ -72,6 +74,7 @@ static func create_cemetery_battle() -> BattleConfig:
 	config.battle_id = "cemetery_battle"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "cemetery"
 	config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
 	BattleConfig._build_party_units(config)
 
@@ -106,6 +109,7 @@ static func create_box_battle() -> BattleConfig:
 	config.battle_id = "box_battle"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "carnival"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("box_battle")
@@ -141,6 +145,7 @@ static func create_army_battle() -> BattleConfig:
 	config.battle_id = "army_battle"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "camp"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("army_battle")
@@ -175,6 +180,7 @@ static func create_lab_battle() -> BattleConfig:
 	config.battle_id = "lab_battle"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "lab"
 	config.music_context = 3  # MusicManager.MusicContext.BATTLE_SCIFI
 	BattleConfig._build_party_units(config)
 
@@ -212,6 +218,7 @@ static func create_mirror_battle() -> BattleConfig:
 	config.battle_id = "mirror_battle"
 	config.grid_width = 14
 	config.grid_height = 10
+	config.environment = "mirror"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("mirror_battle")
@@ -248,6 +255,7 @@ static func create_gate_ambush() -> BattleConfig:
 	config.battle_id = "gate_ambush"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "city"
 	BattleConfig._build_party_units(config)
 
 	# By gate_town, the watcher deploys shadow agents — not street muscle. gloom_stalker leads with two fast prowlers flanking; cursed_peddler is the one hired specialist (keeps "paid ambush" flavor).

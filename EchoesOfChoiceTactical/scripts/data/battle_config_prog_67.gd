@@ -6,6 +6,7 @@ static func create_city_gate_ambush() -> BattleConfig:
 	config.battle_id = "city_gate_ambush"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "city"
 	BattleConfig._build_party_units(config)
 
 	var watcher_lord := load("res://resources/enemies/watcher_lord.tres")
@@ -36,6 +37,7 @@ static func create_return_city_1() -> BattleConfig:
 	config.battle_id = "return_city_1"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "city"
 	BattleConfig._build_party_units(config)
 
 	var seraph := load("res://resources/enemies/seraph.tres")
@@ -66,6 +68,7 @@ static func create_return_city_2() -> BattleConfig:
 	config.battle_id = "return_city_2"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "city"
 	BattleConfig._build_party_units(config)
 
 	var necromancer := load("res://resources/enemies/necromancer.tres")
@@ -96,6 +99,7 @@ static func create_return_city_3() -> BattleConfig:
 	config.battle_id = "return_city_3"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "city"
 	BattleConfig._build_party_units(config)
 
 	var psion := load("res://resources/enemies/psion.tres")
@@ -126,6 +130,7 @@ static func create_return_city_4() -> BattleConfig:
 	config.battle_id = "return_city_4"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "city"
 	BattleConfig._build_party_units(config)
 
 	var warlock := load("res://resources/enemies/warlock.tres")
@@ -155,6 +160,7 @@ static func create_elemental_1() -> BattleConfig:
 	config.battle_id = "elemental_1"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.environment = "shrine"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
@@ -185,6 +191,7 @@ static func create_elemental_2() -> BattleConfig:
 	config.battle_id = "elemental_2"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.environment = "shrine"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
@@ -214,6 +221,7 @@ static func create_elemental_3() -> BattleConfig:
 	config.battle_id = "elemental_3"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.environment = "shrine"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
@@ -243,6 +251,7 @@ static func create_elemental_4() -> BattleConfig:
 	config.battle_id = "elemental_4"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.environment = "shrine"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 
@@ -274,6 +283,7 @@ static func create_final_castle() -> BattleConfig:
 	config.battle_id = "final_castle"
 	config.grid_width = 14
 	config.grid_height = 12
+	config.environment = "castle"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
 	BattleConfig._build_party_units(config)
 

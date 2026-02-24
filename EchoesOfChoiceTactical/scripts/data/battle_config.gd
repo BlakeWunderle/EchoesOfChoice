@@ -3,6 +3,7 @@ class_name BattleConfig extends Resource
 @export var battle_id: String
 @export var grid_width: int = 10
 @export var grid_height: int = 8
+@export var environment: String = "grassland"
 
 @export_group("Units")
 @export var player_units: Array[Dictionary] = []
@@ -59,6 +60,7 @@ static func create_placeholder(battle_id: String) -> BattleConfig:
 	config.battle_id = battle_id
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "grassland"
 	_build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node(battle_id)
@@ -82,6 +84,13 @@ static func create_travel_ambush() -> BattleConfig:
 	_build_party_units(config)
 
 	var prog: int = GameState.progression_stage
+
+	if prog <= 2:
+		config.environment = "grassland"
+	elif prog <= 5:
+		config.environment = "forest"
+	else:
+		config.environment = "forest"
 
 	if prog <= 2:
 		var thug: FighterData = load("res://resources/enemies/thug.tres")

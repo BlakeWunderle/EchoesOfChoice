@@ -6,6 +6,7 @@ static func create_tutorial() -> BattleConfig:
 	config.battle_id = "tutorial"
 	config.grid_width = 8
 	config.grid_height = 6
+	config.environment = "city"
 
 	var prince_data := load("res://resources/classes/prince.tres")
 	var princess_data := load("res://resources/classes/princess.tres")
@@ -48,6 +49,7 @@ static func create_city_street() -> BattleConfig:
 	config.battle_id = "city_street"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "city"
 	BattleConfig._build_party_units(config)
 
 	var thug := load("res://resources/enemies/thug.tres")
@@ -78,6 +80,7 @@ static func create_forest() -> BattleConfig:
 	config.battle_id = "forest"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "forest"
 	BattleConfig._build_party_units(config)
 
 	var bear := load("res://resources/enemies/bear.tres")
@@ -109,6 +112,7 @@ static func create_village_raid() -> BattleConfig:
 	config.battle_id = "village_raid"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "village"
 	BattleConfig._build_party_units(config)
 
 	var goblin := load("res://resources/enemies/goblin.tres")

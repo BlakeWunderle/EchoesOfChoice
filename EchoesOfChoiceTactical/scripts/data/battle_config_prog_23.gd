@@ -6,6 +6,7 @@ static func create_smoke() -> BattleConfig:
 	config.battle_id = "smoke"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "scorched"
 	BattleConfig._build_party_units(config)
 
 	var imp := load("res://resources/enemies/imp.tres")
@@ -35,6 +36,7 @@ static func create_deep_forest() -> BattleConfig:
 	config.battle_id = "deep_forest"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "forest"
 	BattleConfig._build_party_units(config)
 
 	var witch := load("res://resources/enemies/witch.tres")
@@ -66,6 +68,7 @@ static func create_clearing() -> BattleConfig:
 	config.battle_id = "clearing"
 	config.grid_width = 14
 	config.grid_height = 10
+	config.environment = "grassland"
 	BattleConfig._build_party_units(config)
 
 	var satyr := load("res://resources/enemies/satyr.tres")
@@ -97,6 +100,7 @@ static func create_ruins() -> BattleConfig:
 	config.battle_id = "ruins"
 	config.grid_width = 12
 	config.grid_height = 10
+	config.environment = "ruins"
 	BattleConfig._build_party_units(config)
 
 	var shade := load("res://resources/enemies/shade.tres")
@@ -125,6 +129,7 @@ static func create_cave() -> BattleConfig:
 	config.battle_id = "cave"
 	config.grid_width = 8
 	config.grid_height = 6
+	config.environment = "cave"
 	BattleConfig._build_party_units(config)
 
 	var fire_wyrm := load("res://resources/enemies/fire_wyrmling.tres")
@@ -153,6 +158,7 @@ static func create_portal() -> BattleConfig:
 	config.battle_id = "portal"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "portal"
 	config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
 	BattleConfig._build_party_units(config)
 
@@ -182,6 +188,7 @@ static func create_inn_ambush() -> BattleConfig:
 	config.battle_id = "inn_ambush"
 	config.grid_width = 10
 	config.grid_height = 8
+	config.environment = "inn"
 	BattleConfig._build_party_units(config)
 
 	var hound := load("res://resources/enemies/shadow_hound.tres")
