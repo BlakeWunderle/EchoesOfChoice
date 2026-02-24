@@ -201,7 +201,7 @@ const BATTLES: Dictionary = {
 		"enemies": [
 			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 5},
 			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 2, "level": 5},
-			{"res": "res://resources/enemies/hex_peddler.tres",   "name": "Hex Peddler",   "count": 1, "level": 5},
+			{"res": "res://resources/enemies/cursed_peddler.tres", "name": "Cursed Peddler", "count": 1, "level": 5},
 			{"res": "res://resources/enemies/dusk_moth.tres",     "name": "Dusk Moth",     "count": 1, "level": 5},
 		],
 	},

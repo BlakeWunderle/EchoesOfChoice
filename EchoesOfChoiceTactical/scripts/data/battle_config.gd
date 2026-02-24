@@ -633,10 +633,10 @@ static func create_gate_ambush() -> BattleConfig:
 	config.grid_height = 8
 	_build_party_units(config)
 
-	# By gate_town, the watcher deploys shadow agents — not street muscle. gloom_stalker leads with two fast prowlers flanking; hex_peddler is the one hired specialist (keeps "paid ambush" flavor).
+	# By gate_town, the watcher deploys shadow agents — not street muscle. gloom_stalker leads with two fast prowlers flanking; cursed_peddler is the one hired specialist (keeps "paid ambush" flavor).
 	var stalker := load("res://resources/enemies/gloom_stalker.tres")
 	var prowler := load("res://resources/enemies/night_prowler.tres")
-	var peddler := load("res://resources/enemies/hex_peddler.tres")
+	var peddler := load("res://resources/enemies/cursed_peddler.tres")
 	var moth := load("res://resources/enemies/dusk_moth.tres")
 	config.enemy_units = [
 		{"data": stalker, "name": "Shadow at the Gate", "pos": Vector2i(9, 3), "level": 5},
