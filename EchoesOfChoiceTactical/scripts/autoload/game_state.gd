@@ -27,15 +27,10 @@ var player_level: int = 1
 
 var fired_travel_event_ids: Array[String] = []
 
-const MAX_SAVE_SLOTS := 3
-const SAVE_META_PATH := "user://save_meta.json"
 const REST_HEAL_FRACTION := 0.30
 
 var current_slot: int = -1  # -1 = not loaded from a slot yet
-
-
-func _save_path(slot: int) -> String:
-	return "user://savegame_%d.json" % slot
+var _save_manager = preload("res://scripts/autoload/save_load_manager.gd").new()
 
 
 func set_player_info(p_name: String, p_gender: String) -> void:
@@ -440,7 +435,7 @@ func reset_for_new_game() -> void:
 
 
 func save_game() -> void:
-	if current_slot < 0 or current_slot >= MAX_SAVE_SLOTS:
+	if current_slot < 0 or current_slot >= _save_manager.MAX_SAVE_SLOTS:
 		push_error("GameState.save_game: no valid slot selected (current_slot=%d)" % current_slot)
 		return
 	var save_data := {
@@ -460,32 +455,13 @@ func save_game() -> void:
 		"unlocked_classes": unlocked_classes,
 		"fired_travel_event_ids": fired_travel_event_ids,
 	}
-	var file := FileAccess.open(_save_path(current_slot), FileAccess.WRITE)
-	if file:
-		file.store_string(JSON.stringify(save_data, "\t"))
-		file.close()
-	_write_save_meta(current_slot)
-
-
-func _write_save_meta(slot: int) -> void:
-	var file := FileAccess.open(SAVE_META_PATH, FileAccess.WRITE)
-	if file:
-		file.store_string(JSON.stringify({"last_slot": slot}))
-		file.close()
+	_save_manager.save_to_slot(current_slot, save_data)
 
 
 func load_game(slot: int) -> bool:
-	if not FileAccess.file_exists(_save_path(slot)):
+	var data: Dictionary = _save_manager.load_from_slot(slot)
+	if data.is_empty():
 		return false
-	var file := FileAccess.open(_save_path(slot), FileAccess.READ)
-	if not file:
-		return false
-	var json := JSON.new()
-	var result := json.parse(file.get_as_text())
-	file.close()
-	if result != OK:
-		return false
-	var data: Dictionary = json.data
 	player_name = data.get("player_name", "")
 	player_gender = data.get("player_gender", "")
 	player_class_id = data.get("player_class_id", "")
@@ -514,58 +490,25 @@ func load_game(slot: int) -> bool:
 	for e in fe:
 		fired_travel_event_ids.append(str(e))
 	current_slot = slot
-	_write_save_meta(slot)
+	_save_manager.mark_last_used(slot)
 	return true
 
 
 func delete_save(slot: int) -> void:
-	var path := _save_path(slot)
-	if FileAccess.file_exists(path):
-		DirAccess.remove_absolute(path)
+	_save_manager.delete_save(slot)
 
 
 func has_save(slot: int) -> bool:
-	return FileAccess.file_exists(_save_path(slot))
+	return _save_manager.has_save(slot)
 
 
 func has_any_save() -> bool:
-	for i in MAX_SAVE_SLOTS:
-		if has_save(i):
-			return true
-	return false
+	return _save_manager.has_any_save()
 
 
 func get_last_used_slot() -> int:
-	if not FileAccess.file_exists(SAVE_META_PATH):
-		return -1
-	var file := FileAccess.open(SAVE_META_PATH, FileAccess.READ)
-	if not file:
-		return -1
-	var json := JSON.new()
-	if json.parse(file.get_as_text()) != OK:
-		return -1
-	file.close()
-	var slot: int = int(json.data.get("last_slot", -1))
-	if slot >= 0 and slot < MAX_SAVE_SLOTS and has_save(slot):
-		return slot
-	return -1
+	return _save_manager.get_last_used_slot()
 
 
 func get_save_summary(slot: int) -> Dictionary:
-	if not has_save(slot):
-		return {"exists": false}
-	var file := FileAccess.open(_save_path(slot), FileAccess.READ)
-	if not file:
-		return {"exists": false}
-	var json := JSON.new()
-	if json.parse(file.get_as_text()) != OK:
-		return {"exists": false}
-	file.close()
-	var d: Dictionary = json.data
-	return {
-		"exists": true,
-		"player_name": d.get("player_name", "Unknown"),
-		"player_class_id": d.get("player_class_id", ""),
-		"progression_stage": int(d.get("progression_stage", 0)),
-		"gold": int(d.get("gold", 0)),
-	}
+	return _save_manager.get_save_summary(slot)
