@@ -9,10 +9,50 @@ var active: bool = false
 var valid_cells: Array[Vector2i] = []
 
 const TILE_SIZE := 64
+const CURSOR_COLOR := Color(1.0, 0.9, 0.2)
+const CURSOR_INVALID_COLOR := Color(0.6, 0.6, 0.6)
+const CORNER_LEN := 12.0
+const LINE_WIDTH := 3.0
+
+var _pulse_time: float = 0.0
 
 
 func _ready() -> void:
 	set_process_input(false)
+
+
+func _process(delta: float) -> void:
+	if active:
+		_pulse_time += delta
+		queue_redraw()
+
+
+func _draw() -> void:
+	if not active:
+		return
+	var is_valid := grid_position in valid_cells
+	var base_color := CURSOR_COLOR if is_valid else CURSOR_INVALID_COLOR
+	var pulse := 0.7 + 0.3 * sin(_pulse_time * 4.0)
+	var color := Color(base_color.r, base_color.g, base_color.b, pulse)
+
+	var half := TILE_SIZE / 2.0
+	var tl := Vector2(-half, -half)
+	var tr := Vector2(half, -half)
+	var bl := Vector2(-half, half)
+	var br := Vector2(half, half)
+
+	# Corner brackets
+	draw_line(tl, tl + Vector2(CORNER_LEN, 0), color, LINE_WIDTH)
+	draw_line(tl, tl + Vector2(0, CORNER_LEN), color, LINE_WIDTH)
+
+	draw_line(tr, tr + Vector2(-CORNER_LEN, 0), color, LINE_WIDTH)
+	draw_line(tr, tr + Vector2(0, CORNER_LEN), color, LINE_WIDTH)
+
+	draw_line(bl, bl + Vector2(CORNER_LEN, 0), color, LINE_WIDTH)
+	draw_line(bl, bl + Vector2(0, -CORNER_LEN), color, LINE_WIDTH)
+
+	draw_line(br, br + Vector2(-CORNER_LEN, 0), color, LINE_WIDTH)
+	draw_line(br, br + Vector2(0, -CORNER_LEN), color, LINE_WIDTH)
 
 
 func activate(valid: Array[Vector2i], start_pos: Vector2i = Vector2i.ZERO) -> void:

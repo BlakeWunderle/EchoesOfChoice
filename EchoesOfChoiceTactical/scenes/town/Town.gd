@@ -1,5 +1,6 @@
 extends Control
 
+@onready var background: ColorRect = $Background
 @onready var town_name_label: Label = $Panel/MarginContainer/VBox/TownName
 @onready var town_desc_label: Label = $Panel/MarginContainer/VBox/Description
 @onready var party_list: VBoxContainer = $Panel/MarginContainer/VBox/ScrollContainer/PartyList
@@ -88,10 +89,23 @@ const TOWN_SHOPS: Dictionary = {
 }
 
 
+const TOWN_BACKGROUNDS: Dictionary = {
+	MapData.Terrain.VILLAGE: Color(0.12, 0.16, 0.1),
+	MapData.Terrain.INN: Color(0.14, 0.11, 0.08),
+	MapData.Terrain.CITY: Color(0.13, 0.12, 0.14),
+	MapData.Terrain.CITY_GATE: Color(0.13, 0.12, 0.14),
+	MapData.Terrain.CASTLE: Color(0.12, 0.11, 0.13),
+}
+
+
 func _ready() -> void:
 	MusicManager.play_context(MusicManager.MusicContext.TOWN)
 	_town_id = GameState.current_town_id
 	var node_data: Dictionary = MapData.get_node(_town_id)
+
+	var terrain: int = node_data.get("terrain", -1)
+	if TOWN_BACKGROUNDS.has(terrain):
+		background.color = TOWN_BACKGROUNDS[terrain]
 
 	town_name_label.text = node_data.get("display_name", "Town")
 	town_desc_label.text = node_data.get("description", "")
