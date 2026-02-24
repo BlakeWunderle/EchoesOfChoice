@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "street_tough"
 class_display_name = "Street Tough"
-base_max_health = 52
+base_max_health = 48
 base_max_mana = 6
 base_physical_attack = 19
 base_physical_defense = 13
