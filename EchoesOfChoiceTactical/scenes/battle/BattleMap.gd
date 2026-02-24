@@ -541,6 +541,12 @@ func _execute_item(unit: Unit, target_pos: Vector2i) -> void:
 			var ms := ModifiedStat.create(item.buff_stat, item.consumable_value, item.buff_turns, false)
 			target.modified_stats.append(ms)
 			target.apply_stat_modifier(item.buff_stat, item.consumable_value, false)
+		Enums.ConsumableEffect.FULL_REST_ALL:
+			for ally in turn_manager.player_units:
+				if ally.is_alive:
+					ally.heal(ally.max_health - ally.current_health)
+					ally.mana = ally.max_mana
+			GameState.full_rest_party()
 
 	unit.has_acted = true
 
@@ -588,7 +594,7 @@ func _on_unit_turn_started(unit: Unit) -> void:
 
 
 func _apply_fire_damage(unit: Unit) -> void:
-	var dmg := max(1, 10 - unit.mag_def)
+	var dmg := max(1, 10 - unit.magic_defense)
 	unit.take_damage(dmg)
 
 
