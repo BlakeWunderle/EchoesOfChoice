@@ -203,9 +203,10 @@ const BATTLES: Dictionary = {
 	"lab_battle": {
 		"prog": 4,
 		"enemies": [
-			{"res": "res://resources/enemies/android.tres",   "name": "Android",   "count": 2, "level": 4},
-			{"res": "res://resources/enemies/machinist.tres", "name": "Machinist", "count": 2, "level": 4},
-			{"res": "res://resources/enemies/ironclad.tres",  "name": "Ironclad",  "count": 1, "level": 4},
+			{"res": "res://resources/enemies/android.tres",    "name": "Android",   "count": 2, "level": 4},
+			{"res": "res://resources/enemies/arc_golem.tres",  "name": "Arc Golem", "count": 1, "level": 4},
+			{"res": "res://resources/enemies/machinist.tres",  "name": "Machinist", "count": 1, "level": 4},
+			{"res": "res://resources/enemies/ironclad.tres",   "name": "Ironclad",  "count": 1, "level": 4},
 		],
 	},
 	# ── Prog 5 ──────────────────────────────────────────────────────────────────

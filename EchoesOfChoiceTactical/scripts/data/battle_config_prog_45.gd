@@ -182,11 +182,12 @@ static func create_lab_battle() -> BattleConfig:
 
 	# C# LabBattle: Android (Deus), Machinist (Ananiah), Ironclad (Acrid). Lab = constructs only — no imps/fiendlings.
 	var android := load("res://resources/enemies/android.tres")
+	var arc_golem := load("res://resources/enemies/arc_golem.tres")
 	var machinist := load("res://resources/enemies/machinist.tres")
 	var ironclad := load("res://resources/enemies/ironclad.tres")
 	config.enemy_units = [
 		{"data": android, "name": "Deus", "pos": Vector2i(8, 1), "level": lvl},
-		{"data": machinist, "name": "Ananiah", "pos": Vector2i(8, 2), "level": lvl},
+		{"data": arc_golem, "name": "Ananiah", "pos": Vector2i(8, 2), "level": lvl},
 		{"data": ironclad, "name": "Acrid", "pos": Vector2i(9, 3), "level": lvl},
 		{"data": android, "name": "Unit Seven", "pos": Vector2i(8, 5), "level": lvl},
 		{"data": machinist, "name": "Cog", "pos": Vector2i(8, 4), "level": lvl},
