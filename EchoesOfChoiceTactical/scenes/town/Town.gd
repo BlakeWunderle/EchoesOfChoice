@@ -12,6 +12,7 @@ extends Control
 
 var _town_id: String = ""
 var _dialogue_box_scene: PackedScene = preload("res://scenes/ui/DialogueBox.tscn")
+var _promote_button: Button
 
 const REST_COST := 50
 
@@ -115,6 +116,14 @@ func _ready() -> void:
 	items_button.pressed.connect(_on_items_pressed)
 
 	var buttons_node: Node = continue_button.get_parent()
+
+	_promote_button = Button.new()
+	_promote_button.text = "Promote"
+	_promote_button.pressed.connect(_on_promote_pressed)
+	_promote_button.visible = GameState.has_any_promotable_member()
+	buttons_node.add_child(_promote_button)
+	buttons_node.move_child(_promote_button, recruit_button.get_index() + 1)
+
 	var rest_button := Button.new()
 	rest_button.text = "Rest Party (%dg)" % REST_COST
 	rest_button.pressed.connect(_on_rest_pressed)
@@ -124,6 +133,9 @@ func _ready() -> void:
 	_populate_npcs(node_data)
 
 	continue_button.pressed.connect(_on_continue)
+
+	if GameState.has_any_promotable_member():
+		_on_promote_pressed()
 
 
 func _populate_party_list() -> void:
@@ -204,6 +216,17 @@ func _on_shop_pressed() -> void:
 		gold_label.text = "Gold: %d" % GameState.gold
 	)
 	add_child(shop)
+
+
+func _on_promote_pressed() -> void:
+	var promote_scene := preload("res://scenes/town/PromoteUI.tscn")
+	var promote_ui: Control = promote_scene.instantiate()
+	promote_ui.promote_closed.connect(func():
+		promote_ui.queue_free()
+		_populate_party_list()
+		_promote_button.visible = GameState.has_any_promotable_member()
+	)
+	add_child(promote_ui)
 
 
 func _on_recruit_pressed() -> void:
