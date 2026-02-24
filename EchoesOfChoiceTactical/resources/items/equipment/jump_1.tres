@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "jump_1"
-display_name = "Leap Bracers I"
-description = "Increases jump height. +1 Jump. Requires T1 unit."
+display_name = "Climber's Wraps"
+description = "Sturdy wraps with grip-reinforced palms for pulling yourself up cliff faces. +1 Jump."
 item_type = 1
 buy_price = 150
 sell_price_override = -1

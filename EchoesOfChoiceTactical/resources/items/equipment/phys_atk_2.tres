@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "phys_atk_2"
-display_name = "Strength Band III"
-description = "Greatly increases physical attack. +8 P.Atk. Unlocked when you have a T2 physical attacker (e.g. Cavalry, Paladin)."
+display_name = "Champion's Bracer"
+description = "Worn by tournament victors. The engraving shows a fist breaking stone. +8 P.Atk."
 item_type = 1
 buy_price = 280
 sell_price_override = -1

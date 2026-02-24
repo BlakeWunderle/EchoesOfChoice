@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "dodge_1"
-display_name = "Evasion Cloak II"
-description = "Greatly increases dodge chance. +2 Dodge%. Unlocked when you have a T1 unit from any tree."
+display_name = "Wraith Cloak"
+description = "Woven from memory-silk; the body learns to slip away before the blow lands. +2 Dodge%."
 item_type = 1
 buy_price = 200
 sell_price_override = -1

@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "crit_0"
-display_name = "Precision Lens I"
-description = "Increases critical hit chance. +1 Crit%."
+display_name = "Keen Edge"
+description = "A small whetstone charm. Kept close, it sharpens instincts as much as blades. +1 Crit%."
 item_type = 1
 buy_price = 80
 sell_price_override = -1

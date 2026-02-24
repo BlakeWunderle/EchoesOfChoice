@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "jump_2"
-display_name = "Leap Bracers II"
-description = "Greatly increases jump height. +2 Jump. Unlocked when you have a T2 unit from any tree."
+display_name = "Acrobat's Wraps"
+description = "Worn by dragoons in training; the enchantment makes great heights feel reachable. +2 Jump."
 item_type = 1
 buy_price = 300
 sell_price_override = -1

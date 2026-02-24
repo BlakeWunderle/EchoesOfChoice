@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "crit_1"
-display_name = "Precision Lens II"
-description = "Greatly increases critical hit chance. +2 Crit%. Unlocked when you have a T2 crit-focused unit (e.g. Ninja, Mercenary)."
+display_name = "Reaper's Edge"
+description = "A curved obsidian trinket from a master duelist's kit. Every strike finds the gap. +2 Crit%."
 item_type = 1
 buy_price = 200
 sell_price_override = -1

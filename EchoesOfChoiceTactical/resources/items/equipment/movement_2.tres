@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "movement_2"
-display_name = "Stride Greaves II"
-description = "Greatly increases movement range. +2 Mov. Unlocked when you have a T2 unit from any tree."
+display_name = "Ranger's Greaves"
+description = "Enchanted for scouts and outriders — one stride covers what others need two for. +2 Mov."
 item_type = 1
 buy_price = 300
 sell_price_override = -1

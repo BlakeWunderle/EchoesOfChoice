@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "movement_1"
-display_name = "Stride Greaves I"
-description = "Increases movement range. +1 Mov. Requires T1 unit."
+display_name = "Pathfinder's Greaves"
+description = "Designed for long marches. Light and sure-footed on any terrain. +1 Mov."
 item_type = 1
 buy_price = 150
 sell_price_override = -1

@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "phys_def_1"
-display_name = "Guardian Seal II"
-description = "Increases physical defense. +5 P.Def."
+display_name = "Steelguard Seal"
+description = "A heavier disc treated with a hardening process used by city guard captains. +5 P.Def."
 item_type = 1
 buy_price = 140
 sell_price_override = -1

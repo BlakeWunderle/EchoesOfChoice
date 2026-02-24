@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "phys_atk_1"
-display_name = "Strength Band II"
-description = "Increases physical attack. +5 P.Atk."
+display_name = "Warbond Band"
+description = "Forged by a weaponsmith's guild and stamped with the mark of service. +5 P.Atk."
 item_type = 1
 buy_price = 140
 sell_price_override = -1

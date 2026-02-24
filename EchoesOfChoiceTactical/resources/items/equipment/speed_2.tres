@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "speed_2"
-display_name = "Swift Boots III"
-description = "Masterwork boots that grant uncanny swiftness, adding +5 speed."
+display_name = "Stormstrider Boots"
+description = "Crafted by a Tempest; these boots feel like running with the wind at your back. +5 Spd."
 item_type = 1
 buy_price = 260
 sell_price_override = -1

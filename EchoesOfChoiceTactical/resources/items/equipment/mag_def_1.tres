@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "mag_def_1"
-display_name = "Ward Amulet II"
-description = "Increases magic defense. +5 M.Def."
+display_name = "Mystic Amulet"
+description = "A silver amulet tuned to intercept hostile magical frequencies. +5 M.Def."
 item_type = 1
 buy_price = 140
 sell_price_override = -1

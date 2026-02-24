@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "phys_def_2"
-display_name = "Guardian Seal III"
-description = "Greatly increases physical defense. +8 P.Def. Unlocked when you have a T2 tank (Knight, Bastion, Paladin)."
+display_name = "Aegis Seal"
+description = "Etched by a royal armorsmith. Legends say blades bend away from it. +8 P.Def."
 item_type = 1
 buy_price = 280
 sell_price_override = -1

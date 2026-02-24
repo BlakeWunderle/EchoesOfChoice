@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "health_0"
-display_name = "Health Ring I"
-description = "A simple ring that fortifies the body. +5 Max HP."
+display_name = "Vitality Ring"
+description = "A plain iron ring etched with a heartbeat rune. +5 Max HP."
 item_type = 1
 buy_price = 50
 sell_price_override = -1

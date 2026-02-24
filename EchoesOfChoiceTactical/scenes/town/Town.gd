@@ -39,7 +39,6 @@ const TOWN_SHOPS: Dictionary = {
 		"equipment/health_0", "equipment/mana_0",
 		"equipment/phys_atk_0", "equipment/phys_def_0",
 		"equipment/mag_atk_0", "equipment/mag_def_0",
-		"equipment/speed_0",
 	],
 	"crossroads_inn": [
 		# Consumables — Tier 0+1
@@ -50,7 +49,7 @@ const TOWN_SHOPS: Dictionary = {
 		# Equipment — Tier 0+1 + first 2-tier items
 		"equipment/health_0", "equipment/mana_0",
 		"equipment/phys_atk_0", "equipment/phys_def_0",
-		"equipment/mag_atk_0", "equipment/mag_def_0", "equipment/speed_0",
+		"equipment/mag_atk_0", "equipment/mag_def_0",
 		"equipment/health_1", "equipment/mana_1",
 		"equipment/phys_atk_1", "equipment/phys_def_1",
 		"equipment/mag_atk_1", "equipment/mag_def_1", "equipment/speed_1",
@@ -68,7 +67,7 @@ const TOWN_SHOPS: Dictionary = {
 		# Equipment — all tiers (T2 class-locked items hidden until right class in party)
 		"equipment/health_0", "equipment/mana_0",
 		"equipment/phys_atk_0", "equipment/phys_def_0",
-		"equipment/mag_atk_0", "equipment/mag_def_0", "equipment/speed_0",
+		"equipment/mag_atk_0", "equipment/mag_def_0",
 		"equipment/health_1", "equipment/mana_1",
 		"equipment/phys_atk_1", "equipment/phys_def_1",
 		"equipment/mag_atk_1", "equipment/mag_def_1", "equipment/speed_1",

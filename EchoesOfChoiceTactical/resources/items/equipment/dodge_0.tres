@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "dodge_0"
-display_name = "Evasion Cloak I"
-description = "Increases dodge chance. +1 Dodge%."
+display_name = "Shadow Step"
+description = "A soft cloth token that trains the wearer to read attack angles. +1 Dodge%."
 item_type = 1
 buy_price = 80
 sell_price_override = -1

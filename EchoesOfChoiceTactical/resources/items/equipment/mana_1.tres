@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1")
 item_id = "mana_1"
-display_name = "Mana Charm II"
-description = "A refined charm that sharpens the mind. +5 Max MP."
+display_name = "Arcane Charm"
+description = "A charm woven with soft threads of ambient magic; the reservoir deepens. +5 Max MP."
 item_type = 1
 buy_price = 120
 sell_price_override = -1
