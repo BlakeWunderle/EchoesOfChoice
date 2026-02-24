@@ -20,6 +20,33 @@ Reconstruct the asset tree from the original zips in `Assets/` if needed.
 - **Format**: WAV
 - **Total**: ~1,404 files
 
+### Ranged SFX (`audio/sfx/ranged/`)
+- **Source**: `Assets/bowandarrowsounds_row.zip` (Wave/44_1kHz-16bit/ only, skip 96kHz)
+- **Format**: WAV
+- **Contents**: 136 files across 4 categories
+  - `string_stretch/` (18) — bowstring tension sounds
+  - `arrow_release/` (10) — arrow launch sounds
+  - `arrow_flight/` (18) — arrow traveling through air
+  - `arrow_impacts/` (90) — body penetration, ground hits, shield impacts
+
+### Character Voices (`audio/sfx/voices/`)
+- **Sources**:
+  - `Assets/malecharactersbundle_row.zip` — 4 of 11 male voice packs (WAV only, combat categories)
+  - `Assets/femalecharactersbundle_row.zip` — 4 of 12 female voice packs (WAV only, combat categories)
+- **Format**: WAV
+- **Contents**: 3,166 files across 8 voice profiles
+- **Categories extracted per voice**: confirm (unit selected), attack (ability use), battle_cry (combat cries), vocal (grunts/hit reactions)
+- **Voice profiles**:
+  - `male_01/` (807) — Arthur: British Hero
+  - `male_02/` (370) — Walter: Senior NPC (gruff)
+  - `male_03/` (411) — Erik: Hero
+  - `male_04/` (570) — Ryan: Hero
+  - `female_01/` (41) — Robin Archer (named pack: Affirmatives, Attack_Affirmatives, On_Attack_Taunt, On_Enemy_Kill, On_Spotting_Enemy, Hits)
+  - `female_02/` (36) — Sarah Warrior (named pack: same categories as Robin)
+  - `female_03/` (456) — Olivia: British Hero
+  - `female_04/` (475) — Alex: Hero
+- **Remaining in zips** (not extracted): 7 male packs (Boris, Daniel, Hunter, Jamie, Logan, Robert, Thomas), 8 female packs (Agnes, Amber, Esmeralda, Grace, Kate, Lauren, Nadia, Ruby, Zoe), plus 30 non-combat voice categories per pack
+
 ### Movement SFX (`audio/sfx/movement/`)
 - **Source**: `Assets/scifigamesoundeffectsbundle_row.zip` (Footsteps/ subfolder)
 - **Format**: WAV
@@ -101,11 +128,6 @@ Reconstruct the asset tree from the original zips in `Assets/` if needed.
 - **Categories**: village, farm, forest_village, houses, medieval_camp, town_city, weapons, tools, medical, scifi
 
 ## Not Yet Extracted
-
-### Medium Priority
-- `Assets/malecharactersbundle_row.zip` - 11 male character voice packs (2.1 GB)
-- `Assets/femalecharactersbundle_row.zip` - 12 female character voice packs (2.1 GB)
-- `Assets/bowandarrowsounds_row.zip` - Bow/arrow SFX for ranged combat (128 MB)
 
 ### Low Priority
 - `Assets/industrialsoundeffectsbundle_row.zip` - Industrial SFX (1.2 GB)
