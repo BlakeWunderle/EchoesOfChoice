@@ -88,6 +88,8 @@ func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: 
 	abilities = data.abilities.duplicate()
 	reaction_types = data.reaction_types.duplicate()
 
+	_load_sprite(data.sprite_id)
+
 	if p_team == Enums.Team.PLAYER:
 		_apply_equipment()
 		# Restore persisted HP/MP if available (carries damage from previous battles)
@@ -330,6 +332,15 @@ func animate_move_along_path(path: Array[Vector2i]) -> void:
 		await tween.finished
 
 	_update_facing_animation()
+
+
+# --- Sprite Loading ---
+
+func _load_sprite(p_sprite_id: String) -> void:
+	var frames := SpriteLoader.get_frames(p_sprite_id)
+	if frames:
+		sprite.sprite_frames = frames
+	queue_redraw()
 
 
 # --- Animation ---
