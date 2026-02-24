@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="FighterData" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
-[ext_resource type="Resource" path="res://resources/abilities/cure.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/lay_on_hands.tres" id="2"]
 [ext_resource type="Resource" path="res://resources/abilities/smash.tres" id="3"]
 [ext_resource type="Resource" path="res://resources/abilities/smite.tres" id="4"]
 

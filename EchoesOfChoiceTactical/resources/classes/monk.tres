@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/abilities/spirit_attack.tres" id="2"]
 [ext_resource type="Resource" path="res://resources/abilities/precise_strike.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/abilities/meditate.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/abilities/chi_mend.tres" id="4"]
 
 [resource]
 script = ExtResource("1")
