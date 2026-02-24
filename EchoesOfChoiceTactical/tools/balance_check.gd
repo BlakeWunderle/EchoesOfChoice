@@ -14,45 +14,43 @@ const STAT_MAGIC_ATTACK: int = 2     # Enums.StatType.MAGIC_ATTACK
 const STAT_MIXED_ATTACK: int = 6     # Enums.StatType.MIXED_ATTACK
 
 # ─── Squire phys_atk at each progression ─────────────────────────────────────
-# Squire: base_physical_attack=18, growth_physical_attack=2 → level L: 18+2*(L-1)
+# Squire: base_physical_attack=21, growth_physical_attack=2 → level L: 21+2*(L-1)
 const SQUIRE_PHYS_ATK: Dictionary = {
-	0: 18, 1: 20, 2: 22, 3: 24, 4: 24, 5: 26, 6: 28, 7: 28, 8: 30
+	0: 21, 1: 23, 2: 25, 3: 27, 4: 27, 5: 29, 6: 31, 7: 31, 8: 33
 }
 
 # ─── Party defense profiles (P.Def equipment only, no M.Def equipment bonus) ─
-# Equipment bonus to P.Def only:
-#   Prog 0: +0    Prog 1-2: +3    Prog 3-6: +5    Prog 7-8: +8
-# Base L1 stats:  Squire P15/M13  Mage P13/M18  Scholar P12/M18  Ent P13/M18
+# Base L1 stats:  Squire P15/M11  Mage P11/M18  Scholar P12/M20  Ent P12/M18
 # Growth per level: all +2 P.Def / +2 M.Def, Entertainer M.Def +3/level
 const PARTY: Dictionary = {
-	0: {"level": 1, "squire": [15, 13], "mage": [13, 18], "scholar": [12, 18], "entertainer": [13, 18]},
-	1: {"level": 2, "squire": [20, 15], "mage": [18, 20], "scholar": [17, 20], "entertainer": [18, 21]},
-	2: {"level": 3, "squire": [22, 17], "mage": [20, 22], "scholar": [19, 22], "entertainer": [20, 24]},
-	3: {"level": 4, "squire": [26, 19], "mage": [24, 24], "scholar": [23, 24], "entertainer": [24, 27]},
-	4: {"level": 4, "squire": [26, 19], "mage": [24, 24], "scholar": [23, 24], "entertainer": [24, 27]},
-	5: {"level": 5, "squire": [33, 21], "mage": [31, 26], "scholar": [30, 26], "entertainer": [31, 30]},
-	6: {"level": 6, "squire": [35, 23], "mage": [33, 28], "scholar": [32, 28], "entertainer": [33, 33]},
-	7: {"level": 6, "squire": [38, 23], "mage": [36, 28], "scholar": [35, 28], "entertainer": [36, 33]},
-	8: {"level": 7, "squire": [41, 25], "mage": [39, 30], "scholar": [38, 30], "entertainer": [39, 36]},
+	0: {"level": 1, "squire": [15, 11], "mage": [11, 18], "scholar": [12, 20], "entertainer": [12, 18]},
+	1: {"level": 2, "squire": [20, 13], "mage": [16, 20], "scholar": [17, 22], "entertainer": [17, 21]},
+	2: {"level": 3, "squire": [22, 15], "mage": [18, 22], "scholar": [19, 24], "entertainer": [19, 24]},
+	3: {"level": 4, "squire": [26, 17], "mage": [22, 24], "scholar": [23, 26], "entertainer": [23, 27]},
+	4: {"level": 4, "squire": [26, 17], "mage": [22, 24], "scholar": [23, 26], "entertainer": [23, 27]},
+	5: {"level": 5, "squire": [33, 19], "mage": [29, 26], "scholar": [30, 28], "entertainer": [30, 30]},
+	6: {"level": 6, "squire": [35, 21], "mage": [31, 28], "scholar": [32, 30], "entertainer": [32, 33]},
+	7: {"level": 6, "squire": [38, 21], "mage": [34, 28], "scholar": [35, 30], "entertainer": [35, 33]},
+	8: {"level": 7, "squire": [41, 23], "mage": [37, 30], "scholar": [38, 32], "entertainer": [38, 36]},
 }
 
 const CLASS_ORDER: Array = ["squire", "mage", "scholar", "entertainer"]
 const CLASS_LABELS: Array = ["vs Squire", "vs Mage", "vs Scholar", "vs Ent"]
 
 # ─── Tier 1 extreme defenders (available from Prog 1, ~50 JP threshold) ───────
-# Warden (Tier 1 Squire path): base P.Def=19 growth=4, M.Def=13 growth=2
-# Acolyte (Tier 1 Scholar path): base P.Def=13 growth=2, M.Def=20 growth=3
+# Warden (Tier 1 Squire path): base P.Def=23 growth=4, M.Def=13 growth=2
+# Acolyte (Tier 1 Scholar path): base P.Def=13 growth=2, M.Def=23 growth=3
 # No equipment bonus assumed — T1 class may not have had time to buy gear.
 # Format: [P.Def, M.Def] = base + growth*(level-1), no equip.
 const PARTY_T1: Dictionary = {
-	1: {"warden": [23, 15], "acolyte": [15, 23]},
-	2: {"warden": [27, 17], "acolyte": [17, 26]},
-	3: {"warden": [31, 19], "acolyte": [19, 29]},
-	4: {"warden": [31, 19], "acolyte": [19, 29]},
-	5: {"warden": [35, 21], "acolyte": [21, 32]},
-	6: {"warden": [39, 23], "acolyte": [23, 35]},
-	7: {"warden": [39, 23], "acolyte": [23, 35]},
-	8: {"warden": [43, 25], "acolyte": [25, 38]},
+	1: {"warden": [27, 15], "acolyte": [15, 26]},
+	2: {"warden": [31, 17], "acolyte": [17, 29]},
+	3: {"warden": [35, 19], "acolyte": [19, 32]},
+	4: {"warden": [35, 19], "acolyte": [19, 32]},
+	5: {"warden": [39, 21], "acolyte": [21, 35]},
+	6: {"warden": [43, 23], "acolyte": [23, 38]},
+	7: {"warden": [43, 23], "acolyte": [23, 38]},
+	8: {"warden": [47, 25], "acolyte": [25, 41]},
 }
 
 # ─── Battle roster ────────────────────────────────────────────────────────────
