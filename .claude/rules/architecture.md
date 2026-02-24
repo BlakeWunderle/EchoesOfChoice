@@ -12,8 +12,9 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 
 ### Core Data (`scripts/data/`)
 - `enums.gd` -- All enums: StatType, AbilityType, AoEShape, TileType, Facing, ReactionType, TurnPhase, Team
-- `fighter_data.gd` -- Resource class for class definitions (stats, growth, movement, jump, reactions, abilities, upgrades)
+- `fighter_data.gd` -- Resource class for class definitions (stats, growth, movement, jump, reactions, abilities, upgrades, sprite_id)
 - `ability_data.gd` -- Resource class for abilities (range, AoE, type including Terrain, elevation-aware range calc)
+- `item_data.gd` -- Resource class for consumable and equipment items (stat bonuses, tier, cost, unlock rules)
 - `modified_stat.gd` -- Buff/debuff with turn countdown
 - `terrain_effect.gd` -- Dynamically placed terrain (ice walls, fire tiles) with duration
 
@@ -23,7 +24,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `travel_event.gd` -- TravelEvent resource: event_type (ambush/merchant/rest/story/rumor), title, dialogue Array[Dictionary], trigger_chance, node_range
 
 ### Battle Configuration (`scripts/data/` continued)
-- `battle_config.gd` -- Base battle configuration class
+- `battle_config.gd` -- Base battle configuration class (includes environment field for terrain rendering)
 - `battle_config_prog_01.gd` -- Progression 0-1 battle configs (tutorial, city_street, forest, village_raid)
 - `battle_config_prog_23.gd` -- Progression 2-3 battle configs (smoke, deep_forest, clearing, ruins, cave, portal, inn_ambush)
 - `battle_config_prog_45.gd` -- Progression 4-5 battle configs (shore, beach, cemetery, carnival, encampment, lab, mirror, gate_ambush)
@@ -36,19 +37,23 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `reaction_system.gd` -- All 6 reaction types with trigger logic, defensive reaction chaining (bodyguard then mitigation before damage applies)
 - `battle_ai.gd` -- Enemy AI: target scoring, ability selection, movement positioning, trap avoidance
 - `ability_executor.gd` -- Ability execution: damage/heal/buff/debuff/terrain application
+- `battle_terrain_renderer.gd` -- Draws battle terrain with per-environment color palettes (17 environments), elevation tinting, wall/destructible styling
 
 ### Autoload (`scripts/autoload/`)
 - `game_state.gd` -- Singleton: party data, progression stage, story flags, gold, inventory, equipment, unlocked classes
 - `equipment_manager.gd` -- Equipment slot management, tier-based slot limits (tier+1), item unlock checks
 - `save_load_manager.gd` -- JSON save/load with 3 slots
 - `scene_manager.gd` -- Scene transitions, new game / continue / load routing
+- `music_manager.gd` -- Background music with crossfade, context-based track pools (battle, exploration, town, menu, boss, cutscene)
+- `sfx_manager.gd` -- Sound effects with category pools, voice system, polyphonic playback
+- `sprite_loader.gd` -- Loads and caches SpriteFrames resources by sprite_id for unit rendering
 
 ### Battle (`scenes/battle/`)
-- `BattleMap.gd/.tscn` -- Main battle scene: grid rendering, turn flow (act-then-move), targeting with AoE preview, facing chooser, AI, reaction integration
+- `BattleMap.gd/.tscn` -- Main battle scene: terrain rendering, turn flow (act-then-move), targeting with AoE preview, facing chooser, AI, reaction integration
 - `TurnManager.gd` -- ATB system (speed -> 100 threshold), turn order preview, battle end detection
 - `ActionMenuController.gd` -- Battle action menu (Attack, Ability, Item, Move, Wait, Facing selection)
 - `GridOverlay.gd` -- Colored tile overlays (movement=blue, attack=red, AoE=orange, threatened=red border, path=cyan)
-- `GridCursor.gd/.tscn` -- Keyboard cursor (WASD/arrows, Enter/Z=select, Esc/X=cancel)
+- `GridCursor.gd/.tscn` -- Keyboard cursor with animated corner brackets (WASD/arrows, Enter/Z=select, Esc/X=cancel)
 - `PartySelect.gd/.tscn` -- Pre-battle party composition screen
 - `BattleSummary.gd/.tscn` -- Post-battle XP/JP/loot/promotion results
 
@@ -61,8 +66,8 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `TravelEvent.gd/.tscn` -- Overworld travel event popup (ambush/merchant/rest/story/rumor)
 
 ### Overworld (`scenes/overworld/`)
-- `OverworldMap.gd/.tscn` -- Overworld map with node traversal, fog-of-war, progression gating
-- `terrain_drawer.gd` -- Overworld terrain visualization
+- `OverworldMap.gd/.tscn` -- Overworld map with node traversal, fog-of-war, styled circle node markers with battle/town icons, terrain glow
+- `terrain_drawer.gd` -- Overworld terrain landmark icons (procedural draw per terrain type)
 
 ### Town (`scenes/town/`)
 - `Town.gd/.tscn` -- Town hub: shop, recruit, promote, NPC conversations, rest, story flag gating, optional battles
@@ -77,7 +82,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `GameOver.gd/.tscn` -- Game over screen
 
 ### Units (`scenes/units/`)
-- `Unit.gd/.tscn` -- Unit node: all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
+- `Unit.gd/.tscn` -- Unit node: AnimatedSprite2D (2x scale for 32px art on 64px tiles), directional animations (idle/walk/attack/hurt/death), sprite loading via SpriteLoader, placeholder colored rectangles, all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
 
 ### Resources (`resources/`)
 - `classes/` -- 54 FighterData .tres files (4 base + 16 T1 + 32 T2 + 2 royal)
@@ -89,6 +94,8 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 ### Tools (`tools/`)
 - `balance_check.gd` -- Headless battle simulator for enemy vs. party damage analysis per progression
 - `item_check.gd` -- Equipment balance verification via mirror-fight static analysis
+- `jp_check.gd` -- JP economy balance verification per class and progression
+- `create_spriteframes.gd` -- Generates SpriteFrames .tres from CraftPix-style sprite sheet PNGs (configurable frame size, row order, animations)
 
 ## Build Progress
 
@@ -97,10 +104,11 @@ Phases 1-7 COMPLETE (project setup, grid, units, movement, turns, abilities, com
 | Phase | Status | Scope |
 |-------|--------|-------|
 | 8 | COMPLETE | Tactical AI — enemy decision-making, ability scoring, movement positioning |
-| 9 | MOSTLY COMPLETE | UI — health bars, action menu, turn order, battle summary; missing: combat animations, audio |
+| 9 | MOSTLY COMPLETE | UI — health bars, action menu, turn order, battle summary, cursor; missing: combat animations |
 | 10 | COMPLETE | Class porting — all 54 player classes, 170+ abilities, 67 enemies, 59 items as .tres |
 | 11 | MOSTLY COMPLETE | Story/world — battle configs, NPC conversations, travel events; missing: some dialogue polish |
 | 12 | PENDING | Final balance pass — all battles tuned; XP/JP curve verified; win-rate targets met |
+| 13 | IN PROGRESS | Art integration — pixel art pipeline (AnimatedSprite2D, SpriteLoader, create_spriteframes tool), terrain renderer (17 environments), overworld styling; pending: CraftPix asset purchase and import |
 
 ## Reference Codebase
 
