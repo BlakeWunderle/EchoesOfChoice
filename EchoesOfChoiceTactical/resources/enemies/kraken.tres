@@ -8,11 +8,11 @@
 script = ExtResource("1")
 class_id = "kraken"
 class_display_name = "Kraken"
-base_max_health = 130
+base_max_health = 72
 base_max_mana = 30
 base_physical_attack = 22
-base_physical_defense = 28
-base_magic_attack = 14
+base_physical_defense = 16
+base_magic_attack = 18
 base_magic_defense = 14
 base_speed = 10
 base_crit_chance = 2

@@ -138,6 +138,119 @@ const BATTLES: Dictionary = {
 			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 3},
 		],
 	},
+	# ── Prog 4 ──────────────────────────────────────────────────────────────────
+	"shore": {
+		"prog": 4,
+		"enemies": [
+			{"res": "res://resources/enemies/siren.tres", "name": "Siren", "count": 3, "level": 4},
+			{"res": "res://resources/enemies/nymph.tres", "name": "Nymph", "count": 2, "level": 4},
+		],
+	},
+	"beach": {
+		"prog": 4,
+		"enemies": [
+			{"res": "res://resources/enemies/pirate.tres",  "name": "Pirate",  "count": 3, "level": 4},
+			{"res": "res://resources/enemies/captain.tres", "name": "Captain", "count": 1, "level": 4},
+			{"res": "res://resources/enemies/kraken.tres",  "name": "Kraken",  "count": 1, "level": 4},
+		],
+	},
+	"cemetery_battle": {
+		"prog": 4,
+		"enemies": [
+			{"res": "res://resources/enemies/zombie.tres",  "name": "Zombie",  "count": 2, "level": 4},
+			{"res": "res://resources/enemies/specter.tres", "name": "Specter", "count": 2, "level": 4},
+			{"res": "res://resources/enemies/wraith.tres",  "name": "Wraith",  "count": 1, "level": 4},
+		],
+	},
+	"box_battle": {
+		"prog": 4,
+		"enemies": [
+			{"res": "res://resources/enemies/harlequin.tres",        "name": "Harlequin",  "count": 2, "level": 4},
+			{"res": "res://resources/enemies/chanteuse.tres",        "name": "Chanteuse",  "count": 2, "level": 4},
+			{"res": "res://resources/enemies/ringmaster.tres",       "name": "Ringmaster", "count": 1, "level": 4},
+		],
+	},
+	"army_battle": {
+		"prog": 4,
+		"enemies": [
+			{"res": "res://resources/enemies/draconian.tres", "name": "Draconian", "count": 2, "level": 4},
+			{"res": "res://resources/enemies/chaplain.tres",  "name": "Chaplain",  "count": 2, "level": 4},
+			{"res": "res://resources/enemies/commander.tres", "name": "Commander", "count": 1, "level": 4},
+		],
+	},
+	"lab_battle": {
+		"prog": 4,
+		"enemies": [
+			{"res": "res://resources/enemies/android.tres",   "name": "Android",   "count": 2, "level": 4},
+			{"res": "res://resources/enemies/machinist.tres", "name": "Machinist", "count": 2, "level": 4},
+			{"res": "res://resources/enemies/ironclad.tres",  "name": "Ironclad",  "count": 1, "level": 4},
+		],
+	},
+	# ── Prog 5 ──────────────────────────────────────────────────────────────────
+	"mirror_battle": {
+		"prog": 5,
+		"enemies": [
+			{"res": "res://resources/enemies/void_stalker.tres",  "name": "Void Stalker",  "count": 1, "level": 5},
+			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 5},
+			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 2, "level": 5},
+			{"res": "res://resources/enemies/dusk_moth.tres",     "name": "Dusk Moth",     "count": 1, "level": 5},
+		],
+	},
+	"gate_ambush": {
+		"prog": 5,
+		"enemies": [
+			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 5},
+			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 2, "level": 5},
+			{"res": "res://resources/enemies/hex_peddler.tres",   "name": "Hex Peddler",   "count": 1, "level": 5},
+			{"res": "res://resources/enemies/dusk_moth.tres",     "name": "Dusk Moth",     "count": 1, "level": 5},
+		],
+	},
+	# ── Prog 6 ──────────────────────────────────────────────────────────────────
+	"city_gate_ambush": {
+		"prog": 6,
+		"enemies": [
+			{"res": "res://resources/enemies/void_stalker.tres",  "name": "Void Stalker",  "count": 1, "level": 6},
+			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 2, "level": 6},
+			{"res": "res://resources/enemies/shade.tres",        "name": "Shade",        "count": 1, "level": 6},
+			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 1, "level": 6},
+		],
+	},
+	"return_city_1": {
+		"prog": 6,
+		"enemies": [
+			{"res": "res://resources/enemies/seraph.tres",        "name": "Seraph",        "count": 1, "level": 6},
+			{"res": "res://resources/enemies/hellion.tres",       "name": "Hellion",       "count": 1, "level": 6},
+			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 2, "level": 6},
+			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 6},
+		],
+	},
+	"return_city_2": {
+		"prog": 6,
+		"enemies": [
+			{"res": "res://resources/enemies/necromancer.tres", "name": "Necromancer", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/witch.tres",       "name": "Witch",       "count": 1, "level": 6},
+			{"res": "res://resources/enemies/shade.tres",       "name": "Shade",       "count": 2, "level": 6},
+			{"res": "res://resources/enemies/wraith.tres",      "name": "Wraith",      "count": 1, "level": 6},
+		],
+	},
+	"return_city_3": {
+		"prog": 6,
+		"enemies": [
+			{"res": "res://resources/enemies/psion.tres",         "name": "Psion",         "count": 1, "level": 6},
+			{"res": "res://resources/enemies/guard_scholar.tres", "name": "Guard Scholar", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 2, "level": 6},
+			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 6},
+		],
+	},
+	"return_city_4": {
+		"prog": 6,
+		"enemies": [
+			{"res": "res://resources/enemies/warlock.tres",   "name": "Warlock",   "count": 1, "level": 6},
+			{"res": "res://resources/enemies/shaman.tres",    "name": "Shaman",    "count": 1, "level": 6},
+			{"res": "res://resources/enemies/shade.tres",        "name": "Shade",        "count": 2, "level": 6},
+			{"res": "res://resources/enemies/void_stalker.tres", "name": "Void Stalker", "count": 1, "level": 6},
+		],
+	},
 }
 
 

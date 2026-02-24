@@ -8,10 +8,10 @@
 script = ExtResource("1")
 class_id = "captain"
 class_display_name = "Captain"
-base_max_health = 106
+base_max_health = 60
 base_max_mana = 36
 base_physical_attack = 26
-base_physical_defense = 26
+base_physical_defense = 16
 base_magic_attack = 12
 base_magic_defense = 12
 base_speed = 13

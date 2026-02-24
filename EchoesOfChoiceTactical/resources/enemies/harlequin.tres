@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
-[ext_resource type="Resource" path="res://resources/abilities/wall.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/smash.tres" id="2"]
 [ext_resource type="Resource" path="res://resources/abilities/bewilderment.tres" id="3"]
 [ext_resource type="Resource" path="res://resources/abilities/dash.tres" id="4"]
 
@@ -11,7 +11,7 @@ class_id = "harlequin"
 class_display_name = "Harlequin"
 base_max_health = 58
 base_max_mana = 22
-base_physical_attack = 14
+base_physical_attack = 20
 base_physical_defense = 12
 base_magic_attack = 18
 base_magic_defense = 14
