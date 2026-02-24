@@ -91,7 +91,7 @@ static func create_return_city_2() -> BattleConfig:
 
 
 static func create_return_city_3() -> BattleConfig:
-	# West Gate — The Forge District: Psion + Runewright (guard_scholar) pair
+	# West Gate — The Forge District: Psion + Runewright pair
 	var config := BattleConfig.new()
 	config.battle_id = "return_city_3"
 	config.grid_width = 10
@@ -99,7 +99,7 @@ static func create_return_city_3() -> BattleConfig:
 	BattleConfig._build_party_units(config)
 
 	var psion := load("res://resources/enemies/psion.tres")
-	var scholar := load("res://resources/enemies/guard_scholar.tres")
+	var scholar := load("res://resources/enemies/runewright.tres")
 	var phantom_prowler := load("res://resources/enemies/phantom_prowler.tres")
 	var dread := load("res://resources/enemies/dread_stalker.tres")
 	config.enemy_units = [
@@ -274,8 +274,8 @@ static func create_final_castle() -> BattleConfig:
 
 	# The Stranger — final boss — plus elite castle guard. Level 8.
 	var stranger := load("res://resources/enemies/the_stranger.tres")
-	var guard_mage := load("res://resources/enemies/guard_mage.tres")
-	var guard_squire := load("res://resources/enemies/guard_squire.tres")
+	var guard_mage := load("res://resources/enemies/elite_guard_mage.tres")
+	var guard_squire := load("res://resources/enemies/elite_guard_squire.tres")
 	config.enemy_units = [
 		{"data": stranger, "name": "The Stranger", "pos": Vector2i(12, 5), "level": 8},
 		{"data": guard_mage, "name": "Valdris", "pos": Vector2i(12, 2), "level": 8},

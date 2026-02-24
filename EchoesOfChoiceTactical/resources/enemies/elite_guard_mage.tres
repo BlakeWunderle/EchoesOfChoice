@@ -1,23 +1,22 @@
-[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="FighterData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/abilities/arcane_bolt.tres" id="2"]
-[ext_resource type="Resource" path="res://resources/abilities/undertow.tres" id="3"]
 
 [resource]
 script = ExtResource("1")
-class_id = "siren"
-class_display_name = "Siren"
-base_max_health = 80
-base_max_mana = 26
+class_id = "elite_guard_mage"
+class_display_name = "Elite Court Mage"
+base_max_health = 33
+base_max_mana = 13
 base_physical_attack = 10
-base_physical_defense = 12
-base_magic_attack = 25
-base_magic_defense = 18
-base_speed = 21
+base_physical_defense = 9
+base_magic_attack = 14
+base_magic_defense = 12
+base_speed = 26
 base_crit_chance = 5
 base_crit_damage = 1
-base_dodge_chance = 10
+base_dodge_chance = 0
 growth_health = 4
 growth_mana = 0
 growth_physical_attack = 0
@@ -28,5 +27,5 @@ growth_speed = 0
 movement = 3
 jump = 1
 reaction_types = []
-abilities = [ExtResource("2"), ExtResource("3")]
+abilities = [ExtResource("2")]
 upgrade_options = []

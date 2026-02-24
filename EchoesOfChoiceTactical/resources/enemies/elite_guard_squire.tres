@@ -2,31 +2,31 @@
 
 [ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/abilities/slash.tres" id="2"]
-[ext_resource type="Resource" path="res://resources/abilities/backstab.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/abilities/guard.tres" id="3"]
 
 [resource]
 script = ExtResource("1")
-class_id = "pirate"
-class_display_name = "Pirate"
-base_max_health = 45
-base_max_mana = 27
-base_physical_attack = 22
-base_physical_defense = 16
-base_magic_attack = 12
-base_magic_defense = 12
-base_speed = 20
-base_crit_chance = 10
-base_crit_damage = 4
-base_dodge_chance = 10
-growth_health = 4
+class_id = "elite_guard_squire"
+class_display_name = "Elite Royal Guard"
+base_max_health = 37
+base_max_mana = 6
+base_physical_attack = 12
+base_physical_defense = 10
+base_magic_attack = 6
+base_magic_defense = 9
+base_speed = 26
+base_crit_chance = 5
+base_crit_damage = 1
+base_dodge_chance = 0
+growth_health = 3
 growth_mana = 0
-growth_physical_attack = 3
+growth_physical_attack = 1
 growth_physical_defense = 1
-growth_magic_attack = 0
+growth_magic_attack = 1
 growth_magic_defense = 1
 growth_speed = 0
 movement = 4
-jump = 1
+jump = 2
 reaction_types = []
 abilities = [ExtResource("2"), ExtResource("3")]
 upgrade_options = []
