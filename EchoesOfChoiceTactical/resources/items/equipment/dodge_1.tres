@@ -6,12 +6,12 @@
 script = ExtResource("1")
 item_id = "dodge_1"
 display_name = "Shadow Step"
-description = "A soft cloth token that trains the wearer to read attack angles. +1 Dodge%."
+description = "A soft cloth token that trains the wearer to read attack angles. +5% Dodge."
 item_type = 1
 buy_price = 80
 sell_price_override = -1
 stat_bonuses = {
-8: 1
+8: 5
 }
 unlock_tier = 1
 unlock_class_ids = []

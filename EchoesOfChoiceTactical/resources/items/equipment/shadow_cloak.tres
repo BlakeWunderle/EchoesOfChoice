@@ -6,12 +6,12 @@
 script = ExtResource("1")
 item_id = "shadow_cloak"
 display_name = "Shadow Cloak"
-description = "Woven from shadow-silk. +5 Dodge, +5 Speed. Only sold by wandering merchants."
+description = "Woven from shadow-silk. +15% Dodge, +5 Speed. Only sold by wandering merchants."
 item_type = 1
 buy_price = 500
 sell_price_override = 200
 stat_bonuses = {
-8: 5,
+8: 15,
 7: 5
 }
 unlock_tier = 0

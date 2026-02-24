@@ -6,12 +6,12 @@
 script = ExtResource("1")
 item_id = "crit_2"
 display_name = "Reaper's Edge"
-description = "A curved obsidian trinket from a master duelist's kit. Every strike finds the gap. +2 Crit%."
+description = "A curved obsidian trinket from a master duelist's kit. Every strike finds the gap. +10% Crit."
 item_type = 1
 buy_price = 200
 sell_price_override = -1
 stat_bonuses = {
-12: 2
+12: 10
 }
 unlock_tier = 2
 unlock_class_ids = PackedStringArray("cavalry", "mercenary", "hunter", "ninja", "monk", "electromancer")

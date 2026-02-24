@@ -11,7 +11,7 @@ item_type = 1
 buy_price = 0
 sell_price_override = 100
 stat_bonuses = {
-8: 3,
+8: 10,
 7: 3
 }
 unlock_tier = 0

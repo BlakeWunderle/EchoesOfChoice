@@ -6,15 +6,15 @@
 script = ExtResource("1")
 item_id = "village_charm"
 display_name = "Village Charm"
-description = "A trinket given in gratitude by the villagers. +2 Phys.Atk, +2 Phys.Def, +2 Mag.Atk, +2 Mag.Def."
+description = "A trinket given in gratitude by the villagers. +1 Phys.Atk, +1 Phys.Def, +1 Mag.Atk, +1 Mag.Def."
 item_type = 1
 buy_price = 0
-sell_price_override = 80
+sell_price_override = 40
 stat_bonuses = {
-0: 2,
-1: 2,
-2: 2,
-3: 2
+0: 1,
+1: 1,
+2: 1,
+3: 1
 }
 unlock_tier = 0
 unlock_class_ids = []
