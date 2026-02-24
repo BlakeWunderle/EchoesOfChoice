@@ -8,11 +8,11 @@
 script = ExtResource("1")
 class_id = "guard_scholar"
 class_display_name = "Royal Advisor"
-base_max_health = 30
+base_max_health = 55
 base_max_mana = 10
 base_physical_attack = 6
-base_physical_defense = 8
-base_magic_attack = 12
+base_physical_defense = 14
+base_magic_attack = 26
 base_magic_defense = 12
 base_speed = 9
 base_crit_chance = 1
