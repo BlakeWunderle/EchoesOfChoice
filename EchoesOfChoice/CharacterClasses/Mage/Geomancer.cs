@@ -33,14 +33,14 @@ namespace EchoesOfChoice.CharacterClasses.Mage
         public override void IncreaseLevel()
         {
             Level += 1;
-            var healthIncrease = random.Next(6, 9);
+            var healthIncrease = random.Next(7, 10);
             Health += healthIncrease;
             MaxHealth += healthIncrease;
             var manaIncrease = random.Next(5, 8);
             Mana += manaIncrease;
             MaxMana += manaIncrease;
             PhysicalAttack += random.Next(1, 3);
-            PhysicalDefense += random.Next(1, 3);
+            PhysicalDefense += random.Next(2, 4);
             MagicAttack += random.Next(6, 9);
             MagicDefense += random.Next(3, 5);
             Speed += random.Next(2, 5);

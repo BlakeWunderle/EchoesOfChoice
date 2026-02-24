@@ -33,7 +33,7 @@ namespace EchoesOfChoice.CharacterClasses.Entertainer
         public override void IncreaseLevel()
         {
             Level += 1;
-            var healthIncrease = random.Next(9, 12);
+            var healthIncrease = random.Next(10, 13);
             Health += healthIncrease;
             MaxHealth += healthIncrease;
             var manaIncrease = random.Next(2, 5);

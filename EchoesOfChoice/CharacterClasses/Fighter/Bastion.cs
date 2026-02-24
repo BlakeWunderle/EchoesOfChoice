@@ -40,7 +40,7 @@ namespace EchoesOfChoice.CharacterClasses.Fighter
             var manaIncrease = random.Next(1, 4);
             Mana += manaIncrease;
             MaxMana += manaIncrease;
-            PhysicalAttack += random.Next(3, 6);
+            PhysicalAttack += random.Next(4, 7);
             PhysicalDefense += random.Next(4, 7);
             MagicAttack += random.Next(1, 3);
             MagicDefense += random.Next(4, 7);
