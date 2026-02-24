@@ -212,25 +212,80 @@ PROGRESSION <N> (battles: <list>, target win rate: <X>%):
 
 ## Worked Example: Prog 0
 
-**Step 1 -- Enemy Balance:**
+### Step 1 -- Enemy Balance
+
 ```bash
 <godot> --path EchoesOfChoiceTactical --headless --script res://tools/balance_check.gd -- city_street
 ```
-Result: TTK 3-6 for all enemies, no SPIKE, no EASY. Street Tough TTK=11 (known `⚠SLOW`, design-intent exception). Hex Peddler deals magic damage to Squire. Overall: **PASS** (one known exception).
 
-No T1/T2 check at Prog 0 (T1 starts at Prog 1, T2 at Prog 3).
+**Actual output:**
+```
+═══ city_street            [Prog 0 | Party Lv1 | Sq.Atk 21] ═══
+Enemy                    HP │ vs Squire     vs Mage       vs Scholar    vs Ent       │ TTK
+──────────────────────────────────────────────────────────────────────────────────────────────
+Thug (x2)                40 │ 6p/0m         10p/0m        9p/0m         9p/0m        │   4
+Street Tough (x2)        48 │ 8p/0m         12p/0m        11p/0m        11p/0m       │   6
+Hex Peddler              34 │ 0p/8m         0p/1m         0p/0m         0p/1m        │   3
 
-**Step 2 -- Item Balance:**
-Prog 0 has no shop. Only story items exist. Test T0 base classes:
+  ✓ All clear — damage present, no spikes, TTK 2–10
+```
+
+**Analysis:**
+- Thug: 6-10p damage, TTK=4 (standard)
+- Street Tough: 8-12p damage, TTK=6 (standard). HP=48 gives TTK=6, well within range.
+- Hex Peddler: 8m to Squire (magic threat), 0m to Scholar (Scholar MD=20 absorbs it). TTK=3 (fodder).
+- No SPIKE, no EASY, no ZERO, no SLOW. Clean pass.
+- No T1/T2 check at Prog 0 (T1 starts at Prog 1, T2 at Prog 3).
+- **STEP 1: PASS**
+
+### Step 2 -- Item Balance
+
+Prog 0 has no shop. Test T0 base classes to check story items and preview shop items:
+
 ```bash
 <godot> --path EchoesOfChoiceTactical --headless --script res://tools/item_check.gd -- squire 0
 <godot> --path EchoesOfChoiceTactical --headless --script res://tools/item_check.gd -- mage 0
 <godot> --path EchoesOfChoiceTactical --headless --script res://tools/item_check.gd -- scholar 0
 ```
-Check Story/Unique section for Village Charm (+1/+1/+1/+1). Should show modest ΔKill/ΔSurv (within +/-1), no SPIKE. T0 shop items (Guardian Seal, etc.) are listed but not available until Prog 1 -- their values are still useful as a preview. **PASS** if no SPIKE or IMMUNE.
 
-**Step 3 -- Cross-Check:**
-No changes made in Steps 1-2. Nothing to cross-check. **PASS.**
+**Key results (Squire Lv2, baseline Dmg=6, TTK=11, TTS=11):**
+- Iron Band (+3 PA): ΔKill=+4 (TTK 11→7) -- strong but ratio 1.57x, below SPIKE threshold
+- Guardian's Torc (+4 PD/+4 MD/+8 HP): ΔSurv=+25 -- big survival boost, no SPIKE (doesn't increase damage)
+- Battlemage Stone (+4 PA/+4 MA): ΔKill=+4 (TTK 11→7) -- same ratio, no SPIKE
+- Shadow Cloak (+15 Dodge/+5 Spd): no mirror effect (dodge is probabilistic, not modeled)
+
+**Key results (Mage Lv2, baseline Dmg=5, TTK=11, TTS=11):**
+- Focus Shard (+3 MA): ΔKill=+4 (TTK 11→7) -- good for magic builds
+- Guardian's Torc: ΔSurv=+52 on Mage -- Mage has lowest PD (13), so +4 PD is proportionally huge. Not SPIKE since offense unchanged.
+- Warding Amulet (+3 MD): ΔSurv=+17 -- meaningful for Mage mirror
+
+**Key results (Scholar Lv2, 0-dmg baseline):**
+- Battlemage Stone, Focus Shard: ✓BREAK (breaks 0-dmg mirror, expected)
+- All defense items: ⚠WEAK (expected -- Scholar can't penetrate its own defenses)
+
+**No IMMUNE, no SPIKE flags across any class. STEP 2: PASS**
+
+### Step 3 -- Cross-Check
+
+No changes made in Steps 1-2. Nothing to cross-check. **STEP 3: PASS**
+
+### Result
+
+```
+PROGRESSION 0 (battles: city_street, target win rate: ~90%):
+  STEP 1 -- Enemy Balance:
+  - [x] Run balance_check.gd for city_street
+  - [x] All flags clean (✓ All clear)
+  - [x] No fixes needed
+  STEP 2 -- Item Balance:
+  - [x] Classes: squire, mage, scholar at T0
+  - [x] Run item_check.gd for each class
+  - [x] No IMMUNE or SPIKE flags
+  - [x] No fixes needed
+  STEP 3 -- Cross-Check:
+  - [x] No changes made — stable
+  LOCKED: [x]
+```
 
 **Prog 0: LOCKED.**
 
