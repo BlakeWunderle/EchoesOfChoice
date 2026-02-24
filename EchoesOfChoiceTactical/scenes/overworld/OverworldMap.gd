@@ -92,15 +92,18 @@ func _create_node_button(nid: String, node_data: Dictionary) -> void:
 	btn.mouse_entered.connect(func(): _on_node_hovered(nid))
 	btn.pressed.connect(func(): _on_node_clicked(nid))
 
-	var dot := ColorRect.new()
-	dot.size = Vector2(NODE_RADIUS * 2, NODE_RADIUS * 2)
+	# Styled circle marker instead of ColorRect
+	var marker := _NodeMarker.new()
+	marker.position = Vector2(NODE_RADIUS, NODE_RADIUS)
 	if is_completed:
-		dot.color = NODE_COMPLETED_COLOR
+		marker.color = NODE_COMPLETED_COLOR
 	elif is_available:
-		dot.color = NODE_AVAILABLE_COLOR
+		marker.color = NODE_AVAILABLE_COLOR
 	else:
-		dot.color = Color(0.4, 0.4, 0.4)
-	btn.add_child(dot)
+		marker.color = Color(0.4, 0.4, 0.4)
+	marker.radius = NODE_RADIUS
+	marker.is_battle = node_data.get("is_battle", true)
+	btn.add_child(marker)
 
 	add_child(btn)
 	_node_buttons[nid] = btn
@@ -251,19 +254,45 @@ func _center_camera_on_latest() -> void:
 func _draw() -> void:
 	var revealed := MapData.get_all_revealed_nodes()
 
-	# Draw paths between revealed connected nodes
+	# Draw revealed area glow (lighter terrain around explored nodes)
+	for nid in revealed:
+		var pos: Vector2 = MapData.NODES[nid]["pos"]
+		draw_circle(pos, REVEAL_RADIUS, Color(0.16, 0.2, 0.13, 0.35))
+		draw_circle(pos, REVEAL_RADIUS * 0.6, Color(0.18, 0.22, 0.14, 0.2))
+
+	# Draw paths between revealed connected nodes (road with border)
 	for nid in revealed:
 		var node_data: Dictionary = MapData.NODES[nid]
 		var from_pos: Vector2 = node_data["pos"]
 		for next_id in node_data.get("next_nodes", []):
 			if next_id in revealed:
-				draw_line(from_pos, MapData.NODES[next_id]["pos"], PATH_COLOR, 3.0, true)
+				var to_pos: Vector2 = MapData.NODES[next_id]["pos"]
+				draw_line(from_pos, to_pos, PATH_COLOR.darkened(0.3), 5.0, true)
+				draw_line(from_pos, to_pos, PATH_COLOR, 3.0, true)
 
-	# Draw fog circles (dark everywhere except around revealed nodes)
-	# We draw the revealed node backgrounds as subtle circles
-	for nid in revealed:
-		var pos: Vector2 = MapData.NODES[nid]["pos"]
-		draw_circle(pos, REVEAL_RADIUS, Color(0.08, 0.1, 0.08, 0.3))
+
+# Node marker inner class
+class _NodeMarker extends Node2D:
+	var color := Color.WHITE
+	var radius := 18.0
+	var is_battle := true
+
+	func _draw() -> void:
+		# Outer border
+		draw_circle(Vector2.ZERO, radius + 2, Color(0.1, 0.1, 0.1, 0.8))
+		# Main circle
+		draw_circle(Vector2.ZERO, radius, color.darkened(0.2))
+		# Inner highlight
+		draw_circle(Vector2.ZERO, radius * 0.7, color)
+		# Battle = sword cross, Town = house shape (small icon hint)
+		if is_battle:
+			draw_line(Vector2(-5, -5), Vector2(5, 5), Color(0.1, 0.1, 0.1, 0.6), 2.0)
+			draw_line(Vector2(5, -5), Vector2(-5, 5), Color(0.1, 0.1, 0.1, 0.6), 2.0)
+		else:
+			var house := PackedVector2Array([
+				Vector2(-5, 4), Vector2(-5, -1), Vector2(0, -6), Vector2(5, -1), Vector2(5, 4),
+			])
+			draw_colored_polygon(house, Color(0.1, 0.1, 0.1, 0.5))
 
 
 # Inline terrain drawer class
