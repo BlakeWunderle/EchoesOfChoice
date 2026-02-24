@@ -14,12 +14,12 @@ static func create_shore() -> BattleConfig:
 
 	# C# ShoreBattle: 3 Sirens (Lorelei, Thalassa, Ligeia). Sirens + aquatic only; no pirates. Unique names fitting class.
 	var siren := load("res://resources/enemies/siren.tres")
-	var nymph := load("res://resources/enemies/nymph.tres")
+	var tide_nymph := load("res://resources/enemies/tide_nymph.tres")
 	config.enemy_units = [
 		{"data": siren, "name": "Thalassa", "pos": Vector2i(8, 1), "level": lvl},
 		{"data": siren, "name": "Ligeia", "pos": Vector2i(8, 5), "level": lvl},
-		{"data": nymph, "name": "Nerida", "pos": Vector2i(8, 2), "level": lvl},
-		{"data": nymph, "name": "Coralie", "pos": Vector2i(8, 4), "level": lvl},
+		{"data": tide_nymph, "name": "Nerida", "pos": Vector2i(8, 2), "level": lvl},
+		{"data": tide_nymph, "name": "Coralie", "pos": Vector2i(8, 4), "level": lvl},
 		{"data": siren, "name": "Lorelei", "pos": Vector2i(9, 3), "level": lvl},
 	]
 	
@@ -81,13 +81,13 @@ static func create_cemetery_battle() -> BattleConfig:
 	# C# CemeteryBattle: 3 Zombies (Mort--, Rave--, Jori--). Tactical: corporeal zombies + ranged specters + wraith lead. Distinct from ruins (ethereal shades/wraiths only).
 	var zombie := load("res://resources/enemies/zombie.tres")
 	var specter := load("res://resources/enemies/specter.tres")
-	var wraith := load("res://resources/enemies/wraith.tres")
+	var grave_wraith := load("res://resources/enemies/grave_wraith.tres")
 	config.enemy_units = [
 		{"data": zombie, "name": "Mortis", "pos": Vector2i(8, 1), "level": lvl},
 		{"data": zombie, "name": "Ravenna", "pos": Vector2i(8, 5), "level": lvl},
 		{"data": specter, "name": "Duskward", "pos": Vector2i(8, 2), "level": lvl},
 		{"data": specter, "name": "Hollow", "pos": Vector2i(8, 4), "level": lvl},
-		{"data": wraith, "name": "Joris", "pos": Vector2i(9, 3), "level": lvl},
+		{"data": grave_wraith, "name": "Joris", "pos": Vector2i(9, 3), "level": lvl},
 	]
 
 	config.pre_battle_dialogue = [
@@ -217,9 +217,9 @@ static func create_mirror_battle() -> BattleConfig:
 
 	# C# MirrorBattle: shadow clones of party (no fixed enemy list). Tactical: void_stalker (commanding lead), gloom_stalker, night_prowler × 2, dusk_moth. No shadow_hound — this is the watcher's real force, not a scouting pack.
 	var void_stalker := load("res://resources/enemies/void_stalker.tres")
-	var prowler := load("res://resources/enemies/night_prowler.tres")
-	var stalker := load("res://resources/enemies/gloom_stalker.tres")
-	var moth := load("res://resources/enemies/dusk_moth.tres")
+	var prowler := load("res://resources/enemies/shade_prowler.tres")
+	var stalker := load("res://resources/enemies/mirror_stalker.tres")
+	var moth := load("res://resources/enemies/twilight_moth.tres")
 	config.enemy_units = [
 		{"data": void_stalker, "name": "Tenebris", "pos": Vector2i(13, 4), "level": lvl},
 		{"data": stalker, "name": "Vesper", "pos": Vector2i(12, 2), "level": lvl},
@@ -248,10 +248,10 @@ static func create_gate_ambush() -> BattleConfig:
 	BattleConfig._build_party_units(config)
 
 	# By gate_town, the watcher deploys shadow agents — not street muscle. gloom_stalker leads with two fast prowlers flanking; cursed_peddler is the one hired specialist (keeps "paid ambush" flavor).
-	var stalker := load("res://resources/enemies/gloom_stalker.tres")
-	var prowler := load("res://resources/enemies/night_prowler.tres")
+	var stalker := load("res://resources/enemies/mirror_stalker.tres")
+	var prowler := load("res://resources/enemies/shade_prowler.tres")
 	var peddler := load("res://resources/enemies/cursed_peddler.tres")
-	var moth := load("res://resources/enemies/dusk_moth.tres")
+	var moth := load("res://resources/enemies/twilight_moth.tres")
 	config.enemy_units = [
 		{"data": stalker, "name": "Shadow at the Gate", "pos": Vector2i(9, 3), "level": 5},
 		{"data": prowler, "name": "Gate Prowler", "pos": Vector2i(8, 1), "level": 5},

@@ -165,7 +165,7 @@ const BATTLES: Dictionary = {
 		"prog": 4,
 		"enemies": [
 			{"res": "res://resources/enemies/siren.tres", "name": "Siren", "count": 3, "level": 4},
-			{"res": "res://resources/enemies/nymph.tres", "name": "Nymph", "count": 2, "level": 4},
+			{"res": "res://resources/enemies/tide_nymph.tres", "name": "Tide Nymph", "count": 2, "level": 4},
 		],
 	},
 	"beach": {
@@ -181,7 +181,7 @@ const BATTLES: Dictionary = {
 		"enemies": [
 			{"res": "res://resources/enemies/zombie.tres",  "name": "Zombie",  "count": 2, "level": 4},
 			{"res": "res://resources/enemies/specter.tres", "name": "Specter", "count": 2, "level": 4},
-			{"res": "res://resources/enemies/wraith.tres",  "name": "Wraith",  "count": 1, "level": 4},
+			{"res": "res://resources/enemies/grave_wraith.tres", "name": "Grave Wraith", "count": 1, "level": 4},
 		],
 	},
 	"box_battle": {
@@ -212,27 +212,27 @@ const BATTLES: Dictionary = {
 	"mirror_battle": {
 		"prog": 5,
 		"enemies": [
-			{"res": "res://resources/enemies/void_stalker.tres",  "name": "Void Stalker",  "count": 1, "level": 5},
-			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 5},
-			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 2, "level": 5},
-			{"res": "res://resources/enemies/dusk_moth.tres",     "name": "Dusk Moth",     "count": 1, "level": 5},
+			{"res": "res://resources/enemies/void_stalker.tres",    "name": "Void Stalker",    "count": 1, "level": 5},
+			{"res": "res://resources/enemies/mirror_stalker.tres",  "name": "Mirror Stalker",  "count": 1, "level": 5},
+			{"res": "res://resources/enemies/shade_prowler.tres",   "name": "Shade Prowler",   "count": 2, "level": 5},
+			{"res": "res://resources/enemies/twilight_moth.tres",   "name": "Twilight Moth",   "count": 1, "level": 5},
 		],
 	},
 	"gate_ambush": {
 		"prog": 5,
 		"enemies": [
-			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 5},
-			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 2, "level": 5},
-			{"res": "res://resources/enemies/cursed_peddler.tres", "name": "Cursed Peddler", "count": 1, "level": 5},
-			{"res": "res://resources/enemies/dusk_moth.tres",     "name": "Dusk Moth",     "count": 1, "level": 5},
+			{"res": "res://resources/enemies/mirror_stalker.tres",  "name": "Mirror Stalker",  "count": 1, "level": 5},
+			{"res": "res://resources/enemies/shade_prowler.tres",   "name": "Shade Prowler",   "count": 2, "level": 5},
+			{"res": "res://resources/enemies/cursed_peddler.tres",  "name": "Cursed Peddler",  "count": 1, "level": 5},
+			{"res": "res://resources/enemies/twilight_moth.tres",   "name": "Twilight Moth",   "count": 1, "level": 5},
 		],
 	},
 	# ── Prog 6 ──────────────────────────────────────────────────────────────────
 	"city_gate_ambush": {
 		"prog": 6,
 		"enemies": [
-			{"res": "res://resources/enemies/void_stalker.tres",  "name": "Void Stalker",  "count": 1, "level": 6},
-			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 2, "level": 6},
+			{"res": "res://resources/enemies/void_overlord.tres",   "name": "Void Overlord",   "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dread_stalker.tres",   "name": "Dread Stalker",   "count": 2, "level": 6},
 			{"res": "res://resources/enemies/void_shade.tres",    "name": "Void Shade",    "count": 1, "level": 6},
 			{"res": "res://resources/enemies/void_prowler.tres",  "name": "Void Prowler",  "count": 1, "level": 6},
 		],
@@ -243,7 +243,7 @@ const BATTLES: Dictionary = {
 			{"res": "res://resources/enemies/seraph.tres",        "name": "Seraph",        "count": 1, "level": 6},
 			{"res": "res://resources/enemies/arch_hellion.tres",  "name": "Arch Hellion",  "count": 1, "level": 6},
 			{"res": "res://resources/enemies/void_prowler.tres",  "name": "Void Prowler",  "count": 2, "level": 6},
-			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dread_stalker.tres", "name": "Dread Stalker", "count": 1, "level": 6},
 		],
 	},
 	"return_city_2": {
@@ -261,7 +261,7 @@ const BATTLES: Dictionary = {
 			{"res": "res://resources/enemies/psion.tres",         "name": "Psion",         "count": 1, "level": 6},
 			{"res": "res://resources/enemies/guard_scholar.tres", "name": "Guard Scholar", "count": 1, "level": 6},
 			{"res": "res://resources/enemies/void_prowler.tres",  "name": "Void Prowler",  "count": 2, "level": 6},
-			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dread_stalker.tres", "name": "Dread Stalker", "count": 1, "level": 6},
 		],
 	},
 	"return_city_4": {
@@ -270,7 +270,7 @@ const BATTLES: Dictionary = {
 			{"res": "res://resources/enemies/warlock.tres",      "name": "Warlock",    "count": 1, "level": 6},
 			{"res": "res://resources/enemies/shaman.tres",       "name": "Shaman",     "count": 1, "level": 6},
 			{"res": "res://resources/enemies/void_shade.tres",   "name": "Void Shade", "count": 2, "level": 6},
-			{"res": "res://resources/enemies/void_stalker.tres", "name": "Void Stalker","count": 1, "level": 6},
+			{"res": "res://resources/enemies/void_overlord.tres", "name": "Void Overlord", "count": 1, "level": 6},
 		],
 	},
 }
