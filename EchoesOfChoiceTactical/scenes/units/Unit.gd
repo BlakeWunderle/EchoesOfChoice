@@ -234,11 +234,11 @@ func get_facing_direction() -> Vector2i:
 
 
 func is_facing_toward(from_pos: Vector2i) -> bool:
-	var approach_dir := grid_position - from_pos
-	if approach_dir == Vector2i.ZERO:
+	var dir_to_pos := from_pos - grid_position
+	if dir_to_pos == Vector2i.ZERO:
 		return false
 	var face_dir := get_facing_direction()
-	return approach_dir.x == face_dir.x and approach_dir.y == face_dir.y
+	return sign(dir_to_pos.x) == face_dir.x and sign(dir_to_pos.y) == face_dir.y
 
 
 func apply_stat_modifier(stat: Enums.StatType, modifier: int, is_negative: bool) -> void:
