@@ -1,0 +1,257 @@
+---
+name: progression-balance-check
+description: Combined balance check for a single progression stage. Runs enemy damage analysis (balance_check.gd), then equipment mirror fights (item_check.gd), then cross-checks. Use when balancing a progression stage end-to-end, after tuning enemies or items, or when you want to verify a progression is clean.
+---
+
+# Progression Balance Check
+
+All paths relative to workspace root. Godot project at `EchoesOfChoiceTactical/`.
+
+Run this skill **once per progression stage**, lowest to highest. Each progression must pass all three steps before moving on.
+
+---
+
+## Godot Executable
+
+```
+"/c/Users/blake/AppData/Local/Microsoft/WinGet/Packages/GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe/Godot_v4.6.1-stable_win64_console.exe"
+```
+
+Shorthand below: `<godot>`.
+
+---
+
+## Battle Roster by Progression
+
+| Prog | Battles |
+|------|---------|
+| 0 | `city_street` |
+| 1 | `forest`, `village_raid` |
+| 2 | `smoke`, `deep_forest`, `clearing`, `ruins` |
+| 3 | `cave`, `portal`, `inn_ambush` |
+| 4 | `shore`, `beach`, `cemetery_battle`, `box_battle`, `army_battle`, `lab_battle` |
+| 5 | `mirror_battle`, `gate_ambush` |
+| 6 | `city_gate_ambush`, `return_city_1`, `return_city_2`, `return_city_3`, `return_city_4` |
+
+---
+
+## Progression-to-Shop Mapping
+
+| Prog | Shop Available | Equipment Tier | Item Slots | Classes to Test |
+|------|---------------|----------------|------------|-----------------|
+| 0 | None (pre-shop) | -- | 1 | squire, mage, scholar (story items only) |
+| 1 | Forest Village | T0 | 1 | squire, mage, scholar at T0 |
+| 2 | (same as Prog 1) | T0 | 1 | squire, mage, scholar at T0 |
+| 3 | Crossroads Inn | T0 + T1 | 2 | squire, mage, scholar at T0+T1; ranger, firebrand, dervish at T1 |
+| 4 | (same as Prog 3) | T0 + T1 | 2 | same as Prog 3 |
+| 5 | Gate Town | T0 + T1 + T2 | 2-3 | all 10 classes at appropriate tiers |
+| 6 | (same as Prog 5) | T0 + T1 + T2 | 3 | all 10 classes |
+
+---
+
+## STEP 1 -- Enemy Balance (balance_check.gd)
+
+### Run
+
+```bash
+<godot> --path EchoesOfChoiceTactical --headless --script res://tools/balance_check.gd -- <battle_id>
+```
+
+Run once per battle at this progression. Read the full output.
+
+### Pass Criteria
+
+**Base classes (all progs):**
+- No `⚠ZERO` -- unless the enemy is an intentional support unit (healer/buffer with no DAMAGE ability)
+- No `⚠SPIKE` -- enemy kills a class in <3 hits
+- No `⚠SLOW` -- Squire TTK > 10
+- No `⚠EASY` -- Squire one-shots (TTK = 1)
+
+**T1 defenders (Prog 1+):**
+- All 6 T1 reps (Warden, Acolyte, Ranger, Firebrand, Dervish, Martial Artist) threatened by at least 1 enemy
+- Per-enemy `⚠` on a single T1 class is OK if another enemy covers it
+- Battle-level `⚠T1TANK` or `⚠T1MAGE` means no enemy threatens that extreme -- check design-intent exceptions before fixing
+
+**T2 defenders (Prog 3+):**
+- All 8 T2 reps (Bastion, Paladin, Ninja, Cavalry, Pyromancer, Priest, Mercenary, Illusionist) threatened by at least 1 enemy
+- Same logic: per-enemy `⚠` OK if another enemy covers it
+- `⚠T2TANK` (Bastion immune to all) or `⚠T2MAGE` (Priest immune to all) are the battle-level flags to watch
+
+### Fix Recipes
+
+| Flag | Fix |
+|------|-----|
+| `⚠ZERO` (attack too low) | Raise `base_physical_attack` or `base_magic_attack` in enemy .tres. Target: `scholar_phys_def + 3` for phys, `squire_mag_def - ability_modifier + 3` for magic. |
+| `⚠ZERO` (no DAMAGE ability) | Enemy only has DEBUFF/HEAL abilities. Add a DAMAGE ability (e.g. `spirit_touch.tres`, `slash.tres`). |
+| `⚠SPIKE` | Reduce `base_physical_attack` or `base_magic_attack` by 3-5 until ratio >= 3.0. |
+| `⚠SLOW` | Reduce `base_max_health` until TTK <= 10. |
+| `⚠EASY` | Raise `base_max_health` until TTK >= 2. Min HP = `(squire_dmg * 2) - 1`. |
+| `⚠T1TANK`/`⚠T2TANK` | Add or strengthen a magic enemy. Warden/Bastion are phys tanks -- only magic threats penetrate. |
+| `⚠T1MAGE`/`⚠T2MAGE` | Add or strengthen a physical enemy. Acolyte/Priest are mag tanks -- only physical threats penetrate. |
+
+### Design-Intent Exceptions
+
+These flags are expected and should NOT be fixed:
+
+| Flag | Battle | Why OK |
+|------|--------|--------|
+| `⚠T1MAGE` | `smoke` (P2) | Acolyte is the magic-counter class. Pure-magic battle is where it shines. Raising magic to threaten Acolyte would spike base Squire. |
+| `⚠T1TANK` | `forest`, `village_raid` (P1) | Warden requires ~50 JP. Players extremely unlikely to have promoted by Prog 1. |
+| `⚠ZERO` | `Goblin Shaman` in `village_raid` | Pure healer/support design. Intentional. |
+| `⚠SLOW` | `Street Tough` in `city_street` | TTK=11, borderline. Tutorial battle, intentionally forgiving. Fix: reduce HP to 48 if desired. |
+| `⚠ZERO` | `Goblin Archer` in `village_raid` | arrow_shot mod=2 + low phys_atk barely misses Scholar PD=17. Deferred; Prog 1 already easy. |
+
+---
+
+## STEP 2 -- Item Balance (item_check.gd)
+
+### Which classes and tiers to test
+
+Use the Progression-to-Shop Mapping table above. Only test tiers the player has access to at this progression.
+
+### Run
+
+```bash
+<godot> --path EchoesOfChoiceTactical --headless --script res://tools/item_check.gd -- <class> <tier>
+```
+
+Examples:
+```bash
+# Prog 0: story items only (T0 baseline)
+<godot> --path ... --script res://tools/item_check.gd -- squire 0
+<godot> --path ... --script res://tools/item_check.gd -- mage 0
+<godot> --path ... --script res://tools/item_check.gd -- scholar 0
+
+# Prog 3: T0+T1 for base classes, T1 for T1 classes
+<godot> --path ... --script res://tools/item_check.gd -- squire 1
+<godot> --path ... --script res://tools/item_check.gd -- ranger 1
+<godot> --path ... --script res://tools/item_check.gd -- firebrand 1
+
+# Prog 5+: all classes at all available tiers
+<godot> --path ... --script res://tools/item_check.gd
+```
+
+### Pass Criteria
+
+**Per-class per-tier:**
+- No `⚠IMMUNE` -- defensive item makes unit immune to mirror opponent
+- No `⚠SPIKE` -- offensive item kills 2.5x faster than baseline
+
+**Combo section (T2):**
+- No `⚠IMMUNE` -- full defense stacking breaks the game
+- No `⚠SPIKE` with TTK < 5 -- 3-slot stacking too strong
+
+**Story items:**
+- No outliers: ΔKill and ΔSurv within +/-2 of tier-appropriate items
+- Village Charm (+1/+1/+1/+1) should show modest deltas, no SPIKE
+
+### Fix Recipes
+
+| Problem | Fix |
+|---------|-----|
+| `⚠IMMUNE` on single-stat defense item | Reduce `stat_bonuses[1]` (P.Def) or `stat_bonuses[3]` (M.Def) by 1-2 |
+| `⚠SPIKE` on single-stat offense item | Reduce `stat_bonuses[0]` (P.Atk) or `stat_bonuses[2]` (M.Atk) by 2-3 |
+| Story item too strong | Lower dominant stat bonus; split into two smaller bonuses |
+| `⚠IMMUNE` combo only | Reduce T2 defense stat bonuses slightly |
+| `⚠SPIKE` combo only (TTK < 5) | Reduce individual item stats or increase prices |
+
+---
+
+## STEP 3 -- Cross-Check
+
+After fixing enemies or items in Steps 1-2, verify the other side hasn't regressed.
+
+1. If you changed any **enemy .tres** in Step 1:
+   - Re-run `item_check.gd` for all classes at this prog's tier -- items haven't changed but the skill's enemy-awareness gives confidence nothing was broken indirectly.
+   - Actually: item_check.gd is mirror-fight (class vs class), so enemy changes don't affect it. **Skip re-run.**
+
+2. If you changed any **item .tres** in Step 2:
+   - Re-run `balance_check.gd` for all battles at this prog.
+   - Why: balance_check.gd bakes in equipment PD bonuses per prog. If you changed a PD item's value, the defense profiles in the tool's constants may need updating. Check whether the item you changed is in the "equipment bonus" assumption.
+   - If the defense profiles need updating, edit the `PARTY` dict in `balance_check.gd`, then re-run.
+
+3. If you changed **player class .tres** (growth rates, base stats):
+   - **Full restart from Prog 0.** Player stat changes cascade to every progression.
+   - Update both tools' constants: `PARTY` in balance_check.gd, `CLASS_PROFILES` in item_check.gd.
+   - Re-run all battles, all items.
+
+### Convergence
+
+The cross-check passes when:
+- All battles at this prog show no unexpected flags in balance_check.gd
+- All classes at this prog's tier show no unexpected flags in item_check.gd
+- No changes were made in the cross-check step (stable)
+
+Mark this progression as **LOCKED** and move to the next.
+
+---
+
+## Iteration Checklist Template
+
+Copy and fill per progression:
+
+```
+PROGRESSION <N> (battles: <list>, target win rate: <X>%):
+  STEP 1 -- Enemy Balance:
+  - [ ] Run balance_check.gd for each battle
+  - [ ] All flags either clean or in design-intent exceptions
+  - [ ] Fix applied + re-run clean
+  STEP 2 -- Item Balance:
+  - [ ] Determine which classes/tiers to test (use shop mapping)
+  - [ ] Run item_check.gd for each class x tier
+  - [ ] All flags clean (no IMMUNE, no SPIKE)
+  - [ ] Fix applied + re-run clean
+  STEP 3 -- Cross-Check:
+  - [ ] If items changed: re-run balance_check.gd -- still clean
+  - [ ] If enemies changed: no item re-run needed (mirror fight)
+  - [ ] Stable (no new changes needed)
+  LOCKED: [ ]
+```
+
+---
+
+## Worked Example: Prog 0
+
+**Step 1 -- Enemy Balance:**
+```bash
+<godot> --path EchoesOfChoiceTactical --headless --script res://tools/balance_check.gd -- city_street
+```
+Result: TTK 3-6 for all enemies, no SPIKE, no EASY. Street Tough TTK=11 (known `⚠SLOW`, design-intent exception). Hex Peddler deals magic damage to Squire. Overall: **PASS** (one known exception).
+
+No T1/T2 check at Prog 0 (T1 starts at Prog 1, T2 at Prog 3).
+
+**Step 2 -- Item Balance:**
+Prog 0 has no shop. Only story items exist. Test T0 base classes:
+```bash
+<godot> --path EchoesOfChoiceTactical --headless --script res://tools/item_check.gd -- squire 0
+<godot> --path EchoesOfChoiceTactical --headless --script res://tools/item_check.gd -- mage 0
+<godot> --path EchoesOfChoiceTactical --headless --script res://tools/item_check.gd -- scholar 0
+```
+Check Story/Unique section for Village Charm (+1/+1/+1/+1). Should show modest ΔKill/ΔSurv (within +/-1), no SPIKE. T0 shop items (Guardian Seal, etc.) are listed but not available until Prog 1 -- their values are still useful as a preview. **PASS** if no SPIKE or IMMUNE.
+
+**Step 3 -- Cross-Check:**
+No changes made in Steps 1-2. Nothing to cross-check. **PASS.**
+
+**Prog 0: LOCKED.**
+
+---
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `EchoesOfChoiceTactical/tools/balance_check.gd` | Enemy damage analysis tool |
+| `EchoesOfChoiceTactical/tools/item_check.gd` | Equipment mirror-fight tool |
+| `EchoesOfChoiceTactical/resources/enemies/*.tres` | Enemy stat files (tuning lever) |
+| `EchoesOfChoiceTactical/resources/items/*.tres` | Equipment item files (tuning lever) |
+| `EchoesOfChoiceTactical/resources/classes/*.tres` | Player class files (cascade lever) |
+
+## Related Skills
+
+| Skill | When |
+|-------|------|
+| `balance-thresholds` | Interpreting flag values, defense profiles, TTK targets |
+| `item-balance` | Detailed item_check.gd output interpretation, best-fit class table |
+| `character-stat-tuning` | When adjusting player class stats (triggers full restart) |
+| `equipment-items` | When creating or modifying equipment .tres files |
+| `enemy-progression-variants` | When an enemy needs different stats at different progs |
