@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "pixie"
 class_display_name = "Pixie"
-base_max_health = 16
+base_max_health = 28
 base_max_mana = 10
 base_physical_attack = 3
 base_physical_defense = 3

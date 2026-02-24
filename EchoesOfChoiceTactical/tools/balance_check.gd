@@ -40,18 +40,19 @@ const CLASS_ORDER: Array = ["squire", "mage", "scholar", "entertainer"]
 const CLASS_LABELS: Array = ["vs Squire", "vs Mage", "vs Scholar", "vs Ent"]
 
 # ─── Tier 1 extreme defenders (available from Prog 1, ~50 JP threshold) ───────
-# Warden (Tier 1 Squire path): base P.Def=19 growth=5, M.Def=13 growth=2
-# Acolyte (Tier 1 Scholar path): base P.Def=13 growth=2, M.Def=20 growth=4
-# Equipment same P.Def bonus as base classes; no M.Def equipment bonus.
+# Warden (Tier 1 Squire path): base P.Def=19 growth=4, M.Def=13 growth=2
+# Acolyte (Tier 1 Scholar path): base P.Def=13 growth=2, M.Def=20 growth=3
+# No equipment bonus assumed — T1 class may not have had time to buy gear.
+# Format: [P.Def, M.Def] = base + growth*(level-1), no equip.
 const PARTY_T1: Dictionary = {
-	1: {"warden": [27, 15], "acolyte": [18, 24]},
-	2: {"warden": [32, 17], "acolyte": [20, 28]},
-	3: {"warden": [39, 19], "acolyte": [24, 32]},
-	4: {"warden": [39, 19], "acolyte": [24, 32]},
-	5: {"warden": [49, 21], "acolyte": [31, 36]},
-	6: {"warden": [54, 23], "acolyte": [33, 40]},
-	7: {"warden": [57, 23], "acolyte": [36, 40]},
-	8: {"warden": [63, 25], "acolyte": [39, 44]},
+	1: {"warden": [23, 15], "acolyte": [15, 23]},
+	2: {"warden": [27, 17], "acolyte": [17, 26]},
+	3: {"warden": [31, 19], "acolyte": [19, 29]},
+	4: {"warden": [31, 19], "acolyte": [19, 29]},
+	5: {"warden": [35, 21], "acolyte": [21, 32]},
+	6: {"warden": [39, 23], "acolyte": [23, 35]},
+	7: {"warden": [39, 23], "acolyte": [23, 35]},
+	8: {"warden": [43, 25], "acolyte": [25, 38]},
 }
 
 # ─── Battle roster ────────────────────────────────────────────────────────────
@@ -292,6 +293,7 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 	var zero_names: Array = []
 	var spike_names: Array = []
 	var slow_names: Array = []
+	var easy_names: Array = []
 	var fighters_cache: Array = []  # {entry, fighter} — reused for Tier 1 check
 
 	for entry: Dictionary in bdata["enemies"]:
@@ -376,6 +378,9 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 		if ttk > 10:
 			flags += " ⚠SLOW"
 			slow_names.append(label)
+		if ttk <= 1:
+			flags += " ⚠EASY"
+			easy_names.append(label)
 
 		print("%-22s %4d │ %-13s %-13s %-13s %-12s │ %3d%s" % [
 			label, e_hp,
@@ -384,14 +389,16 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 		])
 
 	print("")
-	if zero_names.is_empty() and spike_names.is_empty() and slow_names.is_empty():
-		print("  ✓ All clear — damage present, no spikes, TTK ≤ 10")
+	if zero_names.is_empty() and spike_names.is_empty() and slow_names.is_empty() and easy_names.is_empty():
+		print("  ✓ All clear — damage present, no spikes, TTK 2–10")
 	if not zero_names.is_empty():
 		print("  ⚠ ZERO  — deals 0 to all classes: " + ", ".join(zero_names))
 	if not spike_names.is_empty():
 		print("  ⚠ SPIKE — kills a class in <3 hits: " + ", ".join(spike_names))
 	if not slow_names.is_empty():
 		print("  ⚠ SLOW  — Squire needs >10 hits: " + ", ".join(slow_names))
+	if not easy_names.is_empty():
+		print("  ⚠ EASY  — Squire one-shots (TTK=1), needs more HP: " + ", ".join(easy_names))
 
 	# Tier 1 extreme class check (Warden = peak physical tank, Acolyte = peak magic tank)
 	if prog >= 1 and PARTY_T1.has(prog):
