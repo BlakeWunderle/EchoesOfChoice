@@ -1,6 +1,7 @@
 extends Node2D
 
 @onready var turn_manager: TurnManager = $TurnManager
+@onready var terrain_renderer: BattleTerrainRenderer = $TerrainRenderer
 @onready var grid_overlay: GridOverlay = $GridOverlay
 @onready var grid_cursor: GridCursor = $GridCursor
 @onready var camera: Camera2D = $Camera2D
@@ -110,6 +111,8 @@ func _setup_test_battle() -> void:
 	# Destructible boulder
 	grid.set_tile(Vector2i(5, 5), false, 999, 0, true, 20)
 
+	terrain_renderer.setup(grid, "grassland")
+
 	# Player units
 	var squire_data := _create_test_fighter("Squire", 50, 15, 12, 8, 5, 6, 8, 4, 2,
 		[Enums.ReactionType.OPPORTUNITY_ATTACK, Enums.ReactionType.FLANKING_STRIKE, Enums.ReactionType.BODYGUARD])
@@ -164,6 +167,8 @@ func _setup_from_config(config: BattleConfig) -> void:
 	for t in terrain_overrides:
 		var pos: Vector2i = t["pos"]
 		grid.set_tile(pos, t["walkable"], t["cost"], t["elevation"], t["blocks_los"], t.get("destructible_hp", 0))
+
+	terrain_renderer.setup(grid, config.environment)
 
 	for entry in config.player_units:
 		var unit := _spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"])
