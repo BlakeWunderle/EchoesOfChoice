@@ -8,12 +8,12 @@ func _ready() -> void:
 	load_button.pressed.connect(_on_load)
 	title_button.pressed.connect(_on_title)
 
-	load_button.visible = GameState.has_save()
+	var slot := GameState.current_slot
+	load_button.visible = slot >= 0 and GameState.has_save(slot)
 
 
 func _on_load() -> void:
-	if GameState.load_game():
-		SceneManager.go_to_overworld()
+	SceneManager.load_game_slot(GameState.current_slot)
 
 
 func _on_title() -> void:

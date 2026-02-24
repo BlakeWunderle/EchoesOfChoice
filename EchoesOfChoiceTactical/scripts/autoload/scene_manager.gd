@@ -29,9 +29,21 @@ func change_scene(path: String, fade_duration: float = 0.4) -> void:
 	transition_finished.emit()
 
 
-func start_new_game() -> void:
+func start_new_game(slot: int) -> void:
+	GameState.current_slot = slot
 	GameState.reset_for_new_game()
 	change_scene("res://scenes/story/CharacterCreation.tscn")
+
+
+func load_game_slot(slot: int) -> void:
+	if GameState.load_game(slot):
+		change_scene("res://scenes/overworld/OverworldMap.tscn")
+
+
+func continue_game() -> void:
+	var slot := GameState.get_last_used_slot()
+	if slot >= 0:
+		load_game_slot(slot)
 
 
 func go_to_tutorial_battle() -> void:
