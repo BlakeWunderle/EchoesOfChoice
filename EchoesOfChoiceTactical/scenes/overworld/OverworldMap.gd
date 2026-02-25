@@ -12,13 +12,40 @@ const NODE_RADIUS := 18.0
 const REVEAL_RADIUS := 90.0
 const FOG_COLOR := Color(0.04, 0.04, 0.06, 0.92)
 const PATH_COLOR := Color(0.45, 0.4, 0.35, 0.7)
+const PATH_BORDER_COLOR := Color(0.2, 0.18, 0.14, 0.8)
+const PATH_DASH_COLOR := Color(0.6, 0.55, 0.45, 0.35)
 const NODE_AVAILABLE_COLOR := Color(1.0, 0.85, 0.3)
 const NODE_COMPLETED_COLOR := Color(0.35, 0.7, 0.35)
+
+# Terrain-based ring tint colors for node markers
+const TERRAIN_RING_COLORS: Dictionary = {
+	MapData.Terrain.CASTLE: Color(0.5, 0.48, 0.45),
+	MapData.Terrain.CITY: Color(0.55, 0.45, 0.35),
+	MapData.Terrain.CITY_GATE: Color(0.55, 0.45, 0.35),
+	MapData.Terrain.FOREST: Color(0.25, 0.55, 0.2),
+	MapData.Terrain.DEEP_FOREST: Color(0.15, 0.4, 0.12),
+	MapData.Terrain.SMOKE: Color(0.45, 0.35, 0.25),
+	MapData.Terrain.CLEARING: Color(0.4, 0.6, 0.3),
+	MapData.Terrain.SHORE: Color(0.3, 0.5, 0.7),
+	MapData.Terrain.BEACH: Color(0.7, 0.65, 0.45),
+	MapData.Terrain.RUINS: Color(0.5, 0.47, 0.42),
+	MapData.Terrain.CAVE: Color(0.35, 0.3, 0.28),
+	MapData.Terrain.PORTAL: Color(0.5, 0.3, 0.7),
+	MapData.Terrain.CIRCUS: Color(0.7, 0.35, 0.25),
+	MapData.Terrain.CEMETERY: Color(0.35, 0.38, 0.34),
+	MapData.Terrain.LAB: Color(0.4, 0.42, 0.5),
+	MapData.Terrain.ARMY_CAMP: Color(0.45, 0.38, 0.28),
+	MapData.Terrain.MIRROR: Color(0.35, 0.4, 0.55),
+	MapData.Terrain.SHRINE: Color(0.4, 0.55, 0.75),
+	MapData.Terrain.VILLAGE: Color(0.4, 0.5, 0.3),
+	MapData.Terrain.INN: Color(0.55, 0.42, 0.28),
+}
 
 var _node_buttons: Dictionary = {}
 var _selected_node_id: String = ""
 var _pulse_time: float = 0.0
 var _last_event_node: String = ""
+var _grass_tex: Texture2D
 
 var _travel_event_scene: PackedScene = preload("res://scenes/story/TravelEvent.tscn")
 
@@ -27,6 +54,11 @@ func _ready() -> void:
 	MusicManager.play_context(MusicManager.MusicContext.EXPLORATION)
 	info_panel.visible = false
 	enter_button.pressed.connect(_on_enter_battle)
+
+	# Load grass background texture for revealed areas
+	var grass_path := "res://assets/art/tilesets/overworld/path_road/PNG_Tiled/Ground_grass.png"
+	if ResourceLoader.exists(grass_path):
+		_grass_tex = load(grass_path) as Texture2D
 
 	if not GameState.is_battle_completed("castle"):
 		GameState.complete_battle("castle")
@@ -103,6 +135,8 @@ func _create_node_button(nid: String, node_data: Dictionary) -> void:
 		marker.color = Color(0.4, 0.4, 0.4)
 	marker.radius = NODE_RADIUS
 	marker.is_battle = node_data.get("is_battle", true)
+	var terrain: int = node_data.get("terrain", -1)
+	marker.ring_color = TERRAIN_RING_COLORS.get(terrain, Color(0.3, 0.3, 0.3))
 	btn.add_child(marker)
 
 	add_child(btn)
@@ -256,45 +290,82 @@ func _center_camera_on_latest() -> void:
 func _draw() -> void:
 	var revealed := MapData.get_all_revealed_nodes()
 
-	# Draw revealed area glow (lighter terrain around explored nodes)
+	# Draw revealed area glow — soft gradient rings around explored nodes
 	for nid in revealed:
 		var pos: Vector2 = MapData.NODES[nid]["pos"]
-		draw_circle(pos, REVEAL_RADIUS, Color(0.16, 0.2, 0.13, 0.35))
-		draw_circle(pos, REVEAL_RADIUS * 0.6, Color(0.18, 0.22, 0.14, 0.2))
+		# Outer soft edge
+		draw_circle(pos, REVEAL_RADIUS * 1.1, Color(0.14, 0.18, 0.1, 0.15))
+		# Main reveal
+		draw_circle(pos, REVEAL_RADIUS, Color(0.16, 0.2, 0.13, 0.3))
+		# Inner brighter zone
+		draw_circle(pos, REVEAL_RADIUS * 0.65, Color(0.18, 0.24, 0.14, 0.2))
+		draw_circle(pos, REVEAL_RADIUS * 0.35, Color(0.2, 0.26, 0.15, 0.1))
 
-	# Draw paths between revealed connected nodes (road with border)
+	# Draw paths between revealed connected nodes (road with dark border + fill + dashes)
 	for nid in revealed:
 		var node_data: Dictionary = MapData.NODES[nid]
 		var from_pos: Vector2 = node_data["pos"]
 		for next_id in node_data.get("next_nodes", []):
 			if next_id in revealed:
 				var to_pos: Vector2 = MapData.NODES[next_id]["pos"]
-				draw_line(from_pos, to_pos, PATH_COLOR.darkened(0.3), 5.0, true)
-				draw_line(from_pos, to_pos, PATH_COLOR, 3.0, true)
+				# Dark road border
+				draw_line(from_pos, to_pos, PATH_BORDER_COLOR, 7.0, true)
+				# Road fill
+				draw_line(from_pos, to_pos, PATH_COLOR, 5.0, true)
+				# Center dashes for cobblestone hint
+				_draw_road_dashes(from_pos, to_pos)
+
+
+func _draw_road_dashes(from: Vector2, to: Vector2) -> void:
+	var dir := (to - from).normalized()
+	var length := from.distance_to(to)
+	var dash_len := 6.0
+	var gap_len := 8.0
+	var offset := NODE_RADIUS + 4.0  # start past the node circle
+	while offset < length - NODE_RADIUS - 4.0:
+		var start := from + dir * offset
+		var end_offset := minf(offset + dash_len, length - NODE_RADIUS - 4.0)
+		var end := from + dir * end_offset
+		draw_line(start, end, PATH_DASH_COLOR, 1.5, true)
+		offset += dash_len + gap_len
 
 
 # Node marker inner class
 class _NodeMarker extends Node2D:
 	var color := Color.WHITE
+	var ring_color := Color(0.3, 0.3, 0.3)
 	var radius := 18.0
 	var is_battle := true
 
 	func _draw() -> void:
+		# Drop shadow
+		draw_circle(Vector2(2, 3), radius + 1, Color(0.0, 0.0, 0.0, 0.35))
+		# Terrain-tinted outer ring
+		draw_circle(Vector2.ZERO, radius + 3, ring_color.darkened(0.15))
 		# Outer border
-		draw_circle(Vector2.ZERO, radius + 2, Color(0.1, 0.1, 0.1, 0.8))
+		draw_circle(Vector2.ZERO, radius + 1, Color(0.1, 0.1, 0.1, 0.8))
 		# Main circle
 		draw_circle(Vector2.ZERO, radius, color.darkened(0.2))
 		# Inner highlight
-		draw_circle(Vector2.ZERO, radius * 0.7, color)
-		# Battle = sword cross, Town = house shape (small icon hint)
+		draw_circle(Vector2.ZERO, radius * 0.65, color)
+		# Small specular highlight
+		draw_circle(Vector2(-3, -4), radius * 0.25, Color(1, 1, 1, 0.15))
+		# Battle = sword cross, Town = house shape (larger, cleaner icons)
 		if is_battle:
-			draw_line(Vector2(-5, -5), Vector2(5, 5), Color(0.1, 0.1, 0.1, 0.6), 2.0)
-			draw_line(Vector2(5, -5), Vector2(-5, 5), Color(0.1, 0.1, 0.1, 0.6), 2.0)
+			# Crossed swords
+			draw_line(Vector2(-6, -6), Vector2(6, 6), Color(0.1, 0.1, 0.1, 0.7), 2.5)
+			draw_line(Vector2(6, -6), Vector2(-6, 6), Color(0.1, 0.1, 0.1, 0.7), 2.5)
+			# Sword hilts
+			draw_line(Vector2(-4, -2), Vector2(-2, -4), Color(0.1, 0.1, 0.1, 0.5), 1.5)
+			draw_line(Vector2(4, -2), Vector2(2, -4), Color(0.1, 0.1, 0.1, 0.5), 1.5)
 		else:
+			# House with peaked roof
 			var house := PackedVector2Array([
-				Vector2(-5, 4), Vector2(-5, -1), Vector2(0, -6), Vector2(5, -1), Vector2(5, 4),
+				Vector2(-6, 5), Vector2(-6, -1), Vector2(0, -7), Vector2(6, -1), Vector2(6, 5),
 			])
-			draw_colored_polygon(house, Color(0.1, 0.1, 0.1, 0.5))
+			draw_colored_polygon(house, Color(0.1, 0.1, 0.1, 0.55))
+			# Door
+			draw_rect(Rect2(-2, 0, 4, 5), Color(0.2, 0.15, 0.1, 0.5))
 
 
 # Inline terrain drawer class
