@@ -57,11 +57,15 @@ func _build_main_menu() -> void:
 	_load_btn.pressed.connect(_on_load_pressed)
 	_menu_panel.add_child(_load_btn)
 
+	var credits_btn := _make_button("Credits")
+	credits_btn.pressed.connect(_on_credits_pressed)
+	_menu_panel.add_child(credits_btn)
+
 	var quit_btn := _make_button("Quit")
 	quit_btn.pressed.connect(func() -> void: get_tree().quit())
 	_menu_panel.add_child(quit_btn)
 
-	_wire_focus([_new_game_btn, _continue_btn, _load_btn, quit_btn])
+	_wire_focus([_new_game_btn, _continue_btn, _load_btn, credits_btn, quit_btn])
 
 
 func _build_slot_panel() -> void:
@@ -230,6 +234,11 @@ func _on_continue_pressed() -> void:
 func _on_load_pressed() -> void:
 	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_show_slot_picker(_MenuState.SLOT_PICKER_LOAD)
+
+
+func _on_credits_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
+	SceneManager.go_to_credits()
 
 
 func _on_slot_pressed(slot: int) -> void:

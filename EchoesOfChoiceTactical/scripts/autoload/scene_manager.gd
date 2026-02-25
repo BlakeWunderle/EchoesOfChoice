@@ -86,3 +86,7 @@ func go_to_party_select() -> void:
 
 func go_to_game_over() -> void:
 	change_scene("res://scenes/ui/GameOver.tscn")
+
+
+func go_to_credits() -> void:
+	change_scene("res://scenes/story/Credits.tscn")

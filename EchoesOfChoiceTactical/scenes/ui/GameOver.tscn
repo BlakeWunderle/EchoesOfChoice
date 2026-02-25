@@ -75,3 +75,8 @@ text = "Load Save"
 layout_mode = 2
 custom_minimum_size = Vector2(140, 40)
 text = "Title Screen"
+
+[node name="CreditsButton" type="Button" parent="Panel/MarginContainer/VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 40)
+text = "Credits"
