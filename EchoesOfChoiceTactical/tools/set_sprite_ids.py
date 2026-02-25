@@ -27,65 +27,69 @@ ENEMIES_DIR = PROJECT_DIR / "resources" / "enemies"
 # ---------------------------------------------------------------------------
 
 CLASS_SPRITE_IDS: dict[str, str] = {
-    # Melee/Physical -> Swordsman (strong match)
-    "squire": "swordsman_1",
-    "martial_artist": "swordsman_2",
-    "duelist": "swordsman_3",
-    "warden": "swordsman_4",
-    "monk": "swordsman_5",
-    "knight": "swordsman_6",
-    "bastion": "swordsman_7",
-    "dragoon": "swordsman_8",
-    "cavalry": "swordsman_9",
-    "paladin": "swordsman_8",
-    "ninja": "swordsman_3",
-    "mercenary": "swordsman_4",
-    "ranger": "swordsman_2",
-    "hunter": "swordsman_5",
-    "dervish": "swordsman_3",
+    # --- Martial Artist tree (unarmed/light fighters) ---
+    "martial_artist": "swordsman_2",   # Base: light fighter
+    "monk": "swordsman_5",             # T1: disciplined fighter
+    "dervish": "bandit_2",             # T1: fast rogue-like (thug)
+    "mercenary": "swordsman_4",        # T1: hired sword
+    "hunter": "bandit_3",              # T1: tracking/ranged (robber)
+    "tempest": "swordsman_6",          # T2: storm warrior
+    "ninja": "bandit_1",               # T2: assassin (perfect fit)
+    "duelist": "swordsman_3",          # T2: precision swordsman
+    "dragoon": "swordsman_8",          # T2: lance/heavy
+    "cavalry": "swordsman_9",          # T2: mounted heavy
+    "squire": "swordsman_1",           # T2: beginner knight
+    "knight": "swordsman_7",           # T2: full plate knight
+    "paladin": "swordsman_8",          # T2: holy knight
+    "warden": "swordsman_4",           # T2: defensive tank
+    "bastion": "swordsman_7",          # T2: ultimate tank
+    "ranger": "bandit_3",              # T2: bow/nature (robber)
+    "firebrand": "swordsman_6",        # T2: fire sword fighter
 
-    # Caster/Robed -> Vampire (thematic match)
-    "mage": "vampire_1",
-    "firebrand": "vampire_1",
-    "stormcaller": "vampire_1",
-    "pyromancer": "vampire_1",
-    "electromancer": "vampire_1",
-    "thaumaturge": "vampire_1",
-    "chronomancer": "vampire_1",
-    "acolyte": "vampire_2",
-    "mistweaver": "vampire_2",
-    "scholar": "vampire_2",
-    "artificer": "vampire_2",
-    "cosmologist": "vampire_2",
-    "geomancer": "vampire_2",
-    "alchemist": "vampire_2",
-    "technomancer": "vampire_2",
-    "priest": "vampire_2",
-    "cryomancer": "vampire_3",
-    "hydromancer": "vampire_3",
-    "tempest": "vampire_3",
-    "illusionist": "vampire_3",
-    "astronomer": "vampire_3",
-    "arithmancer": "vampire_3",
-    "automaton": "vampire_3",
+    # --- Mage tree (casters) -> vampire now, wizard_* when downloaded ---
+    "mage": "vampire_1",               # Base: dark caster
+    "acolyte": "vampire_2",            # T1: apprentice healer
+    "herald": "vampire_1",             # T1: magical herald
+    "priest": "vampire_2",             # T2: holy caster
+    "thaumaturge": "vampire_1",        # T2: advanced mage
+    "illusionist": "vampire_3",        # T2: trickster mage
+    "chronomancer": "vampire_3",       # T2: time mage
+    "mistweaver": "vampire_2",         # T2: fog/mist mage
+    "pyromancer": "vampire_1",         # T2: fire mage
+    "cryomancer": "vampire_3",         # T2: ice mage
+    "electromancer": "vampire_1",      # T2: lightning mage
+    "hydromancer": "vampire_2",        # T2: water mage
+    "geomancer": "vampire_2",          # T2: earth mage
+    "stormcaller": "vampire_3",        # T2: storm mage
 
-    # Placeholder -> base_male/female_sword (need PixelLab)
-    "entertainer": "base_male_sword",
-    "bard": "base_male_sword",
-    "orator": "base_male_sword",
-    "warcrier": "base_male_sword",
-    "minstrel": "base_male_sword",
-    "chorister": "base_male_sword",
-    "elegist": "base_male_sword",
-    "laureate": "base_male_sword",
-    "herald": "base_male_sword",
-    "muse": "base_male_sword",
-    "mime": "base_male_sword",
-    "tinker": "base_male_sword",
-    "bombardier": "base_male_sword",
-    "siegemaster": "base_male_sword",
-    "prince": "base_male_sword",
-    "princess": "base_female_sword",
+    # --- Entertainer tree (performers) ---
+    "entertainer": "base_male_sword",  # Base: generic performer
+    "bard": "base_male_sword",         # T1: musician
+    "minstrel": "base_male_sword",     # T1: traveling musician
+    "chorister": "base_male_sword",    # T2: choir singer
+    "elegist": "base_male_sword",      # T2: mourning poet
+    "laureate": "base_male_sword",     # T2: acclaimed poet
+    "mime": "bandit_1",                # T2: silent performer (masked)
+    "muse": "base_female_sword",       # T2: inspiring artist
+    "orator": "base_male_sword",       # T2: speechmaker
+    "warcrier": "swordsman_4",         # T2: battle shouter (armored)
+
+    # --- Scholar tree (inventors/academics) ---
+    "scholar": "vampire_2",            # Base: robed academic
+    "alchemist": "vampire_2",          # T1: potion maker
+    "artificer": "vampire_3",          # T1: magical crafter
+    "tinker": "base_male_sword",       # T2: mechanical inventor
+    "technomancer": "vampire_3",       # T2: tech + magic
+    "bombardier": "swordsman_3",       # T2: explosives (light armor)
+    "siegemaster": "swordsman_7",      # T2: heavy siege
+    "automaton": "vampire_3",          # T2: construct
+    "astronomer": "vampire_2",         # T2: stargazer
+    "cosmologist": "vampire_3",        # T2: cosmic scholar
+    "arithmancer": "vampire_1",        # T2: math mage
+
+    # --- Royal classes ---
+    "prince": "swordsman_9",           # Royal: armored prince
+    "princess": "base_female_sword",   # Royal: base female
 }
 
 ENEMY_SPRITE_IDS: dict[str, str] = {
@@ -254,48 +258,46 @@ def set_sprite_id_in_tres(filepath: Path, sprite_id: str) -> bool:
 
 
 def print_coverage_report() -> None:
-    """Print which classes need PixelLab sprites."""
-    placeholder_classes = {
-        cls: sid for cls, sid in CLASS_SPRITE_IDS.items()
-        if sid.startswith("base_")
+    """Print sprite coverage by pack type."""
+    groups: dict[str, list[str]] = {
+        "swordsman": [],
+        "bandit": [],
+        "vampire": [],
+        "base (placeholder)": [],
     }
-    swordsman_classes = {
-        cls: sid for cls, sid in CLASS_SPRITE_IDS.items()
-        if sid.startswith("swordsman_")
-    }
-    vampire_classes = {
-        cls: sid for cls, sid in CLASS_SPRITE_IDS.items()
-        if sid.startswith("vampire_")
-    }
+    for cls, sid in sorted(CLASS_SPRITE_IDS.items()):
+        if sid.startswith("swordsman_"):
+            groups["swordsman"].append(cls)
+        elif sid.startswith("bandit_"):
+            groups["bandit"].append(cls)
+        elif sid.startswith("vampire_"):
+            groups["vampire"].append(cls)
+        else:
+            groups["base (placeholder)"].append(cls)
 
     print("\n" + "=" * 60)
     print("SPRITE COVERAGE REPORT")
     print("=" * 60)
 
     print(f"\nPlayer Classes ({len(CLASS_SPRITE_IDS)} total):")
-    print(f"  Strong match (swordsman):  {len(swordsman_classes)} classes")
-    print(f"  Thematic match (vampire):  {len(vampire_classes)} classes")
-    print(f"  Placeholder (base):        {len(placeholder_classes)} classes")
+    for group, classes in groups.items():
+        print(f"  {group:20s}: {len(classes):2d} classes")
 
-    print(f"\nEnemies ({len(ENEMY_SPRITE_IDS)} total):")
-    print(f"  All enemies mapped.")
+    print(f"\nEnemies ({len(ENEMY_SPRITE_IDS)} total): all mapped.")
 
-    print(f"\n--- CLASSES NEEDING PIXELLAB ({len(placeholder_classes)}) ---")
-    print(f"These use base_male/female_sword as placeholder:")
-    for cls in sorted(placeholder_classes.keys()):
-        print(f"  {cls}")
+    placeholder_classes = groups["base (placeholder)"]
+    if placeholder_classes:
+        print(f"\n--- STILL NEED SPRITES ({len(placeholder_classes)}) ---")
+        for cls in sorted(placeholder_classes):
+            print(f"  {cls}")
 
-    # Group by needed archetype
-    archetypes = {
-        "Bard": ["entertainer", "bard", "warcrier", "minstrel"],
-        "Orator": ["orator", "chorister", "elegist", "laureate", "herald", "muse"],
-        "Dancer": ["mime"],
-        "Engineer": ["tinker", "bombardier", "siegemaster"],
-        "Prince": ["prince"],
-        "Princess": ["princess"],
-    }
+    print("\nUpgrade path: wizard_*/archer_* packs will replace vampire_* for mages")
+    print("=" * 60)
 
-    print(f"\nNeeded PixelLab archetypes (~6 unique generations):")
+    # This section is for the future -- no need to list archetypes
+    archetypes: dict[str, list[str]] = {}
+
+    print(f"\nNeeded custom archetypes:")
     for archetype, classes in archetypes.items():
         present = [c for c in classes if c in placeholder_classes]
         if present:

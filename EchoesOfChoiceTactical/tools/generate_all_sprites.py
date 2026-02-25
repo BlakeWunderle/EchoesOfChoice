@@ -23,6 +23,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = SCRIPT_DIR.parent
 ASSETS_DIR = PROJECT_DIR / "assets" / "art" / "sprites"
 OUTPUT_DIR = ASSETS_DIR / "spriteframes"
+PROCESSED_DIR = ASSETS_DIR / "processed"
 
 # Animation keywords for classifying PNG filenames
 ANIM_KEYWORDS = {
@@ -48,8 +49,13 @@ SPRITES: dict[str, dict] = {}
 
 
 def _reg(sprite_id: str, rel_path: str, fw: int = 64, fh: int = 64) -> None:
-    """Register a sprite in the global registry."""
-    SPRITES[sprite_id] = {"path": rel_path, "fw": fw, "fh": fh}
+    """Register a pixel-art sprite (single sheet, 4 direction rows)."""
+    SPRITES[sprite_id] = {"path": rel_path, "fw": fw, "fh": fh, "mode": "sheet"}
+
+
+def _reg_4dir(sprite_id: str, rel_path: str, target_size: int = 64) -> None:
+    """Register a 4-direction vector sprite (per-direction files, needs compositing)."""
+    SPRITES[sprite_id] = {"path": rel_path, "mode": "4dir", "target": target_size}
 
 
 # --- Characters: Swordsman (9 variants, 64x64) ---
@@ -71,6 +77,33 @@ for i in range(1, 4):
 # --- Characters: Base male/female sword (64x64) ---
 _reg("base_male_sword", "characters/base_male/PNG/Sword/Without_shadow")
 _reg("base_female_sword", "characters/base_female/PNG/Sword/Without_shadow")
+
+# --- Characters: Bandit (3 variants, 4-direction vector -> 64x64) ---
+_reg_4dir("bandit_1", "characters/bandit/Assassin/PNG/Spritesheets")
+_reg_4dir("bandit_2", "characters/bandit/Thug/PNG/Spritesheets")
+_reg_4dir("bandit_3", "characters/bandit/Robber/PNG/Spritesheets")
+
+# --- Characters: Roguelike Kit (pixel art, paths TBD after download) ---
+_reg("roguelike_wizard", "characters/roguelike_kit/Wizard/Without_shadow")
+_reg("roguelike_archer", "characters/roguelike_kit/Archer/Without_shadow")
+_reg("roguelike_knight", "characters/roguelike_kit/Knight/Without_shadow")
+
+# --- Characters: Wizard 4-direction (vector, paths TBD after download) ---
+_reg_4dir("wizard_1", "characters/wizard_male/Wizard1/PNG/Spritesheets")
+_reg_4dir("wizard_2", "characters/wizard_male/Wizard2/PNG/Spritesheets")
+_reg_4dir("wizard_f1", "characters/wizard_female/Wizard1/PNG/Spritesheets")
+_reg_4dir("wizard_f2", "characters/wizard_female/Wizard2/PNG/Spritesheets")
+
+# --- Characters: Archer 4-direction (vector, paths TBD after download) ---
+_reg_4dir("archer_1", "characters/archer/Archer1/PNG/Spritesheets")
+_reg_4dir("archer_2", "characters/archer/Archer2/PNG/Spritesheets")
+
+# --- Characters: Warrior 4-direction (vector, paths TBD after download) ---
+_reg_4dir("warrior_1", "characters/warrior_pack/Knight/PNG/Spritesheets")
+_reg_4dir("warrior_2", "characters/warrior_pack/Mage/PNG/Spritesheets")
+_reg_4dir("warrior_3", "characters/warrior_pack/Archer/PNG/Spritesheets")
+_reg_4dir("warrior_free_1", "characters/warrior_free/Warrior1/PNG/Spritesheets")
+_reg_4dir("warrior_free_2", "characters/warrior_free/Warrior2/PNG/Spritesheets")
 
 # --- Enemies: Standard 64x64 ---
 _enemy_packs_64 = {
@@ -112,6 +145,140 @@ for pack, (prefix, count) in _enemy_packs_128.items():
 
 
 # ---------------------------------------------------------------------------
+# 4-Direction Compositing (vector packs -> pixel-art-style sheets)
+# ---------------------------------------------------------------------------
+
+# Maps CraftPix direction prefixes to our row order (down=0, left=1, right=2, up=3)
+_DIR_MAP = {"Front": 0, "Left": 1, "Right": 2, "Back": 3}
+
+# Maps CraftPix animation names to our standard names
+_4DIR_ANIM_MAP = {
+    "Idle": "idle",
+    "Walking": "walk",
+    "Running": "walk",  # fallback
+    "Attacking": "attack",
+    "Hurt": "hurt",
+    "Dying": "death",
+}
+
+
+def _detect_frame_size(dir_path: Path) -> int:
+    """Detect frame size from any single-frame PNG sequence file."""
+    seq_dirs = sorted(dir_path.parent.glob("PNG Sequences/*/"))
+    if not seq_dirs:
+        # Fallback: check if there's a sibling PNG Sequences directory
+        parent_png = dir_path.parent
+        seq_dirs = sorted(parent_png.glob("../PNG Sequences/*/")) if parent_png.exists() else []
+    for seq_dir in seq_dirs:
+        frames = sorted(seq_dir.glob("*.png"))
+        if frames:
+            img = Image.open(frames[0])
+            return img.width  # Assume square frames
+    return 480  # Default for CraftPix vector packs
+
+
+def composite_4dir(sprite_id: str, dir_path: Path, target: int) -> Path | None:
+    """Composite per-direction spritesheets into single multi-row sheets.
+
+    Reads "Front - Idle.png", "Back - Walking.png" etc., downscales frames
+    to `target` size, and writes one composite PNG per animation to PROCESSED_DIR.
+    Returns the processed directory path, or None on failure.
+    """
+    out_dir = PROCESSED_DIR / sprite_id
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # Discover available per-direction spritesheet files
+    png_files = sorted(dir_path.glob("*.png"))
+    if not png_files:
+        return None
+
+    # Group files by animation: {anim_name: {dir_index: Path}}
+    anim_groups: dict[str, dict[int, Path]] = {}
+    death_file: Path | None = None
+
+    for png in png_files:
+        name = png.stem  # e.g. "Front - Idle" or "Dying"
+
+        # Handle non-directional death animation
+        if "Dying" in name or "Death" in name:
+            death_file = png
+            continue
+
+        # Skip blinking variants
+        if "Blinking" in name:
+            continue
+
+        # Parse "Direction - Animation"
+        parts = name.split(" - ", 1)
+        if len(parts) != 2:
+            continue
+
+        dir_name, anim_name = parts[0].strip(), parts[1].strip()
+        if dir_name not in _DIR_MAP:
+            continue
+
+        # Map to standard animation name
+        std_anim = _4DIR_ANIM_MAP.get(anim_name)
+        if not std_anim:
+            continue
+
+        dir_idx = _DIR_MAP[dir_name]
+        if std_anim not in anim_groups:
+            anim_groups[std_anim] = {}
+        anim_groups[std_anim][dir_idx] = png
+
+    if not anim_groups:
+        return None
+
+    # Detect source frame size
+    frame_size = _detect_frame_size(dir_path)
+
+    # Process each animation into a composite sheet
+    generated_any = False
+    for anim_name in ANIM_ORDER:
+        dir_files = anim_groups.get(anim_name)
+        if anim_name == "death" and not dir_files and death_file:
+            # Use the non-directional Dying file for all 4 directions
+            dir_files = {i: death_file for i in range(4)}
+        if not dir_files:
+            continue
+
+        # Read one sheet to get frame count
+        sample_path = next(iter(dir_files.values()))
+        sample_img = Image.open(sample_path)
+        src_cols = sample_img.width // frame_size
+        src_rows = sample_img.height // frame_size
+        frame_count = src_cols * src_rows
+
+        # Cap frames to keep sheet reasonable (max 12 per direction)
+        frame_count = min(frame_count, 12)
+
+        # Create composite: 4 rows (directions), frame_count columns
+        composite = Image.new("RGBA", (frame_count * target, 4 * target), (0, 0, 0, 0))
+
+        for dir_idx in range(4):
+            src_path = dir_files.get(dir_idx)
+            if not src_path:
+                continue
+            src_img = Image.open(src_path)
+
+            for f in range(frame_count):
+                col = f % src_cols
+                row = f // src_cols
+                x = col * frame_size
+                y = row * frame_size
+                frame = src_img.crop((x, y, x + frame_size, y + frame_size))
+                frame = frame.resize((target, target), Image.LANCZOS)
+                composite.paste(frame, (f * target, dir_idx * target))
+
+        out_path = out_dir / f"{anim_name}.png"
+        composite.save(out_path, "PNG")
+        generated_any = True
+
+    return out_dir if generated_any else None
+
+
+# ---------------------------------------------------------------------------
 # .tres Generation
 # ---------------------------------------------------------------------------
 
@@ -127,9 +294,10 @@ def should_skip(filename: str) -> bool:
 
 def classify_file(filename: str) -> str:
     """Map a filename to an animation name based on keywords."""
+    lower = filename.lower()
     for anim_name, keywords in ANIM_KEYWORDS.items():
         for keyword in keywords:
-            if keyword in filename:
+            if keyword.lower() in lower:
                 return anim_name
     return ""
 
@@ -152,7 +320,7 @@ def discover_anims(dir_path: Path) -> dict[str, Path]:
             if should_skip(png.name):
                 continue
             for keyword in WALK_FALLBACK:
-                if keyword in png.name:
+                if keyword.lower() in png.name.lower():
                     anim_files["walk"] = png
                     break
             if "walk" in anim_files:
@@ -293,17 +461,33 @@ def main() -> None:
     print(f"Output: {OUTPUT_DIR}")
     print()
 
+    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
     for sprite_id, config in sorted(sprites_to_gen.items()):
+        mode = config.get("mode", "sheet")
         dir_path = ASSETS_DIR / config["path"]
-        fw = config["fw"]
-        fh = config["fh"]
 
         if not dir_path.is_dir():
-            print(f"  SKIP {sprite_id}: directory not found ({dir_path})")
+            print(f"  SKIP {sprite_id}: directory not found")
             skipped += 1
             continue
 
-        anim_files = discover_anims(dir_path)
+        if mode == "4dir":
+            # Composite per-direction sheets into standard format
+            target = config["target"]
+            processed = composite_4dir(sprite_id, dir_path, target)
+            if not processed:
+                print(f"  FAIL {sprite_id}: 4-dir compositing failed")
+                failed += 1
+                continue
+            # Now discover anims from the processed directory
+            anim_files = discover_anims(processed)
+            fw = fh = target
+        else:
+            fw = config["fw"]
+            fh = config["fh"]
+            anim_files = discover_anims(dir_path)
+
         if not anim_files:
             print(f"  SKIP {sprite_id}: no animation PNGs found")
             skipped += 1
@@ -319,10 +503,10 @@ def main() -> None:
 
         if args.dry_run:
             anim_names = [a for a in ANIM_ORDER if a in anim_files]
-            print(f"  [DRY] {sprite_id}: {', '.join(anim_names)} ({fw}x{fh})")
+            label = f"4dir->{fw}x{fh}" if mode == "4dir" else f"{fw}x{fh}"
+            print(f"  [DRY] {sprite_id}: {', '.join(anim_names)} ({label})")
         else:
             output_path.write_text(tres_content, encoding="utf-8")
-            # Count animations in output
             anim_count = tres_content.count('"name": &"')
             print(f"  OK   {sprite_id}: {anim_count} animations -> {output_path.name}")
 
