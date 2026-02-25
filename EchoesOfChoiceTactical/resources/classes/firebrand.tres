@@ -10,7 +10,7 @@
 script = ExtResource("1")
 class_id = "firebrand"
 class_display_name = "Firebrand"
-sprite_id = "vampire_1"
+sprite_id = "swordsman_6"
 base_max_health = 49
 base_max_mana = 19
 base_physical_attack = 14

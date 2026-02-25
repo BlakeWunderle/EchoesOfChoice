@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "technomancer"
 class_display_name = "Technomancer"
-sprite_id = "vampire_2"
+sprite_id = "vampire_3"
 base_max_health = 59
 base_max_mana = 14
 base_physical_attack = 18

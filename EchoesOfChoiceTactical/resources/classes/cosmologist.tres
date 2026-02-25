@@ -11,7 +11,7 @@
 script = ExtResource("1")
 class_id = "cosmologist"
 class_display_name = "Cosmologist"
-sprite_id = "vampire_2"
+sprite_id = "vampire_3"
 base_max_health = 44
 base_max_mana = 14
 base_physical_attack = 7
