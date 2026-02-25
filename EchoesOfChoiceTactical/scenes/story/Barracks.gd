@@ -309,6 +309,7 @@ func _finish_recruitment() -> void:
 	await dialogue_box.dialogue_finished
 
 	GameState.set_flag("party_formed")
+	GameState.auto_save()
 	SceneManager.go_to_title_screen()
 
 

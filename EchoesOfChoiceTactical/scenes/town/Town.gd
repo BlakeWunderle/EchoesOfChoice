@@ -329,4 +329,5 @@ func _on_rest_pressed() -> void:
 
 func _on_continue() -> void:
 	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
+	GameState.auto_save()
 	SceneManager.go_to_overworld()

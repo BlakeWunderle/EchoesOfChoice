@@ -756,12 +756,14 @@ func _on_battle_ended(player_won: bool) -> void:
 
 	if GameState.current_battle_id == "tutorial":
 		GameState.set_flag("tutorial_complete")
+		GameState.auto_save()
 		SceneManager.go_to_class_selection()
 	else:
 		if player_won and (_has_xp_gains(player_units_list) or gold_earned > 0 or fallen.size() > 0 or item_rewards_earned.size() > 0):
 			_show_battle_summary(player_units_list, gold_earned, fallen, item_rewards_earned)
 		elif player_won:
 			GameState.complete_battle(GameState.current_battle_id)
+			GameState.auto_save()
 			SceneManager.go_to_overworld()
 		else:
 			SceneManager.go_to_overworld()
@@ -780,6 +782,7 @@ func _show_battle_summary(units: Array, gold_earned: int = 0, fallen: Array[Stri
 	summary.setup(units, gold_earned, fallen, item_rewards)
 	summary.summary_closed.connect(func():
 		GameState.complete_battle(GameState.current_battle_id)
+		GameState.auto_save()
 		SceneManager.go_to_overworld()
 	)
 	$HUD.add_child(summary)

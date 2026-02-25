@@ -30,6 +30,8 @@ var player_jp: int = 0
 
 var fired_travel_event_ids: Array[String] = []
 
+const MAX_SAVE_SLOTS := 3
+const AUTOSAVE_SLOT := 3
 const REST_HEAL_FRACTION := 0.30
 
 var current_slot: int = -1  # -1 = not loaded from a slot yet
@@ -493,7 +495,15 @@ func save_game() -> void:
 	if current_slot < 0 or current_slot >= _save_manager.MAX_SAVE_SLOTS:
 		push_error("GameState.save_game: no valid slot selected (current_slot=%d)" % current_slot)
 		return
-	var save_data := {
+	_save_manager.save_to_slot(current_slot, _build_save_data())
+
+
+func auto_save() -> void:
+	_save_manager.save_to_slot(_save_manager.AUTOSAVE_SLOT, _build_save_data())
+
+
+func _build_save_data() -> Dictionary:
+	return {
 		"player_name": player_name,
 		"player_gender": player_gender,
 		"player_class_id": player_class_id,
@@ -513,7 +523,6 @@ func save_game() -> void:
 		"unlocked_classes": unlocked_classes,
 		"fired_travel_event_ids": fired_travel_event_ids,
 	}
-	_save_manager.save_to_slot(current_slot, save_data)
 
 
 func load_game(slot: int) -> bool:
@@ -565,6 +574,10 @@ func has_save(slot: int) -> bool:
 
 func has_any_save() -> bool:
 	return _save_manager.has_any_save()
+
+
+func has_autosave() -> bool:
+	return _save_manager.has_autosave()
 
 
 func get_last_used_slot() -> int:

@@ -55,4 +55,5 @@ func _ready() -> void:
 	await dialogue_box.dialogue_finished
 
 	GameState.set_flag("stranger_met")
+	GameState.auto_save()
 	SceneManager.go_to_barracks()

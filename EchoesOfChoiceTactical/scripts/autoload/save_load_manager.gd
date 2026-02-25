@@ -1,10 +1,14 @@
 class_name SaveLoadManager extends RefCounted
 
 const MAX_SAVE_SLOTS := 3
+const AUTOSAVE_SLOT := 3
 const SAVE_META_PATH := "user://save_meta.json"
+const AUTOSAVE_PATH := "user://autosave.json"
 
 
 func _save_path(slot: int) -> String:
+	if slot == AUTOSAVE_SLOT:
+		return AUTOSAVE_PATH
 	return "user://savegame_%d.json" % slot
 
 
@@ -13,7 +17,8 @@ func save_to_slot(slot: int, save_data: Dictionary) -> void:
 	if file:
 		file.store_string(JSON.stringify(save_data, "\t"))
 		file.close()
-	_write_save_meta(slot)
+	if slot != AUTOSAVE_SLOT:
+		_write_save_meta(slot)
 
 
 func load_from_slot(slot: int) -> Dictionary:
@@ -92,3 +97,7 @@ func get_save_summary(slot: int) -> Dictionary:
 		"progression_stage": int(d.get("progression_stage", 0)),
 		"gold": int(d.get("gold", 0)),
 	}
+
+
+func has_autosave() -> bool:
+	return FileAccess.file_exists(AUTOSAVE_PATH)

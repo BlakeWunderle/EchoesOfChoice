@@ -149,18 +149,19 @@ func _show_main_menu() -> void:
 	_slot_panel.visible = false
 	_confirm_panel.visible = false
 
-	var has_any := GameState.has_any_save()
-	_continue_btn.disabled = not has_any
-	_continue_btn.modulate.a = 1.0 if has_any else 0.5
-	_load_btn.disabled = not has_any
-	_load_btn.modulate.a = 1.0 if has_any else 0.5
+	var can_continue := GameState.has_autosave() or GameState.has_any_save()
+	_continue_btn.disabled = not can_continue
+	_continue_btn.modulate.a = 1.0 if can_continue else 0.5
+	var has_manual := GameState.has_any_save()
+	_load_btn.disabled = not has_manual
+	_load_btn.modulate.a = 1.0 if has_manual else 0.5
 
 	_menu_panel.visible = true
 	var t := create_tween()
 	t.tween_property(_menu_panel, "modulate:a", 1.0, 0.4)
 	await t.finished
 
-	if has_any:
+	if can_continue:
 		_continue_btn.grab_focus()
 	else:
 		_new_game_btn.grab_focus()

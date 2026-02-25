@@ -41,6 +41,10 @@ func load_game_slot(slot: int) -> void:
 
 
 func continue_game() -> void:
+	if GameState.has_autosave():
+		load_game_slot(GameState.AUTOSAVE_SLOT)
+		return
+	# Fallback to last-used manual slot for old saves
 	var slot := GameState.get_last_used_slot()
 	if slot >= 0:
 		load_game_slot(slot)
