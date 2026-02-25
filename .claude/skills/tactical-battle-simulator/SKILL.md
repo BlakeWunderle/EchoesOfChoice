@@ -110,9 +110,9 @@ The `BATTLES` dictionary in the tool covers **all Prog 0–6 battles**:
 
 ---
 
-## What the Tool Does NOT Check
+## What balance_check.gd Does NOT Check
 
-- Actual win rates (requires a full battle simulator — not yet built)
+- Actual win rates (use the full battle simulator below)
 - Grid positioning advantage/disadvantage
 - Reaction trigger frequency
 - AoE ability multi-target value
@@ -121,29 +121,97 @@ The `BATTLES` dictionary in the tool covers **all Prog 0–6 battles**:
 
 ---
 
-## Full Battle Simulator (Not Yet Built)
+## Full Battle Simulator: `battle_simulator.gd`
 
-When the automated simulator is built, it should:
+A headless battle simulator at `tools/sim/` that runs complete tactical battles with spatial positioning, ATB turns, movement, abilities, and reactions. Tests realistic party compositions per progression stage.
 
-1. Instantiate a battle from a `BattleConfig`
-2. Run all units as AI (player units use enemy AI decision logic)
-3. Resolve the battle to completion
-4. Record win/loss and per-unit stats
-5. Repeat N times per party composition
-6. Report aggregate win rates
+### How to Run
 
-### Key Differences from C# Simulator
+```
+"<godot_exe>" --path EchoesOfChoiceTactical --headless --script res://tools/sim/battle_simulator.gd -- [options]
+```
 
-| Aspect | C# Game | Tactical Game |
-|--------|---------|---------------|
-| Party size | 3 | 5 (player + 4 guards) |
-| Combat system | Turn-based text | Grid-based tactical |
-| Enemy data | C# constructors | `.tres` FighterData resources |
-| Level system | Auto-level | XP-based with catch-up |
+CLI options:
+```
+  <battle_id>        Simulate a specific battle (e.g. city_street)
+  --all              Simulate all battles
+  --progression N    Simulate all battles in progression N
+  --sims N           Simulations per party combo (default: 30)
+  --sample N         Max party combos to sample (default: 200)
+  --verbose          Show per-battle class breakdown and combo extremes
+  --list             List all available battles
+```
+
+### Examples
+
+Single battle quick check:
+```
+... --script res://tools/sim/battle_simulator.gd -- city_street --sims 10 --sample 20 --verbose
+```
+
+Full progression run:
+```
+... --script res://tools/sim/battle_simulator.gd -- --progression 2 --sims 30 --sample 200
+```
+
+All battles:
+```
+... --script res://tools/sim/battle_simulator.gd -- --all --sims 30
+```
+
+### Output Format
+
+```
+=== BATTLE SIMULATOR ===
+
+  --- city_street (80.0% vs 90.0% target) ---
+  WEAKEST:
+      0.0%  squire / squire / squire / entertainer / entertainer
+     40.0%  squire / squire / squire / squire / entertainer
+  STRONGEST:
+    100.0%  squire / squire / mage / mage / mage
+    100.0%  mage / entertainer / entertainer / scholar / scholar
+  CLASS BREAKDOWN:
+    scholar              100.0%
+    mage                  96.9%
+    entertainer           70.8%
+    squire                61.3%
+
+  SIMULATION SUMMARY
+  Battle                   Win Rate   Target     Range          Status
+  --------------------------------------------------------------------------
+  city_street               80.0%      90.0%       87% -   93%   TOO HARD
+
+  Passed: 0/1 | Sims/combo: 10 | Time: 6.6s
+```
+
+### Architecture (8 files under `tools/sim/`)
+
+| File | Purpose |
+|------|---------|
+| `sim_unit.gd` | Lightweight RefCounted replacement for Unit (no sprites/animations) |
+| `sim_reaction_system.gd` | Adapted ReactionSystem (no SFX, duck-typed) |
+| `sim_executor.gd` | Adapted AbilityExecutor (no SFX/XP, returns kill count) |
+| `sim_ai.gd` | Synchronous AI for both player and enemy units |
+| `sim_turn_manager.gd` | Synchronous ATB loop (speed→100 threshold, 200 round cap) |
+| `party_composer.gd` | Realistic party composition generator with archetype filtering |
+| `battle_stages.gd` | All 28 battle definitions with enemy rosters and targets |
+| `battle_simulator.gd` | Main entry point, CLI parsing, output formatting |
+
+### Design Decisions
+
+- **Both sides use same AI**: Conservative baseline. Win rates reflect stat/ability balance, not AI quality.
+- **Full spatial simulation**: Movement, AoE, reactions, terrain all modeled.
+- **Realistic comps only**: Require at least 2 distinct archetypes. Degenerate comps (5 healers) are filtered out.
+- **Reuses Grid and Combat as-is**: Both are RefCounted with no visual dependencies.
 
 ### Party Composition Space
 
-56 unique compositions at Tier 0 (multisets of 5 from 4 base classes). Expands greatly at Tier 1/2.
+| Progression | Tier | Pool Size | Max Combos | Realistic (filtered) |
+|-------------|------|-----------|------------|---------------------|
+| 0-1 | T0 | 4 classes | 56 | ~40 |
+| 2-3 | T1 | 16 classes | ~4000 | sampled to 200 |
+| 4-7 | T2 | 32+ classes | ~200K | sampled to 200 |
 
 ---
 
@@ -168,7 +236,10 @@ When the automated simulator is built, it should:
 
 | File | Purpose |
 |------|---------|
-| `EchoesOfChoiceTactical/tools/balance_check.gd` | **Static analysis tool — primary balance check** |
+| `EchoesOfChoiceTactical/tools/balance_check.gd` | Static analysis tool — damage/TTK checks |
+| `EchoesOfChoiceTactical/tools/sim/battle_simulator.gd` | **Full battle simulator — win rate testing** |
+| `EchoesOfChoiceTactical/tools/sim/battle_stages.gd` | Battle definitions for simulator (28 battles) |
+| `EchoesOfChoiceTactical/tools/sim/party_composer.gd` | Realistic party composition generator |
 | `EchoesOfChoiceTactical/scripts/data/battle_config.gd` | Battle configurations (enemy composition, placement) |
 | `EchoesOfChoiceTactical/resources/enemies/*.tres` | Enemy stat definitions |
 | `EchoesOfChoiceTactical/resources/abilities/*.tres` | Ability definitions |
