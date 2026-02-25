@@ -191,7 +191,7 @@ PACKS = [
     ("sprites/characters/chibi", "skeleton_shaman",
      "/product/chibi-skeleton-shaman-character-sprites/"),
     ("sprites/characters/chibi", "vampire_hunter",
-     "/product/chibi-vampire-hunter-chibi-character-sprites/"),
+     "/product/chibi-vampire-hunter-character-sprites/"),
     ("sprites/characters/chibi", "skeleton_nobleman",
      "/product/chibi-skeleton-nobleman-character-sprites/"),
     ("sprites/characters/chibi", "mimic",
