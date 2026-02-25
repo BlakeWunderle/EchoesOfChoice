@@ -118,8 +118,8 @@ Phases 1-7 COMPLETE (project setup, grid, units, movement, turns, abilities, com
 | 8 | COMPLETE | Tactical AI — enemy decision-making, ability scoring, movement positioning |
 | 9 | COMPLETE | UI — health bars, action menu, turn order, battle summary, cursor, combat animations (damage popups, hit flash, screen shake, health bar tweening) |
 | 10 | COMPLETE | Class porting — all 54 player classes, 170+ abilities, 67 enemies, 59 items as .tres |
-| 11 | MOSTLY COMPLETE | Story/world — battle configs, NPC conversations, travel events; missing: some dialogue polish |
-| 12 | PENDING | Final balance pass — all battles tuned; XP/JP curve verified; win-rate targets met |
+| 11 | COMPLETE | Story/world — battle configs (31 battles), NPC conversations (3 towns, 9 NPCs), travel events (8 types), all story scenes |
+| 12 | IN PROGRESS | Final balance pass — headless battle simulator, win-rate validation, difficulty gradient tuning |
 | 13 | MOSTLY COMPLETE | Art integration — 231 CraftPix packs downloaded (96 RPG top-down + 98 Chibi + 37 Tiny Fantasy); direction synthesis pipeline (synthesize_directions.py → generate_all_sprites.py 3dir mode → Unit.gd flip_h fallback); all 54 player classes mapped to unique Chibi sprites from 38 packs; 125 SpriteFrames generated; missing: palette swaps for same-archetype variants, enemy sprite upgrades to Chibi style |
 
 ## Reference Codebase
