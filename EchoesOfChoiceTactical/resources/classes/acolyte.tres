@@ -11,7 +11,7 @@
 script = ExtResource("1")
 class_id = "acolyte"
 class_display_name = "Acolyte"
-sprite_id = "vampire_2"
+sprite_id = "chibi_priest_1"
 base_max_health = 52
 base_max_mana = 19
 base_physical_attack = 12

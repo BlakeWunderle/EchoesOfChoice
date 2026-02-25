@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "geomancer"
 class_display_name = "Geomancer"
-sprite_id = "vampire_2"
+sprite_id = "chibi_human_shaman_1"
 base_max_health = 59
 base_max_mana = 16
 base_physical_attack = 9

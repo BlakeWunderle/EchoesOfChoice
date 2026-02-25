@@ -10,7 +10,7 @@
 script = ExtResource("1")
 class_id = "dervish"
 class_display_name = "Dervish"
-sprite_id = "bandit_2"
+sprite_id = "chibi_persian_arab_warriors_persian_and_arab_warriors_1"
 base_max_health = 49
 base_max_mana = 14
 base_physical_attack = 14

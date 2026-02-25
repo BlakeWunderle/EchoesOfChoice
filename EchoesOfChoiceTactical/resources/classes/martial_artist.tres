@@ -10,7 +10,7 @@
 script = ExtResource("1")
 class_id = "martial_artist"
 class_display_name = "Martial Artist"
-sprite_id = "swordsman_2"
+sprite_id = "chibi_monk_old_warrior_monk_guy"
 base_max_health = 59
 base_max_mana = 9
 base_physical_attack = 25

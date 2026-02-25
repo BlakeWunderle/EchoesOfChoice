@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "illusionist"
 class_display_name = "Illusionist"
-sprite_id = "vampire_3"
+sprite_id = "chibi_dark_oracle_2"
 base_max_health = 55
 base_max_mana = 16
 base_physical_attack = 14

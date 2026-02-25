@@ -12,7 +12,7 @@
 script = ExtResource("1")
 class_id = "scholar"
 class_display_name = "Scholar"
-sprite_id = "vampire_2"
+sprite_id = "chibi_old_hero_2"
 base_max_health = 44
 base_max_mana = 14
 base_physical_attack = 7

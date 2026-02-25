@@ -10,7 +10,7 @@
 script = ExtResource("1")
 class_id = "artificer"
 class_display_name = "Artificer"
-sprite_id = "vampire_3"
+sprite_id = "chibi_technomage_1"
 base_max_health = 44
 base_max_mana = 14
 base_physical_attack = 12
