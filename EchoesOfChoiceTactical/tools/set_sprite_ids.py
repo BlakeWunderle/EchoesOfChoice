@@ -27,69 +27,71 @@ ENEMIES_DIR = PROJECT_DIR / "resources" / "enemies"
 # ---------------------------------------------------------------------------
 
 CLASS_SPRITE_IDS: dict[str, str] = {
-    # --- Martial Artist tree (unarmed/light fighters) ---
-    "martial_artist": "swordsman_2",   # Base: light fighter
-    "monk": "swordsman_5",             # T1: disciplined fighter
-    "dervish": "bandit_2",             # T1: fast rogue-like (thug)
-    "mercenary": "swordsman_4",        # T1: hired sword
-    "hunter": "bandit_3",              # T1: tracking/ranged (robber)
-    "tempest": "swordsman_6",          # T2: storm warrior
-    "ninja": "bandit_1",               # T2: assassin (perfect fit)
-    "duelist": "swordsman_3",          # T2: precision swordsman
-    "dragoon": "swordsman_8",          # T2: lance/heavy
-    "cavalry": "swordsman_9",          # T2: mounted heavy
-    "squire": "swordsman_1",           # T2: beginner knight
-    "knight": "swordsman_7",           # T2: full plate knight
-    "paladin": "swordsman_8",          # T2: holy knight
-    "warden": "swordsman_4",           # T2: defensive tank
-    "bastion": "swordsman_7",          # T2: ultimate tank
-    "ranger": "bandit_3",              # T2: bow/nature (robber)
-    "firebrand": "swordsman_6",        # T2: fire sword fighter
+    # --- Martial Artist sub-tree (unarmed/light fighters) ---
+    "martial_artist": "chibi_monk_old_warrior_monk_guy",          # T0: unarmed fighter
+    "monk": "chibi_spiritual_monk_1",                              # T1: disciplined martial artist
+    "dervish": "chibi_persian_arab_warriors_persian_and_arab_warriors_1",  # T1: fast whirling dancer
+    "mercenary": "chibi_mercenaries_1",                            # T1: hired sword
+    "hunter": "chibi_forest_ranger_1",                             # T1: tracking/ranged
+    "tempest": "chibi_samurai_1",                                  # T2: storm warrior
+    "ninja": "chibi_ninja_assassin_black_ninja",                   # T2: assassin
+    "duelist": "chibi_samurai_2",                                  # T2: precision swordsman
+    "dragoon": "chibi_spartan_knight_warrior_spartan_knight_with_spear",  # T2: lance/heavy
+    "ranger": "chibi_archer_1",                                    # T2: bow/nature
 
-    # --- Mage tree (casters) -> vampire now, wizard_* when downloaded ---
-    "mage": "vampire_1",               # Base: dark caster
-    "acolyte": "vampire_2",            # T1: apprentice healer
-    "herald": "vampire_1",             # T1: magical herald
-    "priest": "vampire_2",             # T2: holy caster
-    "thaumaturge": "vampire_1",        # T2: advanced mage
-    "illusionist": "vampire_3",        # T2: trickster mage
-    "chronomancer": "vampire_3",       # T2: time mage
-    "mistweaver": "vampire_2",         # T2: fog/mist mage
-    "pyromancer": "vampire_1",         # T2: fire mage
-    "cryomancer": "vampire_3",         # T2: ice mage
-    "electromancer": "vampire_1",      # T2: lightning mage
-    "hydromancer": "vampire_2",        # T2: water mage
-    "geomancer": "vampire_2",          # T2: earth mage
-    "stormcaller": "vampire_3",        # T2: storm mage
+    # --- Squire sub-tree (armored fighters) ---
+    "squire": "chibi_knight_1",                                    # T0: beginner knight
+    "knight": "chibi_armored_knight_medieval_knight",              # T2: full plate knight
+    "paladin": "chibi_paladin_1",                                  # T2: holy knight
+    "warden": "chibi_armored_knight_templar_knight",               # T2: defensive tank
+    "bastion": "chibi_king_defender_sergeant_very_heavy_armored_frontier_defender",  # T2: ultimate tank
+    "cavalry": "chibi_medieval_warrior_medieval_commander",        # T2: mounted heavy
+    "firebrand": "chibi_fantasy_warrior_devil_masked_guy",         # T1: fire sword fighter
+
+    # --- Mage tree (casters) ---
+    "mage": "chibi_magician_1",                                    # T0: base caster
+    "acolyte": "chibi_priest_1",                                   # T1: apprentice healer
+    "herald": "chibi_magician_2",                                  # T1: magical herald
+    "mistweaver": "chibi_dark_oracle_1",                           # T1: fog/mist mage
+    "stormcaller": "chibi_shaman_of_thunder_1",                    # T1: storm mage
+    "priest": "chibi_priest_2",                                    # T2: holy caster
+    "thaumaturge": "chibi_magician_3",                             # T2: advanced mage
+    "illusionist": "chibi_dark_oracle_2",                          # T2: trickster mage
+    "chronomancer": "chibi_time_keeper_1",                         # T2: time mage
+    "pyromancer": "chibi_pyromancer_1",                            # T2: fire mage
+    "cryomancer": "chibi_winter_witch_1",                          # T2: ice mage
+    "electromancer": "chibi_shaman_of_thunder_2",                  # T2: lightning mage
+    "hydromancer": "chibi_shaman_1",                               # T2: water mage
+    "geomancer": "chibi_human_shaman_1",                           # T2: earth mage
 
     # --- Entertainer tree (performers) ---
-    "entertainer": "base_male_sword",  # Base: generic performer
-    "bard": "base_male_sword",         # T1: musician
-    "minstrel": "base_male_sword",     # T1: traveling musician
-    "chorister": "base_male_sword",    # T2: choir singer
-    "elegist": "base_male_sword",      # T2: mourning poet
-    "laureate": "base_male_sword",     # T2: acclaimed poet
-    "mime": "bandit_1",                # T2: silent performer (masked)
-    "muse": "base_female_sword",       # T2: inspiring artist
-    "orator": "base_male_sword",       # T2: speechmaker
-    "warcrier": "swordsman_4",         # T2: battle shouter (armored)
+    "entertainer": "chibi_villager_1",                             # T0: humble performer
+    "bard": "chibi_old_hero_1",                                    # T1: wandering musician
+    "chorister": "chibi_priest_3",                                 # T1: choir singer
+    "orator": "chibi_citizen_1",                                   # T1: speechmaker
+    "minstrel": "chibi_thief_pirate_rogue_rogue",                 # T2: traveling musician
+    "elegist": "chibi_dark_elves_1",                               # T2: melancholic poet
+    "laureate": "chibi_citizen_2",                                 # T2: acclaimed poet
+    "mime": "chibi_ninja_assassin_white_ninja",                    # T2: silent performer
+    "muse": "chibi_magician_girl_1",                               # T2: inspiring artist
+    "warcrier": "chibi_viking_1",                                  # T2: battle shouter
 
     # --- Scholar tree (inventors/academics) ---
-    "scholar": "vampire_2",            # Base: robed academic
-    "alchemist": "vampire_2",          # T1: potion maker
-    "artificer": "vampire_3",          # T1: magical crafter
-    "tinker": "base_male_sword",       # T2: mechanical inventor
-    "technomancer": "vampire_3",       # T2: tech + magic
-    "bombardier": "swordsman_3",       # T2: explosives (light armor)
-    "siegemaster": "swordsman_7",      # T2: heavy siege
-    "automaton": "vampire_3",          # T2: construct
-    "astronomer": "vampire_2",         # T2: stargazer
-    "cosmologist": "vampire_3",        # T2: cosmic scholar
-    "arithmancer": "vampire_1",        # T2: math mage
+    "scholar": "chibi_old_hero_2",                                 # T0: robed academic
+    "alchemist": "chibi_bloody_alchemist_1",                       # T1: potion maker
+    "artificer": "chibi_technomage_1",                             # T1: magical crafter
+    "tinker": "chibi_gnome_1",                                     # T2: mechanical inventor
+    "technomancer": "chibi_technomage_2",                          # T2: tech + magic
+    "bombardier": "chibi_mercenaries_2",                           # T2: explosives expert
+    "siegemaster": "chibi_king_defender_sergeant_medieval_sergeant",  # T2: heavy siege
+    "automaton": "chibi_golem_1",                                  # T2: construct
+    "astronomer": "chibi_old_hero_3",                              # T2: stargazer
+    "cosmologist": "chibi_witch_1",                                # T2: cosmic scholar
+    "arithmancer": "chibi_cursed_alchemist_1",                     # T2: math mage
 
     # --- Royal classes ---
-    "prince": "swordsman_9",           # Royal: armored prince
-    "princess": "base_female_sword",   # Royal: base female
+    "prince": "chibi_king_defender_sergeant_medieval_king",        # Royal: armored prince
+    "princess": "chibi_valkyrie_1",                                # Royal: warrior princess
 }
 
 ENEMY_SPRITE_IDS: dict[str, str] = {
@@ -258,51 +260,22 @@ def set_sprite_id_in_tres(filepath: Path, sprite_id: str) -> bool:
 
 
 def print_coverage_report() -> None:
-    """Print sprite coverage by pack type."""
-    groups: dict[str, list[str]] = {
-        "swordsman": [],
-        "bandit": [],
-        "vampire": [],
-        "base (placeholder)": [],
-    }
+    """Print sprite coverage by pack collection."""
+    chibi_count = sum(1 for sid in CLASS_SPRITE_IDS.values() if sid.startswith("chibi_"))
+    other_count = len(CLASS_SPRITE_IDS) - chibi_count
+
+    # Group by Chibi pack
+    packs: dict[str, list[str]] = {}
     for cls, sid in sorted(CLASS_SPRITE_IDS.items()):
-        if sid.startswith("swordsman_"):
-            groups["swordsman"].append(cls)
-        elif sid.startswith("bandit_"):
-            groups["bandit"].append(cls)
-        elif sid.startswith("vampire_"):
-            groups["vampire"].append(cls)
-        else:
-            groups["base (placeholder)"].append(cls)
+        # Extract pack name from sprite_id (e.g. chibi_magician_1 -> magician)
+        packs.setdefault(sid, []).append(cls)
 
     print("\n" + "=" * 60)
     print("SPRITE COVERAGE REPORT")
     print("=" * 60)
-
-    print(f"\nPlayer Classes ({len(CLASS_SPRITE_IDS)} total):")
-    for group, classes in groups.items():
-        print(f"  {group:20s}: {len(classes):2d} classes")
-
-    print(f"\nEnemies ({len(ENEMY_SPRITE_IDS)} total): all mapped.")
-
-    placeholder_classes = groups["base (placeholder)"]
-    if placeholder_classes:
-        print(f"\n--- STILL NEED SPRITES ({len(placeholder_classes)}) ---")
-        for cls in sorted(placeholder_classes):
-            print(f"  {cls}")
-
-    print("\nUpgrade path: wizard_*/archer_* packs will replace vampire_* for mages")
-    print("=" * 60)
-
-    # This section is for the future -- no need to list archetypes
-    archetypes: dict[str, list[str]] = {}
-
-    print(f"\nNeeded custom archetypes:")
-    for archetype, classes in archetypes.items():
-        present = [c for c in classes if c in placeholder_classes]
-        if present:
-            print(f"  {archetype}: {', '.join(present)}")
-
+    print(f"\nPlayer Classes: {len(CLASS_SPRITE_IDS)} total ({chibi_count} chibi, {other_count} other)")
+    print(f"Unique sprites: {len(packs)}")
+    print(f"\nEnemies: {len(ENEMY_SPRITE_IDS)} total")
     print("=" * 60)
 
 

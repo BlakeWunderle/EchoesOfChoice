@@ -95,7 +95,7 @@ def darken_frame(img: Image.Image) -> Image.Image:
 
 def load_frames_from_sequence(seq_dir: Path, max_frames: int = MAX_FRAMES) -> list[Image.Image]:
     """Load individual PNG frames from a sequence directory."""
-    frames = sorted(seq_dir.glob("*.png"))
+    frames = sorted(f for f in seq_dir.glob("*.png") if not f.name.startswith("._"))
     if not frames:
         return []
     images = []
@@ -294,6 +294,9 @@ def find_png_sequences(pack_dir: Path) -> list[tuple[str, Path]]:
     # Look for */PNG/PNG Sequences/ pattern
     for seq_dir in sorted(pack_dir.rglob("PNG Sequences")):
         if not seq_dir.is_dir():
+            continue
+        # Skip macOS metadata directories
+        if "__MACOSX" in str(seq_dir):
             continue
         # Extract variant name: use the direct parent of "PNG Sequences"
         # which contains the actual variant name, skipping structural folders.

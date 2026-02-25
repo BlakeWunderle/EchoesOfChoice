@@ -115,9 +115,72 @@ _reg_4dir("warrior_3", "characters/warrior_pack/Archer/PNG/Spritesheets")
 _reg_4dir("warrior_free_1", "characters/warrior_free/Warrior1/PNG/Spritesheets")
 _reg_4dir("warrior_free_2", "characters/warrior_free/Warrior2/PNG/Spritesheets")
 
-# --- Characters: Chibi 3-direction (synthesized) ---
-# Registrations will be added after class→sprite_id mapping is finalized.
-# Example: _reg_3dir("chibi_archer_1", "processed/chibi_archer_1")
+# --- Characters: Chibi 3-direction (synthesized from synthesize_directions.py) ---
+# All 54 player classes mapped to Chibi packs for unified art style.
+_chibi_3dir_sprites = [
+    # Martial Artist sub-tree
+    "chibi_monk_old_warrior_monk_guy",
+    "chibi_spiritual_monk_1",
+    "chibi_persian_arab_warriors_persian_and_arab_warriors_1",
+    "chibi_mercenaries_1",
+    "chibi_forest_ranger_1",
+    "chibi_samurai_1",
+    "chibi_ninja_assassin_black_ninja",
+    "chibi_samurai_2",
+    "chibi_spartan_knight_warrior_spartan_knight_with_spear",
+    "chibi_archer_1",
+    # Squire sub-tree
+    "chibi_knight_1",
+    "chibi_armored_knight_medieval_knight",
+    "chibi_paladin_1",
+    "chibi_armored_knight_templar_knight",
+    "chibi_king_defender_sergeant_very_heavy_armored_frontier_defender",
+    "chibi_medieval_warrior_medieval_commander",
+    "chibi_fantasy_warrior_devil_masked_guy",
+    # Mage tree
+    "chibi_magician_1",
+    "chibi_priest_1",
+    "chibi_magician_2",
+    "chibi_dark_oracle_1",
+    "chibi_shaman_of_thunder_1",
+    "chibi_priest_2",
+    "chibi_magician_3",
+    "chibi_dark_oracle_2",
+    "chibi_time_keeper_1",
+    "chibi_pyromancer_1",
+    "chibi_winter_witch_1",
+    "chibi_shaman_of_thunder_2",
+    "chibi_shaman_1",
+    "chibi_human_shaman_1",
+    # Entertainer tree
+    "chibi_villager_1",
+    "chibi_old_hero_1",
+    "chibi_priest_3",
+    "chibi_citizen_1",
+    "chibi_thief_pirate_rogue_rogue",
+    "chibi_dark_elves_1",
+    "chibi_citizen_2",
+    "chibi_ninja_assassin_white_ninja",
+    "chibi_magician_girl_1",
+    "chibi_viking_1",
+    # Scholar tree
+    "chibi_old_hero_2",
+    "chibi_bloody_alchemist_1",
+    "chibi_technomage_1",
+    "chibi_gnome_1",
+    "chibi_technomage_2",
+    "chibi_mercenaries_2",
+    "chibi_king_defender_sergeant_medieval_sergeant",
+    "chibi_golem_1",
+    "chibi_old_hero_3",
+    "chibi_witch_1",
+    "chibi_cursed_alchemist_1",
+    # Royal
+    "chibi_king_defender_sergeant_medieval_king",
+    "chibi_valkyrie_1",
+]
+for _sid in _chibi_3dir_sprites:
+    _reg_3dir(_sid, f"processed/{_sid}")
 
 # --- Enemies: Standard 64x64 ---
 _enemy_packs_64 = {
