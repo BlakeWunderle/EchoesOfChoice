@@ -127,14 +127,29 @@ func _run_stage(stage: Dictionary, composer) -> Dictionary:
 	# Sort combos for extremes
 	combo_results.sort_custom(func(a, b): return a["win_rate"] < b["win_rate"])
 
+	# Per-class banding
+	var warn_floor := target - _BattleStages.CLASS_WARN_DELTA
+	var fail_floor := target - _BattleStages.CLASS_FAIL_DELTA
+	var over_ceiling := target + _BattleStages.TOLERANCE + _BattleStages.CLASS_OVER_DELTA
+	var class_bands: Array[Dictionary] = []
+	for c in class_breakdown:
+		var band := "OK"
+		if c["win_rate"] < fail_floor:
+			band = "FAIL"
+		elif c["win_rate"] < warn_floor:
+			band = "WARN"
+		elif c["win_rate"] > over_ceiling:
+			band = "OVER"
+		class_bands.append({"class_id": c["class_id"], "win_rate": c["win_rate"], "band": band})
+
 	if _verbose:
-		_print_stage_detail(battle_id, overall_rate, target, class_breakdown, combo_results)
+		_print_stage_detail(battle_id, overall_rate, target, class_breakdown, class_bands, combo_results)
 
 	return {
 		"battle_id": battle_id, "progression": prog,
 		"win_rate": overall_rate, "target": target,
 		"total_sims": total_sims, "combos": parties.size(),
-		"class_breakdown": class_breakdown,
+		"class_breakdown": class_breakdown, "class_bands": class_bands,
 		"weakest": combo_results.slice(0, 3),
 		"strongest": combo_results.slice(maxi(0, combo_results.size() - 3), combo_results.size()),
 	}
@@ -203,9 +218,25 @@ func _print_summary(results: Array[Dictionary], elapsed: float) -> void:
 	print("\n  Passed: %d/%d | Sims/combo: %d | Time: %.1fs" % [
 		passed, results.size(), _sims_per_combo, elapsed])
 
+	# Class outliers
+	var outliers: Array[Dictionary] = []
+	for r in results:
+		for cb in r.get("class_bands", []):
+			if cb["band"] != "OK":
+				outliers.append({"battle": r["battle_id"], "class_id": cb["class_id"],
+					"win_rate": cb["win_rate"], "band": cb["band"]})
+	if outliers.size() > 0:
+		print("\n  CLASS OUTLIERS")
+		print("  %-24s %-20s %-10s %s" % ["Battle", "Class", "Win Rate", "Band"])
+		print("  " + "-".repeat(64))
+		for o in outliers:
+			print("  %-24s %-20s %5.1f%%     %s" % [o["battle"], o["class_id"],
+				o["win_rate"] * 100.0, o["band"]])
+
 
 func _print_stage_detail(battle_id: String, rate: float, target: float,
-		breakdown: Array[Dictionary], combos: Array[Dictionary]) -> void:
+		breakdown: Array[Dictionary], bands: Array[Dictionary],
+		combos: Array[Dictionary]) -> void:
 	print("\n  --- %s (%.1f%% vs %.1f%% target) ---" % [battle_id, rate * 100.0, target * 100.0])
 
 	if combos.size() >= 3:
@@ -218,9 +249,14 @@ func _print_stage_detail(battle_id: String, rate: float, target: float,
 			var c := combos[i]
 			print("    %5.1f%%  %s" % [c["win_rate"] * 100.0, " / ".join(c["party"])])
 
+	var band_map := {}
+	for b in bands:
+		band_map[b["class_id"]] = b["band"]
 	print("  CLASS BREAKDOWN:")
 	for c in breakdown.slice(0, 10):
-		print("    %-20s %5.1f%%" % [c["class_id"], c["win_rate"] * 100.0])
+		var band: String = band_map.get(c["class_id"], "OK")
+		var suffix := "  <-- %s" % band if band != "OK" else ""
+		print("    %-20s %5.1f%%%s" % [c["class_id"], c["win_rate"] * 100.0, suffix])
 
 
 func _list_battles() -> void:

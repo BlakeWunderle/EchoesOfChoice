@@ -11,6 +11,11 @@ const TARGETS := {
 ## Tolerance range (±) for pass/fail.
 const TOLERANCE := 0.03
 
+## Per-class win rate thresholds relative to stage target.
+const CLASS_WARN_DELTA := 0.15
+const CLASS_FAIL_DELTA := 0.25
+const CLASS_OVER_DELTA := 0.08
+
 
 static func get_all_stages() -> Array[Dictionary]:
 	var stages: Array[Dictionary] = []
