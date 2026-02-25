@@ -13,10 +13,11 @@ static func create_city_gate_ambush() -> BattleConfig:
 	var dread_stalker := load("res://resources/enemies/dread_stalker.tres")
 	var dire_shade := load("res://resources/enemies/dire_shade.tres")
 	var phantom_prowler := load("res://resources/enemies/phantom_prowler.tres")
+	var city_militia := load("res://resources/enemies/city_militia.tres")
 	config.enemy_units = [
 		{"data": watcher_lord, "name": "The Watcher's Hand", "pos": Vector2i(9, 3), "level": 6},
 		{"data": dread_stalker, "name": "Gate Shadow", "pos": Vector2i(8, 1), "level": 6},
-		{"data": dread_stalker, "name": "Gate Shadow", "pos": Vector2i(8, 5), "level": 6},
+		{"data": city_militia, "name": "Turned Guard", "pos": Vector2i(8, 5), "level": 6},
 		{"data": dire_shade, "name": "Turned Warden", "pos": Vector2i(9, 2), "level": 6},
 		{"data": phantom_prowler, "name": "City Runner", "pos": Vector2i(8, 4), "level": 6},
 	]

@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/lunge.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/stun_strike.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+class_id = "city_militia"
+class_display_name = "City Militia"
+sprite_id = "chibi_armored_knight_medieval_knight"
+base_max_health = 95
+base_max_mana = 6
+base_physical_attack = 35
+base_physical_defense = 18
+base_magic_attack = 8
+base_magic_defense = 14
+base_speed = 20
+base_crit_chance = 5
+base_crit_damage = 2
+base_dodge_chance = 5
+growth_health = 8
+growth_mana = 0
+growth_physical_attack = 2
+growth_physical_defense = 0
+growth_magic_attack = 0
+growth_magic_defense = 1
+growth_speed = 0
+movement = 4
+jump = 2
+reaction_types = []
+abilities = [ExtResource("2"), ExtResource("3")]
+upgrade_options = []

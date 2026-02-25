@@ -193,7 +193,7 @@ static func _prog_6() -> Array[Dictionary]:
 	return [
 		_stage("city_gate_ambush", 6, 10, 8, [
 			_e("watcher_lord", 6, Vector2i(9, 3)),
-			_e("dread_stalker", 6, Vector2i(8, 1)), _e("dread_stalker", 6, Vector2i(8, 5)),
+			_e("dread_stalker", 6, Vector2i(8, 1)), _e("city_militia", 6, Vector2i(8, 5)),
 			_e("dire_shade", 6, Vector2i(9, 2)), _e("phantom_prowler", 6, Vector2i(8, 4)),
 		]),
 		_stage("return_city_1", 6, 10, 8, [
