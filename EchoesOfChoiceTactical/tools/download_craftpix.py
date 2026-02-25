@@ -95,6 +95,8 @@ PACKS = [
      "/freebies/free-slime-mobs-pixel-art-top-down-sprite-pack/"),
     ("sprites/enemies", "slime_enemies",
      "/product/pixel-art-slime-enemies-top-down-sprite-pack/"),
+    ("sprites/enemies", "slime_monsters",
+     "/product/top-down-pixel-art-slime-monsters-sprite-pack/"),
     ("sprites/enemies", "slime_boss",
      "/product/slime-boss-pixel-art-2d-sprite-for-roguelike-games/"),
     ("sprites/enemies", "skeleton",
@@ -132,6 +134,16 @@ PACKS = [
     ("sprites/enemies", "boss_characters",
      "/freebies/free-top-down-boss-character-4-direction-pack/"),
 
+    # --- Characters: Animals ---
+    ("sprites/animals", "hunt_animals",
+     "/freebies/free-top-down-hunt-animals-pixel-sprite-pack/"),
+    ("sprites/animals", "cute_farm_animals",
+     "/product/top-down-cute-farm-animals-pixel-sprite/"),
+    ("sprites/animals", "village_farm_animals",
+     "/product/top-down-village-farm-animals-sprite-sheet/"),
+    ("sprites/animals", "farm_animals_free",
+     "/freebies/free-top-down-animals-farm-pixel-art-sprites/"),
+
     # --- Tilesets: Battle Environments ---
     ("tilesets/battle", "grassland",
      "/product/grassland-top-down-tileset-pixel-art/"),
@@ -163,6 +175,26 @@ PACKS = [
      "/product/winter-top-down-pixel-art-tileset-for-rpg/"),
     ("tilesets/battle", "guild_hall",
      "/freebies/free-top-down-pixel-art-guild-hall-asset-pack/"),
+    ("tilesets/battle", "farm",
+     "/product/top-down-farm-with-animals-pixel-art-asset-pack/"),
+    ("tilesets/battle", "dungeon_roguelike",
+     "/product/top-down-dungeon-pixel-tileset-for-rpg-and-roguelike-game/"),
+    ("tilesets/battle", "training_arena",
+     "/product/pixel-art-training-arena-tileset-for-rpg-games/"),
+    ("tilesets/battle", "flying_islands",
+     "/product/flying-islands-pixel-art-top-down-tileset/"),
+    ("tilesets/battle", "seabed",
+     "/product/seabed-pixel-art-top-down-tileset/"),
+
+    # --- Tilesets: Buildings ---
+    ("tilesets/buildings", "herbalist_hut",
+     "/product/pixel-art-herbalists-hut-top-down-asset-pack/"),
+    ("tilesets/buildings", "blacksmith",
+     "/product/pixel-blacksmith-house-interior-and-exterior-assets/"),
+    ("tilesets/buildings", "glassblower",
+     "/freebies/free-glassblowers-workshop-top-down-pixel-art-asset/"),
+    ("tilesets/buildings", "main_character_home",
+     "/freebies/main-characters-home-free-top-down-pixel-art-asset/"),
 
     # --- Tilesets: Overworld & Objects ---
     ("tilesets/overworld", "path_road",
@@ -187,6 +219,28 @@ PACKS = [
      "/freebies/free-pixel-dungeon-props-and-objects-asset-pack/"),
     ("objects", "bridges",
      "/freebies/free-bridges-top-down-pixel-art-asset-pack/"),
+    ("objects", "glade_objects",
+     "/product/glade-objects-top-down-pixel-art/"),
+    ("objects", "swamp_objects",
+     "/product/swamp-objects-top-down-pixel-art/"),
+    ("objects", "glowing_cave_objects",
+     "/product/glowing-cave-objects-pixel-art-asset-pack/"),
+    ("objects", "desert_objects",
+     "/product/desert-objects-top-down-pixel-art/"),
+    ("objects", "dungeon_objects",
+     "/freebies/free-pixel-art-dungeon-objects-asset-pack/"),
+    ("objects", "cursed_land_objects",
+     "/product/cursed-land-objects-pixel-art-for-rpg-game/"),
+    ("objects", "undead_land_objects",
+     "/product/the-top-down-undead-land-objects-pixel-art/"),
+    ("objects", "winter_objects",
+     "/product/top-down-winter-objects-pixel-art/"),
+    ("objects", "seabed_objects",
+     "/freebies/free-top-down-seabed-objects-pixel-art/"),
+    ("objects", "farm_plants",
+     "/freebies/free-pixel-art-plants-for-farm/"),
+    ("objects", "resources_icons",
+     "/product/pixel-art-resources-and-icons-basic-pack/"),
 
     # --- GUI & Icons ---
     ("gui", "rpg_ui",
@@ -197,6 +251,10 @@ PACKS = [
      "/product/magic-objects-and-icons-pixel-art-pack/"),
     ("icons", "treasure",
      "/product/treasure-32x32-objects-and-icons-pixel-pack/"),
+    ("icons", "fishing_gathering",
+     "/product/fishing-and-gathering-pixel-art-rpg-icons/"),
+    ("icons", "basic_icons_16",
+     "/product/basic-icons-16x16-for-gui/"),
     ("sprites/npcs", "market_square",
      "/product/pixel-art-market-square-rpg-shop-and-npc-assets-pack/"),
 ]
@@ -204,7 +262,13 @@ PACKS = [
 
 def create_session(cookie_pairs: list[str] | None = None,
                     cookies_file: Path | None = None) -> requests.Session:
-    """Create an authenticated requests Session."""
+    """Create an authenticated requests Session.
+
+    Supports three cookie file formats:
+    - Netscape cookies.txt (starts with '# Netscape HTTP Cookie File')
+    - Simple name=value pairs (one per line, comments start with #)
+    - --cookie flag pairs passed as list
+    """
     session = requests.Session()
     session.headers.update(HEADERS)
 
@@ -216,9 +280,21 @@ def create_session(cookie_pairs: list[str] | None = None,
             name, value = pair.split("=", 1)
             session.cookies.set(name.strip(), value.strip(), domain=".craftpix.net")
     elif cookies_file and cookies_file.exists():
-        cj = http.cookiejar.MozillaCookieJar()
-        cj.load(str(cookies_file), ignore_discard=True, ignore_expires=True)
-        session.cookies = cj
+        content = cookies_file.read_text(encoding="utf-8").strip()
+        if content.startswith("# Netscape HTTP Cookie File") or content.startswith("# HTTP Cookie File"):
+            cj = http.cookiejar.MozillaCookieJar()
+            cj.load(str(cookies_file), ignore_discard=True, ignore_expires=True)
+            session.cookies = cj
+        else:
+            # Simple name=value format (one per line)
+            for line in content.splitlines():
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" not in line:
+                    continue
+                name, value = line.split("=", 1)
+                session.cookies.set(name.strip(), value.strip(), domain=".craftpix.net")
     else:
         return None  # type: ignore[return-value]
 
