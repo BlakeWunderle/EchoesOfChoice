@@ -136,7 +136,7 @@ _chibi_3dir_sprites = [
     "chibi_armored_knight_templar_knight",
     "chibi_king_defender_sergeant_very_heavy_armored_frontier_defender",
     "chibi_medieval_warrior_medieval_commander",
-    "chibi_fantasy_warrior_devil_masked_guy",
+    "chibi_pyromancer_3",
     # Mage tree
     "chibi_magician_1",
     "chibi_priest_1",
@@ -158,7 +158,7 @@ _chibi_3dir_sprites = [
     "chibi_priest_3",
     "chibi_citizen_1",
     "chibi_thief_pirate_rogue_rogue",
-    "chibi_dark_elves_1",
+    "chibi_magician_girl_3",
     "chibi_citizen_2",
     "chibi_ninja_assassin_white_ninja",
     "chibi_magician_girl_1",

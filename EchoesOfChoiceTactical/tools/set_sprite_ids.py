@@ -46,7 +46,7 @@ CLASS_SPRITE_IDS: dict[str, str] = {
     "warden": "chibi_armored_knight_templar_knight",               # T2: defensive tank
     "bastion": "chibi_king_defender_sergeant_very_heavy_armored_frontier_defender",  # T2: ultimate tank
     "cavalry": "chibi_medieval_warrior_medieval_commander",        # T2: mounted heavy
-    "firebrand": "chibi_fantasy_warrior_devil_masked_guy",         # T1: fire sword fighter
+    "firebrand": "chibi_pyromancer_3",                              # T1: fire mage
 
     # --- Mage tree (casters) ---
     "mage": "chibi_magician_1",                                    # T0: base caster
@@ -70,7 +70,7 @@ CLASS_SPRITE_IDS: dict[str, str] = {
     "chorister": "chibi_priest_3",                                 # T1: choir singer
     "orator": "chibi_citizen_1",                                   # T1: speechmaker
     "minstrel": "chibi_thief_pirate_rogue_rogue",                 # T2: traveling musician
-    "elegist": "chibi_dark_elves_1",                               # T2: melancholic poet
+    "elegist": "chibi_magician_girl_3",                              # T2: melancholic poet
     "laureate": "chibi_citizen_2",                                 # T2: acclaimed poet
     "mime": "chibi_ninja_assassin_white_ninja",                    # T2: silent performer
     "muse": "chibi_magician_girl_1",                               # T2: inspiring artist

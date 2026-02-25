@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "elegist"
 class_display_name = "Elegist"
-sprite_id = "chibi_dark_elves_1"
+sprite_id = "chibi_magician_girl_3"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

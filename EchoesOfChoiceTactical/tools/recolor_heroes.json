@@ -1,0 +1,27 @@
+{
+    "jobs": [
+        {"input": "sprites/processed/chibi_dark_oracle_1/idle.png", "output": "sprites/processed/chibi_dark_oracle_1/idle.png", "from_hue": 10, "to_hue": 180, "lightness_shift": 0.1},
+        {"input": "sprites/processed/chibi_dark_oracle_1/walk.png", "output": "sprites/processed/chibi_dark_oracle_1/walk.png", "from_hue": 10, "to_hue": 180, "lightness_shift": 0.1},
+        {"input": "sprites/processed/chibi_dark_oracle_1/attack.png", "output": "sprites/processed/chibi_dark_oracle_1/attack.png", "from_hue": 10, "to_hue": 180, "lightness_shift": 0.1},
+        {"input": "sprites/processed/chibi_dark_oracle_1/hurt.png", "output": "sprites/processed/chibi_dark_oracle_1/hurt.png", "from_hue": 10, "to_hue": 180, "lightness_shift": 0.1},
+        {"input": "sprites/processed/chibi_dark_oracle_1/death.png", "output": "sprites/processed/chibi_dark_oracle_1/death.png", "from_hue": 10, "to_hue": 180, "lightness_shift": 0.1},
+
+        {"input": "sprites/processed/chibi_witch_1/idle.png", "output": "sprites/processed/chibi_witch_1/idle.png", "from_hue": 0, "to_hue": 250, "lightness_shift": 0.05},
+        {"input": "sprites/processed/chibi_witch_1/walk.png", "output": "sprites/processed/chibi_witch_1/walk.png", "from_hue": 0, "to_hue": 250, "lightness_shift": 0.05},
+        {"input": "sprites/processed/chibi_witch_1/attack.png", "output": "sprites/processed/chibi_witch_1/attack.png", "from_hue": 0, "to_hue": 250, "lightness_shift": 0.05},
+        {"input": "sprites/processed/chibi_witch_1/hurt.png", "output": "sprites/processed/chibi_witch_1/hurt.png", "from_hue": 0, "to_hue": 250, "lightness_shift": 0.05},
+        {"input": "sprites/processed/chibi_witch_1/death.png", "output": "sprites/processed/chibi_witch_1/death.png", "from_hue": 0, "to_hue": 250, "lightness_shift": 0.05},
+
+        {"input": "sprites/processed/chibi_cursed_alchemist_1/idle.png", "output": "sprites/processed/chibi_cursed_alchemist_1/idle.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.15},
+        {"input": "sprites/processed/chibi_cursed_alchemist_1/walk.png", "output": "sprites/processed/chibi_cursed_alchemist_1/walk.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.15},
+        {"input": "sprites/processed/chibi_cursed_alchemist_1/attack.png", "output": "sprites/processed/chibi_cursed_alchemist_1/attack.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.15},
+        {"input": "sprites/processed/chibi_cursed_alchemist_1/hurt.png", "output": "sprites/processed/chibi_cursed_alchemist_1/hurt.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.15},
+        {"input": "sprites/processed/chibi_cursed_alchemist_1/death.png", "output": "sprites/processed/chibi_cursed_alchemist_1/death.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.15},
+
+        {"input": "sprites/processed/chibi_dark_oracle_2/idle.png", "output": "sprites/processed/chibi_dark_oracle_2/idle.png", "from_hue": 210, "to_hue": 260, "lightness_shift": 0.12},
+        {"input": "sprites/processed/chibi_dark_oracle_2/walk.png", "output": "sprites/processed/chibi_dark_oracle_2/walk.png", "from_hue": 210, "to_hue": 260, "lightness_shift": 0.12},
+        {"input": "sprites/processed/chibi_dark_oracle_2/attack.png", "output": "sprites/processed/chibi_dark_oracle_2/attack.png", "from_hue": 210, "to_hue": 260, "lightness_shift": 0.12},
+        {"input": "sprites/processed/chibi_dark_oracle_2/hurt.png", "output": "sprites/processed/chibi_dark_oracle_2/hurt.png", "from_hue": 210, "to_hue": 260, "lightness_shift": 0.12},
+        {"input": "sprites/processed/chibi_dark_oracle_2/death.png", "output": "sprites/processed/chibi_dark_oracle_2/death.png", "from_hue": 210, "to_hue": 260, "lightness_shift": 0.12}
+    ]
+}
