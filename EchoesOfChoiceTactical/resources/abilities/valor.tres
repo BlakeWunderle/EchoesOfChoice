@@ -5,13 +5,13 @@
 [resource]
 script = ExtResource("1")
 ability_name = "Valor"
-flavor_text = "Inspire an ally to fight with renewed vigor."
-modified_stat = 4
-modifier = 4
-impacted_turns = 2
-use_on_enemy = false
+flavor_text = "A courageous strike driven by sheer determination."
+modified_stat = 0
+modifier = 5
+impacted_turns = 0
+use_on_enemy = true
 mana_cost = 3
-ability_range = 3
+ability_range = 1
 aoe_shape = 0
 aoe_size = 0
-ability_type = 2
+ability_type = 0

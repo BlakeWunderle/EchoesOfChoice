@@ -5,13 +5,13 @@
 [resource]
 script = ExtResource("1")
 ability_name = "Battle Cry"
-flavor_text = "A primal roar that boosts combat prowess."
-modified_stat = 4
-modifier = 3
-impacted_turns = 2
-use_on_enemy = false
+flavor_text = "A primal roar that strikes with mixed physical and magical force."
+modified_stat = 6
+modifier = 8
+impacted_turns = 0
+use_on_enemy = true
 mana_cost = 2
-ability_range = 0
+ability_range = 1
 aoe_shape = 0
 aoe_size = 0
-ability_type = 2
+ability_type = 0

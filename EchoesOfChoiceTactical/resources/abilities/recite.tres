@@ -5,13 +5,13 @@
 [resource]
 script = ExtResource("1")
 ability_name = "Recite"
-flavor_text = "Recite formulae that disrupt the enemy's magical focus."
+flavor_text = "Recite arcane formulae that blast the enemy with focused energy."
 modified_stat = 2
-modifier = 3
-impacted_turns = 2
+modifier = 6
+impacted_turns = 0
 use_on_enemy = true
 mana_cost = 2
 ability_range = 3
 aoe_shape = 0
 aoe_size = 0
-ability_type = 3
+ability_type = 0

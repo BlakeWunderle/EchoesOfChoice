@@ -5,13 +5,13 @@
 [resource]
 script = ExtResource("1")
 ability_name = "Proclamation"
-flavor_text = "A bold proclamation that strengthens nearby allies."
-modified_stat = 4
-modifier = 4
-impacted_turns = 2
-use_on_enemy = false
+flavor_text = "A bold proclamation that blasts the enemy with commanding force."
+modified_stat = 2
+modifier = 6
+impacted_turns = 0
+use_on_enemy = true
 mana_cost = 4
-ability_range = 0
-aoe_shape = 3
-aoe_size = 1
-ability_type = 2
+ability_range = 3
+aoe_shape = 0
+aoe_size = 0
+ability_type = 0
