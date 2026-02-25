@@ -73,6 +73,22 @@ PACKS = [
      "/freebies/free-medieval-bandit-4-direction-character-pack/"),
     ("sprites/characters", "vampire",
      "/freebies/free-vampire-4-direction-pixel-character-sprite-pack/"),
+    ("sprites/characters", "roguelike_kit",
+     "/freebies/free-top-down-roguelike-game-kit-pixel-art/"),
+    ("sprites/characters", "wizard_male",
+     "/product/wizard-4-direction-characters/"),
+    ("sprites/characters", "wizard_female",
+     "/product/wizard-4-direction-woman-character-sprites/"),
+    ("sprites/characters", "archer",
+     "/product/archer-4-direction-character-sprites/"),
+    ("sprites/characters", "warrior_pack",
+     "/product/warrior-4-direction-character-sprites/"),
+    ("sprites/characters", "warrior_free",
+     "/freebies/free-warrior-4-direction-character-sprites/"),
+
+    # --- Characters: NPCs ---
+    ("sprites/npcs", "citizen_artist_astrologer",
+     "/freebies/free-citizen-artist-astrologer-4-direction-npc-character-pack/"),
 
     # --- Characters: Enemies ---
     ("sprites/enemies", "slime_mobs",
