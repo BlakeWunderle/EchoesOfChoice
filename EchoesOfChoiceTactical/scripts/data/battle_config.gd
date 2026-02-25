@@ -33,7 +33,7 @@ static func _build_party_units(config: BattleConfig) -> void:
 	var player_data: FighterData = load_class(player_class_id)
 
 	config.player_units.append(
-		{"data": player_data, "name": GameState.player_name, "pos": Vector2i(0, 3), "level": GameState.player_level}
+		{"data": player_data, "name": GameState.player_name, "pos": Vector2i(2, 3), "level": GameState.player_level}
 	)
 
 	var selected: Array[String] = GameState.selected_party
@@ -51,7 +51,7 @@ static func _build_party_units(config: BattleConfig) -> void:
 		var mdata: FighterData = load_class(member["class_id"])
 		var y_pos: int = y_slots[i] if i < y_slots.size() else 3 + i
 		config.player_units.append(
-			{"data": mdata, "name": member["name"], "pos": Vector2i(1, y_pos), "level": member.get("level", 1)}
+			{"data": mdata, "name": member["name"], "pos": Vector2i(3, y_pos), "level": member.get("level", 1)}
 		)
 
 

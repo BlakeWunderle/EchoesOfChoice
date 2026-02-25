@@ -56,7 +56,7 @@ static func _stage(id: String, prog: int, w: int, h: int, enemies: Array[Diction
 		"grid_width": w, "grid_height": h,
 		"target": TARGETS.get(prog, 0.75),
 		"enemies": enemies,
-		"player_spawn": [Vector2i(0, 3), Vector2i(1, 1), Vector2i(1, 2), Vector2i(1, 4), Vector2i(1, 5)],
+		"player_spawn": [Vector2i(2, 3), Vector2i(3, 1), Vector2i(3, 2), Vector2i(3, 4), Vector2i(3, 5)],
 	}
 
 
