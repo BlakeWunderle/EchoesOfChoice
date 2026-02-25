@@ -115,6 +115,10 @@ _reg_4dir("warrior_3", "characters/warrior_pack/Archer/PNG/Spritesheets")
 _reg_4dir("warrior_free_1", "characters/warrior_free/Warrior1/PNG/Spritesheets")
 _reg_4dir("warrior_free_2", "characters/warrior_free/Warrior2/PNG/Spritesheets")
 
+# --- Characters: Chibi 3-direction (synthesized) ---
+# Registrations will be added after class→sprite_id mapping is finalized.
+# Example: _reg_3dir("chibi_archer_1", "processed/chibi_archer_1")
+
 # --- Enemies: Standard 64x64 ---
 _enemy_packs_64 = {
     "skeleton": ("Skeleton", 3),

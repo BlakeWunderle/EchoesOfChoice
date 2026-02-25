@@ -53,6 +53,7 @@ ANIM_MAP: dict[str, dict[str, str]] = {
         "Walking": "walk",
         "Running": "walk",
         "Slashing": "attack",
+        "Shooting": "attack",
         "Kicking": "attack",
         "Throwing": "attack",
         "Attacking": "attack",
@@ -77,7 +78,7 @@ ANIM_MAP: dict[str, dict[str, str]] = {
 ANIM_PRIORITY = {
     "idle": ["Idle"],
     "walk": ["Walking", "Running"],
-    "attack": ["Slashing", "Attacking", "Kicking", "Throwing", "Casting Spells"],
+    "attack": ["Slashing", "Shooting", "Attacking", "Kicking", "Throwing", "Casting Spells"],
     "hurt": ["Hurt"],
     "death": ["Dying"],
 }
@@ -294,11 +295,17 @@ def find_png_sequences(pack_dir: Path) -> list[tuple[str, Path]]:
     for seq_dir in sorted(pack_dir.rglob("PNG Sequences")):
         if not seq_dir.is_dir():
             continue
-        # Extract variant name from parent structure
-        # e.g. Dark_Oracle_1/PNG/PNG Sequences -> Dark_Oracle_1
-        rel = seq_dir.relative_to(pack_dir)
-        parts = list(rel.parts)
-        variant = parts[0] if parts else "default"
+        # Extract variant name: use the direct parent of "PNG Sequences"
+        # which contains the actual variant name, skipping structural folders.
+        # Chibi: Archer_1/PNG/PNG Sequences -> parent = PNG -> grandparent = Archer_1
+        # Tiny:  PNG/Knight Dark/PNG Sequences -> parent = Knight Dark
+        parent = seq_dir.parent
+        if parent.name in ("PNG", "png"):
+            # Chibi layout: variant/PNG/PNG Sequences
+            variant = parent.parent.name
+        else:
+            # Tiny Fantasy layout: PNG/variant/PNG Sequences (variant under Vector Parts)
+            variant = parent.name
         results.append((variant, seq_dir))
     return results
 
@@ -316,7 +323,7 @@ def find_spritesheets(pack_dir: Path) -> list[tuple[str, Path]]:
     return results
 
 
-def make_sprite_id(base_name: str, variant: str) -> str:
+def make_sprite_id(base_name: str, variant: str, prefix: str = "") -> str:
     """Generate a clean sprite_id from pack name and variant."""
     # Clean up variant name: "Dark_Oracle_1" -> "dark_oracle_1"
     clean = variant.lower().replace(" ", "_").replace("-", "_")
@@ -325,8 +332,14 @@ def make_sprite_id(base_name: str, variant: str) -> str:
         suffix = clean[len(base_name):]
         suffix = suffix.lstrip("_")
         if suffix:
-            return f"{base_name}_{suffix}"
-    return f"{base_name}_{clean}"
+            base = f"{base_name}_{suffix}"
+        else:
+            base = f"{base_name}_{clean}"
+    else:
+        base = f"{base_name}_{clean}"
+    if prefix:
+        return f"{prefix}_{base}"
+    return base
 
 
 def main() -> None:
@@ -343,6 +356,8 @@ def main() -> None:
                         help="Collection type for animation mapping")
     parser.add_argument("--target-size", type=int, default=TARGET_SIZE,
                         help="Target frame size in pixels (default: 64)")
+    parser.add_argument("--prefix", type=str, default="",
+                        help="Prefix for sprite IDs in batch mode (e.g. 'chibi')")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print what would be generated")
     args = parser.parse_args()
@@ -405,7 +420,7 @@ def main() -> None:
         print(f"Found {len(variants)} variant(s) in {pack_name}")
 
         for variant_name, variant_path in variants:
-            sprite_id = make_sprite_id(pack_name, variant_name)
+            sprite_id = make_sprite_id(pack_name, variant_name, prefix=args.prefix)
 
             if args.collection == "4dir":
                 anims = discover_4dir_front_anims(variant_path)
