@@ -5,6 +5,7 @@ const TILE_SIZE := 64
 var _grid: Grid
 var _environment: String = "grassland"
 var _tile_cache: TileTextureCache
+var _deco_data: TileDecorationData
 
 # Color palettes per environment: {ground, ground_alt, wall, elevation_tint, grid_line}
 const PALETTES := {
@@ -105,6 +106,7 @@ func setup(grid: Grid, environment: String) -> void:
 	_grid = grid
 	_environment = environment if PALETTES.has(environment) else "grassland"
 	_tile_cache = TileTextureCache.new()
+	_deco_data = TileDecorationData.new()
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	queue_redraw()
 
@@ -131,9 +133,9 @@ func _draw() -> void:
 			var is_destructible := not walkable and _grid._destructible_hp[_grid._idx(pos)] > 0
 
 			if is_destructible:
-				_draw_destructible(rect, wall_color)
+				_draw_destructible(rect, wall_color, x + y * _grid.width)
 			elif not walkable:
-				_draw_wall(rect, wall_color)
+				_draw_wall(rect, wall_color, x + y * _grid.width)
 			else:
 				_draw_ground(rect, x, y, elevation, ground, ground_alt, elev_tint, variant_count)
 
@@ -178,7 +180,15 @@ func _draw_ground(rect: Rect2, x: int, y: int, elevation: int,
 	draw_rect(rect, base_color)
 
 
-func _draw_wall(rect: Rect2, wall_color: Color) -> void:
+func _draw_wall(rect: Rect2, wall_color: Color, variant: int = 0) -> void:
+	# Try wall object sprite from decoration data
+	if _deco_data:
+		var deco_tex := _deco_data.get_wall_sprite(_environment, variant)
+		if deco_tex:
+			draw_texture_rect(deco_tex, rect, false)
+			draw_rect(rect, Color(0, 0, 0, 0.1), false, 1.0)
+			return
+	# Try tileset wall texture
 	if _tile_cache:
 		var tex := _tile_cache.get_wall_texture(_environment)
 		if tex:
@@ -189,7 +199,14 @@ func _draw_wall(rect: Rect2, wall_color: Color) -> void:
 	draw_rect(rect, wall_color.darkened(0.2), false, 2.0)
 
 
-func _draw_destructible(rect: Rect2, wall_color: Color) -> void:
+func _draw_destructible(rect: Rect2, wall_color: Color, variant: int = 0) -> void:
+	# Try destructible sprite from decoration data
+	if _deco_data:
+		var deco_tex := _deco_data.get_destructible_sprite(variant)
+		if deco_tex:
+			draw_texture_rect(deco_tex, rect, false)
+			return
+	# Fallback: colored rectangles
 	draw_rect(rect, wall_color.darkened(0.1))
 	var inner := rect.grow(-6)
 	draw_rect(inner, wall_color.lightened(0.15))
