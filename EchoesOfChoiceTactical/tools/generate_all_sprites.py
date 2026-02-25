@@ -39,6 +39,7 @@ SKIP_CONTAINS = ["Run_Attack", "Walk_Attack"]
 ANIM_ORDER = ["idle", "walk", "attack", "hurt", "death"]
 LOOP_ANIMS = {"idle", "walk"}
 ROW_ORDER = ["down", "left", "right", "up"]
+ROW_ORDER_3DIR = ["down", "right", "up"]  # 3-dir mode: west handled by flip_h
 
 
 # ---------------------------------------------------------------------------
@@ -56,6 +57,15 @@ def _reg(sprite_id: str, rel_path: str, fw: int = 64, fh: int = 64) -> None:
 def _reg_4dir(sprite_id: str, rel_path: str, target_size: int = 64) -> None:
     """Register a 4-direction vector sprite (per-direction files, needs compositing)."""
     SPRITES[sprite_id] = {"path": rel_path, "mode": "4dir", "target": target_size}
+
+
+def _reg_3dir(sprite_id: str, rel_path: str, fw: int = 64, fh: int = 64) -> None:
+    """Register a 3-direction synthesized sprite (south/east/north, west=flip).
+
+    Expects pre-processed composites from synthesize_directions.py in
+    assets/art/sprites/processed/<sprite_id>/ with 3-row PNGs.
+    """
+    SPRITES[sprite_id] = {"path": rel_path, "fw": fw, "fh": fh, "mode": "3dir"}
 
 
 # --- Characters: Swordsman (9 variants, 64x64) ---
@@ -330,8 +340,12 @@ def discover_anims(dir_path: Path) -> dict[str, Path]:
 
 
 def generate_tres(sprite_id: str, anim_files: dict[str, Path],
-                  fw: int, fh: int, fps: float = 8.0) -> str:
+                  fw: int, fh: int, fps: float = 8.0,
+                  row_order: list[str] | None = None) -> str:
     """Generate a SpriteFrames .tres file as text."""
+    if row_order is None:
+        row_order = ROW_ORDER
+
     # Collect all ext_resources (one per unique PNG) and sub_resources (AtlasTextures)
     ext_resources: list[tuple[str, str]]  = []  # (id, res_path)
     sub_resources: list[tuple[str, str, str, str]] = []  # (sub_id, ext_id, region_str, sub_id_label)
@@ -366,9 +380,9 @@ def generate_tres(sprite_id: str, anim_files: dict[str, Path],
         ext_id_counter += 1
 
         # Create directional animations
-        dir_count = min(rows, len(ROW_ORDER))
+        dir_count = min(rows, len(row_order))
         for dir_i in range(dir_count):
-            direction = ROW_ORDER[dir_i]
+            direction = row_order[dir_i]
             anim_name = f"{anim_base}_{direction}"
             frame_refs = []
 
@@ -483,6 +497,16 @@ def main() -> None:
             # Now discover anims from the processed directory
             anim_files = discover_anims(processed)
             fw = fh = target
+        elif mode == "3dir":
+            # 3-direction synthesized sprites (from synthesize_directions.py)
+            fw = config["fw"]
+            fh = config["fh"]
+            processed_path = PROCESSED_DIR / sprite_id
+            if not processed_path.is_dir():
+                print(f"  SKIP {sprite_id}: processed dir not found (run synthesize_directions.py first)")
+                skipped += 1
+                continue
+            anim_files = discover_anims(processed_path)
         else:
             fw = config["fw"]
             fh = config["fh"]
@@ -493,7 +517,8 @@ def main() -> None:
             skipped += 1
             continue
 
-        tres_content = generate_tres(sprite_id, anim_files, fw, fh)
+        use_row_order = ROW_ORDER_3DIR if mode == "3dir" else ROW_ORDER
+        tres_content = generate_tres(sprite_id, anim_files, fw, fh, row_order=use_row_order)
         if not tres_content:
             print(f"  FAIL {sprite_id}: could not generate .tres")
             failed += 1
@@ -503,7 +528,12 @@ def main() -> None:
 
         if args.dry_run:
             anim_names = [a for a in ANIM_ORDER if a in anim_files]
-            label = f"4dir->{fw}x{fh}" if mode == "4dir" else f"{fw}x{fh}"
+            if mode == "4dir":
+                label = f"4dir->{fw}x{fh}"
+            elif mode == "3dir":
+                label = f"3dir->{fw}x{fh}"
+            else:
+                label = f"{fw}x{fh}"
             print(f"  [DRY] {sprite_id}: {', '.join(anim_names)} ({label})")
         else:
             output_path.write_text(tres_content, encoding="utf-8")

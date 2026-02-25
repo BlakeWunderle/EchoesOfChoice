@@ -364,12 +364,26 @@ func _has_anim(anim_name: String) -> bool:
 	return sprite.sprite_frames != null and sprite.sprite_frames.has_animation(anim_name)
 
 
-func _play_anim(action: String) -> void:
-	var anim_name := "%s_%s" % [action, _facing_suffix()]
+func _play_anim(action: String) -> bool:
+	var suffix := _facing_suffix()
+	var anim_name := "%s_%s" % [action, suffix]
 	if _has_anim(anim_name):
+		sprite.flip_h = false
 		sprite.play(anim_name)
+		return true
+	elif suffix == "left" and _has_anim("%s_right" % action):
+		sprite.flip_h = true
+		sprite.play("%s_right" % action)
+		return true
+	elif suffix == "right" and _has_anim("%s_left" % action):
+		sprite.flip_h = true
+		sprite.play("%s_left" % action)
+		return true
 	elif _has_anim(action):
+		sprite.flip_h = false
 		sprite.play(action)
+		return true
+	return false
 
 
 func _update_facing_animation() -> void:
@@ -377,20 +391,13 @@ func _update_facing_animation() -> void:
 
 
 func play_attack_animation() -> void:
-	var anim_name := "attack_%s" % _facing_suffix()
-	if _has_anim(anim_name):
-		sprite.play(anim_name)
-		await sprite.animation_finished
-		_update_facing_animation()
-	elif _has_anim("attack"):
-		sprite.play("attack")
+	if _play_anim("attack"):
 		await sprite.animation_finished
 		_update_facing_animation()
 
 
 func play_hurt_animation() -> void:
-	if _has_anim("hurt"):
-		sprite.play("hurt")
+	if _play_anim("hurt"):
 		await sprite.animation_finished
 		_update_facing_animation()
 	else:
@@ -402,8 +409,7 @@ func play_hurt_animation() -> void:
 
 
 func play_death_animation() -> void:
-	if _has_anim("death"):
-		sprite.play("death")
+	if _play_anim("death"):
 		await sprite.animation_finished
 	else:
 		var tween := create_tween()
