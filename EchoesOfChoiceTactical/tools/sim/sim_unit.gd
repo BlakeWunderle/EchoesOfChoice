@@ -34,6 +34,7 @@ var has_reaction: bool = true
 var has_acted: bool = false
 var has_moved: bool = false
 var is_alive: bool = true
+var jp_gained: int = 0
 
 
 func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: int = 1) -> void:
@@ -115,6 +116,12 @@ func start_turn() -> void:
 
 func end_turn() -> void:
 	pass
+
+
+func award_ability_jp(ability: AbilityData) -> void:
+	if team != Enums.Team.PLAYER:
+		return
+	jp_gained += XpConfig.calculate_jp(unit_name, ability)
 
 
 func use_reaction() -> void:

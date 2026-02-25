@@ -15,6 +15,7 @@ func _init(p_grid: Grid, p_reaction) -> void:
 
 
 func execute(unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> int:
+	unit.award_ability_jp(ability)
 	if ability.is_terrain_ability():
 		return _execute_terrain(unit, ability, aoe_tiles)
 	elif ability.is_heal():

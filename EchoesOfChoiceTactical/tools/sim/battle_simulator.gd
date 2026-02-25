@@ -98,14 +98,20 @@ func _run_stage(stage: Dictionary, composer) -> Dictionary:
 	var total_sims := 0
 	var class_wins: Dictionary = {}
 	var class_counts: Dictionary = {}
+	var class_jp_total: Dictionary = {}
+	var class_jp_sims: Dictionary = {}
 	var combo_results: Array[Dictionary] = []
 
 	for party in parties:
 		var wins := 0
 		for _sim in range(_sims_per_combo):
-			var won := _simulate_battle(stage, party, party_level, enemy_datas)
-			if won:
+			var sim_result := _simulate_battle(stage, party, party_level, enemy_datas)
+			if sim_result["player_won"]:
 				wins += 1
+			var jp_map: Dictionary = sim_result["jp"]
+			for cid in jp_map:
+				class_jp_total[cid] = class_jp_total.get(cid, 0) + jp_map[cid]
+				class_jp_sims[cid] = class_jp_sims.get(cid, 0) + 1
 		total_wins += wins
 		total_sims += _sims_per_combo
 		var combo_rate := float(wins) / float(_sims_per_combo)
@@ -142,20 +148,29 @@ func _run_stage(stage: Dictionary, composer) -> Dictionary:
 			band = "OVER"
 		class_bands.append({"class_id": c["class_id"], "win_rate": c["win_rate"], "band": band})
 
+	# JP economy
+	var jp_breakdown: Array[Dictionary] = []
+	for cid in class_jp_total:
+		var avg_jp := float(class_jp_total[cid]) / float(class_jp_sims[cid])
+		var is_identity := XpConfig.CLASS_IDENTITY.has(cid)
+		jp_breakdown.append({"class_id": cid, "avg_jp": avg_jp, "identity": is_identity})
+	jp_breakdown.sort_custom(func(a, b): return a["avg_jp"] > b["avg_jp"])
+
 	if _verbose:
-		_print_stage_detail(battle_id, overall_rate, target, class_breakdown, class_bands, combo_results)
+		_print_stage_detail(battle_id, overall_rate, target, class_breakdown, class_bands, combo_results, jp_breakdown)
 
 	return {
 		"battle_id": battle_id, "progression": prog,
 		"win_rate": overall_rate, "target": target,
 		"total_sims": total_sims, "combos": parties.size(),
 		"class_breakdown": class_breakdown, "class_bands": class_bands,
+		"jp_breakdown": jp_breakdown,
 		"weakest": combo_results.slice(0, 3),
 		"strongest": combo_results.slice(maxi(0, combo_results.size() - 3), combo_results.size()),
 	}
 
 
-func _simulate_battle(stage: Dictionary, party: Array, party_level: int, enemy_datas: Array[Dictionary]) -> bool:
+func _simulate_battle(stage: Dictionary, party: Array, party_level: int, enemy_datas: Array[Dictionary]) -> Dictionary:
 	var grid := Grid.new(stage["grid_width"], stage["grid_height"])
 	var reaction_sys := _SimReactionSystem.new(grid)
 	var executor := _SimExecutor.new(grid, reaction_sys)
@@ -163,6 +178,7 @@ func _simulate_battle(stage: Dictionary, party: Array, party_level: int, enemy_d
 	var turn_mgr := _SimTurnManager.new()
 
 	var all_units: Array = []
+	var player_units: Array = []
 	var spawn_positions: Array = stage["player_spawn"]
 
 	# Create player units
@@ -177,6 +193,7 @@ func _simulate_battle(stage: Dictionary, party: Array, party_level: int, enemy_d
 		unit.grid_position = pos
 		grid.set_occupant(pos, unit)
 		all_units.append(unit)
+		player_units.append(unit)
 
 	# Create enemy units
 	for e_def in enemy_datas:
@@ -188,7 +205,13 @@ func _simulate_battle(stage: Dictionary, party: Array, party_level: int, enemy_d
 
 	turn_mgr.setup(all_units)
 	var result := turn_mgr.run_battle(ai)
-	return result["player_won"]
+
+	# Collect JP per class
+	var jp_per_class: Dictionary = {}
+	for unit in player_units:
+		jp_per_class[unit.unit_name] = unit.jp_gained
+
+	return {"player_won": result["player_won"], "jp": jp_per_class}
 
 
 func _print_summary(results: Array[Dictionary], elapsed: float) -> void:
@@ -236,7 +259,7 @@ func _print_summary(results: Array[Dictionary], elapsed: float) -> void:
 
 func _print_stage_detail(battle_id: String, rate: float, target: float,
 		breakdown: Array[Dictionary], bands: Array[Dictionary],
-		combos: Array[Dictionary]) -> void:
+		combos: Array[Dictionary], jp: Array[Dictionary] = []) -> void:
 	print("\n  --- %s (%.1f%% vs %.1f%% target) ---" % [battle_id, rate * 100.0, target * 100.0])
 
 	if combos.size() >= 3:
@@ -257,6 +280,12 @@ func _print_stage_detail(battle_id: String, rate: float, target: float,
 		var band: String = band_map.get(c["class_id"], "OK")
 		var suffix := "  <-- %s" % band if band != "OK" else ""
 		print("    %-20s %5.1f%%%s" % [c["class_id"], c["win_rate"] * 100.0, suffix])
+
+	if jp.size() > 0:
+		print("  JP ECONOMY (avg per battle):")
+		for j in jp:
+			var tag := "  (identity)" if j["identity"] else ""
+			print("    %-20s %4.1f JP%s" % [j["class_id"], j["avg_jp"], tag])
 
 
 func _list_battles() -> void:
