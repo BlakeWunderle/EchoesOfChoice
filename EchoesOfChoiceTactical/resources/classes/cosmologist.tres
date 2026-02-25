@@ -11,7 +11,8 @@
 script = ExtResource("1")
 class_id = "cosmologist"
 class_display_name = "Cosmologist"
-sprite_id = "chibi_witch_1"
+sprite_id = "chibi_dark_oracle_3"
+sprite_id_female = "chibi_witch_1"
 base_max_health = 44
 base_max_mana = 14
 base_physical_attack = 7

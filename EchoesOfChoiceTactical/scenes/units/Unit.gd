@@ -32,6 +32,7 @@ var dodge_chance: int
 var movement: int
 var jump: int
 
+var gender: String = ""
 var voice_pack: String = ""
 var grid_position: Vector2i
 var facing: Enums.Facing = Enums.Facing.SOUTH
@@ -63,12 +64,13 @@ func _draw() -> void:
 	draw_rect(Rect2(-half, -half, PLACEHOLDER_SIZE, PLACEHOLDER_SIZE), color.lightened(0.3), false, 2.0)
 
 
-func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: int = 1) -> void:
+func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: int = 1, p_gender: String = "") -> void:
 	fighter_data = data
 	unit_name = p_name
 	unit_class = data.class_display_name
 	team = p_team
 	level = p_level
+	gender = p_gender
 
 	var stats := data.get_stats_at_level(level)
 	max_health = stats["max_health"]
@@ -89,7 +91,10 @@ func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: 
 	abilities = data.abilities.duplicate()
 	reaction_types = data.reaction_types.duplicate()
 
-	_load_sprite(data.sprite_id)
+	var sid := data.sprite_id
+	if _is_female(p_gender) and not data.sprite_id_female.is_empty():
+		sid = data.sprite_id_female
+	_load_sprite(sid)
 
 	if p_team == Enums.Team.PLAYER:
 		_apply_equipment()
@@ -338,6 +343,10 @@ func animate_move_along_path(path: Array[Vector2i]) -> void:
 		SFXManager.play(SFXManager.Category.FOOTSTEP, 0.4)
 
 	_update_facing_animation()
+
+
+func _is_female(g: String) -> bool:
+	return g == "female" or g == "princess"
 
 
 # --- Sprite Loading ---

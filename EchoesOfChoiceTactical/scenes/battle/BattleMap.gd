@@ -174,7 +174,8 @@ func _setup_from_config(config: BattleConfig) -> void:
 	terrain_renderer.setup(grid, config.environment)
 
 	for entry in config.player_units:
-		var unit := _spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"])
+		var member_gender := _get_member_gender(entry["name"])
+		var unit := _spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"], member_gender)
 		var member_xp := _find_party_member_xp(entry["name"])
 		unit.initialize_xp(member_xp[0], member_xp[1])
 		unit.voice_pack = GameState.get_voice_pack(entry["name"])
@@ -278,10 +279,19 @@ func _create_test_fighter(display_name: String, hp: int, mp: int, p_atk: int, p_
 	return data
 
 
-func _spawn_unit(data: FighterData, unit_name: String, team: Enums.Team, pos: Vector2i, level: int) -> Unit:
+func _get_member_gender(unit_name: String) -> String:
+	if unit_name == GameState.player_name:
+		return GameState.player_gender
+	for member in GameState.party_members:
+		if member["name"] == unit_name:
+			return member.get("gender", "")
+	return ""
+
+
+func _spawn_unit(data: FighterData, unit_name: String, team: Enums.Team, pos: Vector2i, level: int, p_gender: String = "") -> Unit:
 	var unit: Unit = unit_scene.instantiate()
 	units_container.add_child(unit)
-	unit.initialize(data, unit_name, team, level)
+	unit.initialize(data, unit_name, team, level, p_gender)
 	unit.place_on_grid(pos)
 	grid.set_occupant(pos, unit)
 

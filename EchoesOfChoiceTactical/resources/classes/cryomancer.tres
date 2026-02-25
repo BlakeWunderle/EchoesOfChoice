@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "cryomancer"
 class_display_name = "Cryomancer"
-sprite_id = "chibi_winter_witch_1"
+sprite_id = "chibi_shaman_2"
+sprite_id_female = "chibi_winter_witch_1"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

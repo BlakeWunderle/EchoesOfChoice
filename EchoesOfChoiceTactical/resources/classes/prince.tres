@@ -8,6 +8,7 @@ script = ExtResource("1")
 class_id = "prince"
 class_display_name = "Prince"
 sprite_id = "chibi_king_defender_sergeant_medieval_king"
+sprite_id_female = "chibi_valkyrie_1"
 base_max_health = 48
 base_max_mana = 10
 base_physical_attack = 12

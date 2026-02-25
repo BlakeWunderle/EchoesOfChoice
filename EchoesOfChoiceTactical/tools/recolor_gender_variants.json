@@ -1,0 +1,57 @@
+{
+    "jobs": [
+        {"input": "sprites/processed/chibi_medieval_warrior_girl/idle.png", "output": "sprites/processed/chibi_medieval_warrior_girl/idle.png", "from_hue": 40, "to_hue": 10},
+        {"input": "sprites/processed/chibi_medieval_warrior_girl/walk.png", "output": "sprites/processed/chibi_medieval_warrior_girl/walk.png", "from_hue": 40, "to_hue": 10},
+        {"input": "sprites/processed/chibi_medieval_warrior_girl/attack.png", "output": "sprites/processed/chibi_medieval_warrior_girl/attack.png", "from_hue": 40, "to_hue": 10},
+        {"input": "sprites/processed/chibi_medieval_warrior_girl/hurt.png", "output": "sprites/processed/chibi_medieval_warrior_girl/hurt.png", "from_hue": 40, "to_hue": 10},
+        {"input": "sprites/processed/chibi_medieval_warrior_girl/death.png", "output": "sprites/processed/chibi_medieval_warrior_girl/death.png", "from_hue": 40, "to_hue": 10},
+
+        {"input": "sprites/processed/chibi_forest_ranger_2/idle.png", "output": "sprites/processed/chibi_forest_ranger_2/idle.png", "from_hue": 80, "to_hue": 20},
+        {"input": "sprites/processed/chibi_forest_ranger_2/walk.png", "output": "sprites/processed/chibi_forest_ranger_2/walk.png", "from_hue": 80, "to_hue": 20},
+        {"input": "sprites/processed/chibi_forest_ranger_2/attack.png", "output": "sprites/processed/chibi_forest_ranger_2/attack.png", "from_hue": 80, "to_hue": 20},
+        {"input": "sprites/processed/chibi_forest_ranger_2/hurt.png", "output": "sprites/processed/chibi_forest_ranger_2/hurt.png", "from_hue": 80, "to_hue": 20},
+        {"input": "sprites/processed/chibi_forest_ranger_2/death.png", "output": "sprites/processed/chibi_forest_ranger_2/death.png", "from_hue": 80, "to_hue": 20},
+
+        {"input": "sprites/processed/chibi_forest_ranger_3/idle.png", "output": "sprites/processed/chibi_forest_ranger_3/idle.png", "from_hue": 30, "to_hue": 70},
+        {"input": "sprites/processed/chibi_forest_ranger_3/walk.png", "output": "sprites/processed/chibi_forest_ranger_3/walk.png", "from_hue": 30, "to_hue": 70},
+        {"input": "sprites/processed/chibi_forest_ranger_3/attack.png", "output": "sprites/processed/chibi_forest_ranger_3/attack.png", "from_hue": 30, "to_hue": 70},
+        {"input": "sprites/processed/chibi_forest_ranger_3/hurt.png", "output": "sprites/processed/chibi_forest_ranger_3/hurt.png", "from_hue": 30, "to_hue": 70},
+        {"input": "sprites/processed/chibi_forest_ranger_3/death.png", "output": "sprites/processed/chibi_forest_ranger_3/death.png", "from_hue": 30, "to_hue": 70},
+
+        {"input": "sprites/processed/chibi_magician_girl_2/idle.png", "output": "sprites/processed/chibi_magician_girl_2/idle.png", "from_hue": 220, "to_hue": 190},
+        {"input": "sprites/processed/chibi_magician_girl_2/walk.png", "output": "sprites/processed/chibi_magician_girl_2/walk.png", "from_hue": 220, "to_hue": 190},
+        {"input": "sprites/processed/chibi_magician_girl_2/attack.png", "output": "sprites/processed/chibi_magician_girl_2/attack.png", "from_hue": 220, "to_hue": 190},
+        {"input": "sprites/processed/chibi_magician_girl_2/hurt.png", "output": "sprites/processed/chibi_magician_girl_2/hurt.png", "from_hue": 220, "to_hue": 190},
+        {"input": "sprites/processed/chibi_magician_girl_2/death.png", "output": "sprites/processed/chibi_magician_girl_2/death.png", "from_hue": 220, "to_hue": 190},
+
+        {"input": "sprites/processed/chibi_citizen_3/idle.png", "output": "sprites/processed/chibi_citizen_3/idle.png", "from_hue": 20, "to_hue": 40},
+        {"input": "sprites/processed/chibi_citizen_3/walk.png", "output": "sprites/processed/chibi_citizen_3/walk.png", "from_hue": 20, "to_hue": 40},
+        {"input": "sprites/processed/chibi_citizen_3/attack.png", "output": "sprites/processed/chibi_citizen_3/attack.png", "from_hue": 20, "to_hue": 40},
+        {"input": "sprites/processed/chibi_citizen_3/hurt.png", "output": "sprites/processed/chibi_citizen_3/hurt.png", "from_hue": 20, "to_hue": 40},
+        {"input": "sprites/processed/chibi_citizen_3/death.png", "output": "sprites/processed/chibi_citizen_3/death.png", "from_hue": 20, "to_hue": 40},
+
+        {"input": "sprites/processed/chibi_pyromancer_2/idle.png", "output": "sprites/processed/chibi_pyromancer_2/idle.png", "from_hue": 40, "to_hue": 20},
+        {"input": "sprites/processed/chibi_pyromancer_2/walk.png", "output": "sprites/processed/chibi_pyromancer_2/walk.png", "from_hue": 40, "to_hue": 20},
+        {"input": "sprites/processed/chibi_pyromancer_2/attack.png", "output": "sprites/processed/chibi_pyromancer_2/attack.png", "from_hue": 40, "to_hue": 20},
+        {"input": "sprites/processed/chibi_pyromancer_2/hurt.png", "output": "sprites/processed/chibi_pyromancer_2/hurt.png", "from_hue": 40, "to_hue": 20},
+        {"input": "sprites/processed/chibi_pyromancer_2/death.png", "output": "sprites/processed/chibi_pyromancer_2/death.png", "from_hue": 40, "to_hue": 20},
+
+        {"input": "sprites/processed/chibi_fantasy_warrior_black_wizard/idle.png", "output": "sprites/processed/chibi_fantasy_warrior_black_wizard/idle.png", "from_hue": 40, "to_hue": 20},
+        {"input": "sprites/processed/chibi_fantasy_warrior_black_wizard/walk.png", "output": "sprites/processed/chibi_fantasy_warrior_black_wizard/walk.png", "from_hue": 40, "to_hue": 20},
+        {"input": "sprites/processed/chibi_fantasy_warrior_black_wizard/attack.png", "output": "sprites/processed/chibi_fantasy_warrior_black_wizard/attack.png", "from_hue": 40, "to_hue": 20},
+        {"input": "sprites/processed/chibi_fantasy_warrior_black_wizard/hurt.png", "output": "sprites/processed/chibi_fantasy_warrior_black_wizard/hurt.png", "from_hue": 40, "to_hue": 20},
+        {"input": "sprites/processed/chibi_fantasy_warrior_black_wizard/death.png", "output": "sprites/processed/chibi_fantasy_warrior_black_wizard/death.png", "from_hue": 40, "to_hue": 20},
+
+        {"input": "sprites/processed/chibi_shaman_2/idle.png", "output": "sprites/processed/chibi_shaman_2/idle.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.1},
+        {"input": "sprites/processed/chibi_shaman_2/walk.png", "output": "sprites/processed/chibi_shaman_2/walk.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.1},
+        {"input": "sprites/processed/chibi_shaman_2/attack.png", "output": "sprites/processed/chibi_shaman_2/attack.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.1},
+        {"input": "sprites/processed/chibi_shaman_2/hurt.png", "output": "sprites/processed/chibi_shaman_2/hurt.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.1},
+        {"input": "sprites/processed/chibi_shaman_2/death.png", "output": "sprites/processed/chibi_shaman_2/death.png", "from_hue": 20, "to_hue": 220, "lightness_shift": 0.1},
+
+        {"input": "sprites/processed/chibi_dark_oracle_3/idle.png", "output": "sprites/processed/chibi_dark_oracle_3/idle.png", "from_hue": 210, "to_hue": 260},
+        {"input": "sprites/processed/chibi_dark_oracle_3/walk.png", "output": "sprites/processed/chibi_dark_oracle_3/walk.png", "from_hue": 210, "to_hue": 260},
+        {"input": "sprites/processed/chibi_dark_oracle_3/attack.png", "output": "sprites/processed/chibi_dark_oracle_3/attack.png", "from_hue": 210, "to_hue": 260},
+        {"input": "sprites/processed/chibi_dark_oracle_3/hurt.png", "output": "sprites/processed/chibi_dark_oracle_3/hurt.png", "from_hue": 210, "to_hue": 260},
+        {"input": "sprites/processed/chibi_dark_oracle_3/death.png", "output": "sprites/processed/chibi_dark_oracle_3/death.png", "from_hue": 210, "to_hue": 260}
+    ]
+}

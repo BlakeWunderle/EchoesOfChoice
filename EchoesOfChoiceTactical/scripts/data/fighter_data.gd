@@ -3,6 +3,7 @@ class_name FighterData extends Resource
 @export var class_id: String
 @export var class_display_name: String
 @export var sprite_id: String = ""
+@export var sprite_id_female: String = ""
 
 @export_group("Base Stats")
 @export var base_max_health: int = 50

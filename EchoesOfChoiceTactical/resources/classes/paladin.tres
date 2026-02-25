@@ -10,6 +10,7 @@ script = ExtResource("1")
 class_id = "paladin"
 class_display_name = "Paladin"
 sprite_id = "chibi_paladin_1"
+sprite_id_female = "chibi_valkyrie_3"
 base_max_health = 63
 base_max_mana = 16
 base_physical_attack = 19

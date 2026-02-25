@@ -59,7 +59,7 @@ CLASS_SPRITE_IDS: dict[str, str] = {
     "illusionist": "chibi_dark_oracle_2",                          # T2: trickster mage
     "chronomancer": "chibi_time_keeper_1",                         # T2: time mage
     "pyromancer": "chibi_pyromancer_1",                            # T2: fire mage
-    "cryomancer": "chibi_winter_witch_1",                          # T2: ice mage
+    "cryomancer": "chibi_shaman_2",                                 # T2: ice mage (male, recolored blue)
     "electromancer": "chibi_shaman_of_thunder_2",                  # T2: lightning mage
     "hydromancer": "chibi_shaman_1",                               # T2: water mage
     "geomancer": "chibi_human_shaman_1",                           # T2: earth mage
@@ -70,10 +70,10 @@ CLASS_SPRITE_IDS: dict[str, str] = {
     "chorister": "chibi_priest_3",                                 # T1: choir singer
     "orator": "chibi_citizen_1",                                   # T1: speechmaker
     "minstrel": "chibi_thief_pirate_rogue_rogue",                 # T2: traveling musician
-    "elegist": "chibi_magician_girl_3",                              # T2: melancholic poet
+    "elegist": "chibi_fantasy_warrior_black_wizard",                 # T2: melancholic poet (male)
     "laureate": "chibi_citizen_2",                                 # T2: acclaimed poet
     "mime": "chibi_ninja_assassin_white_ninja",                    # T2: silent performer
-    "muse": "chibi_magician_girl_1",                               # T2: inspiring artist
+    "muse": "chibi_villager_2",                                    # T2: inspiring artist (male)
     "warcrier": "chibi_viking_1",                                  # T2: battle shouter
 
     # --- Scholar tree (inventors/academics) ---
@@ -86,12 +86,33 @@ CLASS_SPRITE_IDS: dict[str, str] = {
     "siegemaster": "chibi_king_defender_sergeant_medieval_sergeant",  # T2: heavy siege
     "automaton": "chibi_golem_1",                                  # T2: construct
     "astronomer": "chibi_old_hero_3",                              # T2: stargazer
-    "cosmologist": "chibi_witch_1",                                # T2: cosmic scholar
+    "cosmologist": "chibi_dark_oracle_3",                           # T2: cosmic scholar (male, recolored indigo)
     "arithmancer": "chibi_cursed_alchemist_1",                     # T2: math mage
 
     # --- Royal classes ---
     "prince": "chibi_king_defender_sergeant_medieval_king",        # Royal: armored prince
     "princess": "chibi_valkyrie_1",                                # Royal: warrior princess
+}
+
+CLASS_SPRITE_IDS_FEMALE: dict[str, str] = {
+    # Male classes -> add female variant (recolored to match male palette)
+    "martial_artist": "chibi_amazon_warrior_1",
+    "squire": "chibi_medieval_warrior_girl",
+    "knight": "chibi_valkyrie_2",
+    "paladin": "chibi_valkyrie_3",
+    "mercenary": "chibi_amazon_warrior_2",
+    "ranger": "chibi_forest_ranger_2",
+    "hunter": "chibi_forest_ranger_3",
+    "mage": "chibi_magician_girl_2",
+    "entertainer": "chibi_citizen_3",
+    "firebrand": "chibi_pyromancer_2",
+    "prince": "chibi_valkyrie_1",
+
+    # Female classes -> keep current sprite as female variant
+    "muse": "chibi_magician_girl_1",
+    "elegist": "chibi_magician_girl_3",
+    "cryomancer": "chibi_winter_witch_1",
+    "cosmologist": "chibi_witch_1",
 }
 
 ENEMY_SPRITE_IDS: dict[str, str] = {
@@ -259,6 +280,39 @@ def set_sprite_id_in_tres(filepath: Path, sprite_id: str) -> bool:
     return False
 
 
+def set_sprite_id_female_in_tres(filepath: Path, sprite_id_female: str) -> bool:
+    """Set sprite_id_female in a FighterData .tres file. Returns True if changed."""
+    content = filepath.read_text(encoding="utf-8")
+
+    # Check if sprite_id_female already exists
+    if re.search(r'^sprite_id_female\s*=', content, re.MULTILINE):
+        new_content = re.sub(
+            r'^sprite_id_female\s*=\s*"[^"]*"',
+            f'sprite_id_female = "{sprite_id_female}"',
+            content,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        if new_content == content:
+            return False
+        filepath.write_text(new_content, encoding="utf-8")
+        return True
+
+    # Insert after sprite_id line
+    match = re.search(r'^(sprite_id\s*=\s*"[^"]*")', content, re.MULTILINE)
+    if match:
+        insert_pos = match.end()
+        new_content = (
+            content[:insert_pos]
+            + f'\nsprite_id_female = "{sprite_id_female}"'
+            + content[insert_pos:]
+        )
+        filepath.write_text(new_content, encoding="utf-8")
+        return True
+
+    return False
+
+
 def print_coverage_report() -> None:
     """Print sprite coverage by pack collection."""
     chibi_count = sum(1 for sid in CLASS_SPRITE_IDS.values() if sid.startswith("chibi_"))
@@ -311,6 +365,24 @@ def main() -> None:
             class_updated += 1
 
     print(f"\nClasses: {class_updated} updated, {class_missing} missing\n")
+
+    # Process female sprite variants
+    female_updated = 0
+    for class_id, sprite_id_female in sorted(CLASS_SPRITE_IDS_FEMALE.items()):
+        filepath = CLASSES_DIR / f"{class_id}.tres"
+        if not filepath.exists():
+            continue
+
+        if args.dry_run:
+            print(f"  [DRY] class/{class_id} female -> {sprite_id_female}")
+            female_updated += 1
+        else:
+            changed = set_sprite_id_female_in_tres(filepath, sprite_id_female)
+            status = "SET " if changed else "SAME"
+            print(f"  {status} class/{class_id} female -> {sprite_id_female}")
+            female_updated += 1
+
+    print(f"\nFemale variants: {female_updated} updated\n")
 
     # Process enemies
     enemy_updated = 0

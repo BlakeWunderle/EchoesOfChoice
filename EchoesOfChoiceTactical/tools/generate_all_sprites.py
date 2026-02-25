@@ -178,6 +178,22 @@ _chibi_3dir_sprites = [
     # Royal
     "chibi_king_defender_sergeant_medieval_king",
     "chibi_valkyrie_1",
+    # Gender variants (female sprites for male classes)
+    "chibi_amazon_warrior_1",
+    "chibi_amazon_warrior_2",
+    "chibi_medieval_warrior_girl",
+    "chibi_valkyrie_2",
+    "chibi_valkyrie_3",
+    "chibi_forest_ranger_2",
+    "chibi_forest_ranger_3",
+    "chibi_magician_girl_2",
+    "chibi_citizen_3",
+    "chibi_pyromancer_2",
+    # Gender variants (male sprites for female classes)
+    "chibi_villager_2",
+    "chibi_fantasy_warrior_black_wizard",
+    "chibi_shaman_2",
+    "chibi_dark_oracle_3",
 ]
 for _sid in _chibi_3dir_sprites:
     _reg_3dir(_sid, f"processed/{_sid}")
