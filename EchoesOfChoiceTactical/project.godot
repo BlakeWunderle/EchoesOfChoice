@@ -23,6 +23,10 @@ MusicManager="*res://scripts/autoload/music_manager.gd"
 SFXManager="*res://scripts/autoload/sfx_manager.gd"
 SpriteLoader="*res://scripts/autoload/sprite_loader.gd"
 
+[gui]
+
+theme/custom="res://resources/gui/game_theme.tres"
+
 [display]
 
 window/size/viewport_width=1280
