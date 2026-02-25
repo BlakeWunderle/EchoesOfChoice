@@ -86,9 +86,18 @@ PACKS = [
     ("sprites/characters", "warrior_free",
      "/freebies/free-warrior-4-direction-character-sprites/"),
 
+    ("sprites/characters", "wizard_topdown",
+     "/product/top-down-wizard-characters-pack-male-veteran-female/"),
+
     # --- Characters: NPCs ---
     ("sprites/npcs", "citizen_artist_astrologer",
      "/freebies/free-citizen-artist-astrologer-4-direction-npc-character-pack/"),
+    ("sprites/npcs", "winter_npcs",
+     "/product/winter-4-direction-npc-character-sprites/"),
+    ("sprites/npcs", "desert_npcs",
+     "/product/citizen-inspector-assistant-4-direction-character-sprites/"),
+    ("sprites/npcs", "tropical_npcs",
+     "/product/tropical-4-direction-character-sprites/"),
 
     # --- Characters: Enemies ---
     ("sprites/enemies", "slime_mobs",
