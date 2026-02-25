@@ -5,13 +5,13 @@
 [resource]
 script = ExtResource("1")
 ability_name = "Radiance"
-flavor_text = "Holy light that strengthens nearby allies."
-modified_stat = 5
-modifier = 2
-impacted_turns = 2
-use_on_enemy = false
+flavor_text = "Emit a burst of divine light to sear an enemy."
+modified_stat = 2
+modifier = 4
+impacted_turns = 0
+use_on_enemy = true
 mana_cost = 3
-ability_range = 0
-aoe_shape = 3
-aoe_size = 1
-ability_type = 2
+ability_range = 3
+aoe_shape = 0
+aoe_size = 0
+ability_type = 0

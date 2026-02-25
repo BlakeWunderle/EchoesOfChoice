@@ -5,13 +5,13 @@
 [resource]
 script = ExtResource("1")
 ability_name = "Melody"
-flavor_text = "An uplifting tune that strengthens an ally."
-modified_stat = 4
-modifier = 3
-impacted_turns = 2
-use_on_enemy = false
-mana_cost = 2
+flavor_text = "A sharp melody that strikes a painful chord in the enemy."
+modified_stat = 2
+modifier = 5
+impacted_turns = 0
+use_on_enemy = true
+mana_cost = 3
 ability_range = 3
 aoe_shape = 0
 aoe_size = 0
-ability_type = 2
+ability_type = 0
