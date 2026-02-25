@@ -85,7 +85,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `GameOver.gd/.tscn` -- Game over screen
 
 ### Units (`scenes/units/`)
-- `Unit.gd/.tscn` -- Unit node: AnimatedSprite2D with 64x64 CraftPix sprites (128x128 for large enemies), directional animations (idle/walk/attack/hurt/death x 4 directions), sprite loading via SpriteLoader, placeholder colored rectangles fallback, all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
+- `Unit.gd/.tscn` -- Unit node: AnimatedSprite2D (2x scale for 32px art on 64px tiles), directional animations (idle/walk/attack/hurt/death), sprite loading via SpriteLoader, flip_h mirroring fallback (left↔right) for 3-direction sprites, placeholder colored rectangles, all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
 
 ### Resources (`resources/`)
 - `classes/` -- 54 FighterData .tres files (4 base + 16 T1 + 32 T2 + 2 royal)
@@ -103,10 +103,11 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `create_spriteframes.gd` -- Generates SpriteFrames .tres from sprite sheet PNGs; supports single-sheet and --dir mode for CraftPix multi-file format (per-animation PNGs with 4 direction rows)
 - `orphan_check.gd` -- Detects orphaned .tres resources and .tscn scenes with zero external references (full-path + quoted-basename search strategies)
 - `generate_theme.gd` -- Generates `resources/gui/game_theme.tres` programmatically with StyleBoxFlat styling for all UI control types
-- `download_craftpix.py` -- Python script to download all 92 CraftPix asset packs via cookie auth (two-step URL resolution: product page → download page → files.craftpix.net ZIP); supports Netscape and simple name=value cookie files
+- `download_craftpix.py` -- Python script to download all 231 CraftPix asset packs via cookie auth (two-step URL resolution: product page → download page → files.craftpix.net ZIP); supports Netscape and simple name=value cookie files; covers RPG top-down collection (96), Chibi collection (98), Tiny Fantasy collection (37)
 - `palette_swap.py` -- Python hue-based sprite recoloring tool with analyze, single, and batch modes for creating class variants from base archetypes
-- `generate_all_sprites.py` -- Python batch generator: reads CraftPix PNG sprite sheets, writes 68 SpriteFrames .tres files (14 character + 54 enemy sprites) with correct AtlasTexture regions
-- `set_sprite_ids.py` -- Python tool to set sprite_id on all 54 class and 78 enemy .tres files per a hard-coded mapping; also prints coverage gap report for PixelLab
+- `synthesize_directions.py` -- Python tool to generate 3-direction composite sheets from single-facing sprite packs (Chibi/Tiny Fantasy); south=original, east=original, north=darkened; west handled by Unit.gd flip_h
+- `generate_all_sprites.py` -- Python batch generator: reads CraftPix PNG sprite sheets, writes SpriteFrames .tres files with correct AtlasTexture regions; supports sheet mode (4-row), 4dir mode (per-direction compositing), and 3dir mode (synthesized 3-direction)
+- `set_sprite_ids.py` -- Python tool to set sprite_id on all 54 class and 78 enemy .tres files per a hard-coded mapping; also prints coverage gap report
 
 ## Build Progress
 
@@ -119,7 +120,7 @@ Phases 1-7 COMPLETE (project setup, grid, units, movement, turns, abilities, com
 | 10 | COMPLETE | Class porting — all 54 player classes, 170+ abilities, 67 enemies, 59 items as .tres |
 | 11 | MOSTLY COMPLETE | Story/world — battle configs, NPC conversations, travel events; missing: some dialogue polish |
 | 12 | PENDING | Final balance pass — all battles tuned; XP/JP curve verified; win-rate targets met |
-| 13 | MOSTLY COMPLETE | Art integration — 92 CraftPix packs downloaded (characters, enemies, animals, tilesets, buildings, objects, icons); sprites wired to all 54 classes and 78 enemies (68 SpriteFrames generated); wizard/archer/warrior/NPC packs downloaded for class remapping; CraftPix tileset textures for ground/wall/destructible tiles (17 environments); GUI theme (dark panels, Oswald-Bold font); overworld styled paths and terrain markers; missing: generate SpriteFrames for new character packs, remap mage classes to wizard sprites, palette swaps for entertainer/scholar placeholders |
+| 13 | IN PROGRESS | Art integration — 231 CraftPix packs in download script (96 RPG top-down + 98 Chibi + 37 Tiny Fantasy); direction synthesis pipeline (synthesize_directions.py → generate_all_sprites.py 3dir mode → Unit.gd flip_h fallback); 68 SpriteFrames generated for existing packs; missing: download remaining packs, synthesize 3-direction sprites from Chibi/Tiny, map all 54 classes to final sprite_ids, palette swaps for variants |
 
 ## Reference Codebase
 
