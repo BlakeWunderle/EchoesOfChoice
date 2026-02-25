@@ -7,8 +7,9 @@ extends Node2D
 @onready var camera: Camera2D = $Camera2D
 @onready var units_container: Node2D = $Units
 @onready var hud: CanvasLayer = $HUD
-@onready var turn_info: Label = $HUD/TurnInfo
-@onready var action_menu: ActionMenuController = $HUD/ActionPanel
+@onready var turn_info: Label = $HUD/TurnInfoPanel/TurnInfo
+@onready var action_menu: ActionMenuController = $HUD/ActionMenuPanel/ActionPanel
+@onready var _action_menu_panel: PanelContainer = $HUD/ActionMenuPanel
 
 var grid: Grid
 var reaction_system: ReactionSystem
@@ -313,12 +314,14 @@ func _connect_action_menu() -> void:
 
 
 func _show_action_menu(unit: Unit) -> void:
+	_action_menu_panel.visible = true
 	action_menu.show_menu(unit)
 	_update_turn_info(unit)
 
 
 func _hide_action_menu() -> void:
 	action_menu.hide_menu()
+	_action_menu_panel.visible = false
 
 
 func _update_turn_info(unit: Unit) -> void:
@@ -392,6 +395,7 @@ func _on_facing_chosen(dir: int) -> void:
 		return
 	unit.facing = dir
 	action_menu.hide_menu()
+	_action_menu_panel.visible = false
 	grid_overlay.clear_all()
 	unit.end_turn()
 
@@ -535,6 +539,7 @@ func _show_targeting(ability: AbilityData, unit: Unit) -> void:
 func _enter_facing_phase(unit: Unit) -> void:
 	_current_phase = Enums.TurnPhase.CHOOSE_FACING
 	grid_cursor.deactivate()
+	_action_menu_panel.visible = true
 	action_menu.show_facing()
 
 

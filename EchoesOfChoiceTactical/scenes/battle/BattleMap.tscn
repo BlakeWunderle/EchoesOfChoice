@@ -27,18 +27,24 @@ visible = false
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="TurnInfo" type="Label" parent="HUD"]
+[node name="TurnInfoPanel" type="PanelContainer" parent="HUD"]
 offset_left = 10.0
 offset_top = 10.0
 offset_right = 400.0
 offset_bottom = 60.0
 
-[node name="ActionPanel" type="VBoxContainer" parent="HUD"]
+[node name="TurnInfo" type="Label" parent="HUD/TurnInfoPanel"]
+layout_mode = 2
+
+[node name="ActionMenuPanel" type="PanelContainer" parent="HUD"]
 visible = false
 offset_left = 10.0
 offset_top = 70.0
 offset_right = 200.0
 offset_bottom = 300.0
+
+[node name="ActionPanel" type="VBoxContainer" parent="HUD/ActionMenuPanel"]
+layout_mode = 2
 script = ExtResource("5_menu")
 
 [node name="TurnManager" type="Node" parent="."]
