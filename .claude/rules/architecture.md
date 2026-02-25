@@ -36,8 +36,11 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `combat.gd` -- All damage formulas, crit/dodge rolls, reaction damage calculations (flanking 50%, snap shot 50%, reactive heal 35%, mitigation 25%, bodyguard 45%)
 - `reaction_system.gd` -- All 6 reaction types with trigger logic, defensive reaction chaining (bodyguard then mitigation before damage applies)
 - `battle_ai.gd` -- Enemy AI: target scoring, ability selection, movement positioning, trap avoidance
-- `ability_executor.gd` -- Ability execution: damage/heal/buff/debuff/terrain application
-- `battle_terrain_renderer.gd` -- Draws battle terrain with per-environment color palettes (17 environments), elevation tinting, wall/destructible styling
+- `ability_executor.gd` -- Ability execution: damage/heal/buff/debuff/terrain application, returns result dictionaries for animation
+- `combat_animator.gd` -- Combat visual effects: damage popups, hit flash, screen shake, ability tint, health bar tweening, death sequences
+- `battle_terrain_renderer.gd` -- Draws battle terrain with CraftPix tileset textures (17 environments), elevation tinting, wall/destructible sprites, terrain effect overlays
+- `tile_texture_cache.gd` -- Caches ground and wall AtlasTextures from CraftPix tileset spritesheets per environment
+- `tile_decoration_data.gd` -- Per-environment wall object, destructible, and detail sprite paths with fallback mapping
 
 ### Autoload (`scripts/autoload/`)
 - `game_state.gd` -- Singleton: party data, progression stage, story flags, gold, inventory, equipment, unlocked classes
@@ -66,7 +69,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `TravelEvent.gd/.tscn` -- Overworld travel event popup (ambush/merchant/rest/story/rumor)
 
 ### Overworld (`scenes/overworld/`)
-- `OverworldMap.gd/.tscn` -- Overworld map with node traversal, fog-of-war, styled circle node markers with battle/town icons, terrain glow
+- `OverworldMap.gd/.tscn` -- Overworld map with node traversal, fog-of-war, terrain-tinted node markers with drop shadows, styled road paths with dashes, info panel with dark/gold styling
 - `terrain_drawer.gd` -- Overworld terrain landmark icons (procedural draw per terrain type)
 
 ### Town (`scenes/town/`)
@@ -90,6 +93,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `enemies/` -- 78 FighterData .tres files
 - `items/` -- 58 item .tres files (consumables + equipment across 3 progression tiers)
 - `tilesets/` -- TileSet resources for terrain
+- `gui/` -- `game_theme.tres` project-wide Theme (dark panels, gold borders, green buttons, Oswald-Bold font)
 - `spriteframes/` -- 68 SpriteFrames .tres files (in `assets/art/sprites/spriteframes/`, tracked in git); generated from CraftPix PNGs by `generate_all_sprites.py`
 
 ### Tools (`tools/`)
@@ -98,7 +102,8 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `jp_check.gd` -- JP economy balance verification per class and progression
 - `create_spriteframes.gd` -- Generates SpriteFrames .tres from sprite sheet PNGs; supports single-sheet and --dir mode for CraftPix multi-file format (per-animation PNGs with 4 direction rows)
 - `orphan_check.gd` -- Detects orphaned .tres resources and .tscn scenes with zero external references (full-path + quoted-basename search strategies)
-- `download_craftpix.py` -- Python script to download all 58 CraftPix asset packs via cookie auth (two-step URL resolution: product page → download page → files.craftpix.net ZIP)
+- `generate_theme.gd` -- Generates `resources/gui/game_theme.tres` programmatically with StyleBoxFlat styling for all UI control types
+- `download_craftpix.py` -- Python script to download all 92 CraftPix asset packs via cookie auth (two-step URL resolution: product page → download page → files.craftpix.net ZIP); supports Netscape and simple name=value cookie files
 - `palette_swap.py` -- Python hue-based sprite recoloring tool with analyze, single, and batch modes for creating class variants from base archetypes
 - `generate_all_sprites.py` -- Python batch generator: reads CraftPix PNG sprite sheets, writes 68 SpriteFrames .tres files (14 character + 54 enemy sprites) with correct AtlasTexture regions
 - `set_sprite_ids.py` -- Python tool to set sprite_id on all 54 class and 78 enemy .tres files per a hard-coded mapping; also prints coverage gap report for PixelLab
@@ -110,11 +115,11 @@ Phases 1-7 COMPLETE (project setup, grid, units, movement, turns, abilities, com
 | Phase | Status | Scope |
 |-------|--------|-------|
 | 8 | COMPLETE | Tactical AI — enemy decision-making, ability scoring, movement positioning |
-| 9 | MOSTLY COMPLETE | UI — health bars, action menu, turn order, battle summary, cursor; missing: combat animations |
+| 9 | COMPLETE | UI — health bars, action menu, turn order, battle summary, cursor, combat animations (damage popups, hit flash, screen shake, health bar tweening) |
 | 10 | COMPLETE | Class porting — all 54 player classes, 170+ abilities, 67 enemies, 59 items as .tres |
 | 11 | MOSTLY COMPLETE | Story/world — battle configs, NPC conversations, travel events; missing: some dialogue polish |
 | 12 | PENDING | Final balance pass — all battles tuned; XP/JP curve verified; win-rate targets met |
-| 13 | MOSTLY COMPLETE | Art integration — CraftPix sprites wired to all 54 classes and 78 enemies (68 SpriteFrames generated); terrain renderer (17 environments); overworld styling; missing: 16 entertainer/orator/engineer/royal classes need PixelLab sprites, tileset upgrade, GUI skinning |
+| 13 | MOSTLY COMPLETE | Art integration — 92 CraftPix packs downloaded (characters, enemies, animals, tilesets, buildings, objects, icons); sprites wired to all 54 classes and 78 enemies (68 SpriteFrames generated); wizard/archer/warrior/NPC packs downloaded for class remapping; CraftPix tileset textures for ground/wall/destructible tiles (17 environments); GUI theme (dark panels, Oswald-Bold font); overworld styled paths and terrain markers; missing: generate SpriteFrames for new character packs, remap mage classes to wizard sprites, palette swaps for entertainer/scholar placeholders |
 
 ## Reference Codebase
 
