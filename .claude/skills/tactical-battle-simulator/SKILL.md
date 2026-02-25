@@ -164,26 +164,61 @@ All battles:
 ```
 === BATTLE SIMULATOR ===
 
-  --- city_street (80.0% vs 90.0% target) ---
+  --- city_street (79.4% vs 90.0% target) ---
   WEAKEST:
-      0.0%  squire / squire / squire / entertainer / entertainer
-     40.0%  squire / squire / squire / squire / entertainer
+      0.0%  entertainer / entertainer / entertainer / scholar / scholar
+     70.0%  squire / squire / mage / entertainer / entertainer
   STRONGEST:
-    100.0%  squire / squire / mage / mage / mage
-    100.0%  mage / entertainer / entertainer / scholar / scholar
+    100.0%  squire / squire / mage / mage / scholar
+    100.0%  mage / mage / mage / mage / scholar
   CLASS BREAKDOWN:
-    scholar              100.0%
     mage                  96.9%
-    entertainer           70.8%
-    squire                61.3%
+    scholar               85.7%
+    squire                78.3%
+    entertainer           55.7%  <-- FAIL
+  JP ECONOMY (avg per battle):
+    entertainer          40.9 JP  (identity)
+    mage                 21.0 JP  (identity)
+    squire               18.2 JP  (identity)
+    scholar              17.5 JP  (identity)
 
   SIMULATION SUMMARY
   Battle                   Win Rate   Target     Range          Status
   --------------------------------------------------------------------------
-  city_street               80.0%      90.0%       87% -   93%   TOO HARD
+  city_street               79.4%      90.0%       87% -   93%   TOO HARD
 
-  Passed: 0/1 | Sims/combo: 10 | Time: 6.6s
+  Passed: 0/1 | Sims/combo: 30 | Time: 92.9s
+
+  CLASS OUTLIERS
+  Battle                   Class                Win Rate   Band
+  ----------------------------------------------------------------
+  city_street              entertainer           55.7%     FAIL
 ```
+
+### Per-Class Win Rate Banding
+
+Each class's win rate is compared to the stage target. Bands flag outliers:
+
+| Band | Threshold | Meaning |
+|------|-----------|---------|
+| FAIL | target - 25% | Class is critically underperforming |
+| WARN | target - 15% | Class is underperforming |
+| OK | within range | Class is balanced |
+| OVER | target + tolerance + 8% | Class is overperforming |
+
+Example at P0 (target 90%): FAIL < 65%, WARN < 75%, OK 75-101%, OVER > 101%.
+Example at P4 (target 73%): FAIL < 48%, WARN < 58%, OK 58-84%, OVER > 84%.
+
+CLASS OUTLIERS section in the summary lists all non-OK classes across all battles.
+
+### JP Economy Tracking
+
+The simulator tracks JP (Job Points) earned per class per battle via `XpConfig.calculate_jp()`:
+- **BASE_JP = 1** per ability use
+- **IDENTITY_JP = 5** if the ability matches the class's identity actions (from `XpConfig.CLASS_IDENTITY`)
+- Tier 1 upgrade threshold: 50 JP, Tier 2: 100 JP
+
+JP ECONOMY section in verbose mode shows average JP per battle with `(identity)` marker for classes with identity action bonuses. Use this to verify all classes can realistically progress through JP tiers.
 
 ### Architecture (8 files under `tools/sim/`)
 
@@ -229,6 +264,22 @@ All battles:
 | 5 | 69% | 66-72% | Mirror, Gate Ambush |
 | 6 | 64% | 61-67% | City Gate Ambush, Return City 1-4 |
 | 7 | ~58% | 55-61% | Elemental battles |
+
+---
+
+## Player Spawn Positions
+
+Player unit placement is **hardcoded** — there is no pre-battle placement phase. Positions come from BattleConfig and are a direct balance lever.
+
+**Default spawns** (used by most battles via `_build_party_units` and `battle_stages.gd`):
+- Leader: `Vector2i(2, 3)` — front center
+- Party: `Vector2i(3, 1)`, `Vector2i(3, 2)`, `Vector2i(3, 4)`, `Vector2i(3, 5)` — second column
+
+**Tutorial** (`battle_config_prog_01.gd`): Hardcoded at x=2-3 on 8x6 grid.
+
+**Prog 7** (`battle_stages.gd`): Custom wider spawns for 12x10+ maps (e.g. `spawn_wide`, `final_castle`).
+
+Enemies typically spawn at x=8-9 on 10-wide maps, creating a 5-6 tile gap. Melee (movement 4, range 1) reaches in 1-2 turns; ranged (range 3) can attack immediately.
 
 ---
 
