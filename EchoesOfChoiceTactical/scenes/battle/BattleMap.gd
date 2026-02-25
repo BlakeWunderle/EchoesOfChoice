@@ -24,6 +24,7 @@ var _attack_tiles: Array[Vector2i] = []
 var _is_replay: bool = false
 var _ai: BattleAI
 var _executor: AbilityExecutor
+var _combat_animator: CombatAnimator
 
 
 func _ready() -> void:
@@ -149,6 +150,7 @@ func _setup_test_battle() -> void:
 	grid_cursor.cancelled.connect(_on_cursor_cancelled)
 
 	_executor = AbilityExecutor.new(grid, reaction_system)
+	_combat_animator = CombatAnimator.new(self, camera)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
 	_connect_action_menu()
 	_begin_battle()
@@ -193,6 +195,7 @@ func _setup_from_config(config: BattleConfig) -> void:
 	grid_cursor.cancelled.connect(_on_cursor_cancelled)
 
 	_executor = AbilityExecutor.new(grid, reaction_system)
+	_combat_animator = CombatAnimator.new(self, camera)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
 	_connect_action_menu()
 
@@ -420,16 +423,27 @@ func _execute_item(unit: Unit, target_pos: Vector2i) -> void:
 		_show_action_menu(unit)
 		return
 
+	var item_results: Array[Dictionary] = []
 	match item.consumable_effect:
 		Enums.ConsumableEffect.HEAL_HP:
+			var old_ratio := float(target.health) / float(target.max_health) if target.max_health > 0 else 0.0
 			target.heal(item.consumable_value)
+			var new_ratio := float(target.health) / float(target.max_health) if target.max_health > 0 else 0.0
+			item_results.append({"target": target, "type": "heal", "amount": item.consumable_value,
+				"old_hp_ratio": old_ratio, "new_hp_ratio": new_ratio})
 		Enums.ConsumableEffect.RESTORE_MANA:
 			target.mana = mini(target.mana + item.consumable_value, target.max_mana)
+			item_results.append({"target": target, "type": "mana_heal", "amount": item.consumable_value})
 		Enums.ConsumableEffect.BUFF_STAT:
 			var ms := ModifiedStat.create(item.buff_stat, item.consumable_value, item.buff_turns, false)
 			target.modified_stats.append(ms)
 			target.apply_stat_modifier(item.buff_stat, item.consumable_value, false)
+			var stat_name := Enums.StatType.keys()[item.buff_stat] if item.buff_stat < Enums.StatType.size() else "STAT"
+			item_results.append({"target": target, "type": "buff", "stat_name": stat_name})
 
+	SFXManager.play(SFXManager.Category.SHIMMER)
+	var item_exec := {"results": item_results, "ability": null, "terrain_changed": false, "defensive_reactions": []}
+	await _combat_animator.animate_ability_results(unit, item_exec)
 	unit.has_acted = true
 
 	if not unit.has_moved:
@@ -614,10 +628,11 @@ func _execute_action(unit: Unit, target_pos: Vector2i) -> void:
 	unit.set_facing_toward(target_pos)
 
 	var aoe_tiles := grid.get_aoe_tiles(target_pos, ability.aoe_shape, ability.aoe_size, unit.grid_position)
-	var terrain_placed := _executor.execute(unit, ability, aoe_tiles)
-	if terrain_placed:
+	var exec_result := _executor.execute(unit, ability, aoe_tiles)
+	if exec_result["terrain_changed"]:
 		queue_redraw()
 
+	await _combat_animator.animate_ability_results(unit, exec_result)
 	unit.has_acted = true
 
 	if not unit.has_moved:
@@ -664,9 +679,10 @@ func _on_cursor_cancelled() -> void:
 
 
 func _ai_execute_ability(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> void:
-	var terrain_placed := _executor.execute(unit, ability, aoe_tiles)
-	if terrain_placed:
+	var exec_result := _executor.execute(unit, ability, aoe_tiles)
+	if exec_result["terrain_changed"]:
 		queue_redraw()
+	await _combat_animator.animate_ability_results(unit, exec_result)
 
 
 func _find_party_member_xp(unit_name: String) -> Array:

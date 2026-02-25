@@ -211,9 +211,10 @@ func check_bodyguard(damaged_unit: Unit, incoming_damage: int) -> Dictionary:
 
 
 # Process all defensive reactions before damage is applied.
-# Returns the final damage the target actually takes.
-func process_defensive_reactions(target: Unit, raw_damage: int) -> int:
+# Returns {"final_damage": int, "reactions": Array[Dictionary]}.
+func process_defensive_reactions(target: Unit, raw_damage: int) -> Dictionary:
 	var final_damage := raw_damage
+	var reactions: Array[Dictionary] = []
 
 	# Check bodyguard first (adjacent tank absorbs portion)
 	var bodyguard := check_bodyguard(target, final_damage)
@@ -221,13 +222,15 @@ func process_defensive_reactions(target: Unit, raw_damage: int) -> int:
 		final_damage = bodyguard["damage_to_ally"]
 		bodyguard["reactor"].take_damage(bodyguard["damage_to_tank"])
 		SFXManager.play(SFXManager.Category.BODY_HIT)
+		reactions.append(bodyguard)
 
 	# Check damage mitigation (support within 3 tiles reduces damage)
 	var mitigation := check_damage_mitigation(target, final_damage)
 	if mitigation["active"]:
 		final_damage = mitigation["mitigated_damage"]
+		reactions.append(mitigation)
 
-	return final_damage
+	return {"final_damage": final_damage, "reactions": reactions}
 
 
 func _is_valid_reactor(unit, against: Unit, reaction_type: Enums.ReactionType) -> bool:

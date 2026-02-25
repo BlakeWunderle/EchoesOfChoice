@@ -25,7 +25,7 @@ func run_turn(unit: Unit) -> void:
 	# Act-then-move: try best ability from current position first
 	var pre_action := _best_action(unit, unit.grid_position)
 	if pre_action.size() > 0:
-		_perform_action(unit, pre_action)
+		await _perform_action(unit, pre_action)
 		await _scene_root.get_tree().create_timer(0.3).timeout
 
 	# Move to optimal position
@@ -38,7 +38,7 @@ func run_turn(unit: Unit) -> void:
 	if unit.is_alive and not unit.has_acted:
 		var post_action := _best_action(unit, unit.grid_position)
 		if post_action.size() > 0:
-			_perform_action(unit, post_action)
+			await _perform_action(unit, post_action)
 			await _scene_root.get_tree().create_timer(0.3).timeout
 
 	await _scene_root.get_tree().create_timer(0.4).timeout
@@ -135,7 +135,7 @@ func _perform_action(unit: Unit, action: Dictionary) -> void:
 	unit.set_facing_toward(target_pos)
 	unit.spend_mana(ability.mana_cost)
 	var aoe_tiles := _grid.get_aoe_tiles(target_pos, ability.aoe_shape, ability.aoe_size, unit.grid_position)
-	_execute_ability_fn.call(unit, ability, aoe_tiles)
+	await _execute_ability_fn.call(unit, ability, aoe_tiles)
 	unit.has_acted = true
 
 

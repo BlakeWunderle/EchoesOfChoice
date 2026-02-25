@@ -394,10 +394,10 @@ func play_hurt_animation() -> void:
 		await sprite.animation_finished
 		_update_facing_animation()
 	else:
-		# Flash white as fallback
-		sprite.modulate = Color.WHITE
+		# Flash bright white as fallback
+		modulate = Color(3, 3, 3, 1)
 		var tween := create_tween()
-		tween.tween_property(sprite, "modulate", Color(1, 1, 1, 1), 0.15)
+		tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 0.15)
 		await tween.finished
 
 

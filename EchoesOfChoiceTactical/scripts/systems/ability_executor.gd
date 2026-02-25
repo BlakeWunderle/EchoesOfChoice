@@ -2,6 +2,8 @@ class_name AbilityExecutor extends RefCounted
 
 var _grid: Grid
 var _reaction_system: ReactionSystem
+var _results: Array[Dictionary] = []
+var _defensive_reactions: Array[Dictionary] = []
 
 
 func _init(p_grid: Grid, p_reaction: ReactionSystem) -> void:
@@ -9,19 +11,30 @@ func _init(p_grid: Grid, p_reaction: ReactionSystem) -> void:
 	_reaction_system = p_reaction
 
 
-## Dispatches ability execution by type. Returns true if terrain was modified
-## (caller should queue_redraw).
-func execute(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> bool:
+## Dispatches ability execution by type. Returns a Dictionary with:
+##   "terrain_changed": bool, "results": Array[Dictionary],
+##   "ability": AbilityData, "defensive_reactions": Array[Dictionary]
+func execute(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> Dictionary:
+	_results = []
+	_defensive_reactions = []
+	var terrain_changed := false
+
 	if ability.is_terrain_ability():
 		_execute_terrain(unit, ability, aoe_tiles)
-		return true
+		terrain_changed = true
 	elif ability.is_heal():
 		_execute_heal(unit, ability, aoe_tiles)
 	elif ability.is_buff_or_debuff():
 		_execute_buff(unit, ability, aoe_tiles)
 	else:
 		_execute_damage(unit, ability, aoe_tiles)
-	return false
+
+	return {
+		"terrain_changed": terrain_changed,
+		"results": _results,
+		"ability": ability,
+		"defensive_reactions": _defensive_reactions,
+	}
 
 
 func _execute_damage(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i]) -> void:
@@ -39,6 +52,7 @@ func _execute_damage(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i
 
 		if Combat.roll_dodge(target.dodge_chance):
 			SFXManager.play(SFXManager.Category.WHOOSH, 0.7)
+			_results.append({"target": target, "type": "dodge"})
 			continue
 
 		var this_crit := Combat.roll_crit(attacker.crit_chance)
@@ -46,15 +60,26 @@ func _execute_damage(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i
 			damage += attacker.crit_damage
 			got_crit = true
 
-		damage = _reaction_system.process_defensive_reactions(target, damage)
+		var def_result := _reaction_system.process_defensive_reactions(target, damage)
+		damage = def_result["final_damage"]
+		_defensive_reactions.append_array(def_result["reactions"])
 
+		var old_hp_ratio := float(target.health) / float(target.max_health) if target.max_health > 0 else 0.0
 		target.take_damage(damage)
+		var new_hp_ratio := float(target.health) / float(target.max_health) if target.max_health > 0 else 0.0
 		SFXManager.play_ability_sfx(ability)
 		if this_crit:
 			SFXManager.play(SFXManager.Category.IMPACT, 0.8)
 
-		if not target.is_alive:
+		var killed := not target.is_alive
+		if killed:
 			got_kill = true
+
+		_results.append({
+			"target": target, "type": "damage", "amount": damage,
+			"is_crit": this_crit, "killed": killed,
+			"old_hp_ratio": old_hp_ratio, "new_hp_ratio": new_hp_ratio,
+		})
 
 		_reaction_system.check_flanking_strikes(attacker, target)
 
@@ -72,10 +97,17 @@ func _execute_heal(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -
 		if target.team != caster.team:
 			continue
 		var amount := Combat.calculate_heal(ability, caster.magic_attack, caster.physical_attack)
+		var old_hp_ratio := float(target.health) / float(target.max_health) if target.max_health > 0 else 0.0
 		if ability.modified_stat == Enums.StatType.MAX_MANA:
 			target.restore_mana(amount)
+			_results.append({"target": target, "type": "mana_heal", "amount": amount})
 		else:
 			target.heal(amount)
+			var new_hp_ratio := float(target.health) / float(target.max_health) if target.max_health > 0 else 0.0
+			_results.append({
+				"target": target, "type": "heal", "amount": amount,
+				"old_hp_ratio": old_hp_ratio, "new_hp_ratio": new_hp_ratio,
+			})
 		SFXManager.play(SFXManager.Category.SHIMMER)
 
 	caster.award_ability_xp_jp(ability, false, false)
@@ -98,6 +130,12 @@ func _execute_buff(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -
 		target.apply_stat_modifier(ability.modified_stat, ability.modifier, is_debuff)
 		SFXManager.play(SFXManager.Category.SHIMMER, 0.8)
 
+		var stat_name := Enums.StatType.keys()[ability.modified_stat] if ability.modified_stat < Enums.StatType.size() else "STAT"
+		_results.append({
+			"target": target, "type": "debuff" if is_debuff else "buff",
+			"stat_name": stat_name,
+		})
+
 	caster.award_ability_xp_jp(ability, false, false)
 
 
@@ -113,10 +151,18 @@ func _execute_terrain(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]
 			var occupant = _grid.get_occupant(tile)
 			if occupant is Unit and occupant.is_alive:
 				apply_fire_damage(occupant)
+	_results.append({"type": "terrain"})
 	caster.award_ability_xp_jp(ability, false, false)
 
 
 func apply_fire_damage(unit: Unit) -> void:
 	var dmg := max(1, 10 - unit.magic_defense)
+	var old_hp_ratio := float(unit.health) / float(unit.max_health) if unit.max_health > 0 else 0.0
 	unit.take_damage(dmg)
+	var new_hp_ratio := float(unit.health) / float(unit.max_health) if unit.max_health > 0 else 0.0
 	SFXManager.play(SFXManager.Category.FIRE, 0.7)
+	_results.append({
+		"target": unit, "type": "damage", "amount": dmg,
+		"is_crit": false, "killed": not unit.is_alive,
+		"old_hp_ratio": old_hp_ratio, "new_hp_ratio": new_hp_ratio,
+	})
