@@ -241,6 +241,12 @@ _chibi_3dir_sprites = [
     "chibi_vampire_hunter_1",
     "chibi_vampire_hunter_2",
     "chibi_vampire_hunter_3",
+    # Royal guard variants (unused player variants + palette swaps)
+    "chibi_knight_2",
+    "chibi_knight_3",
+    "chibi_villager_3",
+    "chibi_magician_1_royal",
+    "chibi_old_hero_2_royal",
     # Demons & imps
     "chibi_blood_demon_1",
     "chibi_blood_demon_2",

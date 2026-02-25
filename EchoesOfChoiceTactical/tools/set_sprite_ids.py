@@ -138,12 +138,12 @@ ENEMY_SPRITE_IDS: dict[str, str] = {
     "hex_peddler": "chibi_skeleton_nobleman_1",
 
     # --- Guards & military ---
-    "guard_squire": "chibi_frost_knight_1",
-    "elite_guard_squire": "chibi_frost_knight_2",
-    "guard_mage": "chibi_magician_demon_magician_1",
+    "guard_squire": "chibi_knight_2",
+    "elite_guard_squire": "chibi_knight_3",
+    "guard_mage": "chibi_magician_1_royal",
     "elite_guard_mage": "chibi_magician_demon_magician_2",
-    "guard_scholar": "chibi_magician_undead_magician_1",
-    "guard_entertainer": "chibi_vampire_hunter_1",
+    "guard_scholar": "chibi_old_hero_2_royal",
+    "guard_entertainer": "chibi_villager_3",
     "commander": "chibi_warrior_heavy_armored_defender_knight",
     "captain": "chibi_skeleton_pirate_captain_1",
     "pirate": "chibi_ghost_pirate_1",
