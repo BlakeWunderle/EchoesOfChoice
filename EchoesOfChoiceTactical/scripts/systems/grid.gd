@@ -10,7 +10,7 @@ var _destructible_hp: Array[int] = []
 var _blocks_los: Array[bool] = []
 var _terrain_effects: Array[TerrainEffect] = []
 
-const DIRECTIONS := [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
+const DIRECTIONS: Array[Vector2i] = [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 
 
 func _init(w: int, h: int) -> void:
