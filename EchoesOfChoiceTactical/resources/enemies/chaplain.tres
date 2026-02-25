@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "chaplain"
 class_display_name = "Chaplain"
-sprite_id = "lich_2"
+sprite_id = "chibi_orc_shaman_shamans_2"
 base_max_health = 54
 base_max_mana = 24
 base_physical_attack = 20

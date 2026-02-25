@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "shadow_hound"
 class_display_name = "Shadow Hound"
-sprite_id = "gnolls_2"
+sprite_id = "chibi_skeleton_hunter_1"
 base_max_health = 44
 base_max_mana = 0
 base_physical_attack = 29

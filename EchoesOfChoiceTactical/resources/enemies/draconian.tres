@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "draconian"
 class_display_name = "Draconian"
-sprite_id = "demons_3"
+sprite_id = "chibi_demon_of_darkness_demons_of_darkness_1"
 base_max_health = 58
 base_max_mana = 20
 base_physical_attack = 22

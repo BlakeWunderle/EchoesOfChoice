@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "phantom_prowler"
 class_display_name = "Phantom Prowler"
-sprite_id = "ghost_2"
+sprite_id = "chibi_ghost_pirate_2"
 base_max_health = 64
 base_max_mana = 8
 base_physical_attack = 36

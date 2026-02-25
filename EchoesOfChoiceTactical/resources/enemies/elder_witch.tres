@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "elder_witch"
 class_display_name = "Elder Witch"
-sprite_id = "lich_3"
+sprite_id = "chibi_skeleton_witch_2"
 base_max_health = 75
 base_max_mana = 20
 base_physical_attack = 8

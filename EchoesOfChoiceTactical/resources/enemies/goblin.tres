@@ -7,7 +7,7 @@
 script = ExtResource("1")
 class_id = "goblin"
 class_display_name = "Goblin"
-sprite_id = "goblin_1"
+sprite_id = "chibi_goblin_1"
 base_max_health = 25
 base_max_mana = 0
 base_physical_attack = 16

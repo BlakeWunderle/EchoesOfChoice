@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "guard_scholar"
 class_display_name = "Royal Advisor"
-sprite_id = "vampire_2"
+sprite_id = "chibi_magician_undead_magician_1"
 base_max_health = 55
 base_max_mana = 10
 base_physical_attack = 6

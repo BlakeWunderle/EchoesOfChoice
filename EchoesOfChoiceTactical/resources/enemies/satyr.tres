@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "satyr"
 class_display_name = "Satyr"
-sprite_id = "gnolls_2"
+sprite_id = "chibi_satyr_1"
 base_max_health = 48
 base_max_mana = 8
 base_physical_attack = 25

@@ -7,7 +7,7 @@
 script = ExtResource("1")
 class_id = "guard_mage"
 class_display_name = "Court Mage"
-sprite_id = "vampire_1"
+sprite_id = "chibi_magician_demon_magician_1"
 base_max_health = 33
 base_max_mana = 13
 base_physical_attack = 10

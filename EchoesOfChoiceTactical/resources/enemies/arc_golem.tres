@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "arc_golem"
 class_display_name = "Arc Golem"
-sprite_id = "golem_1"
+sprite_id = "chibi_golem_2"
 base_max_health = 55
 base_max_mana = 20
 base_physical_attack = 8

@@ -116,115 +116,117 @@ CLASS_SPRITE_IDS_FEMALE: dict[str, str] = {
 }
 
 ENEMY_SPRITE_IDS: dict[str, str] = {
-    # Direct matches
-    "goblin": "goblin_1",
-    "goblin_shaman": "goblin_2",
-    "goblin_archer": "goblin_3",
-    "hobgoblin": "goblin_2",
-    "zombie": "zombie_1",
-    "imp": "imp_1",
-    "fiendling": "imp_2",
-    "fire_spirit": "imp_3",
-    "cave_bat": "imp_2",
-    "pixie": "imp_1",
-    "sprite": "imp_3",
-    "harlequin": "imp_1",
-    "bone_sentry": "skeleton_1",
-    "cursed_peddler": "skeleton_2",
-    "hex_peddler": "skeleton_3",
+    # --- Goblinoid ---
+    "goblin": "chibi_goblin_1",
+    "goblin_archer": "chibi_goblin_3",
+    "goblin_shaman": "chibi_orc_shaman_shamans_1",
+    "hobgoblin": "chibi_orc_ogre_goblin_orc",
 
-    # Undead casters -> lich
-    "necromancer": "lich_1",
-    "warlock": "lich_2",
-    "elder_witch": "lich_3",
-    "witch": "lich_1",
-    "psion": "lich_2",
-    "shaman": "lich_1",
-    "runewright": "lich_3",
-    "chaplain": "lich_2",
+    # --- Beasts & prowlers ---
+    "wolf": "chibi_gnoll_1",
+    "shadow_hound": "chibi_skeleton_hunter_1",
+    "wild_boar": "chibi_minotaur_1",
+    "bear": "chibi_forest_guardian_1",
+    "bear_cub": "chibi_forest_guardian_2",
+    "night_prowler": "chibi_dark_elves_1",
+    "dusk_prowler": "chibi_dark_elves_2",
+    "dread_stalker": "chibi_dark_elves_3",
 
-    # Spectral -> ghost
-    "grave_wraith": "ghost_1",
-    "wraith": "ghost_2",
-    "dread_wraith": "ghost_3",
-    "shade": "ghost_1",
-    "dire_shade": "ghost_2",
-    "specter": "ghost_3",
-    "phantom_prowler": "ghost_2",
-    "mirror_stalker": "ghost_3",
-    "wisp": "ghost_1",
+    # --- City thugs ---
+    "thug": "chibi_archer_barbarian_mage_barbarian_warrior",
+    "street_tough": "chibi_4_characters_medieval_thug",
+    "hex_peddler": "chibi_skeleton_nobleman_1",
 
-    # Large constructs -> golem (128x128)
-    "arc_golem": "golem_1",
-    "ironclad": "golem_2",
-    "android": "golem_3",
-    "machinist": "golem_2",
+    # --- Guards & military ---
+    "guard_squire": "chibi_frost_knight_1",
+    "elite_guard_squire": "chibi_frost_knight_2",
+    "guard_mage": "chibi_magician_demon_magician_1",
+    "elite_guard_mage": "chibi_magician_demon_magician_2",
+    "guard_scholar": "chibi_magician_undead_magician_1",
+    "guard_entertainer": "chibi_vampire_hunter_1",
+    "commander": "chibi_warrior_heavy_armored_defender_knight",
+    "captain": "chibi_skeleton_pirate_captain_1",
+    "pirate": "chibi_ghost_pirate_1",
 
-    # Demons -> demons (128x128)
-    "hellion": "demons_1",
-    "arch_hellion": "demons_2",
-    "draconian": "demons_3",
-    "ringmaster": "demons_3",
+    # --- Imps & small demons ---
+    "imp": "chibi_goblin_2",
+    "fiendling": "chibi_blood_demon_1",
+    "fire_spirit": "chibi_blood_demon_2",
+    "cave_bat": "chibi_orc_archer_1",
 
-    # Fire elemental -> slime_mobs (fluid)
-    "fire_elemental": "slime_mobs_1",
+    # --- Nature spirits ---
+    "pixie": "chibi_elemental_spirits_1",
+    "sprite": "chibi_elemental_spirits_2",
+    "wisp": "chibi_elemental_spirits_3",
 
-    # Water/air/earth elemental -> slime_enemies
-    "water_elemental": "slime_enemies_1",
-    "air_elemental": "slime_enemies_2",
-    "earth_elemental": "slime_enemies_3",
+    # --- Nature / fey humanoids ---
+    "satyr": "chibi_satyr_1",
+    "nymph": "chibi_elf_archer_archer_1",
+    "tide_nymph": "chibi_elf_archer_archer_2",
+    "siren": "chibi_medusa_1",
+    "chanteuse": "chibi_elf_archer_archer_3",
 
-    # Reptiles -> lizardmen
-    "frost_wyrmling": "lizardmen_1",
-    "fire_wyrmling": "lizardmen_2",
-    "gloom_stalker": "lizardmen_3",
+    # --- Spectral ---
+    "shade": "chibi_ghost_knight_1",
+    "dire_shade": "chibi_ghost_knight_2",
+    "wraith": "chibi_ghost_knight_3",
+    "grave_wraith": "chibi_ghost_knight_2_ghost_knight_1",
+    "dread_wraith": "chibi_ghost_knight_2_ghost_knight_2",
+    "specter": "chibi_ghost_knight_2_ghost_knight_3",
+    "phantom_prowler": "chibi_ghost_pirate_2",
+    "mirror_stalker": "chibi_ghost_pirate_3",
 
-    # Beasts -> gnolls
-    "wolf": "gnolls_1",
-    "shadow_hound": "gnolls_2",
-    "wild_boar": "gnolls_3",
-    "night_prowler": "gnolls_1",
-    "dusk_prowler": "gnolls_2",
-    "dread_stalker": "gnolls_3",
-    "satyr": "gnolls_2",
+    # --- Undead casters ---
+    "witch": "chibi_skeleton_witch_1",
+    "elder_witch": "chibi_skeleton_witch_2",
+    "necromancer": "chibi_necromancer_shadow_necromancer_of_the_shadow_1",
+    "warlock": "chibi_magician_undead_magician_2",
+    "psion": "chibi_magician_undead_magician_3",
+    "chaplain": "chibi_orc_shaman_shamans_2",
+    "shaman": "chibi_orc_shaman_shamans_3",
+    "runewright": "chibi_skeleton_sorcerer_1",
 
-    # Large creatures -> ent (128x128)
-    "bear": "ent_1",
+    # --- Undead melee ---
+    "zombie": "chibi_zombie_villager_1",
+    "bone_sentry": "chibi_skeleton_warrior_1",
+    "cursed_peddler": "chibi_skeleton_nobleman_2",
 
-    # Small creatures -> mushroom
-    "bear_cub": "mushroom_1",
+    # --- Wyrmlings ---
+    "fire_wyrmling": "chibi_demon_archer_archer_1",
+    "frost_wyrmling": "chibi_demon_archer_archer_2",
+    "gloom_stalker": "chibi_demon_archer_archer_3",
 
-    # Nature -> predator_plant
-    "nymph": "predator_plant_1",
-    "tide_nymph": "predator_plant_2",
-    "siren": "predator_plant_3",
-    "chanteuse": "predator_plant_2",
+    # --- Constructs ---
+    "arc_golem": "chibi_golem_2",
+    "ironclad": "chibi_golem_3",
+    "android": "chibi_frost_knight_3",
+    "machinist": "chibi_skeleton_crusader_1",
 
-    # Boss -> slime_boss (128x128)
-    "kraken": "slime_boss_1",
+    # --- Demons ---
+    "hellion": "chibi_blood_demon_3",
+    "arch_hellion": "chibi_devil_hell_knight_succubus_hell_knight",
+    "draconian": "chibi_demon_of_darkness_demons_of_darkness_1",
+    "ringmaster": "chibi_halloween_skull_knight",
+    "harlequin": "chibi_halloween_pumpkin_head_guy",
 
-    # Flying/watching -> beholder
-    "watcher_lord": "beholder_1",
-    "void_watcher": "beholder_2",
-    "seraph": "beholder_3",
-    "dusk_moth": "beholder_1",
-    "twilight_moth": "beholder_2",
+    # --- Watchers & moths ---
+    "watcher_lord": "chibi_medusa_3",
+    "void_watcher": "chibi_medusa_2",
+    "seraph": "chibi_fallen_angel_s_1",
+    "dusk_moth": "chibi_fallen_angel_s_3",
+    "twilight_moth": "chibi_fallen_angel_s_2",
 
-    # Humanoid enemies -> swordsman/vampire
-    "guard_squire": "swordsman_1",
-    "elite_guard_squire": "swordsman_4",
-    "guard_mage": "vampire_1",
-    "elite_guard_mage": "vampire_3",
-    "guard_scholar": "vampire_2",
-    "guard_entertainer": "base_male_sword",
-    "commander": "swordsman_9",
-    "captain": "swordsman_8",
-    "street_tough": "swordsman_1",
-    "thug": "swordsman_2",
-    "pirate": "swordsman_3",
+    # --- True elementals (Prog 7) ---
+    "fire_elemental": "chibi_elemental_s_1",
+    "water_elemental": "chibi_elemental_s_2",
+    "air_elemental": "chibi_elemental_s_3",
+    "earth_elemental": "chibi_forest_guardian_3",
 
-    # Special
-    "the_stranger": "vampire_3",
+    # --- Boss ---
+    "kraken": "chibi_orc_ogre_goblin_ogre",
+
+    # --- Final boss ---
+    "the_stranger": "chibi_black_reaper_1",
 }
 
 

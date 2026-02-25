@@ -10,7 +10,7 @@
 script = ExtResource("1")
 class_id = "nymph"
 class_display_name = "Nymph"
-sprite_id = "predator_plant_1"
+sprite_id = "chibi_elf_archer_archer_1"
 base_max_health = 32
 base_max_mana = 14
 base_physical_attack = 20

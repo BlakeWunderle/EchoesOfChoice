@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "dread_stalker"
 class_display_name = "Dread Stalker"
-sprite_id = "gnolls_3"
+sprite_id = "chibi_dark_elves_3"
 base_max_health = 92
 base_max_mana = 12
 base_physical_attack = 44

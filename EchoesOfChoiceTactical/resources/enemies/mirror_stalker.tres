@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "mirror_stalker"
 class_display_name = "Mirror Stalker"
-sprite_id = "ghost_3"
+sprite_id = "chibi_ghost_pirate_3"
 base_max_health = 82
 base_max_mana = 10
 base_physical_attack = 40

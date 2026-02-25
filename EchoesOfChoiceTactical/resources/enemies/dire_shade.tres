@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "dire_shade"
 class_display_name = "Dire Shade"
-sprite_id = "ghost_2"
+sprite_id = "chibi_ghost_knight_2"
 base_max_health = 64
 base_max_mana = 10
 base_physical_attack = 6

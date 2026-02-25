@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "street_tough"
 class_display_name = "Street Tough"
-sprite_id = "swordsman_1"
+sprite_id = "chibi_4_characters_medieval_thug"
 base_max_health = 48
 base_max_mana = 6
 base_physical_attack = 19

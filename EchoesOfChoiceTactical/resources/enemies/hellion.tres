@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "hellion"
 class_display_name = "Hellion"
-sprite_id = "demons_1"
+sprite_id = "chibi_blood_demon_3"
 base_max_health = 68
 base_max_mana = 18
 base_physical_attack = 30

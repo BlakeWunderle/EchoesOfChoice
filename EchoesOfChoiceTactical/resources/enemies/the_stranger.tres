@@ -7,7 +7,7 @@
 script = ExtResource("1")
 class_id = "the_stranger"
 class_display_name = "The Stranger"
-sprite_id = "vampire_3"
+sprite_id = "chibi_black_reaper_1"
 base_max_health = 110
 base_max_mana = 28
 base_physical_attack = 16

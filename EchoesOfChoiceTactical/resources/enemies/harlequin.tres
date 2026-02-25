@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "harlequin"
 class_display_name = "Harlequin"
-sprite_id = "imp_1"
+sprite_id = "chibi_halloween_pumpkin_head_guy"
 base_max_health = 58
 base_max_mana = 22
 base_physical_attack = 20

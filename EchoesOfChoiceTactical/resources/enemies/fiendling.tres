@@ -7,7 +7,7 @@
 script = ExtResource("1")
 class_id = "fiendling"
 class_display_name = "Fiendling"
-sprite_id = "imp_2"
+sprite_id = "chibi_blood_demon_1"
 base_max_health = 45
 base_max_mana = 4
 base_physical_attack = 28

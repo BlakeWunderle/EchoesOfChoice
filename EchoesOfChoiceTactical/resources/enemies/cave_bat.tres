@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "cave_bat"
 class_display_name = "Cave Bat"
-sprite_id = "imp_2"
+sprite_id = "chibi_orc_archer_1"
 base_max_health = 26
 base_max_mana = 4
 base_physical_attack = 28

@@ -7,7 +7,7 @@
 script = ExtResource("1")
 class_id = "psion"
 class_display_name = "Psion"
-sprite_id = "lich_2"
+sprite_id = "chibi_magician_undead_magician_3"
 base_max_health = 60
 base_max_mana = 20
 base_physical_attack = 8

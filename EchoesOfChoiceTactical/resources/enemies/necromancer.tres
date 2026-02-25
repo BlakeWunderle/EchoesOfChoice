@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "necromancer"
 class_display_name = "Necromancer"
-sprite_id = "lich_1"
+sprite_id = "chibi_necromancer_shadow_necromancer_of_the_shadow_1"
 base_max_health = 55
 base_max_mana = 20
 base_physical_attack = 8

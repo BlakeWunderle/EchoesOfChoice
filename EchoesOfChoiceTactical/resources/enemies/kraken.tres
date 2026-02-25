@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "kraken"
 class_display_name = "Kraken"
-sprite_id = "slime_boss_1"
+sprite_id = "chibi_orc_ogre_goblin_ogre"
 base_max_health = 72
 base_max_mana = 30
 base_physical_attack = 22

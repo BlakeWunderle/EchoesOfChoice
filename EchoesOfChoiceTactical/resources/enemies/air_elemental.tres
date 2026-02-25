@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "air_elemental"
 class_display_name = "Air Elemental"
-sprite_id = "slime_enemies_2"
+sprite_id = "chibi_elemental_s_3"
 base_max_health = 65
 base_max_mana = 22
 base_physical_attack = 8

@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "fire_wyrmling"
 class_display_name = "Fire Wyrmling"
-sprite_id = "lizardmen_2"
+sprite_id = "chibi_demon_archer_archer_1"
 base_max_health = 62
 base_max_mana = 16
 base_physical_attack = 12

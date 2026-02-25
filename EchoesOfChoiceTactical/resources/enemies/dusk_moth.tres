@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "dusk_moth"
 class_display_name = "Dusk Moth"
-sprite_id = "beholder_1"
+sprite_id = "chibi_fallen_angel_s_3"
 base_max_health = 32
 base_max_mana = 10
 base_physical_attack = 4

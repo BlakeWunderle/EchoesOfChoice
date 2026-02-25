@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "chanteuse"
 class_display_name = "Chanteuse"
-sprite_id = "predator_plant_2"
+sprite_id = "chibi_elf_archer_archer_3"
 base_max_health = 44
 base_max_mana = 24
 base_physical_attack = 8

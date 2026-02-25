@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "gloom_stalker"
 class_display_name = "Gloom Stalker"
-sprite_id = "lizardmen_3"
+sprite_id = "chibi_demon_archer_archer_3"
 base_max_health = 62
 base_max_mana = 8
 base_physical_attack = 32

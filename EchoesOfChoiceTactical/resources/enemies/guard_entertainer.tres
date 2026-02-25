@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "guard_entertainer"
 class_display_name = "Herald Guard"
-sprite_id = "base_male_sword"
+sprite_id = "chibi_vampire_hunter_1"
 base_max_health = 33
 base_max_mana = 10
 base_physical_attack = 10

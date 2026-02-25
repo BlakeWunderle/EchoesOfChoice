@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "cursed_peddler"
 class_display_name = "Cursed Peddler"
-sprite_id = "skeleton_2"
+sprite_id = "chibi_skeleton_nobleman_2"
 base_max_health = 44
 base_max_mana = 18
 base_physical_attack = 8

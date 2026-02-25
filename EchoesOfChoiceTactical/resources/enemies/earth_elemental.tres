@@ -8,7 +8,7 @@
 script = ExtResource("1")
 class_id = "earth_elemental"
 class_display_name = "Earth Elemental"
-sprite_id = "slime_enemies_3"
+sprite_id = "chibi_forest_guardian_3"
 base_max_health = 90
 base_max_mana = 14
 base_physical_attack = 20
