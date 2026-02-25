@@ -6,16 +6,19 @@ var _turn_manager: TurnManager
 var _scene_root: Node2D
 var _execute_ability_fn: Callable
 var _update_turn_info_fn: Callable
+var _combat_animator: CombatAnimator
 
 
 func _init(p_grid: Grid, p_reaction: ReactionSystem, p_turn_mgr: TurnManager,
-		p_scene_root: Node2D, p_execute_fn: Callable, p_update_info_fn: Callable) -> void:
+		p_scene_root: Node2D, p_execute_fn: Callable, p_update_info_fn: Callable,
+		p_combat_animator: CombatAnimator = null) -> void:
 	_grid = p_grid
 	_reaction_system = p_reaction
 	_turn_manager = p_turn_mgr
 	_scene_root = p_scene_root
 	_execute_ability_fn = p_execute_fn
 	_update_turn_info_fn = p_update_info_fn
+	_combat_animator = p_combat_animator
 
 
 func run_turn(unit: Unit) -> void:
@@ -63,21 +66,29 @@ func _execute_move(unit: Unit, move_dest: Vector2i) -> void:
 		actual_dest = path[trap_idx]
 
 	# Process reactions along path
+	var move_reactions: Array[Dictionary] = []
 	var prev := unit.grid_position
 	for step in actual_path:
-		_reaction_system.check_opportunity_attacks(unit, prev, step)
+		move_reactions.append_array(_reaction_system.check_opportunity_attacks(unit, prev, step))
 		if not unit.is_alive:
 			break
-		_reaction_system.check_snap_shot(unit, prev, step)
+		move_reactions.append_array(_reaction_system.check_snap_shot(unit, prev, step))
 		if not unit.is_alive:
 			break
 		prev = step
 	if unit.is_alive:
 		await unit.animate_move_along_path(actual_path)
+		if move_reactions.size() > 0 and _combat_animator:
+			await _combat_animator.animate_reaction_results(move_reactions)
 		_grid.set_occupant(actual_dest, unit)
 		if trap_idx >= 0 and _grid.trigger_trap(actual_dest):
 			_scene_root.queue_redraw()
 			unit.has_acted = true
+	else:
+		if move_reactions.size() > 0 and _combat_animator:
+			await _combat_animator.animate_reaction_results(move_reactions)
+		await unit.play_death_animation()
+		unit.visible = false
 	unit.has_moved = true
 
 

@@ -151,7 +151,7 @@ func _setup_test_battle() -> void:
 
 	_executor = AbilityExecutor.new(grid, reaction_system)
 	_combat_animator = CombatAnimator.new(self, camera)
-	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
+	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info, _combat_animator)
 	_connect_action_menu()
 	_begin_battle()
 
@@ -196,7 +196,7 @@ func _setup_from_config(config: BattleConfig) -> void:
 
 	_executor = AbilityExecutor.new(grid, reaction_system)
 	_combat_animator = CombatAnimator.new(self, camera)
-	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info)
+	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info, _combat_animator)
 	_connect_action_menu()
 
 	MusicManager.play_context(config.music_context)
@@ -581,23 +581,26 @@ func _execute_move(unit: Unit, target_pos: Vector2i) -> void:
 		actual_dest = path[trap_step_idx]
 
 	# Process reactions along actual movement path
+	var move_reactions: Array[Dictionary] = []
 	var prev := unit.grid_position
 	for step in actual_path:
-		# Opportunity attacks when leaving threatened tiles
-		reaction_system.check_opportunity_attacks(unit, prev, step)
+		move_reactions.append_array(reaction_system.check_opportunity_attacks(unit, prev, step))
 		if not unit.is_alive:
 			break
-		# Snap shots when entering tiles adjacent to ranged enemies
-		reaction_system.check_snap_shot(unit, prev, step)
+		move_reactions.append_array(reaction_system.check_snap_shot(unit, prev, step))
 		if not unit.is_alive:
 			break
 		prev = step
 
 	await unit.animate_move_along_path(actual_path)
+	if move_reactions.size() > 0:
+		await _combat_animator.animate_reaction_results(move_reactions)
 	grid.set_occupant(actual_dest, unit)
 	unit.has_moved = true
 
 	if not unit.is_alive:
+		await unit.play_death_animation()
+		unit.visible = false
 		unit.end_turn()
 		return
 
