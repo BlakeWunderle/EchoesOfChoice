@@ -611,7 +611,7 @@ func _execute_move(unit: Unit, target_pos: Vector2i) -> void:
 
 	# Trigger trap if unit stepped on one — forfeits their action
 	if trap_step_idx >= 0 and grid.trigger_trap(actual_dest):
-		queue_redraw()
+		terrain_renderer.queue_redraw()
 		unit.has_acted = true
 		_enter_facing_phase(unit)
 		return
@@ -638,7 +638,7 @@ func _execute_action(unit: Unit, target_pos: Vector2i) -> void:
 	var aoe_tiles := grid.get_aoe_tiles(target_pos, ability.aoe_shape, ability.aoe_size, unit.grid_position)
 	var exec_result := _executor.execute(unit, ability, aoe_tiles)
 	if exec_result["terrain_changed"]:
-		queue_redraw()
+		terrain_renderer.queue_redraw()
 
 	await _combat_animator.animate_ability_results(unit, exec_result)
 	unit.has_acted = true
@@ -689,7 +689,7 @@ func _on_cursor_cancelled() -> void:
 func _ai_execute_ability(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> void:
 	var exec_result := _executor.execute(unit, ability, aoe_tiles)
 	if exec_result["terrain_changed"]:
-		queue_redraw()
+		terrain_renderer.queue_redraw()
 	await _combat_animator.animate_ability_results(unit, exec_result)
 
 
@@ -800,45 +800,3 @@ func _show_reward_choice(choices: Array) -> String:
 	return chosen_id
 
 
-# --- Grid Drawing ---
-
-func _draw() -> void:
-	if grid == null:
-		return
-
-	for x in range(grid.width):
-		for y in range(grid.height):
-			var pos := Vector2i(x, y)
-			var rect := Rect2(Vector2(x * 64, y * 64), Vector2(64, 64))
-			var elevation := grid.get_elevation(pos)
-
-			if not grid.is_walkable(pos):
-				if grid._destructible_hp[grid._idx(pos)] > 0:
-					draw_rect(rect, Color(0.45, 0.35, 0.25), true)
-				else:
-					draw_rect(rect, Color(0.3, 0.25, 0.2), true)
-			elif grid.get_movement_cost(pos) > 1:
-				draw_rect(rect, Color(0.5, 0.55, 0.3), true)
-			elif elevation >= 2:
-				draw_rect(rect, Color(0.6, 0.65, 0.5), true)
-			elif elevation >= 1:
-				draw_rect(rect, Color(0.55, 0.6, 0.45), true)
-			else:
-				draw_rect(rect, Color(0.4, 0.55, 0.35), true)
-
-			draw_rect(rect, Color(0.2, 0.2, 0.2, 0.3), false, 1.0)
-
-			if elevation > 0:
-				var elev_pos := Vector2(x * 64 + 2, y * 64 + 12)
-				draw_string(ThemeDB.fallback_font, elev_pos, "h%d" % elevation,
-					HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(1, 1, 1, 0.5))
-
-	# Draw active terrain effect overlays on top of base tiles
-	for pos in grid.get_active_terrain_positions(Enums.TileType.FIRE_TILE):
-		draw_rect(Rect2(Vector2(pos.x * 64, pos.y * 64), Vector2(64, 64)), Color(1.0, 0.3, 0.0, 0.4), true)
-	for pos in grid.get_active_terrain_positions(Enums.TileType.WATER):
-		draw_rect(Rect2(Vector2(pos.x * 64, pos.y * 64), Vector2(64, 64)), Color(0.1, 0.4, 1.0, 0.4), true)
-	for pos in grid.get_active_terrain_positions(Enums.TileType.ROUGH_TERRAIN):
-		draw_rect(Rect2(Vector2(pos.x * 64, pos.y * 64), Vector2(64, 64)), Color(0.5, 0.35, 0.1, 0.4), true)
-	for pos in grid.get_active_terrain_positions(Enums.TileType.TRAP):
-		draw_rect(Rect2(Vector2(pos.x * 64, pos.y * 64), Vector2(64, 64)), Color(0.8, 0.2, 0.8, 0.45), true)

@@ -82,7 +82,9 @@ func _execute_move(unit: Unit, move_dest: Vector2i) -> void:
 			await _combat_animator.animate_reaction_results(move_reactions)
 		_grid.set_occupant(actual_dest, unit)
 		if trap_idx >= 0 and _grid.trigger_trap(actual_dest):
-			_scene_root.queue_redraw()
+			var tr := _scene_root.get_node_or_null("TerrainRenderer") as Node2D
+			if tr:
+				tr.queue_redraw()
 			unit.has_acted = true
 	else:
 		if move_reactions.size() > 0 and _combat_animator:
