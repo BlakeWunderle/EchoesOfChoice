@@ -8,7 +8,6 @@ script = ExtResource("1")
 class_id = "princess"
 class_display_name = "Princess"
 sprite_id = "chibi_amazon_warrior_1_royal"
-sprite_id_female = "chibi_amazon_warrior_1_royal"
 base_max_health = 48
 base_max_mana = 10
 base_physical_attack = 12

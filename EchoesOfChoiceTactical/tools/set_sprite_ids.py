@@ -153,9 +153,7 @@ CLASS_SPRITE_IDS_FEMALE: dict[str, str] = {
     "automaton": "chibi_golem_1_f",
     "technomancer": "chibi_technomage_2_f",
 
-    # --- Royal ---
-    "prince": "chibi_amazon_warrior_1_royal",
-    "princess": "chibi_amazon_warrior_1_royal",
+    # --- Royal (prince/princess are gendered classes, no female variant needed) ---
 }
 
 ENEMY_SPRITE_IDS: dict[str, str] = {
