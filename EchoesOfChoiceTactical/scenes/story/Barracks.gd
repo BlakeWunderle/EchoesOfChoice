@@ -47,26 +47,41 @@ func _ready() -> void:
 	name_confirm.pressed.connect(_on_name_confirmed)
 	name_input.text_submitted.connect(func(_t: String): _on_name_confirmed())
 
+	# Scene label fade-in
+	scene_label.modulate.a = 0.0
+	var tween := create_tween()
+	tween.tween_property(scene_label, "modulate:a", 1.0, 0.6)
+
 	_populate_npc_display()
 	_start_recruitment()
 
 
 func _populate_npc_display() -> void:
 	var npc_configs := [
-		{"x": 80, "y": 140, "color": CLASS_INFO["squire"]["color"], "label": "Squire"},
-		{"x": 200, "y": 180, "color": CLASS_INFO["mage"]["color"], "label": "Mage"},
-		{"x": 350, "y": 120, "color": CLASS_INFO["entertainer"]["color"], "label": "Ent."},
-		{"x": 500, "y": 170, "color": CLASS_INFO["scholar"]["color"], "label": "Scholar"},
-		{"x": 650, "y": 130, "color": CLASS_INFO["squire"]["color"].lightened(0.2), "label": "Squire"},
-		{"x": 800, "y": 160, "color": CLASS_INFO["mage"]["color"].lightened(0.2), "label": "Mage"},
+		{"x": 80, "y": 140, "class_id": "squire", "gender": "male", "label": "Squire"},
+		{"x": 200, "y": 180, "class_id": "mage", "gender": "male", "label": "Mage"},
+		{"x": 350, "y": 120, "class_id": "entertainer", "gender": "female", "label": "Ent."},
+		{"x": 500, "y": 170, "class_id": "scholar", "gender": "male", "label": "Scholar"},
+		{"x": 650, "y": 130, "class_id": "squire", "gender": "female", "label": "Squire"},
+		{"x": 800, "y": 160, "class_id": "mage", "gender": "female", "label": "Mage"},
 	]
 
 	for cfg in npc_configs:
-		var rect := ColorRect.new()
-		rect.size = Vector2(32, 48)
-		rect.position = Vector2(cfg["x"], cfg["y"])
-		rect.color = cfg["color"]
-		npc_display.add_child(rect)
+		var sprite_tex := _get_class_sprite(cfg["class_id"], cfg["gender"])
+		if sprite_tex:
+			var tex_rect := TextureRect.new()
+			tex_rect.texture = sprite_tex
+			tex_rect.custom_minimum_size = Vector2(48, 48)
+			tex_rect.position = Vector2(cfg["x"], cfg["y"])
+			tex_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			tex_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			npc_display.add_child(tex_rect)
+		else:
+			var rect := ColorRect.new()
+			rect.size = Vector2(32, 48)
+			rect.position = Vector2(cfg["x"], cfg["y"])
+			rect.color = CLASS_INFO[cfg["class_id"]]["color"]
+			npc_display.add_child(rect)
 
 		var lbl := Label.new()
 		lbl.text = cfg["label"]
@@ -206,11 +221,21 @@ func _create_gender_option(gender_label: String, class_name_str: String, color: 
 	var vbox := VBoxContainer.new()
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 
-	var portrait := ColorRect.new()
-	portrait.custom_minimum_size = Vector2(64, 96)
-	portrait.color = color
-	portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	vbox.add_child(portrait)
+	var sprite_tex := _get_class_sprite(_current_class, gender_id)
+	if sprite_tex:
+		var preview := TextureRect.new()
+		preview.texture = sprite_tex
+		preview.custom_minimum_size = Vector2(64, 96)
+		preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		preview.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		vbox.add_child(preview)
+	else:
+		var portrait := ColorRect.new()
+		portrait.custom_minimum_size = Vector2(64, 96)
+		portrait.color = color
+		portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		vbox.add_child(portrait)
 
 	var lbl := Label.new()
 	lbl.text = gender_label + " " + class_name_str
@@ -311,6 +336,21 @@ func _finish_recruitment() -> void:
 	GameState.set_flag("party_formed")
 	GameState.auto_save()
 	SceneManager.go_to_title_screen()
+
+
+func _get_class_sprite(class_id: String, gender: String) -> Texture2D:
+	var data: FighterData = BattleConfig.load_class(class_id)
+	if not data:
+		return null
+	var sid := data.sprite_id
+	if gender in ["female", "princess"] and not data.sprite_id_female.is_empty():
+		sid = data.sprite_id_female
+	if sid.is_empty():
+		return null
+	var frames := SpriteLoader.get_frames(sid)
+	if not frames or not frames.has_animation("idle_down"):
+		return null
+	return frames.get_frame_texture("idle_down", 0)
 
 
 func _clear_selection_content() -> void:
