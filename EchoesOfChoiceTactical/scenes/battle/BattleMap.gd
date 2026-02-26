@@ -560,6 +560,11 @@ func _enter_move_phase(unit: Unit) -> void:
 
 	grid_cursor.activate(_reachable_tiles, unit.grid_position)
 
+	if unit.team == Enums.Team.PLAYER and TutorialOverlay.should_show("tutorial_movement"):
+		var overlay := TutorialOverlay.show_tutorial("tutorial_movement", hud)
+		if overlay:
+			await overlay.dismissed
+
 
 func _show_targeting(ability: AbilityData, unit: Unit) -> void:
 	var elev := grid.get_elevation(unit.grid_position)
@@ -589,6 +594,11 @@ func _show_targeting(ability: AbilityData, unit: Unit) -> void:
 
 	grid_overlay.show_attack_range(_attack_tiles)
 	grid_cursor.activate(_attack_tiles, unit.grid_position)
+
+	if unit.team == Enums.Team.PLAYER and TutorialOverlay.should_show("tutorial_targeting"):
+		var overlay := TutorialOverlay.show_tutorial("tutorial_targeting", hud)
+		if overlay:
+			await overlay.dismissed
 
 
 func _enter_facing_phase(unit: Unit) -> void:
@@ -655,6 +665,10 @@ func _execute_move(unit: Unit, target_pos: Vector2i) -> void:
 	await unit.animate_move_along_path(actual_path)
 	if move_reactions.size() > 0:
 		await _combat_animator.animate_reaction_results(move_reactions)
+		if TutorialOverlay.should_show("tutorial_reactions"):
+			var overlay := TutorialOverlay.show_tutorial("tutorial_reactions", hud)
+			if overlay:
+				await overlay.dismissed
 	grid.set_occupant(actual_dest, unit)
 	unit.has_moved = true
 

@@ -46,6 +46,7 @@ var _selected_node_id: String = ""
 var _pulse_time: float = 0.0
 var _last_event_node: String = ""
 var _grass_tex: Texture2D
+var _objective_marker: Label = null
 
 var _travel_event_scene: PackedScene = preload("res://scenes/story/TravelEvent.tscn")
 
@@ -81,10 +82,13 @@ func _process(delta: float) -> void:
 		if MapData.is_node_available(nid):
 			var pulse := 0.7 + 0.3 * sin(_pulse_time * 3.0)
 			btn.modulate = Color(1.0, 1.0, 1.0, pulse)
+	if _objective_marker:
+		_objective_marker.position.y = _objective_marker.get_meta("base_y") + sin(_pulse_time * 4.0) * 4.0
 
 
 func _build_map() -> void:
 	var revealed := MapData.get_all_revealed_nodes()
+	_objective_marker = null
 
 	for nid in MapData.NODES:
 		var node_data: Dictionary = MapData.NODES[nid]
@@ -94,6 +98,12 @@ func _build_map() -> void:
 		if is_revealed:
 			_create_terrain_landmark(nid, node_data)
 			_create_node_button(nid, node_data)
+
+	# Objective marker on first available uncompleted battle node
+	for nid in MapData.NODES:
+		if MapData.is_node_available(nid) and not GameState.is_battle_completed(nid):
+			_create_objective_marker(MapData.NODES[nid]["pos"])
+			break
 
 	queue_redraw()
 
@@ -280,6 +290,18 @@ func _roll_travel_event(node_id: String, is_backward: bool = false) -> Dictionar
 			return event
 
 	return {}
+
+
+func _create_objective_marker(pos: Vector2) -> void:
+	_objective_marker = Label.new()
+	_objective_marker.text = "v"
+	_objective_marker.add_theme_font_size_override("font_size", 20)
+	_objective_marker.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))
+	_objective_marker.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_objective_marker.position = Vector2(pos.x - 8, pos.y - NODE_RADIUS - 28)
+	_objective_marker.set_meta("base_y", _objective_marker.position.y)
+	_objective_marker.add_to_group("map_element")
+	add_child(_objective_marker)
 
 
 func _on_party_pressed() -> void:

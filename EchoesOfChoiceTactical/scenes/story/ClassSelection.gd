@@ -82,6 +82,20 @@ func _build_class_buttons() -> void:
 		ability_label.add_theme_color_override("font_color", Color(0.6, 0.85, 0.6))
 		vbox.add_child(ability_label)
 
+		# Sprite preview
+		var class_data: FighterData = BattleConfig.load_class(class_id)
+		if class_data and not class_data.sprite_id.is_empty():
+			var frames := SpriteLoader.get_frames(class_data.sprite_id)
+			if frames and frames.has_animation("idle_down"):
+				var tex := frames.get_frame_texture("idle_down", 0)
+				if tex:
+					var preview := TextureRect.new()
+					preview.texture = tex
+					preview.custom_minimum_size = Vector2(64, 64)
+					preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+					preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+					vbox.add_child(preview)
+
 		var btn := Button.new()
 		btn.text = "Train with " + data["mentor"]
 		btn.size_flags_vertical = Control.SIZE_SHRINK_END

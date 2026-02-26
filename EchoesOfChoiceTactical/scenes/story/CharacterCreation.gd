@@ -10,6 +10,7 @@ extends Control
 @onready var selection_label: Label = $VBoxContainer/SelectionLabel
 
 var _selected_gender: String = ""
+var _sprite_preview: TextureRect = null
 
 
 func _ready() -> void:
@@ -34,6 +35,7 @@ func _on_prince_selected() -> void:
 	princess_button.disabled = false
 	prince_button.add_theme_stylebox_override("normal", _highlight_style())
 	princess_button.remove_theme_stylebox_override("normal")
+	_show_sprite_preview("prince")
 
 
 func _on_princess_selected() -> void:
@@ -48,6 +50,7 @@ func _on_princess_selected() -> void:
 	princess_button.disabled = false
 	princess_button.add_theme_stylebox_override("normal", _highlight_style())
 	prince_button.remove_theme_stylebox_override("normal")
+	_show_sprite_preview("princess")
 
 
 func _on_confirm() -> void:
@@ -60,6 +63,33 @@ func _on_confirm() -> void:
 	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	GameState.set_player_info(player_name, _selected_gender)
 	SceneManager.go_to_tutorial_battle()
+
+
+func _show_sprite_preview(class_id: String) -> void:
+	if _sprite_preview:
+		_sprite_preview.queue_free()
+		_sprite_preview = null
+	var data: FighterData = BattleConfig.load_class(class_id)
+	if not data:
+		return
+	var sprite_id := data.sprite_id
+	if sprite_id.is_empty():
+		return
+	var frames := SpriteLoader.get_frames(sprite_id)
+	if not frames or not frames.has_animation("idle_down"):
+		return
+	var tex := frames.get_frame_texture("idle_down", 0)
+	if not tex:
+		return
+	_sprite_preview = TextureRect.new()
+	_sprite_preview.texture = tex
+	_sprite_preview.custom_minimum_size = Vector2(96, 96)
+	_sprite_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_sprite_preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	# Insert before name container
+	var vbox: VBoxContainer = name_container.get_parent()
+	vbox.add_child(_sprite_preview)
+	vbox.move_child(_sprite_preview, selection_label.get_index() + 1)
 
 
 func _highlight_style() -> StyleBoxFlat:
