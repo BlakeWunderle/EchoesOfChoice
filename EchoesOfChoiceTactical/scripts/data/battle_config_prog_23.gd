@@ -11,12 +11,13 @@ static func create_smoke() -> BattleConfig:
 
 	var firestarter := load("res://resources/enemies/goblin_firestarter.tres")
 	var fiend := load("res://resources/enemies/blood_fiend.tres")
+	var ogre := load("res://resources/enemies/ogre.tres")
 	config.enemy_units = [
 		{"data": firestarter, "name": "Vex", "pos": Vector2i(8, 1), "level": 2},
 		{"data": firestarter, "name": "Gror", "pos": Vector2i(8, 5), "level": 2},
 		{"data": fiend, "name": "Cinder", "pos": Vector2i(8, 2), "level": 2},
 		{"data": fiend, "name": "Flamekin", "pos": Vector2i(8, 4), "level": 2},
-		{"data": fiend, "name": "Ember", "pos": Vector2i(9, 3), "level": 2},
+		{"data": ogre, "name": "Bonecrusher", "pos": Vector2i(9, 3), "level": 2},
 	]
 
 	config.pre_battle_dialogue = [
@@ -42,12 +43,13 @@ static func create_deep_forest() -> BattleConfig:
 	var witch := load("res://resources/enemies/witch.tres")
 	var wisp := load("res://resources/enemies/wisp.tres")
 	var sprite := load("res://resources/enemies/sprite.tres")
+	var huntsman := load("res://resources/enemies/wild_huntsman.tres")
 	config.enemy_units = [
 		{"data": witch, "name": "Morwen", "pos": Vector2i(9, 3), "level": 2},
 		{"data": wisp, "name": "Flicker", "pos": Vector2i(8, 1), "level": 2},
 		{"data": wisp, "name": "Glimmer", "pos": Vector2i(8, 5), "level": 2},
 		{"data": sprite, "name": "Briar", "pos": Vector2i(8, 2), "level": 2},
-		{"data": sprite, "name": "Thorn", "pos": Vector2i(8, 4), "level": 2},
+		{"data": huntsman, "name": "Thorn", "pos": Vector2i(8, 4), "level": 2},
 	]
 	
 	config.pre_battle_dialogue = [

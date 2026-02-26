@@ -6,9 +6,9 @@
 
 [resource]
 script = ExtResource("1")
-class_id = "bone_peddler"
-class_display_name = "Bone Peddler"
-sprite_id = "chibi_skeleton_nobleman_1"
+class_id = "hedge_mage"
+class_display_name = "Hedge Mage"
+sprite_id = "chibi_magician_demon_magician_1"
 base_max_health = 25
 base_max_mana = 12
 base_physical_attack = 6

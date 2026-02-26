@@ -54,13 +54,13 @@ static func create_city_street() -> BattleConfig:
 
 	var thug := load("res://resources/enemies/thug.tres")
 	var tough := load("res://resources/enemies/street_tough.tres")
-	var peddler := load("res://resources/enemies/bone_peddler.tres")
+	var hedge_mage := load("res://resources/enemies/hedge_mage.tres")
 	config.enemy_units = [
 		{"data": thug, "name": "Street Thug", "pos": Vector2i(8, 1), "level": 1},
 		{"data": thug, "name": "Alley Brute", "pos": Vector2i(8, 5), "level": 1},
 		{"data": tough, "name": "Brawler", "pos": Vector2i(8, 3), "level": 1},
 		{"data": tough, "name": "Gang Enforcer", "pos": Vector2i(9, 3), "level": 1},
-		{"data": peddler, "name": "Bone Peddler", "pos": Vector2i(9, 1), "level": 1},
+		{"data": hedge_mage, "name": "Hedge Mage", "pos": Vector2i(9, 1), "level": 1},
 	]
 	
 	config.pre_battle_dialogue = [

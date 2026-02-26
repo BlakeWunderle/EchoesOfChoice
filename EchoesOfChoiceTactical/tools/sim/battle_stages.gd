@@ -69,7 +69,7 @@ static func _prog_0() -> Array[Dictionary]:
 	return [_stage("city_street", 0, 10, 8, [
 		_e("thug", 1, Vector2i(8, 1)), _e("thug", 1, Vector2i(8, 5)),
 		_e("street_tough", 1, Vector2i(8, 3)), _e("street_tough", 1, Vector2i(9, 3)),
-		_e("bone_peddler", 1, Vector2i(9, 1)),
+		_e("hedge_mage", 1, Vector2i(9, 1)),
 	])]
 
 
@@ -95,12 +95,12 @@ static func _prog_2() -> Array[Dictionary]:
 		_stage("smoke", 2, 10, 8, [
 			_e("goblin_firestarter", 2, Vector2i(8, 1)), _e("goblin_firestarter", 2, Vector2i(8, 5)),
 			_e("blood_fiend", 2, Vector2i(8, 2)), _e("blood_fiend", 2, Vector2i(8, 4)),
-			_e("blood_fiend", 2, Vector2i(9, 3)),
+			_e("ogre", 2, Vector2i(9, 3)),
 		]),
 		_stage("deep_forest", 2, 10, 8, [
 			_e("witch", 2, Vector2i(9, 3)),
 			_e("wisp", 2, Vector2i(8, 1)), _e("wisp", 2, Vector2i(8, 5)),
-			_e("sprite", 2, Vector2i(8, 2)), _e("sprite", 2, Vector2i(8, 4)),
+			_e("sprite", 2, Vector2i(8, 2)), _e("wild_huntsman", 2, Vector2i(8, 4)),
 		]),
 		_stage("clearing", 2, 14, 10, [
 			_e("elf_ranger", 2, Vector2i(12, 2)), _e("elf_ranger", 2, Vector2i(12, 5)),
@@ -203,7 +203,7 @@ static func _prog_6() -> Array[Dictionary]:
 		]),
 		_stage("return_city_2", 6, 10, 8, [
 			_e("necromancer", 6, Vector2i(9, 3)), _e("elder_witch", 6, Vector2i(9, 5)),
-			_e("dire_shade", 6, Vector2i(8, 1)), _e("dire_shade", 6, Vector2i(8, 5)),
+			_e("dire_shade", 6, Vector2i(8, 1)), _e("phantom_prowler", 6, Vector2i(8, 5)),
 			_e("dread_wraith", 6, Vector2i(8, 3)),
 		]),
 		_stage("return_city_3", 6, 10, 8, [
@@ -213,7 +213,7 @@ static func _prog_6() -> Array[Dictionary]:
 		]),
 		_stage("return_city_4", 6, 10, 8, [
 			_e("warlock", 6, Vector2i(9, 3)), _e("shaman", 6, Vector2i(9, 5)),
-			_e("dire_shade", 6, Vector2i(8, 1)), _e("dire_shade", 6, Vector2i(8, 5)),
+			_e("dire_shade", 6, Vector2i(8, 1)), _e("phantom_prowler", 6, Vector2i(8, 5)),
 			_e("gorgon_queen", 6, Vector2i(8, 3)),
 		]),
 	]

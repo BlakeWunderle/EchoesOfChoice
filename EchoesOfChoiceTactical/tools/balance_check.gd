@@ -90,7 +90,7 @@ const BATTLES: Dictionary = {
 		"enemies": [
 			{"res": "res://resources/enemies/thug.tres", "name": "Thug", "count": 2, "level": 1},
 			{"res": "res://resources/enemies/street_tough.tres", "name": "Street Tough", "count": 2, "level": 1},
-			{"res": "res://resources/enemies/bone_peddler.tres", "name": "Bone Peddler", "count": 1, "level": 1},
+			{"res": "res://resources/enemies/hedge_mage.tres", "name": "Hedge Mage", "count": 1, "level": 1},
 		],
 	},
 	"forest": {
@@ -115,7 +115,8 @@ const BATTLES: Dictionary = {
 		"prog": 2,
 		"enemies": [
 			{"res": "res://resources/enemies/goblin_firestarter.tres", "name": "Goblin Firestarter", "count": 2, "level": 2},
-			{"res": "res://resources/enemies/blood_fiend.tres", "name": "Blood Fiend", "count": 3, "level": 2},
+			{"res": "res://resources/enemies/blood_fiend.tres", "name": "Blood Fiend", "count": 2, "level": 2},
+			{"res": "res://resources/enemies/ogre.tres", "name": "Ogre", "count": 1, "level": 2},
 		],
 	},
 	"deep_forest": {
@@ -123,7 +124,8 @@ const BATTLES: Dictionary = {
 		"enemies": [
 			{"res": "res://resources/enemies/witch.tres", "name": "Witch", "count": 1, "level": 2},
 			{"res": "res://resources/enemies/wisp.tres", "name": "Wisp", "count": 2, "level": 2},
-			{"res": "res://resources/enemies/sprite.tres", "name": "Sprite", "count": 2, "level": 2},
+			{"res": "res://resources/enemies/sprite.tres", "name": "Sprite", "count": 1, "level": 2},
+			{"res": "res://resources/enemies/wild_huntsman.tres", "name": "Wild Huntsman", "count": 1, "level": 2},
 		],
 	},
 	"clearing": {
@@ -257,10 +259,11 @@ const BATTLES: Dictionary = {
 	"return_city_2": {
 		"prog": 6,
 		"enemies": [
-			{"res": "res://resources/enemies/necromancer.tres",  "name": "Necromancer",  "count": 1, "level": 6},
-			{"res": "res://resources/enemies/elder_witch.tres",  "name": "Elder Witch",  "count": 1, "level": 6},
-			{"res": "res://resources/enemies/dire_shade.tres",   "name": "Dire Shade",   "count": 2, "level": 6},
-			{"res": "res://resources/enemies/dread_wraith.tres", "name": "Dread Wraith", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/necromancer.tres",     "name": "Necromancer",     "count": 1, "level": 6},
+			{"res": "res://resources/enemies/elder_witch.tres",     "name": "Elder Witch",     "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dire_shade.tres",      "name": "Dire Shade",      "count": 1, "level": 6},
+			{"res": "res://resources/enemies/phantom_prowler.tres", "name": "Phantom Prowler", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dread_wraith.tres",    "name": "Dread Wraith",    "count": 1, "level": 6},
 		],
 	},
 	"return_city_3": {
@@ -275,10 +278,11 @@ const BATTLES: Dictionary = {
 	"return_city_4": {
 		"prog": 6,
 		"enemies": [
-			{"res": "res://resources/enemies/warlock.tres",         "name": "Warlock",       "count": 1, "level": 6},
-			{"res": "res://resources/enemies/shaman.tres",          "name": "Shaman",        "count": 1, "level": 6},
-			{"res": "res://resources/enemies/dire_shade.tres",      "name": "Dire Shade",    "count": 2, "level": 6},
-			{"res": "res://resources/enemies/gorgon_queen.tres",    "name": "Gorgon Queen",  "count": 1, "level": 6},
+			{"res": "res://resources/enemies/warlock.tres",         "name": "Warlock",         "count": 1, "level": 6},
+			{"res": "res://resources/enemies/shaman.tres",          "name": "Shaman",          "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dire_shade.tres",      "name": "Dire Shade",      "count": 1, "level": 6},
+			{"res": "res://resources/enemies/phantom_prowler.tres", "name": "Phantom Prowler", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/gorgon_queen.tres",    "name": "Gorgon Queen",    "count": 1, "level": 6},
 		],
 	},
 }

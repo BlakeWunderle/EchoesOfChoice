@@ -76,11 +76,12 @@ static func create_return_city_2() -> BattleConfig:
 	var elder_witch := load("res://resources/enemies/elder_witch.tres")
 	var dire_shade := load("res://resources/enemies/dire_shade.tres")
 	var dread_wraith := load("res://resources/enemies/dread_wraith.tres")
+	var phantom_prowler := load("res://resources/enemies/phantom_prowler.tres")
 	config.enemy_units = [
 		{"data": necromancer, "name": "Arin", "pos": Vector2i(9, 3), "level": 6},
 		{"data": elder_witch, "name": "Nira", "pos": Vector2i(9, 5), "level": 6},
 		{"data": dire_shade, "name": "Pale Shade", "pos": Vector2i(8, 1), "level": 6},
-		{"data": dire_shade, "name": "Pale Shade", "pos": Vector2i(8, 5), "level": 6},
+		{"data": phantom_prowler, "name": "Shadow Runner", "pos": Vector2i(8, 5), "level": 6},
 		{"data": dread_wraith, "name": "Street Shade", "pos": Vector2i(8, 3), "level": 6},
 	]
 
@@ -137,12 +138,13 @@ static func create_return_city_4() -> BattleConfig:
 	var warlock := load("res://resources/enemies/warlock.tres")
 	var shaman := load("res://resources/enemies/shaman.tres")
 	var dire_shade := load("res://resources/enemies/dire_shade.tres")
+	var phantom_prowler := load("res://resources/enemies/phantom_prowler.tres")
 	var gorgon_queen := load("res://resources/enemies/gorgon_queen.tres")
 	config.enemy_units = [
 		{"data": warlock, "name": "Alis", "pos": Vector2i(9, 3), "level": 6},
 		{"data": shaman, "name": "Sila", "pos": Vector2i(9, 5), "level": 6},
 		{"data": dire_shade, "name": "Shadow Pact", "pos": Vector2i(8, 1), "level": 6},
-		{"data": dire_shade, "name": "Shadow Pact", "pos": Vector2i(8, 5), "level": 6},
+		{"data": phantom_prowler, "name": "Shadow Pact", "pos": Vector2i(8, 5), "level": 6},
 		{"data": gorgon_queen, "name": "Gorgon Matriarch", "pos": Vector2i(8, 3), "level": 6},
 	]
 
