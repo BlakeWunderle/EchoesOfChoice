@@ -29,6 +29,8 @@ var _combat_animator: CombatAnimator
 var _pause_menu: Control = null
 var _pause_menu_scene: PackedScene = preload("res://scenes/ui/PauseMenu.tscn")
 var _settings_menu_scene: PackedScene = preload("res://scenes/ui/SettingsMenu.tscn")
+var _turn_order_panel: TurnOrderPanel
+var _damage_preview: DamagePreview
 
 
 func _ready() -> void:
@@ -209,9 +211,23 @@ func _setup_from_config(config: BattleConfig) -> void:
 
 
 func _begin_battle() -> void:
+	_setup_battle_hud()
 	if _battle_config and _battle_config.pre_battle_dialogue.size() > 0:
 		await _show_dialogue(_battle_config.pre_battle_dialogue)
 	turn_manager.run_battle()
+
+
+func _setup_battle_hud() -> void:
+	# Turn order panel
+	_turn_order_panel = preload("res://scenes/battle/TurnOrderPanel.tscn").instantiate()
+	hud.add_child(_turn_order_panel)
+	_turn_order_panel.refresh(turn_manager)
+	turn_manager.unit_turn_started.connect(func(_u: Unit) -> void: _turn_order_panel.refresh(turn_manager))
+	turn_manager.unit_turn_ended.connect(func(_u: Unit) -> void: _turn_order_panel.refresh(turn_manager))
+
+	# Damage preview
+	_damage_preview = DamagePreview.new()
+	add_child(_damage_preview)
 
 
 func _show_dialogue(lines: Array[Dictionary]) -> void:
@@ -638,6 +654,8 @@ func _execute_move(unit: Unit, target_pos: Vector2i) -> void:
 func _execute_action(unit: Unit, target_pos: Vector2i) -> void:
 	grid_cursor.deactivate()
 	grid_overlay.clear_all()
+	if _damage_preview:
+		_damage_preview.hide_preview()
 
 	if _selected_ability == null:
 		_show_action_menu(unit)
@@ -678,8 +696,24 @@ func _on_cell_hovered(pos: Vector2i) -> void:
 				var aoe := grid.get_aoe_tiles(pos, _selected_ability.aoe_shape,
 					_selected_ability.aoe_size, turn_manager.current_unit.grid_position)
 				grid_overlay.show_aoe_preview(aoe)
+				_show_damage_preview(pos)
 			else:
 				grid_overlay.show_aoe_preview([])
+				if _damage_preview:
+					_damage_preview.hide_preview()
+
+
+func _show_damage_preview(pos: Vector2i) -> void:
+	if not _damage_preview or not _selected_ability:
+		return
+	var occupant := grid.get_occupant(pos)
+	if occupant is Unit and occupant.is_alive:
+		var attacker := turn_manager.current_unit
+		var preview := DamagePreview.get_preview_text(_selected_ability, attacker, occupant)
+		if not preview["text"].is_empty():
+			_damage_preview.show_at(occupant, preview["text"], preview["color"])
+			return
+	_damage_preview.hide_preview()
 
 
 func _on_cursor_cancelled() -> void:
@@ -689,6 +723,8 @@ func _on_cursor_cancelled() -> void:
 
 	grid_cursor.deactivate()
 	grid_overlay.clear_all()
+	if _damage_preview:
+		_damage_preview.hide_preview()
 
 	match _current_phase:
 		Enums.TurnPhase.MOVE:
