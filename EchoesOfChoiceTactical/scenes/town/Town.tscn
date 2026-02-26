@@ -20,90 +20,121 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.1, 0.12, 0.14, 1)
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="HBoxSplit" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -220.0
-offset_right = 280.0
-offset_bottom = 220.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+[node name="TownVisual" type="Control" parent="HBoxSplit"]
 layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 16
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
 
-[node name="VBox" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="VisualBG" type="ColorRect" parent="HBoxSplit/TownVisual"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.14, 0.1, 1)
+
+[node name="TownLabel" type="Label" parent="HBoxSplit/TownVisual"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 16.0
+offset_right = 150.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 22
+text = "Town"
+horizontal_alignment = 1
+
+[node name="NPCArea" type="Control" parent="HBoxSplit/TownVisual"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuPanel" type="PanelContainer" parent="HBoxSplit"]
 layout_mode = 2
-theme_override_constants/separation = 12
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(320, 0)
 
-[node name="TownName" type="Label" parent="Panel/MarginContainer/VBox"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxSplit/MenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="HBoxSplit/MenuPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TownName" type="Label" parent="HBoxSplit/MenuPanel/MarginContainer/VBox"]
 layout_mode = 2
 text = "Town"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 20
 
-[node name="Description" type="Label" parent="Panel/MarginContainer/VBox"]
+[node name="Description" type="Label" parent="HBoxSplit/MenuPanel/MarginContainer/VBox"]
 layout_mode = 2
 text = "A place to rest and recover."
 horizontal_alignment = 1
 autowrap_mode = 2
+theme_override_font_sizes/font_size = 12
 
-[node name="GoldLabel" type="Label" parent="Panel/MarginContainer/VBox"]
+[node name="GoldLabel" type="Label" parent="HBoxSplit/MenuPanel/MarginContainer/VBox"]
 layout_mode = 2
 text = "Gold: 0"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 
-[node name="HSeparator" type="HSeparator" parent="Panel/MarginContainer/VBox"]
+[node name="HSeparator" type="HSeparator" parent="HBoxSplit/MenuPanel/MarginContainer/VBox"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxSplit/MenuPanel/MarginContainer/VBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 180)
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 120)
 
-[node name="PartyList" type="VBoxContainer" parent="Panel/MarginContainer/VBox/ScrollContainer"]
+[node name="PartyList" type="VBoxContainer" parent="HBoxSplit/MenuPanel/MarginContainer/VBox/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxSplit/MenuPanel/MarginContainer/VBox"]
+layout_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="HBoxSplit/MenuPanel/MarginContainer/VBox"]
+layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="HSeparator2" type="HSeparator" parent="Panel/MarginContainer/VBox"]
+[node name="OptionalBattleButton" type="Button" parent="HBoxSplit/MenuPanel/MarginContainer/VBox/Buttons"]
 layout_mode = 2
-
-[node name="Buttons" type="HBoxContainer" parent="Panel/MarginContainer/VBox"]
-layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 16
-
-[node name="OptionalBattleButton" type="Button" parent="Panel/MarginContainer/VBox/Buttons"]
-layout_mode = 2
-custom_minimum_size = Vector2(200, 0)
 text = "Optional Battle"
 
-[node name="ShopButton" type="Button" parent="Panel/MarginContainer/VBox/Buttons"]
+[node name="ShopButton" type="Button" parent="HBoxSplit/MenuPanel/MarginContainer/VBox/Buttons"]
 layout_mode = 2
-custom_minimum_size = Vector2(120, 0)
 text = "Shop"
 
-[node name="RecruitButton" type="Button" parent="Panel/MarginContainer/VBox/Buttons"]
+[node name="RecruitButton" type="Button" parent="HBoxSplit/MenuPanel/MarginContainer/VBox/Buttons"]
 layout_mode = 2
-custom_minimum_size = Vector2(120, 0)
 text = "Recruit"
 
-[node name="ItemsButton" type="Button" parent="Panel/MarginContainer/VBox/Buttons"]
+[node name="ItemsButton" type="Button" parent="HBoxSplit/MenuPanel/MarginContainer/VBox/Buttons"]
 layout_mode = 2
-custom_minimum_size = Vector2(120, 0)
 text = "Items"
 
-[node name="ContinueButton" type="Button" parent="Panel/MarginContainer/VBox/Buttons"]
+[node name="ContinueButton" type="Button" parent="HBoxSplit/MenuPanel/MarginContainer/VBox/Buttons"]
 layout_mode = 2
-custom_minimum_size = Vector2(120, 0)
 text = "Continue"
