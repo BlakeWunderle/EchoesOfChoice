@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/claw.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+class_id = "blood_imp"
+class_display_name = "Blood Imp"
+sprite_id = "chibi_blood_demon_1"
+base_max_health = 91
+base_max_mana = 6
+base_physical_attack = 46
+base_physical_defense = 14
+base_magic_attack = 9
+base_magic_defense = 11
+base_speed = 16
+base_crit_chance = 10
+base_crit_damage = 3
+base_dodge_chance = 5
+growth_health = 7
+growth_mana = 0
+growth_physical_attack = 4
+growth_physical_defense = 1
+growth_magic_attack = 0
+growth_magic_defense = 1
+growth_speed = 0
+movement = 4
+jump = 2
+reaction_types = []
+abilities = [ExtResource("2")]
+upgrade_options = []

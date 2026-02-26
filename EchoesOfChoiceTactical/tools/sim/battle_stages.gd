@@ -69,7 +69,7 @@ static func _prog_0() -> Array[Dictionary]:
 	return [_stage("city_street", 0, 10, 8, [
 		_e("thug", 1, Vector2i(8, 1)), _e("thug", 1, Vector2i(8, 5)),
 		_e("street_tough", 1, Vector2i(8, 3)), _e("street_tough", 1, Vector2i(9, 3)),
-		_e("hex_peddler", 1, Vector2i(9, 1)),
+		_e("bone_peddler", 1, Vector2i(9, 1)),
 	])]
 
 
@@ -77,14 +77,14 @@ static func _prog_0() -> Array[Dictionary]:
 static func _prog_1() -> Array[Dictionary]:
 	return [
 		_stage("forest", 1, 10, 8, [
-			_e("bear", 1, Vector2i(8, 3)), _e("bear_cub", 1, Vector2i(9, 4)),
-			_e("wolf", 1, Vector2i(8, 1)), _e("wolf", 1, Vector2i(8, 5)),
-			_e("wild_boar", 1, Vector2i(9, 2)),
+			_e("forest_guardian", 1, Vector2i(8, 3)), _e("grove_sprite", 1, Vector2i(9, 4)),
+			_e("gnoll_raider", 1, Vector2i(8, 1)), _e("gnoll_raider", 1, Vector2i(8, 5)),
+			_e("minotaur", 1, Vector2i(9, 2)),
 		]),
 		_stage("village_raid", 1, 10, 8, [
 			_e("goblin", 1, Vector2i(8, 2)), _e("goblin", 1, Vector2i(8, 4)),
-			_e("goblin_archer", 1, Vector2i(9, 1)), _e("goblin_shaman", 1, Vector2i(9, 5)),
-			_e("hobgoblin", 1, Vector2i(9, 3)),
+			_e("goblin_archer", 1, Vector2i(9, 1)), _e("orc_shaman", 1, Vector2i(9, 5)),
+			_e("orc_warrior", 1, Vector2i(9, 3)),
 		]),
 	]
 
@@ -93,9 +93,9 @@ static func _prog_1() -> Array[Dictionary]:
 static func _prog_2() -> Array[Dictionary]:
 	return [
 		_stage("smoke", 2, 10, 8, [
-			_e("imp", 2, Vector2i(8, 1)), _e("imp", 2, Vector2i(8, 5)),
-			_e("fire_spirit", 2, Vector2i(8, 2)), _e("fire_spirit", 2, Vector2i(8, 4)),
-			_e("fire_spirit", 2, Vector2i(9, 3)),
+			_e("goblin_firestarter", 2, Vector2i(8, 1)), _e("goblin_firestarter", 2, Vector2i(8, 5)),
+			_e("blood_fiend", 2, Vector2i(8, 2)), _e("blood_fiend", 2, Vector2i(8, 4)),
+			_e("blood_fiend", 2, Vector2i(9, 3)),
 		]),
 		_stage("deep_forest", 2, 10, 8, [
 			_e("witch", 2, Vector2i(9, 3)),
@@ -103,7 +103,7 @@ static func _prog_2() -> Array[Dictionary]:
 			_e("sprite", 2, Vector2i(8, 2)), _e("sprite", 2, Vector2i(8, 4)),
 		]),
 		_stage("clearing", 2, 14, 10, [
-			_e("nymph", 2, Vector2i(12, 2)), _e("nymph", 2, Vector2i(12, 5)),
+			_e("elf_ranger", 2, Vector2i(12, 2)), _e("elf_ranger", 2, Vector2i(12, 5)),
 			_e("pixie", 2, Vector2i(12, 1)), _e("pixie", 2, Vector2i(12, 7)),
 			_e("satyr", 2, Vector2i(13, 4)),
 		]),
@@ -119,18 +119,18 @@ static func _prog_2() -> Array[Dictionary]:
 static func _prog_3() -> Array[Dictionary]:
 	return [
 		_stage("cave", 3, 8, 6, [
-			_e("cave_bat", 3, Vector2i(6, 1)), _e("cave_bat", 3, Vector2i(6, 4)),
-			_e("fire_wyrmling", 3, Vector2i(7, 2)), _e("frost_wyrmling", 3, Vector2i(7, 4)),
+			_e("orc_scout", 3, Vector2i(6, 1)), _e("orc_scout", 3, Vector2i(6, 4)),
+			_e("demon_archer", 3, Vector2i(7, 2)), _e("frost_demon", 3, Vector2i(7, 4)),
 		]),
 		_stage("portal", 3, 10, 8, [
-			_e("fiendling", 3, Vector2i(8, 1)), _e("fiendling", 3, Vector2i(8, 4)),
-			_e("fiendling", 3, Vector2i(8, 7)),
+			_e("blood_imp", 3, Vector2i(8, 1)), _e("blood_imp", 3, Vector2i(8, 4)),
+			_e("blood_imp", 3, Vector2i(8, 7)),
 			_e("hellion", 3, Vector2i(9, 3)), _e("hellion", 3, Vector2i(9, 5)),
 		]),
 		_stage("inn_ambush", 3, 10, 8, [
-			_e("shadow_hound", 3, Vector2i(8, 1)), _e("shadow_hound", 3, Vector2i(8, 5)),
-			_e("night_prowler", 3, Vector2i(8, 3)),
-			_e("dusk_moth", 3, Vector2i(9, 2)), _e("gloom_stalker", 3, Vector2i(9, 4)),
+			_e("skeleton_hunter", 3, Vector2i(8, 1)), _e("skeleton_hunter", 3, Vector2i(8, 5)),
+			_e("dark_elf_assassin", 3, Vector2i(8, 3)),
+			_e("fallen_seraph", 3, Vector2i(9, 2)), _e("shadow_demon", 3, Vector2i(9, 4)),
 		]),
 	]
 
@@ -139,14 +139,14 @@ static func _prog_3() -> Array[Dictionary]:
 static func _prog_4() -> Array[Dictionary]:
 	return [
 		_stage("shore", 4, 10, 8, [
-			_e("siren", 4, Vector2i(8, 1)), _e("siren", 4, Vector2i(8, 5)),
-			_e("tide_nymph", 4, Vector2i(8, 2)), _e("tide_nymph", 4, Vector2i(8, 4)),
-			_e("siren", 4, Vector2i(9, 3)),
+			_e("medusa", 4, Vector2i(8, 1)), _e("medusa", 4, Vector2i(8, 5)),
+			_e("sea_elf", 4, Vector2i(8, 2)), _e("sea_elf", 4, Vector2i(8, 4)),
+			_e("medusa", 4, Vector2i(9, 3)),
 		]),
 		_stage("beach", 4, 10, 8, [
 			_e("pirate", 4, Vector2i(8, 1)), _e("pirate", 4, Vector2i(8, 4)),
 			_e("pirate", 4, Vector2i(8, 5)),
-			_e("captain", 4, Vector2i(9, 2)), _e("kraken", 4, Vector2i(9, 3)),
+			_e("captain", 4, Vector2i(9, 2)), _e("ogre", 4, Vector2i(9, 3)),
 		]),
 		_stage("cemetery_battle", 4, 10, 8, [
 			_e("zombie", 4, Vector2i(8, 1)), _e("zombie", 4, Vector2i(8, 5)),
@@ -154,19 +154,19 @@ static func _prog_4() -> Array[Dictionary]:
 			_e("grave_wraith", 4, Vector2i(9, 3)),
 		]),
 		_stage("box_battle", 4, 10, 8, [
-			_e("harlequin", 4, Vector2i(8, 1)), _e("chanteuse", 4, Vector2i(8, 2)),
-			_e("chanteuse", 4, Vector2i(8, 4)), _e("harlequin", 4, Vector2i(8, 5)),
+			_e("harlequin", 4, Vector2i(8, 1)), _e("elf_enchantress", 4, Vector2i(8, 2)),
+			_e("elf_enchantress", 4, Vector2i(8, 4)), _e("harlequin", 4, Vector2i(8, 5)),
 			_e("ringmaster", 4, Vector2i(9, 3)),
 		]),
 		_stage("army_battle", 4, 10, 8, [
-			_e("draconian", 4, Vector2i(8, 1)), _e("chaplain", 4, Vector2i(8, 2)),
-			_e("draconian", 4, Vector2i(8, 5)), _e("chaplain", 4, Vector2i(9, 2)),
+			_e("shadow_fiend", 4, Vector2i(8, 1)), _e("orc_warchanter", 4, Vector2i(8, 2)),
+			_e("shadow_fiend", 4, Vector2i(8, 5)), _e("orc_warchanter", 4, Vector2i(9, 2)),
 			_e("commander", 4, Vector2i(9, 3)),
 		]),
 		_stage("lab_battle", 4, 10, 8, [
-			_e("android", 4, Vector2i(8, 1)), _e("arc_golem", 4, Vector2i(8, 2)),
+			_e("frost_sentinel", 4, Vector2i(8, 1)), _e("arc_golem", 4, Vector2i(8, 2)),
 			_e("ironclad", 4, Vector2i(9, 3)),
-			_e("android", 4, Vector2i(8, 5)), _e("machinist", 4, Vector2i(8, 4)),
+			_e("frost_sentinel", 4, Vector2i(8, 5)), _e("skeleton_crusader", 4, Vector2i(8, 4)),
 		]),
 	]
 
@@ -175,15 +175,15 @@ static func _prog_4() -> Array[Dictionary]:
 static func _prog_5() -> Array[Dictionary]:
 	return [
 		_stage("mirror_battle", 5, 14, 10, [
-			_e("void_watcher", 5, Vector2i(13, 4)),
-			_e("mirror_stalker", 5, Vector2i(12, 2)),
-			_e("dusk_prowler", 5, Vector2i(12, 1)), _e("dusk_prowler", 5, Vector2i(12, 7)),
-			_e("twilight_moth", 5, Vector2i(12, 5)),
+			_e("gorgon", 5, Vector2i(13, 4)),
+			_e("ghost_corsair", 5, Vector2i(12, 2)),
+			_e("dark_elf_blade", 5, Vector2i(12, 1)), _e("dark_elf_blade", 5, Vector2i(12, 7)),
+			_e("dark_seraph", 5, Vector2i(12, 5)),
 		]),
 		_stage("gate_ambush", 5, 10, 8, [
-			_e("mirror_stalker", 5, Vector2i(9, 3)),
-			_e("dusk_prowler", 5, Vector2i(8, 1)), _e("dusk_prowler", 5, Vector2i(8, 5)),
-			_e("cursed_peddler", 5, Vector2i(9, 2)), _e("twilight_moth", 5, Vector2i(8, 3)),
+			_e("ghost_corsair", 5, Vector2i(9, 3)),
+			_e("dark_elf_blade", 5, Vector2i(8, 1)), _e("dark_elf_blade", 5, Vector2i(8, 5)),
+			_e("bone_sorcerer", 5, Vector2i(9, 2)), _e("dark_seraph", 5, Vector2i(8, 3)),
 		]),
 	]
 
@@ -192,14 +192,14 @@ static func _prog_5() -> Array[Dictionary]:
 static func _prog_6() -> Array[Dictionary]:
 	return [
 		_stage("city_gate_ambush", 6, 10, 8, [
-			_e("watcher_lord", 6, Vector2i(9, 3)),
-			_e("dread_stalker", 6, Vector2i(8, 1)), _e("city_militia", 6, Vector2i(8, 5)),
+			_e("gorgon_queen", 6, Vector2i(9, 3)),
+			_e("dark_elf_warlord", 6, Vector2i(8, 1)), _e("city_militia", 6, Vector2i(8, 5)),
 			_e("dire_shade", 6, Vector2i(9, 2)), _e("phantom_prowler", 6, Vector2i(8, 4)),
 		]),
 		_stage("return_city_1", 6, 10, 8, [
 			_e("seraph", 6, Vector2i(9, 3)), _e("arch_hellion", 6, Vector2i(9, 5)),
 			_e("phantom_prowler", 6, Vector2i(8, 1)), _e("phantom_prowler", 6, Vector2i(8, 5)),
-			_e("dread_stalker", 6, Vector2i(8, 3)),
+			_e("dark_elf_warlord", 6, Vector2i(8, 3)),
 		]),
 		_stage("return_city_2", 6, 10, 8, [
 			_e("necromancer", 6, Vector2i(9, 3)), _e("elder_witch", 6, Vector2i(9, 5)),
@@ -209,12 +209,12 @@ static func _prog_6() -> Array[Dictionary]:
 		_stage("return_city_3", 6, 10, 8, [
 			_e("psion", 6, Vector2i(9, 3)), _e("runewright", 6, Vector2i(9, 5)),
 			_e("phantom_prowler", 6, Vector2i(8, 1)), _e("phantom_prowler", 6, Vector2i(8, 5)),
-			_e("dread_stalker", 6, Vector2i(8, 3)),
+			_e("dark_elf_warlord", 6, Vector2i(8, 3)),
 		]),
 		_stage("return_city_4", 6, 10, 8, [
 			_e("warlock", 6, Vector2i(9, 3)), _e("shaman", 6, Vector2i(9, 5)),
 			_e("dire_shade", 6, Vector2i(8, 1)), _e("dire_shade", 6, Vector2i(8, 5)),
-			_e("watcher_lord", 6, Vector2i(8, 3)),
+			_e("gorgon_queen", 6, Vector2i(8, 3)),
 		]),
 	]
 

@@ -14,7 +14,7 @@ enum Terrain {
 	PORTAL,
 	CIRCUS,
 	CEMETERY,
-	LAB,
+	CRYPT,
 	ARMY_CAMP,
 	MIRROR,
 	CITY_GATE,
@@ -54,7 +54,7 @@ const NODES: Dictionary = {
 	},
 	"forest": {
 		"display_name": "The Forest",
-		"description": "A mother bear and her pack guard the forest path. Past them, a village at the forest's edge offers rest and rumors of what lies deeper.",
+		"description": "A forest guardian and gnoll raiders block the woodland path. Past them, a village at the forest's edge offers rest and rumors of what lies deeper.",
 		"pos": Vector2(400, 360),
 		"terrain": Terrain.FOREST,
 		"prev_nodes": ["city_street"],
@@ -80,7 +80,7 @@ const NODES: Dictionary = {
 				"name": "Maren",
 				"role": "Innkeeper",
 				"lines": [
-					"The cave in the hills? Aye, it's there. Good shelter — unless the wyrmlings have already claimed it.",
+					"The cave in the hills? Aye, it's there. Good shelter — unless the orcs and demons have already claimed it.",
 					"Word from the east: there's a portal shrine along the smoke road. Old magic. Hard to say what's on the other side.",
 				],
 			},
@@ -107,7 +107,7 @@ const NODES: Dictionary = {
 	# --- Progression 2: Four-way branch ---
 	"smoke": {
 		"display_name": "The Smoke",
-		"description": "Smoldering embers and imps lurk in the haze. Beyond the smoke, a rift between worlds crackles—the portal leads toward the crossroads.",
+		"description": "Goblin firestarters and blood fiends lurk in the haze. Beyond the smoke, a rift between worlds crackles—the portal leads toward the crossroads.",
 		"pos": Vector2(660, 180),
 		"terrain": Terrain.SMOKE,
 		"prev_nodes": ["forest_village"],
@@ -119,7 +119,7 @@ const NODES: Dictionary = {
 	},
 	"deep_forest": {
 		"display_name": "Deep Forest",
-		"description": "A witch and her conjured spirits haunt the deep woods. The path through the woods leads to a cave in the hills—shelter, or a nest of wyrms.",
+		"description": "A witch and her conjured spirits haunt the deep woods. The path through the woods leads to a cave in the hills—shelter, or something worse.",
 		"pos": Vector2(660, 300),
 		"terrain": Terrain.DEEP_FOREST,
 		"prev_nodes": ["forest_village"],
@@ -157,7 +157,7 @@ const NODES: Dictionary = {
 	# --- Progression 3: Mid-game convergence ---
 	"cave": {
 		"display_name": "The Cave",
-		"description": "Shelter from the storm—but fire and frost wyrmlings nest in the cavern depths. Beyond the cave, an inn at the crossroads offers the first true respite.",
+		"description": "Shelter from the storm—but orcs and demons have claimed the cavern depths. Beyond the cave, an inn at the crossroads offers the first true respite.",
 		"pos": Vector2(820, 360),
 		"terrain": Terrain.CAVE,
 		"prev_nodes": ["deep_forest", "clearing"],
@@ -181,7 +181,7 @@ const NODES: Dictionary = {
 	},
 	"crossroads_inn": {
 		"display_name": "Crossroads Inn",
-		"description": "A weary inn at a mountain crossroads—the first safe haven since the forest village. Rest here; three roads lead out: the coast, the old cemetery where a carnival has set up, and the encampment at the lab.",
+		"description": "A weary inn at a mountain crossroads—the first safe haven since the forest village. Rest here; three roads lead out: the coast, the old cemetery where a carnival has set up, and the encampment near the crypt.",
 		"pos": Vector2(940, 310),
 		"terrain": Terrain.INN,
 		"prev_nodes": ["cave", "portal"],
@@ -195,7 +195,7 @@ const NODES: Dictionary = {
 				"name": "Bram",
 				"role": "Innkeeper",
 				"lines": [
-					"Three roads from here. The shore has sirens — beautiful, deadly. The cemetery is worse. The encampment is organized trouble.",
+					"Three roads from here. The shore has gorgons — petrifying, deadly. The cemetery is worse. The encampment is organized trouble.",
 					"First safe bed since the forest village. Sleep well. The Mirror is ahead, and nothing is right past it.",
 				],
 			},
@@ -203,7 +203,7 @@ const NODES: Dictionary = {
 				"name": "Lyra",
 				"role": "Merchant",
 				"lines": [
-					"The army at the encampment is not random — they are guarding something at the laboratory. I have seen the supply lines.",
+					"The army at the encampment is not random — they are guarding something at the crypt. I have seen the supply lines.",
 					"The carnival past the cemetery changes locations. Do not let the music in.",
 				],
 			},
@@ -211,7 +211,7 @@ const NODES: Dictionary = {
 				"name": "Wyn",
 				"role": "Weary Traveler",
 				"lines": [
-					"I came through the shore road. Lost two companions to the sirens. The beach past them is not much better — pirates waiting at the shipwreck.",
+					"I came through the shore road. Lost two companions to the gorgons. The beach past them is not much better — pirates waiting at the shipwreck.",
 					"The Mirror is where the roads converge. Something lives in that crossing. I did not linger.",
 				],
 			},
@@ -221,7 +221,7 @@ const NODES: Dictionary = {
 	# --- Progression 4: Three paths (two battles each) ---
 	"shore": {
 		"display_name": "The Shore",
-		"description": "The coast road. Salt hangs heavy in the air; sirens and their kind lurk by the water. Past them, the beach and a shipwreck await.",
+		"description": "The coast road. Salt hangs heavy in the air; gorgons and their kin lurk by the water. Past them, the beach and a shipwreck await.",
 		"pos": Vector2(1060, 520),
 		"terrain": Terrain.SHORE,
 		"prev_nodes": ["crossroads_inn"],
@@ -233,7 +233,7 @@ const NODES: Dictionary = {
 	},
 	"beach": {
 		"display_name": "The Beach",
-		"description": "Past the sirens, the coast opens onto a beach. A shipwreck juts from the shallows—and a pirate crew drops down. Beyond the beach, the road converges at the Mirror.",
+		"description": "Past the gorgons, the coast opens onto a beach. A shipwreck juts from the shallows—and a pirate crew drops down. Beyond the beach, the road converges at the Mirror.",
 		"pos": Vector2(1180, 520),
 		"terrain": Terrain.BEACH,
 		"prev_nodes": ["shore"],
@@ -268,10 +268,10 @@ const NODES: Dictionary = {
 		"gold_reward": 200,
 	},
 	"lab_battle": {
-		"display_name": "The Laboratory",
-		"description": "Past the encampment, the laboratory. Androids and machinists defend the workshop; the ironclad holds the line. Beyond the lab, the road leads to the Mirror—then Gate Town.",
+		"display_name": "The Crypt",
+		"description": "Past the encampment, a sealed crypt. Frost sentinels and a skeleton crusader guard the tomb; the ironclad holds the line. Beyond the crypt, the road leads to the Mirror—then Gate Town.",
 		"pos": Vector2(1180, 230),
-		"terrain": Terrain.LAB,
+		"terrain": Terrain.CRYPT,
 		"prev_nodes": ["army_battle"],
 		"next_nodes": ["mirror_battle"],
 		"branch_group": "",
@@ -281,7 +281,7 @@ const NODES: Dictionary = {
 	},
 	"army_battle": {
 		"display_name": "The Encampment",
-		"description": "An old army has set up an encampment at the lab. A commander marshals the forces. Past the encampment, the laboratory; past the lab, the Mirror and Gate Town.",
+		"description": "An old army has set up an encampment near the crypt. A commander marshals the forces. Past the encampment, the crypt; past the tomb, the Mirror and Gate Town.",
 		"pos": Vector2(1060, 230),
 		"terrain": Terrain.ARMY_CAMP,
 		"prev_nodes": ["crossroads_inn"],
@@ -347,7 +347,7 @@ const NODES: Dictionary = {
 	# --- Progression 6: City Gate Ambush (shared) ---
 	"city_gate_ambush": {
 		"display_name": "The City Gates",
-		"description": "Shadow agents have taken position inside the city walls. The Watcher's Hand from the mirror crossing stands at their head — this time with a turned city warden at its side.",
+		"description": "Shadow agents have taken position inside the city walls. The Gorgon Queen from the mirror crossing stands at their head — this time with a dark elf warlord at her side.",
 		"pos": Vector2(1360, 320),
 		"terrain": Terrain.CITY_GATE,
 		"prev_nodes": ["gate_town"],

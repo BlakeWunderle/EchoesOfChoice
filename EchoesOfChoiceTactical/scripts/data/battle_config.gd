@@ -111,14 +111,14 @@ static func create_travel_ambush() -> BattleConfig:
 		]
 	elif prog <= 5:
 		var goblin: FighterData = load("res://resources/enemies/goblin.tres")
-		var hobgob: FighterData = load("res://resources/enemies/hobgoblin.tres")
+		var orc: FighterData = load("res://resources/enemies/orc_warrior.tres")
 		var archer: FighterData = load("res://resources/enemies/goblin_archer.tres")
 		var lvl: int = clampi(prog, 3, 5)
 		config.enemy_units = [
 			{"data": goblin, "name": "Raider", "pos": Vector2i(8, 1), "level": lvl},
 			{"data": goblin, "name": "Looter", "pos": Vector2i(8, 5), "level": lvl},
 			{"data": archer, "name": "Skirmisher", "pos": Vector2i(9, 2), "level": lvl},
-			{"data": hobgob, "name": "War Chief", "pos": Vector2i(9, 4), "level": lvl},
+			{"data": orc, "name": "Orc War Chief", "pos": Vector2i(9, 4), "level": lvl},
 		]
 		config.pre_battle_dialogue = [
 			{"speaker": "", "text": "A war party steps across the road. They have been tracking you for some time."},
@@ -129,15 +129,15 @@ static func create_travel_ambush() -> BattleConfig:
 		]
 	else:
 		config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
-		var prowler: FighterData = load("res://resources/enemies/night_prowler.tres")
-		var hound: FighterData = load("res://resources/enemies/shadow_hound.tres")
-		var stalker: FighterData = load("res://resources/enemies/gloom_stalker.tres")
+		var assassin: FighterData = load("res://resources/enemies/dark_elf_assassin.tres")
+		var hunter: FighterData = load("res://resources/enemies/skeleton_hunter.tres")
+		var demon: FighterData = load("res://resources/enemies/shadow_demon.tres")
 		var lvl: int = clampi(prog, 6, 10)
 		config.enemy_units = [
-			{"data": prowler, "name": "Night Prowler", "pos": Vector2i(8, 1), "level": lvl},
-			{"data": prowler, "name": "Night Prowler", "pos": Vector2i(8, 5), "level": lvl},
-			{"data": hound, "name": "Shadow Hound", "pos": Vector2i(8, 3), "level": lvl},
-			{"data": stalker, "name": "Gloom Stalker", "pos": Vector2i(9, 3), "level": lvl},
+			{"data": assassin, "name": "Dark Elf Assassin", "pos": Vector2i(8, 1), "level": lvl},
+			{"data": assassin, "name": "Dark Elf Assassin", "pos": Vector2i(8, 5), "level": lvl},
+			{"data": hunter, "name": "Skeleton Hunter", "pos": Vector2i(8, 3), "level": lvl},
+			{"data": demon, "name": "Shadow Demon", "pos": Vector2i(9, 3), "level": lvl},
 		]
 		config.pre_battle_dialogue = [
 			{"speaker": "", "text": "No warning. They were waiting — and they know exactly how you move."},

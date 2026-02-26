@@ -54,7 +54,7 @@ const PALETTES := {
 		"wall": Color(0.25, 0.2, 0.15), "elevation_tint": Color(1.1, 1.0, 0.9),
 		"grid_line": Color(0.2, 0.16, 0.12, 0.3),
 	},
-	"lab": {
+	"crypt": {
 		"ground": Color(0.35, 0.37, 0.4), "ground_alt": Color(0.33, 0.35, 0.38),
 		"wall": Color(0.45, 0.47, 0.5), "elevation_tint": Color(1.0, 1.05, 1.15),
 		"grid_line": Color(0.25, 0.27, 0.3, 0.3),

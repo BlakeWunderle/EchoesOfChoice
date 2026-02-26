@@ -157,26 +157,27 @@ CLASS_SPRITE_IDS_FEMALE: dict[str, str] = {
 }
 
 ENEMY_SPRITE_IDS: dict[str, str] = {
-    # --- Goblinoid ---
+    # --- Goblinoid & Orc ---
     "goblin": "chibi_goblin_1",
     "goblin_archer": "chibi_goblin_3",
-    "goblin_shaman": "chibi_orc_shaman_shamans_1",
-    "hobgoblin": "chibi_orc_ogre_goblin_orc",
+    "goblin_firestarter": "chibi_goblin_2",
+    "orc_shaman": "chibi_orc_shaman_shamans_1",
+    "orc_warrior": "chibi_orc_ogre_goblin_orc",
+    "orc_scout": "chibi_orc_archer_1",
+    "orc_warchanter": "chibi_orc_shaman_shamans_2",
 
-    # --- Beasts & prowlers ---
-    "wolf": "chibi_gnoll_1",
-    "shadow_hound": "chibi_skeleton_hunter_1",
-    "wild_boar": "chibi_minotaur_1",
-    "bear": "chibi_forest_guardian_1",
-    "bear_cub": "chibi_forest_guardian_2",
-    "night_prowler": "chibi_dark_elves_1",
-    "dusk_prowler": "chibi_dark_elves_2",
-    "dread_stalker": "chibi_dark_elves_3",
+    # --- Beast-folk & Nature ---
+    "gnoll_raider": "chibi_gnoll_1",
+    "minotaur": "chibi_minotaur_1",
+    "forest_guardian": "chibi_forest_guardian_1",
+    "grove_sprite": "chibi_forest_guardian_2",
+    "satyr": "chibi_satyr_1",
+    "ogre": "chibi_orc_ogre_goblin_ogre",
 
     # --- City thugs ---
     "thug": "chibi_archer_barbarian_mage_barbarian_warrior",
     "street_tough": "chibi_4_characters_medieval_thug",
-    "hex_peddler": "chibi_skeleton_nobleman_1",
+    "bone_peddler": "chibi_skeleton_nobleman_1",
 
     # --- Guards & military ---
     "guard_squire": "chibi_knight_2",
@@ -189,23 +190,28 @@ ENEMY_SPRITE_IDS: dict[str, str] = {
     "captain": "chibi_skeleton_pirate_captain_1",
     "pirate": "chibi_ghost_pirate_1",
 
-    # --- Imps & small demons ---
-    "imp": "chibi_goblin_2",
-    "fiendling": "chibi_blood_demon_1",
-    "fire_spirit": "chibi_blood_demon_2",
-    "cave_bat": "chibi_orc_archer_1",
+    # --- Blood demons ---
+    "blood_imp": "chibi_blood_demon_1",
+    "blood_fiend": "chibi_blood_demon_2",
+    "hellion": "chibi_blood_demon_3",
 
     # --- Nature spirits ---
     "pixie": "chibi_elemental_spirits_1",
     "sprite": "chibi_elemental_spirits_2",
     "wisp": "chibi_elemental_spirits_3",
 
-    # --- Nature / fey humanoids ---
-    "satyr": "chibi_satyr_1",
-    "nymph": "chibi_elf_archer_archer_1",
-    "tide_nymph": "chibi_elf_archer_archer_2",
-    "siren": "chibi_medusa_1",
-    "chanteuse": "chibi_elf_archer_archer_3",
+    # --- Elves ---
+    "elf_ranger": "chibi_elf_archer_archer_1",
+    "sea_elf": "chibi_elf_archer_archer_2",
+    "elf_enchantress": "chibi_elf_archer_archer_3",
+    "dark_elf_assassin": "chibi_dark_elves_1",
+    "dark_elf_blade": "chibi_dark_elves_2",
+    "dark_elf_warlord": "chibi_dark_elves_3",
+
+    # --- Gorgons ---
+    "medusa": "chibi_medusa_1",
+    "gorgon": "chibi_medusa_2",
+    "gorgon_queen": "chibi_medusa_3",
 
     # --- Spectral ---
     "shade": "chibi_ghost_knight_1",
@@ -215,7 +221,7 @@ ENEMY_SPRITE_IDS: dict[str, str] = {
     "dread_wraith": "chibi_ghost_knight_2_ghost_knight_2",
     "specter": "chibi_ghost_knight_2_ghost_knight_3",
     "phantom_prowler": "chibi_ghost_pirate_2",
-    "mirror_stalker": "chibi_ghost_pirate_3",
+    "ghost_corsair": "chibi_ghost_pirate_3",
 
     # --- Undead casters ---
     "witch": "chibi_skeleton_witch_1",
@@ -223,48 +229,42 @@ ENEMY_SPRITE_IDS: dict[str, str] = {
     "necromancer": "chibi_necromancer_shadow_necromancer_of_the_shadow_1",
     "warlock": "chibi_magician_undead_magician_2",
     "psion": "chibi_magician_undead_magician_3",
-    "chaplain": "chibi_orc_shaman_shamans_2",
     "shaman": "chibi_orc_shaman_shamans_3",
     "runewright": "chibi_skeleton_sorcerer_1",
 
     # --- Undead melee ---
     "zombie": "chibi_zombie_villager_1",
     "bone_sentry": "chibi_skeleton_warrior_1",
-    "cursed_peddler": "chibi_skeleton_nobleman_2",
+    "bone_sorcerer": "chibi_skeleton_nobleman_2",
+    "skeleton_hunter": "chibi_skeleton_hunter_1",
+    "skeleton_crusader": "chibi_skeleton_crusader_1",
 
-    # --- Wyrmlings ---
-    "fire_wyrmling": "chibi_demon_archer_archer_1",
-    "frost_wyrmling": "chibi_demon_archer_archer_2",
-    "gloom_stalker": "chibi_demon_archer_archer_3",
+    # --- Demon archers ---
+    "demon_archer": "chibi_demon_archer_archer_1",
+    "frost_demon": "chibi_demon_archer_archer_2",
+    "shadow_demon": "chibi_demon_archer_archer_3",
 
     # --- Constructs ---
     "arc_golem": "chibi_golem_2",
     "ironclad": "chibi_golem_3",
-    "android": "chibi_frost_knight_3",
-    "machinist": "chibi_skeleton_crusader_1",
+    "frost_sentinel": "chibi_frost_knight_3",
 
     # --- Demons ---
-    "hellion": "chibi_blood_demon_3",
     "arch_hellion": "chibi_devil_hell_knight_succubus_hell_knight",
-    "draconian": "chibi_demon_of_darkness_demons_of_darkness_1",
+    "shadow_fiend": "chibi_demon_of_darkness_demons_of_darkness_1",
     "ringmaster": "chibi_halloween_skull_knight",
     "harlequin": "chibi_halloween_pumpkin_head_guy",
 
-    # --- Watchers & moths ---
-    "watcher_lord": "chibi_medusa_3",
-    "void_watcher": "chibi_medusa_2",
+    # --- Fallen angels ---
     "seraph": "chibi_fallen_angel_s_1",
-    "dusk_moth": "chibi_fallen_angel_s_3",
-    "twilight_moth": "chibi_fallen_angel_s_2",
+    "dark_seraph": "chibi_fallen_angel_s_2",
+    "fallen_seraph": "chibi_fallen_angel_s_3",
 
     # --- True elementals (Prog 7) ---
     "fire_elemental": "chibi_elemental_s_1",
     "water_elemental": "chibi_elemental_s_2",
     "air_elemental": "chibi_elemental_s_3",
     "earth_elemental": "chibi_forest_guardian_3",
-
-    # --- Boss ---
-    "kraken": "chibi_orc_ogre_goblin_ogre",
 
     # --- Final boss ---
     "the_stranger": "chibi_black_reaper_1",

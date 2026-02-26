@@ -54,13 +54,13 @@ static func create_city_street() -> BattleConfig:
 
 	var thug := load("res://resources/enemies/thug.tres")
 	var tough := load("res://resources/enemies/street_tough.tres")
-	var peddler := load("res://resources/enemies/hex_peddler.tres")
+	var peddler := load("res://resources/enemies/bone_peddler.tres")
 	config.enemy_units = [
 		{"data": thug, "name": "Street Thug", "pos": Vector2i(8, 1), "level": 1},
 		{"data": thug, "name": "Alley Brute", "pos": Vector2i(8, 5), "level": 1},
 		{"data": tough, "name": "Brawler", "pos": Vector2i(8, 3), "level": 1},
 		{"data": tough, "name": "Gang Enforcer", "pos": Vector2i(9, 3), "level": 1},
-		{"data": peddler, "name": "Hex Peddler", "pos": Vector2i(9, 1), "level": 1},
+		{"data": peddler, "name": "Bone Peddler", "pos": Vector2i(9, 1), "level": 1},
 	]
 	
 	config.pre_battle_dialogue = [
@@ -83,26 +83,26 @@ static func create_forest() -> BattleConfig:
 	config.environment = "forest"
 	BattleConfig._build_party_units(config)
 
-	var bear := load("res://resources/enemies/bear.tres")
-	var bear_cub := load("res://resources/enemies/bear_cub.tres")
-	var wolf := load("res://resources/enemies/wolf.tres")
-	var boar := load("res://resources/enemies/wild_boar.tres")
+	var guardian := load("res://resources/enemies/forest_guardian.tres")
+	var sprite := load("res://resources/enemies/grove_sprite.tres")
+	var gnoll := load("res://resources/enemies/gnoll_raider.tres")
+	var minotaur := load("res://resources/enemies/minotaur.tres")
 	config.enemy_units = [
-		{"data": bear, "name": "Mother Bear", "pos": Vector2i(8, 3), "level": 1},
-		{"data": bear_cub, "name": "Bear Cub", "pos": Vector2i(9, 4), "level": 1},
-		{"data": wolf, "name": "Grey Wolf", "pos": Vector2i(8, 1), "level": 1},
-		{"data": wolf, "name": "Timber Wolf", "pos": Vector2i(8, 5), "level": 1},
-		{"data": boar, "name": "Wild Boar", "pos": Vector2i(9, 2), "level": 1},
+		{"data": guardian, "name": "Forest Guardian", "pos": Vector2i(8, 3), "level": 1},
+		{"data": sprite, "name": "Grove Sprite", "pos": Vector2i(9, 4), "level": 1},
+		{"data": gnoll, "name": "Gnoll Raider", "pos": Vector2i(8, 1), "level": 1},
+		{"data": gnoll, "name": "Gnoll Stalker", "pos": Vector2i(8, 5), "level": 1},
+		{"data": minotaur, "name": "Minotaur", "pos": Vector2i(9, 2), "level": 1},
 	]
-	
+
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "The forest goes still — not the quiet of morning, but the kind before something large has already made its decision."},
 		{"speaker": "Elara", "text": "Something drove them from the deeper wood. They are not spooked."},
-		{"speaker": "", "text": "A mother bear crashes through the undergrowth. Her cubs flank the path behind her."}
+		{"speaker": "", "text": "A forest guardian materializes from the treeline. Behind it, gnoll raiders scatter, and something massive crashes through the underbrush."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "Thane", "text": "An old house, just off the path. Unlocked."},
-		{"speaker": "", "text": "Something drove them out of the deeper wood. The village ahead — their chimney smoke is still visible through the trees."}
+		{"speaker": "", "text": "The forest guardians are restless — something has disturbed the deeper wood. The village ahead, their chimney smoke is still visible through the trees."}
 	]
 	return config
 
@@ -117,14 +117,14 @@ static func create_village_raid() -> BattleConfig:
 
 	var goblin := load("res://resources/enemies/goblin.tres")
 	var archer := load("res://resources/enemies/goblin_archer.tres")
-	var shaman := load("res://resources/enemies/goblin_shaman.tres")
-	var hobgob := load("res://resources/enemies/hobgoblin.tres")
+	var shaman := load("res://resources/enemies/orc_shaman.tres")
+	var orc := load("res://resources/enemies/orc_warrior.tres")
 	config.enemy_units = [
 		{"data": goblin, "name": "Goblin Raider", "pos": Vector2i(8, 2), "level": 1},
 		{"data": goblin, "name": "Goblin Looter", "pos": Vector2i(8, 4), "level": 1},
 		{"data": archer, "name": "Goblin Archer", "pos": Vector2i(9, 1), "level": 1},
-		{"data": shaman, "name": "Goblin Shaman", "pos": Vector2i(9, 5), "level": 1},
-		{"data": hobgob, "name": "Hobgoblin Chief", "pos": Vector2i(9, 3), "level": 1},
+		{"data": shaman, "name": "Orc Shaman", "pos": Vector2i(9, 5), "level": 1},
+		{"data": orc, "name": "Orc Warlord", "pos": Vector2i(9, 3), "level": 1},
 	]
 	
 	config.pre_battle_dialogue = [

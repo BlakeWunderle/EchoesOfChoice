@@ -27,8 +27,8 @@ func _draw() -> void:
 			_draw_circus()
 		MapData.Terrain.CEMETERY:
 			_draw_cemetery()
-		MapData.Terrain.LAB:
-			_draw_lab()
+		MapData.Terrain.CRYPT:
+			_draw_crypt()
 		MapData.Terrain.ARMY_CAMP:
 			_draw_army_camp()
 		MapData.Terrain.MIRROR:
@@ -185,7 +185,7 @@ func _draw_cemetery() -> void:
 	draw_line(Vector2(30, -6), Vector2(24, -14), Color(0.3, 0.22, 0.15), 1.5)
 
 
-func _draw_lab() -> void:
+func _draw_crypt() -> void:
 	# Tower
 	draw_rect(Rect2(-12, -30, 24, 46), Color(0.4, 0.42, 0.45))
 	# Gears

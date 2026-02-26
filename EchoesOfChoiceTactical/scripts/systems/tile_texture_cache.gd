@@ -44,7 +44,7 @@ const ENVIRONMENT_TILES: Dictionary = {
 		"path": "res://assets/art/tilesets/battle/cursed_land/PNG/Ground.png",
 		"regions": [Rect2i(64, 32, 16, 16), Rect2i(80, 32, 16, 16), Rect2i(64, 48, 16, 16), Rect2i(80, 48, 16, 16)],
 	},
-	"lab": {
+	"crypt": {
 		"path": "res://assets/art/tilesets/battle/mage_tower/PNG/Interior_walls.png",
 		"regions": [Rect2i(64, 32, 16, 16), Rect2i(80, 32, 16, 16), Rect2i(64, 48, 16, 16), Rect2i(80, 48, 16, 16)],
 	},

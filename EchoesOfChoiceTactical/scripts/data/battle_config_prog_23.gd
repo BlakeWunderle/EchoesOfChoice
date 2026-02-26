@@ -9,20 +9,20 @@ static func create_smoke() -> BattleConfig:
 	config.environment = "scorched"
 	BattleConfig._build_party_units(config)
 
-	var imp := load("res://resources/enemies/imp.tres")
-	var spirit := load("res://resources/enemies/fire_spirit.tres")
+	var firestarter := load("res://resources/enemies/goblin_firestarter.tres")
+	var fiend := load("res://resources/enemies/blood_fiend.tres")
 	config.enemy_units = [
-		{"data": imp, "name": "Vex", "pos": Vector2i(8, 1), "level": 2},
-		{"data": imp, "name": "Gror", "pos": Vector2i(8, 5), "level": 2},
-		{"data": spirit, "name": "Cinder", "pos": Vector2i(8, 2), "level": 2},
-		{"data": spirit, "name": "Flamekin", "pos": Vector2i(8, 4), "level": 2},
-		{"data": spirit, "name": "Ember", "pos": Vector2i(9, 3), "level": 2},
+		{"data": firestarter, "name": "Vex", "pos": Vector2i(8, 1), "level": 2},
+		{"data": firestarter, "name": "Gror", "pos": Vector2i(8, 5), "level": 2},
+		{"data": fiend, "name": "Cinder", "pos": Vector2i(8, 2), "level": 2},
+		{"data": fiend, "name": "Flamekin", "pos": Vector2i(8, 4), "level": 2},
+		{"data": fiend, "name": "Ember", "pos": Vector2i(9, 3), "level": 2},
 	]
-	
+
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "The smoke was a smear on the horizon from the village. Up close it feeds on something big."},
 		{"speaker": "Lyris", "text": "I hear cackling."},
-		{"speaker": "", "text": "Three imps cluster around a growing fire, chanting in rhythm. They are not just feeding it — they are building something, and it is nearly ready."}
+		{"speaker": "", "text": "Goblin firestarters cluster around a growing blaze, blood fiends drawn to the flames. They are building something, and it is nearly ready."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "The fire dies to embers. Behind where it burned brightest, a portal pulses with dark energy."},
@@ -72,11 +72,11 @@ static func create_clearing() -> BattleConfig:
 	BattleConfig._build_party_units(config)
 
 	var satyr := load("res://resources/enemies/satyr.tres")
-	var nymph := load("res://resources/enemies/nymph.tres")
+	var elf := load("res://resources/enemies/elf_ranger.tres")
 	var pixie := load("res://resources/enemies/pixie.tres")
 	config.enemy_units = [
-		{"data": nymph, "name": "Ondine", "pos": Vector2i(12, 2), "level": 2},
-		{"data": nymph, "name": "Lirien", "pos": Vector2i(12, 5), "level": 2},
+		{"data": elf, "name": "Ondine", "pos": Vector2i(12, 2), "level": 2},
+		{"data": elf, "name": "Lirien", "pos": Vector2i(12, 5), "level": 2},
 		{"data": pixie, "name": "Jinx", "pos": Vector2i(12, 1), "level": 2},
 		{"data": pixie, "name": "Flitz", "pos": Vector2i(12, 7), "level": 2},
 		{"data": satyr, "name": "Sylvan", "pos": Vector2i(13, 4), "level": 2},
@@ -132,23 +132,23 @@ static func create_cave() -> BattleConfig:
 	config.environment = "cave"
 	BattleConfig._build_party_units(config)
 
-	var fire_wyrm := load("res://resources/enemies/fire_wyrmling.tres")
-	var frost_wyrm := load("res://resources/enemies/frost_wyrmling.tres")
-	var bat := load("res://resources/enemies/cave_bat.tres")
+	var demon_archer := load("res://resources/enemies/demon_archer.tres")
+	var frost_demon := load("res://resources/enemies/frost_demon.tres")
+	var orc_scout := load("res://resources/enemies/orc_scout.tres")
 	config.enemy_units = [
-		{"data": bat, "name": "Shriek", "pos": Vector2i(6, 1), "level": 3},
-		{"data": bat, "name": "Fang", "pos": Vector2i(6, 4), "level": 3},
-		{"data": fire_wyrm, "name": "Raysses", "pos": Vector2i(7, 2), "level": 3},
-		{"data": frost_wyrm, "name": "Sythara", "pos": Vector2i(7, 4), "level": 3},
+		{"data": orc_scout, "name": "Orc Scout", "pos": Vector2i(6, 1), "level": 3},
+		{"data": orc_scout, "name": "Orc Sentry", "pos": Vector2i(6, 4), "level": 3},
+		{"data": demon_archer, "name": "Demon Archer", "pos": Vector2i(7, 2), "level": 3},
+		{"data": frost_demon, "name": "Frost Demon", "pos": Vector2i(7, 4), "level": 3},
 	]
-	
+
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "Gold everywhere — but two wyrmlings share this hoard. A fire and a frost, together."},
-		{"speaker": "Thane", "text": "They never share. Something drove them both here, something neither of them could face alone."}
+		{"speaker": "", "text": "The cave reeks of sulfur. Orc sentries stand guard at the entrance. Deeper in, demon archers draw flaming arrows."},
+		{"speaker": "Thane", "text": "Orcs serving demons. Whatever bargain was struck here, it was not made lightly."}
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "Silence. Just the sound of coins sliding off the fallen beasts."},
-		{"speaker": "Elara", "text": "Two wyrmlings. Old ones. They do not nest near nothing — something darker stirred them here."}
+		{"speaker": "", "text": "Silence. The orc sentries lie still, and the demons' flames gutter out."},
+		{"speaker": "Elara", "text": "Whatever drove the orcs to serve the demons, the bargain is over now."}
 	]
 	return config
 
@@ -163,11 +163,11 @@ static func create_portal() -> BattleConfig:
 	BattleConfig._build_party_units(config)
 
 	var hellion := load("res://resources/enemies/hellion.tres")
-	var fiendling := load("res://resources/enemies/fiendling.tres")
+	var blood_imp := load("res://resources/enemies/blood_imp.tres")
 	config.enemy_units = [
-		{"data": fiendling, "name": "Malphas", "pos": Vector2i(8, 1), "level": 3},
-		{"data": fiendling, "name": "Bael", "pos": Vector2i(8, 4), "level": 3},
-		{"data": fiendling, "name": "Dantalion", "pos": Vector2i(8, 7), "level": 3},
+		{"data": blood_imp, "name": "Malphas", "pos": Vector2i(8, 1), "level": 3},
+		{"data": blood_imp, "name": "Bael", "pos": Vector2i(8, 4), "level": 3},
+		{"data": blood_imp, "name": "Dantalion", "pos": Vector2i(8, 7), "level": 3},
 		{"data": hellion, "name": "Abyzou", "pos": Vector2i(9, 3), "level": 3},
 		{"data": hellion, "name": "Purson", "pos": Vector2i(9, 5), "level": 3},
 	]
@@ -191,16 +191,16 @@ static func create_inn_ambush() -> BattleConfig:
 	config.environment = "inn"
 	BattleConfig._build_party_units(config)
 
-	var hound := load("res://resources/enemies/shadow_hound.tres")
-	var prowler := load("res://resources/enemies/night_prowler.tres")
-	var moth := load("res://resources/enemies/dusk_moth.tres")
-	var stalker := load("res://resources/enemies/gloom_stalker.tres")
+	var hunter := load("res://resources/enemies/skeleton_hunter.tres")
+	var assassin := load("res://resources/enemies/dark_elf_assassin.tres")
+	var seraph := load("res://resources/enemies/fallen_seraph.tres")
+	var demon := load("res://resources/enemies/shadow_demon.tres")
 	config.enemy_units = [
-		{"data": hound, "name": "Shadow Hound", "pos": Vector2i(8, 1), "level": 3},
-		{"data": hound, "name": "Dark Hound", "pos": Vector2i(8, 5), "level": 3},
-		{"data": prowler, "name": "Night Prowler", "pos": Vector2i(8, 3), "level": 3},
-		{"data": moth, "name": "Dusk Moth", "pos": Vector2i(9, 2), "level": 3},
-		{"data": stalker, "name": "Gloom Stalker", "pos": Vector2i(9, 4), "level": 3},
+		{"data": hunter, "name": "Bone Tracker", "pos": Vector2i(8, 1), "level": 3},
+		{"data": hunter, "name": "Bone Stalker", "pos": Vector2i(8, 5), "level": 3},
+		{"data": assassin, "name": "Dark Elf Assassin", "pos": Vector2i(8, 3), "level": 3},
+		{"data": seraph, "name": "Fallen Seraph", "pos": Vector2i(9, 2), "level": 3},
+		{"data": demon, "name": "Shadow Demon", "pos": Vector2i(9, 4), "level": 3},
 	]
 	
 	config.pre_battle_dialogue = [

@@ -67,7 +67,7 @@ const ENVIRONMENT_FALLBACKS: Dictionary = {
 	"mirror": "shrine",
 	"city": "ruins",
 	"castle": "ruins",
-	"lab": "cave",
+	"crypt": "cave",
 	"inn": "grassland",
 }
 

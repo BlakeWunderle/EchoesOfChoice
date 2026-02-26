@@ -84,16 +84,16 @@ const BATTLES: Dictionary = {
 		"enemies": [
 			{"res": "res://resources/enemies/thug.tres", "name": "Thug", "count": 2, "level": 1},
 			{"res": "res://resources/enemies/street_tough.tres", "name": "Street Tough", "count": 2, "level": 1},
-			{"res": "res://resources/enemies/hex_peddler.tres", "name": "Hex Peddler", "count": 1, "level": 1},
+			{"res": "res://resources/enemies/bone_peddler.tres", "name": "Bone Peddler", "count": 1, "level": 1},
 		],
 	},
 	"forest": {
 		"prog": 1,
 		"enemies": [
-			{"res": "res://resources/enemies/bear.tres", "name": "Bear", "count": 1, "level": 1},
-			{"res": "res://resources/enemies/bear_cub.tres", "name": "Bear Cub", "count": 1, "level": 1},
-			{"res": "res://resources/enemies/wolf.tres", "name": "Wolf", "count": 2, "level": 1},
-			{"res": "res://resources/enemies/wild_boar.tres", "name": "Wild Boar", "count": 1, "level": 1},
+			{"res": "res://resources/enemies/forest_guardian.tres", "name": "Forest Guardian", "count": 1, "level": 1},
+			{"res": "res://resources/enemies/grove_sprite.tres", "name": "Grove Sprite", "count": 1, "level": 1},
+			{"res": "res://resources/enemies/gnoll_raider.tres", "name": "Gnoll Raider", "count": 2, "level": 1},
+			{"res": "res://resources/enemies/minotaur.tres", "name": "Minotaur", "count": 1, "level": 1},
 		],
 	},
 	"village_raid": {
@@ -101,15 +101,15 @@ const BATTLES: Dictionary = {
 		"enemies": [
 			{"res": "res://resources/enemies/goblin.tres", "name": "Goblin", "count": 2, "level": 1},
 			{"res": "res://resources/enemies/goblin_archer.tres", "name": "Goblin Archer", "count": 1, "level": 1},
-			{"res": "res://resources/enemies/goblin_shaman.tres", "name": "Goblin Shaman", "count": 1, "level": 1},
-			{"res": "res://resources/enemies/hobgoblin.tres", "name": "Hobgoblin", "count": 1, "level": 1},
+			{"res": "res://resources/enemies/orc_shaman.tres", "name": "Orc Shaman", "count": 1, "level": 1},
+			{"res": "res://resources/enemies/orc_warrior.tres", "name": "Orc Warrior", "count": 1, "level": 1},
 		],
 	},
 	"smoke": {
 		"prog": 2,
 		"enemies": [
-			{"res": "res://resources/enemies/imp.tres", "name": "Imp", "count": 2, "level": 2},
-			{"res": "res://resources/enemies/fire_spirit.tres", "name": "Fire Spirit", "count": 3, "level": 2},
+			{"res": "res://resources/enemies/goblin_firestarter.tres", "name": "Goblin Firestarter", "count": 2, "level": 2},
+			{"res": "res://resources/enemies/blood_fiend.tres", "name": "Blood Fiend", "count": 3, "level": 2},
 		],
 	},
 	"deep_forest": {
@@ -124,7 +124,7 @@ const BATTLES: Dictionary = {
 		"prog": 2,
 		"enemies": [
 			{"res": "res://resources/enemies/satyr.tres", "name": "Satyr", "count": 1, "level": 2},
-			{"res": "res://resources/enemies/nymph.tres", "name": "Nymph", "count": 2, "level": 2},
+			{"res": "res://resources/enemies/elf_ranger.tres", "name": "Elf Ranger", "count": 2, "level": 2},
 			{"res": "res://resources/enemies/pixie.tres", "name": "Pixie", "count": 2, "level": 2},
 		],
 	},
@@ -139,33 +139,33 @@ const BATTLES: Dictionary = {
 	"cave": {
 		"prog": 3,
 		"enemies": [
-			{"res": "res://resources/enemies/cave_bat.tres", "name": "Cave Bat", "count": 2, "level": 3},
-			{"res": "res://resources/enemies/fire_wyrmling.tres", "name": "Fire Wyrmling", "count": 1, "level": 3},
-			{"res": "res://resources/enemies/frost_wyrmling.tres", "name": "Frost Wyrmling", "count": 1, "level": 3},
+			{"res": "res://resources/enemies/orc_scout.tres", "name": "Orc Scout", "count": 2, "level": 3},
+			{"res": "res://resources/enemies/demon_archer.tres", "name": "Demon Archer", "count": 1, "level": 3},
+			{"res": "res://resources/enemies/frost_demon.tres", "name": "Frost Demon", "count": 1, "level": 3},
 		],
 	},
 	"portal": {
 		"prog": 3,
 		"enemies": [
-			{"res": "res://resources/enemies/fiendling.tres", "name": "Fiendling", "count": 3, "level": 3},
+			{"res": "res://resources/enemies/blood_imp.tres", "name": "Blood Imp", "count": 3, "level": 3},
 			{"res": "res://resources/enemies/hellion.tres", "name": "Hellion", "count": 2, "level": 3},
 		],
 	},
 	"inn_ambush": {
 		"prog": 3,
 		"enemies": [
-			{"res": "res://resources/enemies/shadow_hound.tres", "name": "Shadow Hound", "count": 2, "level": 3},
-			{"res": "res://resources/enemies/night_prowler.tres", "name": "Night Prowler", "count": 1, "level": 3},
-			{"res": "res://resources/enemies/dusk_moth.tres", "name": "Dusk Moth", "count": 1, "level": 3},
-			{"res": "res://resources/enemies/gloom_stalker.tres", "name": "Gloom Stalker", "count": 1, "level": 3},
+			{"res": "res://resources/enemies/skeleton_hunter.tres", "name": "Skeleton Hunter", "count": 2, "level": 3},
+			{"res": "res://resources/enemies/dark_elf_assassin.tres", "name": "Dark Elf Assassin", "count": 1, "level": 3},
+			{"res": "res://resources/enemies/fallen_seraph.tres", "name": "Fallen Seraph", "count": 1, "level": 3},
+			{"res": "res://resources/enemies/shadow_demon.tres", "name": "Shadow Demon", "count": 1, "level": 3},
 		],
 	},
 	# ── Prog 4 ──────────────────────────────────────────────────────────────────
 	"shore": {
 		"prog": 4,
 		"enemies": [
-			{"res": "res://resources/enemies/siren.tres", "name": "Siren", "count": 3, "level": 4},
-			{"res": "res://resources/enemies/tide_nymph.tres", "name": "Tide Nymph", "count": 2, "level": 4},
+			{"res": "res://resources/enemies/medusa.tres", "name": "Medusa", "count": 3, "level": 4},
+			{"res": "res://resources/enemies/sea_elf.tres", "name": "Sea Elf", "count": 2, "level": 4},
 		],
 	},
 	"beach": {
@@ -173,7 +173,7 @@ const BATTLES: Dictionary = {
 		"enemies": [
 			{"res": "res://resources/enemies/pirate.tres",  "name": "Pirate",  "count": 3, "level": 4},
 			{"res": "res://resources/enemies/captain.tres", "name": "Captain", "count": 1, "level": 4},
-			{"res": "res://resources/enemies/kraken.tres",  "name": "Kraken",  "count": 1, "level": 4},
+			{"res": "res://resources/enemies/ogre.tres",    "name": "Ogre",    "count": 1, "level": 4},
 		],
 	},
 	"cemetery_battle": {
@@ -187,53 +187,54 @@ const BATTLES: Dictionary = {
 	"box_battle": {
 		"prog": 4,
 		"enemies": [
-			{"res": "res://resources/enemies/harlequin.tres",        "name": "Harlequin",  "count": 2, "level": 4},
-			{"res": "res://resources/enemies/chanteuse.tres",        "name": "Chanteuse",  "count": 2, "level": 4},
-			{"res": "res://resources/enemies/ringmaster.tres",       "name": "Ringmaster", "count": 1, "level": 4},
+			{"res": "res://resources/enemies/harlequin.tres",       "name": "Harlequin",       "count": 2, "level": 4},
+			{"res": "res://resources/enemies/elf_enchantress.tres", "name": "Elf Enchantress", "count": 2, "level": 4},
+			{"res": "res://resources/enemies/ringmaster.tres",      "name": "Ringmaster",      "count": 1, "level": 4},
 		],
 	},
 	"army_battle": {
 		"prog": 4,
 		"enemies": [
-			{"res": "res://resources/enemies/draconian.tres", "name": "Draconian", "count": 2, "level": 4},
-			{"res": "res://resources/enemies/chaplain.tres",  "name": "Chaplain",  "count": 2, "level": 4},
-			{"res": "res://resources/enemies/commander.tres", "name": "Commander", "count": 1, "level": 4},
+			{"res": "res://resources/enemies/shadow_fiend.tres",   "name": "Shadow Fiend",   "count": 2, "level": 4},
+			{"res": "res://resources/enemies/orc_warchanter.tres", "name": "Orc Warchanter", "count": 2, "level": 4},
+			{"res": "res://resources/enemies/commander.tres",      "name": "Commander",      "count": 1, "level": 4},
 		],
 	},
 	"lab_battle": {
 		"prog": 4,
 		"enemies": [
-			{"res": "res://resources/enemies/android.tres",    "name": "Android",   "count": 2, "level": 4},
-			{"res": "res://resources/enemies/arc_golem.tres",  "name": "Arc Golem", "count": 1, "level": 4},
-			{"res": "res://resources/enemies/machinist.tres",  "name": "Machinist", "count": 1, "level": 4},
-			{"res": "res://resources/enemies/ironclad.tres",   "name": "Ironclad",  "count": 1, "level": 4},
+			{"res": "res://resources/enemies/frost_sentinel.tres",    "name": "Frost Sentinel",    "count": 2, "level": 4},
+			{"res": "res://resources/enemies/arc_golem.tres",         "name": "Arc Golem",         "count": 1, "level": 4},
+			{"res": "res://resources/enemies/skeleton_crusader.tres", "name": "Skeleton Crusader", "count": 1, "level": 4},
+			{"res": "res://resources/enemies/ironclad.tres",          "name": "Ironclad",          "count": 1, "level": 4},
 		],
 	},
 	# ── Prog 5 ──────────────────────────────────────────────────────────────────
 	"mirror_battle": {
 		"prog": 5,
 		"enemies": [
-			{"res": "res://resources/enemies/void_watcher.tres",     "name": "Void Watcher",    "count": 1, "level": 5},
-			{"res": "res://resources/enemies/mirror_stalker.tres",  "name": "Mirror Stalker",  "count": 1, "level": 5},
-			{"res": "res://resources/enemies/dusk_prowler.tres",    "name": "Dusk Prowler",    "count": 2, "level": 5},
-			{"res": "res://resources/enemies/twilight_moth.tres",   "name": "Twilight Moth",   "count": 1, "level": 5},
+			{"res": "res://resources/enemies/gorgon.tres",         "name": "Gorgon",         "count": 1, "level": 5},
+			{"res": "res://resources/enemies/ghost_corsair.tres",  "name": "Ghost Corsair",  "count": 1, "level": 5},
+			{"res": "res://resources/enemies/dark_elf_blade.tres", "name": "Dark Elf Blade", "count": 2, "level": 5},
+			{"res": "res://resources/enemies/dark_seraph.tres",    "name": "Dark Seraph",    "count": 1, "level": 5},
 		],
 	},
 	"gate_ambush": {
 		"prog": 5,
 		"enemies": [
-			{"res": "res://resources/enemies/mirror_stalker.tres",  "name": "Mirror Stalker",  "count": 1, "level": 5},
-			{"res": "res://resources/enemies/dusk_prowler.tres",    "name": "Dusk Prowler",    "count": 2, "level": 5},
-			{"res": "res://resources/enemies/cursed_peddler.tres",  "name": "Cursed Peddler",  "count": 1, "level": 5},
-			{"res": "res://resources/enemies/twilight_moth.tres",   "name": "Twilight Moth",   "count": 1, "level": 5},
+			{"res": "res://resources/enemies/ghost_corsair.tres",  "name": "Ghost Corsair",  "count": 1, "level": 5},
+			{"res": "res://resources/enemies/dark_elf_blade.tres", "name": "Dark Elf Blade", "count": 2, "level": 5},
+			{"res": "res://resources/enemies/bone_sorcerer.tres",  "name": "Bone Sorcerer",  "count": 1, "level": 5},
+			{"res": "res://resources/enemies/dark_seraph.tres",    "name": "Dark Seraph",    "count": 1, "level": 5},
 		],
 	},
 	# ── Prog 6 ──────────────────────────────────────────────────────────────────
 	"city_gate_ambush": {
 		"prog": 6,
 		"enemies": [
-			{"res": "res://resources/enemies/watcher_lord.tres",      "name": "Watcher Lord",      "count": 1, "level": 6},
-			{"res": "res://resources/enemies/dread_stalker.tres",   "name": "Dread Stalker",   "count": 2, "level": 6},
+			{"res": "res://resources/enemies/gorgon_queen.tres",    "name": "Gorgon Queen",    "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dark_elf_warlord.tres", "name": "Dark Elf Warlord", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/city_militia.tres",    "name": "City Militia",    "count": 1, "level": 6},
 			{"res": "res://resources/enemies/dire_shade.tres",      "name": "Dire Shade",      "count": 1, "level": 6},
 			{"res": "res://resources/enemies/phantom_prowler.tres", "name": "Phantom Prowler", "count": 1, "level": 6},
 		],
@@ -241,37 +242,37 @@ const BATTLES: Dictionary = {
 	"return_city_1": {
 		"prog": 6,
 		"enemies": [
-			{"res": "res://resources/enemies/seraph.tres",        "name": "Seraph",        "count": 1, "level": 6},
-			{"res": "res://resources/enemies/arch_hellion.tres",  "name": "Arch Hellion",  "count": 1, "level": 6},
+			{"res": "res://resources/enemies/seraph.tres",          "name": "Seraph",          "count": 1, "level": 6},
+			{"res": "res://resources/enemies/arch_hellion.tres",    "name": "Arch Hellion",    "count": 1, "level": 6},
 			{"res": "res://resources/enemies/phantom_prowler.tres", "name": "Phantom Prowler", "count": 2, "level": 6},
-			{"res": "res://resources/enemies/dread_stalker.tres", "name": "Dread Stalker", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dark_elf_warlord.tres", "name": "Dark Elf Warlord", "count": 1, "level": 6},
 		],
 	},
 	"return_city_2": {
 		"prog": 6,
 		"enemies": [
-			{"res": "res://resources/enemies/necromancer.tres",  "name": "Necromancer", "count": 1, "level": 6},
-			{"res": "res://resources/enemies/elder_witch.tres",  "name": "Elder Witch", "count": 1, "level": 6},
-			{"res": "res://resources/enemies/dire_shade.tres",   "name": "Dire Shade",  "count": 2, "level": 6},
-			{"res": "res://resources/enemies/dread_wraith.tres", "name": "Dread Wraith","count": 1, "level": 6},
+			{"res": "res://resources/enemies/necromancer.tres",  "name": "Necromancer",  "count": 1, "level": 6},
+			{"res": "res://resources/enemies/elder_witch.tres",  "name": "Elder Witch",  "count": 1, "level": 6},
+			{"res": "res://resources/enemies/dire_shade.tres",   "name": "Dire Shade",   "count": 2, "level": 6},
+			{"res": "res://resources/enemies/dread_wraith.tres", "name": "Dread Wraith", "count": 1, "level": 6},
 		],
 	},
 	"return_city_3": {
 		"prog": 6,
 		"enemies": [
-			{"res": "res://resources/enemies/psion.tres",         "name": "Psion",         "count": 1, "level": 6},
-			{"res": "res://resources/enemies/guard_scholar.tres", "name": "Guard Scholar", "count": 1, "level": 6},
-			{"res": "res://resources/enemies/phantom_prowler.tres", "name": "Phantom Prowler", "count": 2, "level": 6},
-			{"res": "res://resources/enemies/dread_stalker.tres", "name": "Dread Stalker", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/psion.tres",            "name": "Psion",            "count": 1, "level": 6},
+			{"res": "res://resources/enemies/runewright.tres",       "name": "Runewright",       "count": 1, "level": 6},
+			{"res": "res://resources/enemies/phantom_prowler.tres",  "name": "Phantom Prowler",  "count": 2, "level": 6},
+			{"res": "res://resources/enemies/dark_elf_warlord.tres", "name": "Dark Elf Warlord", "count": 1, "level": 6},
 		],
 	},
 	"return_city_4": {
 		"prog": 6,
 		"enemies": [
-			{"res": "res://resources/enemies/warlock.tres",      "name": "Warlock",    "count": 1, "level": 6},
-			{"res": "res://resources/enemies/shaman.tres",       "name": "Shaman",     "count": 1, "level": 6},
+			{"res": "res://resources/enemies/warlock.tres",         "name": "Warlock",       "count": 1, "level": 6},
+			{"res": "res://resources/enemies/shaman.tres",          "name": "Shaman",        "count": 1, "level": 6},
 			{"res": "res://resources/enemies/dire_shade.tres",      "name": "Dire Shade",    "count": 2, "level": 6},
-			{"res": "res://resources/enemies/watcher_lord.tres",  "name": "Watcher Lord", "count": 1, "level": 6},
+			{"res": "res://resources/enemies/gorgon_queen.tres",    "name": "Gorgon Queen",  "count": 1, "level": 6},
 		],
 	},
 }

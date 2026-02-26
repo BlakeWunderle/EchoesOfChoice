@@ -26,26 +26,26 @@ SCALING = {
 
 ENEMIES_BY_PROG = {
     2: [
-        "imp", "fire_spirit", "witch", "wisp", "sprite",
-        "nymph", "pixie", "satyr", "shade", "wraith", "bone_sentry",
+        "goblin_firestarter", "blood_fiend", "witch", "wisp", "sprite",
+        "elf_ranger", "pixie", "satyr", "shade", "wraith", "bone_sentry",
     ],
     3: [
-        "cave_bat", "fire_wyrmling", "frost_wyrmling", "fiendling", "hellion",
-        "shadow_hound", "night_prowler", "dusk_moth", "gloom_stalker",
+        "orc_scout", "demon_archer", "frost_demon", "blood_imp", "hellion",
+        "skeleton_hunter", "dark_elf_assassin", "fallen_seraph", "shadow_demon",
     ],
     4: [
-        "siren", "tide_nymph", "pirate", "captain", "kraken",
+        "medusa", "sea_elf", "pirate", "captain", "ogre",
         "zombie", "specter", "grave_wraith",
-        "harlequin", "chanteuse", "ringmaster",
-        "draconian", "chaplain", "commander",
-        "android", "arc_golem", "ironclad", "machinist",
+        "harlequin", "elf_enchantress", "ringmaster",
+        "shadow_fiend", "orc_warchanter", "commander",
+        "frost_sentinel", "arc_golem", "ironclad", "skeleton_crusader",
     ],
     5: [
-        "void_watcher", "mirror_stalker", "dusk_prowler",
-        "twilight_moth", "cursed_peddler",
+        "gorgon", "ghost_corsair", "dark_elf_blade",
+        "dark_seraph", "bone_sorcerer",
     ],
     6: [
-        "watcher_lord", "dread_stalker", "city_militia", "dire_shade",
+        "gorgon_queen", "dark_elf_warlord", "city_militia", "dire_shade",
         "phantom_prowler", "seraph", "arch_hellion",
         "necromancer", "elder_witch", "dread_wraith",
         "psion", "runewright", "warlock", "shaman",
