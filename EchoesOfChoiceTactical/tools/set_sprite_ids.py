@@ -119,7 +119,7 @@ CLASS_SPRITE_IDS_FEMALE: dict[str, str] = {
     "geomancer": "chibi_fantasy_warrior_medieval_hooded_girl_geomancer",
     "electromancer": "chibi_witch_3_electromancer",
     "tempest": "chibi_witch_3_tempest",
-    "acolyte": "chibi_ghost_knight_3_acolyte",
+    "acolyte": "chibi_ghost_knight_2_ghost_knight_3_acolyte",
     "priest": "chibi_priest_3_f",
     "paladin": "chibi_valkyrie_3_paladin",
 

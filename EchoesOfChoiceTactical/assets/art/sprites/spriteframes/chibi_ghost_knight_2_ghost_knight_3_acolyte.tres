@@ -1,10 +1,10 @@
 [gd_resource type="SpriteFrames" load_steps=186 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_3_acolyte/idle.png" id="1"]
-[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_3_acolyte/walk.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_3_acolyte/attack.png" id="3"]
-[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_3_acolyte/hurt.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_3_acolyte/death.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_2_ghost_knight_3_acolyte/idle.png" id="1"]
+[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_2_ghost_knight_3_acolyte/walk.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_2_ghost_knight_3_acolyte/attack.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_2_ghost_knight_3_acolyte/hurt.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/art/sprites/processed/chibi_ghost_knight_2_ghost_knight_3_acolyte/death.png" id="5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1"]
 atlas = ExtResource("1")

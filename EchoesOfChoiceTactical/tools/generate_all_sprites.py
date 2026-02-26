@@ -246,7 +246,7 @@ _chibi_3dir_sprites = [
     "chibi_magician_undead_magician_3_tempest",
     "chibi_witch_3_electromancer",
     "chibi_witch_3_tempest",
-    "chibi_ghost_knight_3_acolyte",
+    "chibi_ghost_knight_2_ghost_knight_3_acolyte",
     "chibi_priest_3_f",
     "chibi_valkyrie_3_paladin",
     # --- Palette swap variants (Entertainer tree) ---
