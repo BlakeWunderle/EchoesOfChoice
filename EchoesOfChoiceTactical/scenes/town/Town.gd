@@ -139,6 +139,12 @@ func _ready() -> void:
 	buttons_node.add_child(_promote_button)
 	buttons_node.move_child(_promote_button, recruit_button.get_index() + 1)
 
+	var status_button := Button.new()
+	status_button.text = "Status"
+	status_button.pressed.connect(_on_status_pressed)
+	buttons_node.add_child(status_button)
+	buttons_node.move_child(status_button, items_button.get_index() + 1)
+
 	var rest_button := Button.new()
 	rest_button.text = "Rest Party (%dg)" % REST_COST
 	rest_button.pressed.connect(_on_rest_pressed)
@@ -265,6 +271,14 @@ func _on_items_pressed() -> void:
 	var items_ui: Control = items_scene.instantiate()
 	items_ui.items_closed.connect(func(): items_ui.queue_free())
 	add_child(items_ui)
+
+
+func _on_status_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
+	var status_scene := preload("res://scenes/ui/StatusScreen.tscn")
+	var status_ui: Control = status_scene.instantiate()
+	status_ui.status_closed.connect(func(): status_ui.queue_free())
+	add_child(status_ui)
 
 
 func _populate_npcs(node_data: Dictionary) -> void:

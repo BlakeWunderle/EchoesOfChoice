@@ -20,6 +20,7 @@ func _ready() -> void:
 		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
 		shop_closed.emit()
 	)
+	detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_update_gold()
 	_refresh_list()
 
@@ -195,7 +196,27 @@ func _on_sell_pressed(item: ItemData) -> void:
 
 
 func _show_detail(item: ItemData) -> void:
-	detail_label.text = item.description if not item.description.is_empty() else item.display_name
+	var text := item.description if not item.description.is_empty() else item.display_name
+	if _mode == "buy" and item.is_equipment():
+		text += _get_equip_comparison(item)
+	detail_label.text = text
+
+
+func _get_equip_comparison(item: ItemData) -> String:
+	var lines := "\n--- Party Slots ---"
+	# Player
+	var p_equipped := GameState.get_all_equipped(GameState.player_name).size()
+	var p_max := GameState.get_max_slots(GameState.player_name)
+	var p_status := "FULL" if p_equipped >= p_max else "%d/%d" % [p_equipped, p_max]
+	lines += "\n%s: %s" % [GameState.player_name, p_status]
+	# Party members
+	for member in GameState.party_members:
+		var mname: String = member["name"]
+		var m_equipped := GameState.get_all_equipped(mname).size()
+		var m_max := GameState.get_max_slots(mname)
+		var m_status := "FULL" if m_equipped >= m_max else "%d/%d" % [m_equipped, m_max]
+		lines += "\n%s: %s" % [mname, m_status]
+	return lines
 
 
 func _type_label(item: ItemData) -> String:

@@ -55,6 +55,13 @@ func _ready() -> void:
 	info_panel.visible = false
 	enter_button.pressed.connect(_on_enter_battle)
 
+	var party_btn := Button.new()
+	party_btn.text = "Party"
+	party_btn.custom_minimum_size = Vector2(80, 32)
+	party_btn.position = Vector2(10, 10)
+	party_btn.pressed.connect(_on_party_pressed)
+	$UILayer.add_child(party_btn)
+
 	# Load grass background texture for revealed areas
 	var grass_path := "res://assets/art/tilesets/overworld/path_road/PNG_Tiled/Ground_grass.png"
 	if ResourceLoader.exists(grass_path):
@@ -273,6 +280,14 @@ func _roll_travel_event(node_id: String, is_backward: bool = false) -> Dictionar
 			return event
 
 	return {}
+
+
+func _on_party_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
+	var status_scene := preload("res://scenes/ui/StatusScreen.tscn")
+	var status_ui: Control = status_scene.instantiate()
+	status_ui.status_closed.connect(func(): status_ui.queue_free())
+	$UILayer.add_child(status_ui)
 
 
 func _center_camera_on_latest() -> void:
