@@ -76,6 +76,13 @@ func _add_class_row(data: FighterData) -> void:
 	tier_label.add_theme_color_override("font_color", tier_colors[clampi(data.tier, 0, 2)])
 	row.add_child(tier_label)
 
+	var role_lbl := Label.new()
+	role_lbl.text = "[%s]" % data.get_role_tag()
+	role_lbl.custom_minimum_size = Vector2(60, 0)
+	role_lbl.add_theme_font_size_override("font_size", 11)
+	role_lbl.add_theme_color_override("font_color", _role_color(data.get_role_tag()))
+	row.add_child(role_lbl)
+
 	var cost := GameState.get_recruit_cost(data.class_id)
 	var cost_label := Label.new()
 	cost_label.text = "%dg" % cost
@@ -156,6 +163,29 @@ func _show_class_detail(data: FighterData) -> void:
 			ab_btn.focus_entered.connect(_show_ability_tooltip.bind(ability, ab_btn))
 			ab_btn.focus_exited.connect(_hide_ability_tooltip)
 			detail_panel.add_child(ab_btn)
+
+	# Upgrade path preview
+	if data.upgrade_options.size() > 0:
+		var path_sep := HSeparator.new()
+		detail_panel.add_child(path_sep)
+		var path_title := Label.new()
+		path_title.text = "Promotion Path:"
+		path_title.add_theme_font_size_override("font_size", 13)
+		path_title.add_theme_color_override("font_color", Color(0.8, 0.7, 0.5))
+		detail_panel.add_child(path_title)
+		for option in data.upgrade_options:
+			var text := "  -> %s" % option.class_display_name
+			if option.upgrade_options.size() > 0:
+				var t2_names: Array[String] = []
+				for t2 in option.upgrade_options:
+					t2_names.append(t2.class_display_name)
+				text += " -> %s" % " / ".join(t2_names)
+			var line := Label.new()
+			line.text = text
+			line.add_theme_font_size_override("font_size", 11)
+			var tier_colors := [Color(0.6, 0.6, 0.6), Color(0.4, 0.7, 1.0), Color(0.9, 0.7, 0.2)]
+			line.add_theme_color_override("font_color", tier_colors[clampi(option.tier, 0, 2)])
+			detail_panel.add_child(line)
 
 	var cost := GameState.get_recruit_cost(data.class_id)
 	var sep3 := HSeparator.new()
@@ -270,6 +300,16 @@ func _on_name_confirmed(name_input: LineEdit) -> void:
 
 
 var _ability_tooltip: AbilityTooltip = null
+
+
+static func _role_color(role: String) -> Color:
+	match role:
+		"Melee": return Color(0.9, 0.6, 0.3)
+		"Ranged": return Color(0.3, 0.8, 0.3)
+		"Magic": return Color(0.5, 0.5, 1.0)
+		"Support": return Color(0.3, 0.9, 0.8)
+		"Tank": return Color(0.8, 0.8, 0.3)
+	return Color(0.7, 0.7, 0.7)
 
 
 func _show_ability_tooltip(ability: AbilityData, anchor: Button) -> void:

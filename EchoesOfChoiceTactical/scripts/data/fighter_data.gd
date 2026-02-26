@@ -41,6 +41,33 @@ class_name FighterData extends Resource
 @export var upgrade_options: Array[FighterData] = []
 
 
+func get_role_tag() -> String:
+	if Enums.ReactionType.BODYGUARD in reaction_types or Enums.ReactionType.DAMAGE_MITIGATION in reaction_types:
+		return "Tank"
+	if Enums.ReactionType.REACTIVE_HEAL in reaction_types:
+		return "Support"
+	var heal_count := 0
+	var damage_count := 0
+	for ability in abilities:
+		if ability.ability_type == Enums.AbilityType.HEAL or ability.ability_type == Enums.AbilityType.BUFF:
+			heal_count += 1
+		if ability.ability_type == Enums.AbilityType.DAMAGE:
+			damage_count += 1
+	if heal_count > damage_count and heal_count >= 2:
+		return "Support"
+	if base_magic_attack > base_physical_attack + 3:
+		return "Magic"
+	if Enums.ReactionType.SNAP_SHOT in reaction_types:
+		return "Ranged"
+	var ranged_count := 0
+	for ability in abilities:
+		if ability.ability_range >= 3:
+			ranged_count += 1
+	if ranged_count >= abilities.size() / 2 and ranged_count >= 2:
+		return "Ranged"
+	return "Melee"
+
+
 func calculate_stat(base: int, growth: int, level: int) -> int:
 	return base + growth * (level - 1)
 

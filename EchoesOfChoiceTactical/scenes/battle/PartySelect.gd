@@ -91,7 +91,24 @@ func _make_member_row(unit_name: String, class_id: String, level: int, is_mc: bo
 		hp_label.add_theme_color_override("font_color", Color(0.5, 0.8, 0.5))
 		row.add_child(hp_label)
 
+		var role := data.get_role_tag()
+		var role_lbl := Label.new()
+		role_lbl.text = "[%s]" % role
+		role_lbl.add_theme_font_size_override("font_size", 11)
+		role_lbl.add_theme_color_override("font_color", _role_color(role))
+		row.add_child(role_lbl)
+
 	return row
+
+
+static func _role_color(role: String) -> Color:
+	match role:
+		"Melee": return Color(0.9, 0.6, 0.3)
+		"Ranged": return Color(0.3, 0.8, 0.3)
+		"Magic": return Color(0.5, 0.5, 1.0)
+		"Support": return Color(0.3, 0.9, 0.8)
+		"Tank": return Color(0.8, 0.8, 0.3)
+	return Color(0.7, 0.7, 0.7)
 
 
 func _on_toggle_member(unit_name: String, btn: Button) -> void:
