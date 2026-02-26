@@ -10,6 +10,7 @@ script = ExtResource("1")
 class_id = "monk"
 class_display_name = "Monk"
 sprite_id = "chibi_spiritual_monk_1"
+sprite_id_female = "chibi_spiritual_monk_1_f"
 base_max_health = 63
 base_max_mana = 14
 base_physical_attack = 26

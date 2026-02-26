@@ -11,6 +11,7 @@ script = ExtResource("1")
 class_id = "artificer"
 class_display_name = "Artificer"
 sprite_id = "chibi_technomage_1"
+sprite_id_female = "chibi_winter_witch_3_artificer"
 base_max_health = 44
 base_max_mana = 14
 base_physical_attack = 12

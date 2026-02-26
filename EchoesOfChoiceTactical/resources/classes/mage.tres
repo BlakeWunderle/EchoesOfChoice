@@ -11,8 +11,8 @@
 script = ExtResource("1")
 class_id = "mage"
 class_display_name = "Mage"
-sprite_id = "chibi_magician_1"
-sprite_id_female = "chibi_magician_girl_2"
+sprite_id = "chibi_magician_1_blonde"
+sprite_id_female = "chibi_magician_1_white"
 base_max_health = 49
 base_max_mana = 19
 base_physical_attack = 11

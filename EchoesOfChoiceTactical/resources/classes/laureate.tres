@@ -10,6 +10,7 @@ script = ExtResource("1")
 class_id = "laureate"
 class_display_name = "Laureate"
 sprite_id = "chibi_citizen_2"
+sprite_id_female = "chibi_women_citizen_women_3_laureate"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

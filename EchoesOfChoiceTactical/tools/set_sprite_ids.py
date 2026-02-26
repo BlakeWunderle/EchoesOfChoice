@@ -27,92 +27,135 @@ ENEMIES_DIR = PROJECT_DIR / "resources" / "enemies"
 # ---------------------------------------------------------------------------
 
 CLASS_SPRITE_IDS: dict[str, str] = {
-    # --- Martial Artist sub-tree (unarmed/light fighters) ---
-    "martial_artist": "chibi_monk_old_warrior_monk_guy",          # T0: unarmed fighter
-    "monk": "chibi_spiritual_monk_1",                              # T1: disciplined martial artist
-    "dervish": "chibi_persian_arab_warriors_persian_and_arab_warriors_1",  # T1: fast whirling dancer
-    "mercenary": "chibi_mercenaries_1",                            # T1: hired sword
-    "hunter": "chibi_forest_ranger_1",                             # T1: tracking/ranged
-    "tempest": "chibi_samurai_1",                                  # T2: storm warrior
-    "ninja": "chibi_ninja_assassin_black_ninja",                   # T2: assassin
-    "duelist": "chibi_samurai_2",                                  # T2: precision swordsman
-    "dragoon": "chibi_spartan_knight_warrior_spartan_knight_with_spear",  # T2: lance/heavy
-    "ranger": "chibi_archer_1",                                    # T2: bow/nature
-
-    # --- Squire sub-tree (armored fighters) ---
-    "squire": "chibi_knight_1",                                    # T0: beginner knight
-    "knight": "chibi_armored_knight_medieval_knight",              # T2: full plate knight
-    "paladin": "chibi_paladin_1",                                  # T2: holy knight
-    "warden": "chibi_armored_knight_templar_knight",               # T2: defensive tank
-    "bastion": "chibi_king_defender_sergeant_very_heavy_armored_frontier_defender",  # T2: ultimate tank
+    # --- Squire tree (physical fighters) ---
+    "squire": "chibi_armored_knight_medieval_knight",              # T0: beginner knight
+    "duelist": "chibi_samurai_3",                                  # T1: precision swordsman
     "cavalry": "chibi_medieval_warrior_medieval_commander",        # T2: mounted heavy
-    "firebrand": "chibi_pyromancer_3",                              # T1: fire mage
+    "dragoon": "chibi_spartan_knight_warrior_spartan_knight_with_spear",  # T2: lance/heavy
+    "ranger": "chibi_archer_1",                                    # T1: bow/nature
+    "mercenary": "chibi_mercenaries_1",                            # T2: hired sword
+    "hunter": "chibi_archer_3",                                    # T2: tracking/ranged
+    "warden": "chibi_armored_knight_templar_knight",               # T1: defensive tank
+    "knight": "chibi_knight_1",                                    # T2: full plate knight
+    "bastion": "chibi_king_defender_sergeant_very_heavy_armored_frontier_defender",  # T2: ultimate tank
+    "martial_artist": "chibi_monk_old_warrior_monk_guy",           # T1: unarmed fighter
+    "ninja": "chibi_ninja_assassin_white_ninja",                   # T2: assassin
+    "monk": "chibi_spiritual_monk_1",                              # T2: disciplined fighter
 
     # --- Mage tree (casters) ---
-    "mage": "chibi_magician_1",                                    # T0: base caster
+    "mage": "chibi_magician_1_blonde",                             # T0: base caster (blonde hair)
+    "mistweaver": "chibi_dark_oracle_1_mistweaver",                # T1: fog/mist mage (blue)
+    "firebrand": "chibi_dark_oracle_1_firebrand",                  # T1: fire hybrid (red)
+    "stormcaller": "chibi_dark_oracle_1_stormcaller",              # T1: storm mage (yellow)
+    "cryomancer": "chibi_shaman_of_thunder_2_cryomancer",          # T2: ice mage
+    "hydromancer": "chibi_shaman_of_thunder_2_hydromancer",        # T2: water mage
+    "pyromancer": "chibi_magician_3_pyromancer",                   # T2: fire mage
+    "geomancer": "chibi_magician_3_geomancer",                    # T2: earth mage
+    "electromancer": "chibi_magician_undead_magician_3_electromancer",  # T2: lightning mage
+    "tempest": "chibi_magician_undead_magician_3_tempest",         # T2: wind warrior
     "acolyte": "chibi_priest_1",                                   # T1: apprentice healer
-    "herald": "chibi_magician_2",                                  # T1: magical herald
-    "mistweaver": "chibi_dark_oracle_1",                           # T1: fog/mist mage
-    "stormcaller": "chibi_shaman_of_thunder_1",                    # T1: storm mage
-    "priest": "chibi_priest_2",                                    # T2: holy caster
-    "thaumaturge": "chibi_magician_3",                             # T2: advanced mage
-    "illusionist": "chibi_dark_oracle_2",                          # T2: trickster mage
-    "chronomancer": "chibi_time_keeper_1",                         # T2: time mage
-    "pyromancer": "chibi_pyromancer_1",                            # T2: fire mage
-    "cryomancer": "chibi_shaman_2",                                 # T2: ice mage (male, recolored blue)
-    "electromancer": "chibi_shaman_of_thunder_2",                  # T2: lightning mage
-    "hydromancer": "chibi_shaman_1",                               # T2: water mage
-    "geomancer": "chibi_human_shaman_1",                           # T2: earth mage
+    "paladin": "chibi_paladin_1",                                  # T2: holy knight
+    "priest": "chibi_priest_3",                                    # T2: holy caster
 
     # --- Entertainer tree (performers) ---
     "entertainer": "chibi_villager_1",                             # T0: humble performer
     "bard": "chibi_old_hero_1",                                    # T1: wandering musician
-    "chorister": "chibi_priest_3",                                 # T1: choir singer
-    "orator": "chibi_citizen_1",                                   # T1: speechmaker
-    "minstrel": "chibi_thief_pirate_rogue_rogue",                 # T2: traveling musician
-    "elegist": "chibi_fantasy_warrior_black_wizard",                 # T2: melancholic poet (male)
-    "laureate": "chibi_citizen_2",                                 # T2: acclaimed poet
-    "mime": "chibi_ninja_assassin_white_ninja",                    # T2: silent performer
-    "muse": "chibi_villager_2",                                    # T2: inspiring artist (male)
     "warcrier": "chibi_viking_1",                                  # T2: battle shouter
+    "minstrel": "chibi_vampire_hunter_1_minstrel",                # T2: traveling musician
+    "dervish": "chibi_persian_arab_warriors_persian_and_arab_warriors_1",  # T1: fast dancer
+    "illusionist": "chibi_dark_oracle_2",                          # T2: trickster mage
+    "mime": "chibi_mimic_2_human",                                 # T2: silent performer
+    "orator": "chibi_citizen_1",                                   # T1: speechmaker
+    "laureate": "chibi_citizen_2",                                 # T2: acclaimed poet
+    "elegist": "chibi_fantasy_warrior_black_wizard",               # T2: melancholic poet
+    "chorister": "chibi_citizen_2_chorister",                      # T1: choir singer
+    "herald": "chibi_magician_2",                                  # T2: magical herald
+    "muse": "chibi_villager_2",                                    # T2: inspiring artist
 
     # --- Scholar tree (inventors/academics) ---
     "scholar": "chibi_old_hero_2",                                 # T0: robed academic
-    "alchemist": "chibi_bloody_alchemist_1",                       # T1: potion maker
     "artificer": "chibi_technomage_1",                             # T1: magical crafter
-    "tinker": "chibi_gnome_1",                                     # T2: mechanical inventor
-    "technomancer": "chibi_technomage_2",                          # T2: tech + magic
+    "alchemist": "chibi_bloody_alchemist_1",                       # T2: potion maker
+    "thaumaturge": "chibi_dark_oracle_3",                          # T2: advanced spell research
+    "tinker": "chibi_gnome_1",                                     # T1: mechanical inventor
     "bombardier": "chibi_mercenaries_2",                           # T2: explosives expert
     "siegemaster": "chibi_king_defender_sergeant_medieval_sergeant",  # T2: heavy siege
-    "automaton": "chibi_golem_1",                                  # T2: construct
+    "cosmologist": "chibi_dark_oracle_3",                          # T1: cosmic scholar
     "astronomer": "chibi_old_hero_3",                              # T2: stargazer
-    "cosmologist": "chibi_dark_oracle_3",                           # T2: cosmic scholar (male, recolored indigo)
-    "arithmancer": "chibi_cursed_alchemist_1",                     # T2: math mage
+    "chronomancer": "chibi_time_keeper_2",                         # T2: time mage
+    "arithmancer": "chibi_cursed_alchemist_1",                     # T1: math mage
+    "automaton": "chibi_golem_1",                                  # T2: construct
+    "technomancer": "chibi_technomage_2",                          # T2: tech + magic
 
     # --- Royal classes ---
-    "prince": "chibi_king_defender_sergeant_medieval_king",        # Royal: armored prince
-    "princess": "chibi_valkyrie_1",                                # Royal: warrior princess
+    "prince": "chibi_armored_knight_medieval_knight_royal",        # Royal: armored prince
+    "princess": "chibi_amazon_warrior_1_royal",                    # Royal: warrior princess
 }
 
 CLASS_SPRITE_IDS_FEMALE: dict[str, str] = {
-    # Male classes -> add female variant (recolored to match male palette)
-    "martial_artist": "chibi_amazon_warrior_1",
-    "squire": "chibi_medieval_warrior_girl",
+    # --- Squire tree ---
+    "squire": "chibi_amazon_warrior_1",
+    "duelist": "chibi_medieval_warrior_girl_duelist",
+    "cavalry": "chibi_amazon_warrior_2_cavalry",
+    "dragoon": "chibi_spartan_knight_warrior_spartan_knight_with_spear_f",
+    "ranger": "chibi_elf_archer_archer_2_ranger",
+    "mercenary": "chibi_mercenaries_1_f",
+    "hunter": "chibi_forest_ranger_1_hunter",
+    "warden": "chibi_armored_knight_templar_knight_f",
     "knight": "chibi_valkyrie_2",
-    "paladin": "chibi_valkyrie_3",
-    "mercenary": "chibi_amazon_warrior_2",
-    "ranger": "chibi_forest_ranger_2",
-    "hunter": "chibi_forest_ranger_3",
-    "mage": "chibi_magician_girl_2",
-    "entertainer": "chibi_citizen_3",
-    "firebrand": "chibi_pyromancer_2",
-    "prince": "chibi_valkyrie_1",
+    "bastion": "chibi_king_defender_sergeant_very_heavy_armored_frontier_defender_f",
+    "martial_artist": "chibi_priest_1_martial_artist",
+    "ninja": "chibi_ninja_assassin_assassin_guy",
+    "monk": "chibi_spiritual_monk_1_f",
 
-    # Female classes -> keep current sprite as female variant
-    "muse": "chibi_magician_girl_1",
+    # --- Mage tree ---
+    "mage": "chibi_magician_1_white",
+    "mistweaver": "chibi_pyromancer_2_mistweaver",
+    "firebrand": "chibi_pyromancer_2_firebrand",
+    "stormcaller": "chibi_pyromancer_2_stormcaller",
+    "cryomancer": "chibi_winter_witch_1_cryomancer",
+    "hydromancer": "chibi_winter_witch_1_hydromancer",
+    "pyromancer": "chibi_fantasy_warrior_medieval_hooded_girl_pyromancer",
+    "geomancer": "chibi_fantasy_warrior_medieval_hooded_girl_geomancer",
+    "electromancer": "chibi_witch_3_electromancer",
+    "tempest": "chibi_witch_3_tempest",
+    "acolyte": "chibi_ghost_knight_3_acolyte",
+    "priest": "chibi_priest_3_f",
+    "paladin": "chibi_valkyrie_3_paladin",
+
+    # --- Entertainer tree ---
+    "entertainer": "chibi_citizen_3",
+    "bard": "chibi_women_citizen_women_3_bard",
+    "warcrier": "chibi_valkyrie_3_warcrier",
+    "minstrel": "chibi_witch_1_minstrel",
+    "dervish": "chibi_amazon_warrior_3_dervish",
+    "illusionist": "chibi_dark_oracle_2_f",
+    "mime": "chibi_mimic_2_human",
+    "orator": "chibi_women_citizen_women_1_orator",
+    "laureate": "chibi_women_citizen_women_3_laureate",
     "elegist": "chibi_magician_girl_3",
-    "cryomancer": "chibi_winter_witch_1",
-    "cosmologist": "chibi_witch_1",
+    "chorister": "chibi_magician_girl_2_chorister",
+    "herald": "chibi_winter_witch_2_herald",
+    "muse": "chibi_magician_girl_1",
+
+    # --- Scholar tree ---
+    "scholar": "chibi_dark_elves_1_scholar",
+    "artificer": "chibi_winter_witch_3_artificer",
+    "alchemist": "chibi_dark_elves_3_alchemist",
+    "thaumaturge": "chibi_dark_oracle_3_f",
+    "tinker": "chibi_women_citizen_women_2_tinker",
+    "bombardier": "chibi_vampire_hunter_3_bombardier",
+    "siegemaster": "chibi_valkyrie_1_siegemaster",
+    "chronomancer": "chibi_fallen_angel_s_1_chronomancer",
+    "cosmologist": "chibi_dark_oracle_3_cosmologist_f",
+    "astronomer": "chibi_old_hero_3_f",
+    "arithmancer": "chibi_cursed_alchemist_1_f",
+    "automaton": "chibi_golem_1_f",
+    "technomancer": "chibi_technomage_2_f",
+
+    # --- Royal ---
+    "prince": "chibi_amazon_warrior_1_royal",
+    "princess": "chibi_amazon_warrior_1_royal",
 }
 
 ENEMY_SPRITE_IDS: dict[str, str] = {

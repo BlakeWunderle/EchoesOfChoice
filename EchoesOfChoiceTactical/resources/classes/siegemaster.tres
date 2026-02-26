@@ -10,6 +10,7 @@ script = ExtResource("1")
 class_id = "siegemaster"
 class_display_name = "Siegemaster"
 sprite_id = "chibi_king_defender_sergeant_medieval_sergeant"
+sprite_id_female = "chibi_valkyrie_1_siegemaster"
 base_max_health = 63
 base_max_mana = 14
 base_physical_attack = 19

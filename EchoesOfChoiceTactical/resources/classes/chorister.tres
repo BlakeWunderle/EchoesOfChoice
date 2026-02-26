@@ -11,7 +11,8 @@
 script = ExtResource("1")
 class_id = "chorister"
 class_display_name = "Chorister"
-sprite_id = "chibi_priest_3"
+sprite_id = "chibi_citizen_2_chorister"
+sprite_id_female = "chibi_magician_girl_2_chorister"
 base_max_health = 49
 base_max_mana = 14
 base_physical_attack = 14

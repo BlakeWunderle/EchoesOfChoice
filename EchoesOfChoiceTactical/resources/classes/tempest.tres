@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "tempest"
 class_display_name = "Tempest"
-sprite_id = "chibi_samurai_1"
+sprite_id = "chibi_magician_undead_magician_3_tempest"
+sprite_id_female = "chibi_witch_3_tempest"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

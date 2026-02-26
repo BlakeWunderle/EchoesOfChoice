@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "minstrel"
 class_display_name = "Minstrel"
-sprite_id = "chibi_thief_pirate_rogue_rogue"
+sprite_id = "chibi_vampire_hunter_1_minstrel"
+sprite_id_female = "chibi_witch_1_minstrel"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

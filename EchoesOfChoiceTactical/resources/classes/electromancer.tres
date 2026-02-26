@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "electromancer"
 class_display_name = "Electromancer"
-sprite_id = "chibi_shaman_of_thunder_2"
+sprite_id = "chibi_magician_undead_magician_3_electromancer"
+sprite_id_female = "chibi_witch_3_electromancer"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

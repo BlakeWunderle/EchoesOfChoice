@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "ninja"
 class_display_name = "Ninja"
-sprite_id = "chibi_ninja_assassin_black_ninja"
+sprite_id = "chibi_ninja_assassin_white_ninja"
+sprite_id_female = "chibi_ninja_assassin_assassin_guy"
 base_max_health = 59
 base_max_mana = 12
 base_physical_attack = 27

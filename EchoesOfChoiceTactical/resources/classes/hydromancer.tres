@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "hydromancer"
 class_display_name = "Hydromancer"
-sprite_id = "chibi_shaman_1"
+sprite_id = "chibi_shaman_of_thunder_2_hydromancer"
+sprite_id_female = "chibi_winter_witch_1_hydromancer"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

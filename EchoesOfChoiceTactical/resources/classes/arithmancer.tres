@@ -11,6 +11,7 @@ script = ExtResource("1")
 class_id = "arithmancer"
 class_display_name = "Arithmancer"
 sprite_id = "chibi_cursed_alchemist_1"
+sprite_id_female = "chibi_cursed_alchemist_1_f"
 base_max_health = 44
 base_max_mana = 14
 base_physical_attack = 7

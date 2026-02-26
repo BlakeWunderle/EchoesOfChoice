@@ -11,6 +11,7 @@ script = ExtResource("1")
 class_id = "warden"
 class_display_name = "Warden"
 sprite_id = "chibi_armored_knight_templar_knight"
+sprite_id_female = "chibi_armored_knight_templar_knight_f"
 base_max_health = 63
 base_max_mana = 9
 base_physical_attack = 17

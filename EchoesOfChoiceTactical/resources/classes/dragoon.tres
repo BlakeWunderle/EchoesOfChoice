@@ -10,6 +10,7 @@ script = ExtResource("1")
 class_id = "dragoon"
 class_display_name = "Dragoon"
 sprite_id = "chibi_spartan_knight_warrior_spartan_knight_with_spear"
+sprite_id_female = "chibi_spartan_knight_warrior_spartan_knight_with_spear_f"
 base_max_health = 63
 base_max_mana = 12
 base_physical_attack = 25

@@ -10,7 +10,8 @@
 script = ExtResource("1")
 class_id = "duelist"
 class_display_name = "Duelist"
-sprite_id = "chibi_samurai_2"
+sprite_id = "chibi_samurai_3"
+sprite_id_female = "chibi_medieval_warrior_girl_duelist"
 base_max_health = 59
 base_max_mana = 9
 base_physical_attack = 24

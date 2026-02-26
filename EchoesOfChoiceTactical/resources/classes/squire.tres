@@ -12,8 +12,8 @@
 script = ExtResource("1")
 class_id = "squire"
 class_display_name = "Squire"
-sprite_id = "chibi_knight_1"
-sprite_id_female = "chibi_medieval_warrior_girl"
+sprite_id = "chibi_armored_knight_medieval_knight"
+sprite_id_female = "chibi_amazon_warrior_1"
 base_max_health = 55
 base_max_mana = 9
 base_physical_attack = 21

@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "mime"
 class_display_name = "Mime"
-sprite_id = "chibi_ninja_assassin_white_ninja"
+sprite_id = "chibi_mimic_2_human"
+sprite_id_female = "chibi_mimic_2_human"
 base_max_health = 59
 base_max_mana = 14
 base_physical_attack = 18

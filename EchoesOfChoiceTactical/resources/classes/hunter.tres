@@ -9,8 +9,8 @@
 script = ExtResource("1")
 class_id = "hunter"
 class_display_name = "Hunter"
-sprite_id = "chibi_forest_ranger_1"
-sprite_id_female = "chibi_forest_ranger_3"
+sprite_id = "chibi_archer_3"
+sprite_id_female = "chibi_forest_ranger_1_hunter"
 base_max_health = 59
 base_max_mana = 9
 base_physical_attack = 24

@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "pyromancer"
 class_display_name = "Pyromancer"
-sprite_id = "chibi_pyromancer_1"
+sprite_id = "chibi_magician_3_pyromancer"
+sprite_id_female = "chibi_fantasy_warrior_medieval_hooded_girl_pyromancer"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 9

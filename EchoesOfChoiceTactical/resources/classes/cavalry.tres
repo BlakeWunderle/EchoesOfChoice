@@ -10,6 +10,7 @@ script = ExtResource("1")
 class_id = "cavalry"
 class_display_name = "Cavalry"
 sprite_id = "chibi_medieval_warrior_medieval_commander"
+sprite_id_female = "chibi_amazon_warrior_2_cavalry"
 base_max_health = 63
 base_max_mana = 9
 base_physical_attack = 28

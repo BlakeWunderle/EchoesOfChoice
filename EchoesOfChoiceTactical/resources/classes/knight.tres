@@ -9,7 +9,7 @@
 script = ExtResource("1")
 class_id = "knight"
 class_display_name = "Knight"
-sprite_id = "chibi_armored_knight_medieval_knight"
+sprite_id = "chibi_knight_1"
 sprite_id_female = "chibi_valkyrie_2"
 base_max_health = 67
 base_max_mana = 9

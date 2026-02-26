@@ -9,7 +9,8 @@
 script = ExtResource("1")
 class_id = "chronomancer"
 class_display_name = "Chronomancer"
-sprite_id = "chibi_time_keeper_1"
+sprite_id = "chibi_time_keeper_2"
+sprite_id_female = "chibi_fallen_angel_s_1_chronomancer"
 base_max_health = 55
 base_max_mana = 18
 base_physical_attack = 7
