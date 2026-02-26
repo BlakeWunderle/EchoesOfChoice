@@ -61,7 +61,7 @@ const PARTY_T1: Dictionary = {
 }
 
 # ─── Tier 2 representative defenders (available from Prog 3) ─────────────────
-# Bastion (phys extreme): PD=28 g7, MD=15 g3 | Paladin (balanced): PD=22 g5, MD=18 g4
+# Bastion (phys extreme): PD=25 g6, MD=15 g3 | Paladin (balanced): PD=22 g5, MD=18 g4
 # Ninja (phys glass):     PD=14 g2, MD=10 g2 | Cavalry (phys atk): PD=14 g3, MD=10 g2
 # Pyromancer (mag glass): PD=10 g2, MD=17 g3 | Priest (mag extreme): PD=13 g2, MD=21 g4
 # Mercenary (crit):       PD=14 g2, MD=10 g2 | Illusionist (dodge): PD=10 g2, MD=17 g3
@@ -75,12 +75,12 @@ const T_LABELS: Dictionary = {
 	"pyromancer": "Pyro", "priest": "Prie", "mercenary": "Merc", "illusionist": "Illu",
 }
 const PARTY_T2: Dictionary = {
-	3: {"bastion": [49, 24], "paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "pyromancer": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
-	4: {"bastion": [49, 24], "paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "pyromancer": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
-	5: {"bastion": [56, 27], "paladin": [42, 34], "ninja": [22, 18], "cavalry": [26, 18], "pyromancer": [18, 29], "priest": [21, 37], "mercenary": [22, 18], "illusionist": [18, 29]},
-	6: {"bastion": [63, 30], "paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "pyromancer": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
-	7: {"bastion": [63, 30], "paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "pyromancer": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
-	8: {"bastion": [70, 33], "paladin": [52, 42], "ninja": [26, 22], "cavalry": [32, 22], "pyromancer": [22, 35], "priest": [25, 45], "mercenary": [26, 22], "illusionist": [22, 35]},
+	3: {"bastion": [43, 24], "paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "pyromancer": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
+	4: {"bastion": [43, 24], "paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "pyromancer": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
+	5: {"bastion": [49, 27], "paladin": [42, 34], "ninja": [22, 18], "cavalry": [26, 18], "pyromancer": [18, 29], "priest": [21, 37], "mercenary": [22, 18], "illusionist": [18, 29]},
+	6: {"bastion": [55, 30], "paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "pyromancer": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
+	7: {"bastion": [55, 30], "paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "pyromancer": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
+	8: {"bastion": [61, 33], "paladin": [52, 42], "ninja": [26, 22], "cavalry": [32, 22], "pyromancer": [22, 35], "priest": [25, 45], "mercenary": [26, 22], "illusionist": [22, 35]},
 }
 
 # ─── Battle roster ────────────────────────────────────────────────────────────
@@ -177,9 +177,9 @@ const BATTLES: Dictionary = {
 	"beach": {
 		"prog": 4,
 		"enemies": [
-			{"res": "res://resources/enemies/pirate.tres",  "name": "Pirate",  "count": 3, "level": 4},
-			{"res": "res://resources/enemies/captain.tres", "name": "Captain", "count": 1, "level": 4},
-			{"res": "res://resources/enemies/ogre.tres",    "name": "Ogre",    "count": 1, "level": 4},
+			{"res": "res://resources/enemies/pirate.tres",      "name": "Pirate",     "count": 2, "level": 4},
+			{"res": "res://resources/enemies/sea_shaman.tres", "name": "Sea Shaman", "count": 2, "level": 4},
+			{"res": "res://resources/enemies/captain.tres",    "name": "Captain",    "count": 1, "level": 4},
 		],
 	},
 	"cemetery_battle": {

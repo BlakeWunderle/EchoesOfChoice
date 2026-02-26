@@ -47,16 +47,16 @@ static func create_beach() -> BattleConfig:
 	var progression: int = node_data.get("progression", 4)
 	var lvl: int = maxi(1, progression)
 
-	# C# BeachBattle: Captain (Greybeard), Pirates (Flint, Bonny). Tactical: captain + 3 pirates + kraken. Unique names fitting class.
+	# C# BeachBattle: Captain (Greybeard), Pirates (Flint, Bonny). Tactical: captain + 2 pirates + 2 sea shamans.
 	var captain := load("res://resources/enemies/captain.tres")
 	var pirate := load("res://resources/enemies/pirate.tres")
-	var ogre := load("res://resources/enemies/ogre.tres")
+	var sea_shaman := load("res://resources/enemies/sea_shaman.tres")
 	config.enemy_units = [
 		{"data": pirate, "name": "Flint", "pos": Vector2i(8, 1), "level": lvl},
-		{"data": pirate, "name": "Bonny", "pos": Vector2i(8, 4), "level": lvl},
-		{"data": pirate, "name": "Redeye", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": pirate, "name": "Bonny", "pos": Vector2i(8, 5), "level": lvl},
+		{"data": sea_shaman, "name": "Tidecaller", "pos": Vector2i(8, 4), "level": lvl},
+		{"data": sea_shaman, "name": "Riptide", "pos": Vector2i(9, 3), "level": lvl},
 		{"data": captain, "name": "Greybeard", "pos": Vector2i(9, 2), "level": lvl},
-		{"data": ogre, "name": "Brutus", "pos": Vector2i(9, 3), "level": lvl},
 	]
 	
 	config.pre_battle_dialogue = [
