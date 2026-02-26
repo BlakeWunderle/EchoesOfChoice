@@ -19,6 +19,12 @@ const SQUIRE_PHYS_ATK: Dictionary = {
 	0: 21, 1: 23, 2: 25, 3: 27, 4: 27, 5: 29, 6: 31, 7: 31, 8: 33
 }
 
+# ─── Scaled TTK thresholds per progression ───────────────────────────────────
+# Later enemies are allowed to be tankier; 5 party members compensate.
+const MAX_TTK: Dictionary = {
+	0: 8, 1: 8, 2: 10, 3: 10, 4: 12, 5: 14, 6: 16, 7: 16, 8: 18
+}
+
 # ─── Party profiles: [P.Def, M.Def, HP] (P.Def includes equipment bonus) ─────
 # Base L1:  Squire P15/M11/HP55  Mage P11/M18/HP49  Scholar P12/M20/HP44  Ent P12/M18/HP49
 # Growth:   Squire HP+12, Mage/Scholar/Ent HP+9; all +2 PD/+2 MD, Ent MD+3
@@ -602,7 +608,8 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 		elif min_hp_ratio < 3.0:
 			flags += " ⚠SPIKE"
 			spike_names.append(label)
-		if ttk > 10:
+		var max_ttk: int = MAX_TTK.get(prog, 10)
+		if ttk > max_ttk:
 			flags += " ⚠SLOW"
 			slow_names.append(label)
 		if ttk <= 1:
@@ -617,13 +624,14 @@ func _report_battle(battle_id: String, bdata: Dictionary) -> void:
 
 	print("")
 	if zero_names.is_empty() and spike_names.is_empty() and slow_names.is_empty() and easy_names.is_empty():
-		print("  ✓ All clear — damage present, no spikes, TTK 2–10")
+		var max_ttk_lbl: int = MAX_TTK.get(prog, 10)
+		print("  ✓ All clear — damage present, no spikes, TTK 2–%d" % max_ttk_lbl)
 	if not zero_names.is_empty():
 		print("  ⚠ ZERO  — deals 0 to all classes: " + ", ".join(zero_names))
 	if not spike_names.is_empty():
 		print("  ⚠ SPIKE — kills a class in <3 hits: " + ", ".join(spike_names))
 	if not slow_names.is_empty():
-		print("  ⚠ SLOW  — Squire needs >10 hits: " + ", ".join(slow_names))
+		print("  ⚠ SLOW  — Squire needs >%d hits: %s" % [MAX_TTK.get(prog, 10), ", ".join(slow_names)])
 	if not easy_names.is_empty():
 		print("  ⚠ EASY  — Squire one-shots (TTK=1), needs more HP: " + ", ".join(easy_names))
 
