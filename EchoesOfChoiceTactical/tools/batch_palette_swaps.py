@@ -197,11 +197,18 @@ SCHOLAR_SWAPS = [
     ("chibi_technomage_2", "chibi_technomage_2_f", 210, 250, {"lightness_shift": 0.05}),
 ]
 
+STRANGER_SWAPS = [
+    # Neutral stranger: red eyes → blue, slight lighten for "mysterious traveler" look
+    ("chibi_black_reaper_1", "chibi_black_reaper_1_neutral", 0, 220,
+     {"hue_tolerance": 60, "sat_min": 0.08, "lightness_shift": 0.08}),
+]
+
 ALL_TREES = {
     "squire": SQUIRE_SWAPS + ROYAL_SWAPS,
     "mage": MAGE_SWAPS,
     "entertainer": ENTERTAINER_SWAPS,
     "scholar": SCHOLAR_SWAPS,
+    "stranger": STRANGER_SWAPS,
 }
 
 
