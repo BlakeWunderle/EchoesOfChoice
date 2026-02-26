@@ -12,6 +12,17 @@ func show_event(event: Dictionary) -> void:
 	visible = true
 	SFXManager.play(SFXManager.Category.UI_POPUP, 0.6)
 
+	# Popup entrance animation: scale up + fade in
+	var panel_node := get_child(1) if get_child_count() > 1 else null
+	if panel_node:
+		panel_node.scale = Vector2(0.9, 0.9)
+		panel_node.pivot_offset = panel_node.size * 0.5
+		panel_node.modulate.a = 0.0
+		var tween := create_tween()
+		tween.set_parallel(true)
+		tween.tween_property(panel_node, "scale", Vector2.ONE, 0.2).set_ease(Tween.EASE_OUT)
+		tween.tween_property(panel_node, "modulate:a", 1.0, 0.2)
+
 
 func _build_ui() -> void:
 	# Full-screen dim overlay
@@ -54,6 +65,20 @@ func _build_ui() -> void:
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title_label.add_theme_font_size_override("font_size", 22)
 	vbox.add_child(title_label)
+
+	# Stranger portrait for story_stranger event
+	if _event_data.get("id", "") == "story_stranger":
+		var frames := SpriteLoader.get_frames("chibi_black_reaper_1_neutral")
+		if frames and frames.has_animation("idle_down"):
+			var tex := frames.get_frame_texture("idle_down", 0)
+			if tex:
+				var portrait := TextureRect.new()
+				portrait.texture = tex
+				portrait.custom_minimum_size = Vector2(64, 64)
+				portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				portrait.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+				vbox.add_child(portrait)
 
 	var sep := HSeparator.new()
 	vbox.add_child(sep)

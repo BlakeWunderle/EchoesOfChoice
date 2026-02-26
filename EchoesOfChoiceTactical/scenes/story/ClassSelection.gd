@@ -38,6 +38,14 @@ var _selected_class: String = ""
 func _ready() -> void:
 	MusicManager.play_context(MusicManager.MusicContext.MENU)
 	dialogue_box.visible = false
+
+	# Title + subtitle fade-in
+	title_label.modulate.a = 0.0
+	subtitle_label.modulate.a = 0.0
+	var tween := create_tween()
+	tween.tween_property(title_label, "modulate:a", 1.0, 0.5)
+	tween.tween_property(subtitle_label, "modulate:a", 1.0, 0.5)
+
 	_build_class_buttons()
 
 
