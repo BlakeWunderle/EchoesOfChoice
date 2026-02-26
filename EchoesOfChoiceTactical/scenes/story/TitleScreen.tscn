@@ -1,6 +1,22 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scenes/story/TitleScreen.gd" id="1"]
+
+[sub_resource type="Shader" id="vignette_shader"]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec2 uv = UV - 0.5;
+	float dist = length(uv * vec2(1.0, 0.8));
+	float vignette = smoothstep(0.2, 0.9, dist);
+	vec3 base = vec3(0.04, 0.04, 0.07);
+	vec3 center = vec3(0.08, 0.07, 0.12);
+	COLOR = vec4(mix(center, base, vignette), 1.0);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="vignette_mat"]
+shader = SubResource("vignette_shader")
 
 [node name="TitleScreen" type="Control"]
 layout_mode = 3
@@ -18,9 +34,28 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.02, 0.02, 0.04, 1)
+material = SubResource("vignette_mat")
+color = Color(0.04, 0.04, 0.07, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="Particles" type="CPUParticles2D" parent="."]
+position = Vector2(640, 360)
+emitting = true
+amount = 24
+lifetime = 10.0
+speed_scale = 0.4
+randomness = 0.8
+emission_shape = 3
+emission_rect_extents = Vector2(700, 400)
+direction = Vector2(0, -1)
+spread = 30.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 8.0
+initial_velocity_max = 20.0
+scale_amount_min = 1.5
+scale_amount_max = 3.0
+color = Color(0.85, 0.75, 0.5, 0.12)
+
+[node name="ContentCenter" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,21 +63,26 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="MainVBox" type="VBoxContainer" parent="ContentCenter"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 12
 alignment = 1
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="ContentCenter/MainVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 56
+theme_override_colors/font_color = Color(0.92, 0.88, 0.78, 1)
 text = "ECHOES OF CHOICE"
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+[node name="SubtitleLabel" type="Label" parent="ContentCenter/MainVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.6, 0.65, 0.75, 1)
+theme_override_colors/font_color = Color(0.55, 0.58, 0.68, 1)
 text = "Every choice echoes through time."
 horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="ContentCenter/MainVBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 36)
 

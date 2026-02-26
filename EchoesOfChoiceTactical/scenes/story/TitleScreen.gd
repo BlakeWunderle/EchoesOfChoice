@@ -2,8 +2,9 @@ extends Control
 
 enum _MenuState { ANIMATING, MAIN_MENU, SLOT_PICKER_NEW, SLOT_PICKER_LOAD, CONFIRM_OVERWRITE }
 
-@onready var _title_label: Label = $CenterContainer/VBoxContainer/TitleLabel
-@onready var _subtitle_label: Label = $CenterContainer/VBoxContainer/SubtitleLabel
+@onready var _title_label: Label = $ContentCenter/MainVBox/TitleLabel
+@onready var _subtitle_label: Label = $ContentCenter/MainVBox/SubtitleLabel
+@onready var _main_vbox: VBoxContainer = $ContentCenter/MainVBox
 
 var _state: _MenuState = _MenuState.ANIMATING
 var _pending_slot: int = -1
@@ -34,16 +35,12 @@ func _build_ui() -> void:
 
 
 func _build_main_menu() -> void:
-	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_CENTER)
-	center.offset_top = 80
-	add_child(center)
-
 	_menu_panel = VBoxContainer.new()
-	_menu_panel.add_theme_constant_override("separation", 16)
+	_menu_panel.add_theme_constant_override("separation", 14)
+	_menu_panel.alignment = BoxContainer.ALIGNMENT_CENTER
 	_menu_panel.modulate.a = 0.0
 	_menu_panel.visible = false
-	center.add_child(_menu_panel)
+	_main_vbox.add_child(_menu_panel)
 
 	_new_game_btn = _make_button("New Game")
 	_new_game_btn.pressed.connect(_on_new_game_pressed)
@@ -69,19 +66,15 @@ func _build_main_menu() -> void:
 
 
 func _build_slot_panel() -> void:
-	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_CENTER)
-	center.offset_top = 60
-	add_child(center)
-
 	_slot_panel = VBoxContainer.new()
-	_slot_panel.add_theme_constant_override("separation", 14)
+	_slot_panel.add_theme_constant_override("separation", 12)
+	_slot_panel.alignment = BoxContainer.ALIGNMENT_CENTER
 	_slot_panel.visible = false
-	center.add_child(_slot_panel)
+	_main_vbox.add_child(_slot_panel)
 
 	for i in GameState.MAX_SAVE_SLOTS:
 		var btn := _make_button("")
-		btn.custom_minimum_size = Vector2(340, 56)
+		btn.custom_minimum_size = Vector2(360, 56)
 		var idx := i
 		btn.pressed.connect(func() -> void: _on_slot_pressed(idx))
 		_slot_panel.add_child(btn)
@@ -95,15 +88,11 @@ func _build_slot_panel() -> void:
 
 
 func _build_confirm_panel() -> void:
-	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_CENTER)
-	center.offset_top = 20
-	add_child(center)
-
 	_confirm_panel = VBoxContainer.new()
 	_confirm_panel.add_theme_constant_override("separation", 16)
+	_confirm_panel.alignment = BoxContainer.ALIGNMENT_CENTER
 	_confirm_panel.visible = false
-	center.add_child(_confirm_panel)
+	_main_vbox.add_child(_confirm_panel)
 
 	var lbl := Label.new()
 	lbl.name = "ConfirmLabel"
@@ -130,19 +119,19 @@ func _build_confirm_panel() -> void:
 # --- Animation ---
 
 func _play_reveal() -> void:
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.3).timeout
 
 	var t1 := create_tween()
-	t1.tween_property(_title_label, "modulate:a", 1.0, 2.0)
+	t1.tween_property(_title_label, "modulate:a", 1.0, 1.5)
 	await t1.finished
 
-	await get_tree().create_timer(0.5).timeout
+	await get_tree().create_timer(0.3).timeout
 
 	var t2 := create_tween()
-	t2.tween_property(_subtitle_label, "modulate:a", 1.0, 1.5)
+	t2.tween_property(_subtitle_label, "modulate:a", 1.0, 1.0)
 	await t2.finished
 
-	await get_tree().create_timer(0.8).timeout
+	await get_tree().create_timer(0.5).timeout
 	_show_main_menu()
 
 
@@ -215,7 +204,6 @@ func _show_confirm(slot: int) -> void:
 	]
 
 	_confirm_panel.visible = true
-	# Focus the Yes button
 	_confirm_panel.get_child(1).get_child(0).grab_focus()
 
 
@@ -267,7 +255,7 @@ func _on_overwrite_cancelled() -> void:
 func _make_button(label: String) -> Button:
 	var btn := Button.new()
 	btn.text = label
-	btn.custom_minimum_size = Vector2(220, 48)
+	btn.custom_minimum_size = Vector2(280, 52)
 	btn.focus_mode = Control.FOCUS_ALL
 	return btn
 

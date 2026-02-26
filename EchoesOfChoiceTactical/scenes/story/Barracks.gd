@@ -335,7 +335,7 @@ func _finish_recruitment() -> void:
 
 	GameState.set_flag("party_formed")
 	GameState.auto_save()
-	SceneManager.go_to_title_screen()
+	SceneManager.go_to_overworld()
 
 
 func _get_class_sprite(class_id: String, gender: String) -> Texture2D:
