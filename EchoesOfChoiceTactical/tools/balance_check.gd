@@ -45,19 +45,19 @@ const CLASS_LABELS: Array = ["vs Squire", "vs Mage", "vs Scholar", "vs Ent"]
 
 # ─── Tier 1 representative defenders (available from Prog 1) ─────────────────
 # No equipment bonus assumed. Format: [P.Def, M.Def] = base + growth*(level-1).
-# Warden (phys tank): PD=23 g4, MD=13 g2 | Acolyte (mag tank): PD=13 g2, MD=23 g3
-# Ranger (phys mid):  PD=17 g2, MD=11 g2 | Firebrand (mag glass): PD=10 g2, MD=18 g3
-# Dervish (dodge):    PD=12 g2, MD=18 g2 | Martial Artist (phys glass): PD=14 g3, MD=10 g2
+# Warden (phys tank): PD=20 g4, MD=13 g2 | Acolyte (mag tank): PD=13 g2, MD=23 g3
+# Ranger (phys mid):  PD=17 g2, MD=11 g2 | Firebrand (mag glass): PD=12 g2, MD=18 g3
+# Dervish (dodge):    PD=12 g2, MD=18 g2 | Martial Artist (phys glass): PD=14 g3, MD=12 g2
 const T1_ORDER: Array = ["warden", "acolyte", "ranger", "firebrand", "dervish", "martial_artist"]
 const PARTY_T1: Dictionary = {
-	1: {"warden": [27, 15], "acolyte": [15, 26], "ranger": [19, 13], "firebrand": [12, 21], "dervish": [14, 20], "martial_artist": [17, 12]},
-	2: {"warden": [31, 17], "acolyte": [17, 29], "ranger": [21, 15], "firebrand": [14, 24], "dervish": [16, 22], "martial_artist": [20, 14]},
-	3: {"warden": [35, 19], "acolyte": [19, 32], "ranger": [23, 17], "firebrand": [16, 27], "dervish": [18, 24], "martial_artist": [23, 16]},
-	4: {"warden": [35, 19], "acolyte": [19, 32], "ranger": [23, 17], "firebrand": [16, 27], "dervish": [18, 24], "martial_artist": [23, 16]},
-	5: {"warden": [39, 21], "acolyte": [21, 35], "ranger": [25, 19], "firebrand": [18, 30], "dervish": [20, 26], "martial_artist": [26, 18]},
-	6: {"warden": [43, 23], "acolyte": [23, 38], "ranger": [27, 21], "firebrand": [20, 33], "dervish": [22, 28], "martial_artist": [29, 20]},
-	7: {"warden": [43, 23], "acolyte": [23, 38], "ranger": [27, 21], "firebrand": [20, 33], "dervish": [22, 28], "martial_artist": [29, 20]},
-	8: {"warden": [47, 25], "acolyte": [25, 41], "ranger": [29, 23], "firebrand": [22, 36], "dervish": [24, 30], "martial_artist": [32, 22]},
+	1: {"warden": [24, 15], "acolyte": [15, 26], "ranger": [19, 13], "firebrand": [14, 21], "dervish": [14, 20], "martial_artist": [17, 14]},
+	2: {"warden": [28, 17], "acolyte": [17, 29], "ranger": [21, 15], "firebrand": [16, 24], "dervish": [16, 22], "martial_artist": [20, 16]},
+	3: {"warden": [32, 19], "acolyte": [19, 32], "ranger": [23, 17], "firebrand": [18, 27], "dervish": [18, 24], "martial_artist": [23, 18]},
+	4: {"warden": [32, 19], "acolyte": [19, 32], "ranger": [23, 17], "firebrand": [18, 27], "dervish": [18, 24], "martial_artist": [23, 18]},
+	5: {"warden": [36, 21], "acolyte": [21, 35], "ranger": [25, 19], "firebrand": [20, 30], "dervish": [20, 26], "martial_artist": [26, 20]},
+	6: {"warden": [40, 23], "acolyte": [23, 38], "ranger": [27, 21], "firebrand": [22, 33], "dervish": [22, 28], "martial_artist": [29, 22]},
+	7: {"warden": [40, 23], "acolyte": [23, 38], "ranger": [27, 21], "firebrand": [22, 33], "dervish": [22, 28], "martial_artist": [29, 22]},
+	8: {"warden": [44, 25], "acolyte": [25, 41], "ranger": [29, 23], "firebrand": [24, 36], "dervish": [24, 30], "martial_artist": [32, 24]},
 }
 
 # ─── Tier 2 representative defenders (available from Prog 3) ─────────────────
