@@ -97,7 +97,7 @@ const NODES: Dictionary = {
 				"role": "Village Elder",
 				"lines": [
 					"Four paths out of here. Two lead to the cave, two lead to a portal. All of them lead somewhere dangerous.",
-					"We defended this village when the goblins came. Make sure it meant something.",
+					"We defended this village when the raiders came. Make sure it meant something.",
 				],
 				"requires_flag": "village_defended",
 			},
@@ -321,7 +321,7 @@ const NODES: Dictionary = {
 				"name": "Donal",
 				"role": "Gatekeeper",
 				"lines": [
-					"Four gates into the city. East has a seraph and a fiend clashing — you would be caught in the middle. North is druid versus necromancer. Pick your nightmare.",
+					"Four gates into the city. East has a seraph and a fiend clashing — you would be caught in the middle. North is witch versus necromancer. Pick your nightmare.",
 					"Beyond the gates, the shrines are active. Elementals. The city has been sealed from the inside.",
 				],
 			},
@@ -347,7 +347,7 @@ const NODES: Dictionary = {
 	# --- Progression 6: City Gate Ambush (shared) ---
 	"city_gate_ambush": {
 		"display_name": "The City Gates",
-		"description": "Shadow agents have taken position inside the city walls. The Gorgon Queen from the mirror crossing stands at their head — this time with a dark elf warlord at her side.",
+		"description": "Shadow agents have taken position inside the city walls. The gorgon from the mirror crossing has crowned herself queen — she stands at their head, this time with a dark elf warlord at her side.",
 		"pos": Vector2(1360, 320),
 		"terrain": Terrain.CITY_GATE,
 		"prev_nodes": ["gate_town"],
@@ -475,7 +475,7 @@ const NODES: Dictionary = {
 	# --- Optional battle data (launched from towns; not shown on overworld) ---
 	"village_raid": {
 		"display_name": "Village Raid",
-		"description": "Defend the village from goblins.",
+		"description": "Defend the village from goblin and orc raiders.",
 		"pos": Vector2.ZERO,
 		"terrain": Terrain.VILLAGE,
 		"prev_nodes": [],

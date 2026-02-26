@@ -23,8 +23,8 @@ static func create_city_gate_ambush() -> BattleConfig:
 	]
 
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "Inside the walls. Shadow agents and a city mage — working together."},
-		{"speaker": "Aldric", "text": "The same commander as the mirror crossing. It followed us in."},
+		{"speaker": "", "text": "Inside the walls. Shadow agents and a gorgon queen — working together."},
+		{"speaker": "Aldric", "text": "The gorgon from the mirror crossing — she has grown stronger. And she brought friends."},
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "", "text": "They scatter. The city's four districts open ahead — each held by someone who will not let you through."},

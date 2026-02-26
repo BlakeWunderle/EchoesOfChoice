@@ -170,7 +170,7 @@ static func create_army_battle() -> BattleConfig:
 		{"speaker": "Aldric", "text": "We are not turning back."}
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The commander falls. The encampment scatters. The laboratory beyond the tree line waits."}
+		{"speaker": "", "text": "The commander falls. The encampment scatters. The crypt beyond the tree line waits."}
 	]
 	return config
 
@@ -239,11 +239,11 @@ static func create_mirror_battle() -> BattleConfig:
 
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "All three roads converge at a dark crossing. Shadows move in the space between the lights."},
-		{"speaker": "Lyris", "text": "Those shadows have our shapes."},
-		{"speaker": "Aldric", "text": "The same shadows as the inn. It has been watching us since the crossroads."}
+		{"speaker": "Lyris", "text": "Something is watching from the dark. More than one."},
+		{"speaker": "Aldric", "text": "The same dark elf blades as the inn ambush. It has been tracking us since the crossroads."}
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The shadow-selves dissolve. The crossing clears."},
+		{"speaker": "", "text": "The last of them falls. The crossing clears."},
 		{"speaker": "Aldric", "text": "Gate Town is ahead. Last chance to rest before we take the city gates."}
 	]
 	return config

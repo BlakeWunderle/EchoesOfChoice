@@ -98,11 +98,11 @@ static func create_forest() -> BattleConfig:
 	config.pre_battle_dialogue = [
 		{"speaker": "", "text": "The forest goes still — not the quiet of morning, but the kind before something large has already made its decision."},
 		{"speaker": "Elara", "text": "Something drove them from the deeper wood. They are not spooked."},
-		{"speaker": "", "text": "A forest guardian materializes from the treeline. Behind it, gnoll raiders scatter, and something massive crashes through the underbrush."}
+		{"speaker": "", "text": "A forest guardian materializes from the treeline, a small sprite darting at its side. Behind them, gnoll raiders scatter, and something massive crashes through the underbrush."}
 	]
 	config.post_battle_dialogue = [
 		{"speaker": "Thane", "text": "An old house, just off the path. Unlocked."},
-		{"speaker": "", "text": "The forest guardians are restless — something has disturbed the deeper wood. The village ahead, their chimney smoke is still visible through the trees."}
+		{"speaker": "", "text": "The forest guardian was restless — something has disturbed the deeper wood. The village ahead, their chimney smoke is still visible through the trees."}
 	]
 	return config
 
@@ -128,11 +128,11 @@ static func create_village_raid() -> BattleConfig:
 	]
 	
 	config.pre_battle_dialogue = [
-		{"speaker": "", "text": "The forest village is under attack. Goblins have broken through the fence line."},
+		{"speaker": "", "text": "The forest village is under attack. Goblins have broken through the fence line — and orcs are leading them."},
 		{"speaker": "Villager", "text": "Please, drive them off! They are taking everything!"}
 	]
 	config.post_battle_dialogue = [
-		{"speaker": "", "text": "The goblins scatter. The village catches its breath."},
+		{"speaker": "", "text": "The raiders scatter. The village catches its breath."},
 		{"speaker": "Aldric", "text": "They were organized. Someone sent them."}
 	]
 	return config
