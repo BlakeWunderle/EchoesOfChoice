@@ -195,8 +195,7 @@ func _build_status_effects(unit: Unit) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
-	if event is InputEventKey and event.pressed:
-		if event.keycode == KEY_TAB or event.keycode == KEY_ESCAPE:
-			visible = false
-			closed.emit()
-			get_viewport().set_input_as_handled()
+	if event.is_action_pressed("inspect") or event.is_action_pressed("cancel"):
+		visible = false
+		closed.emit()
+		get_viewport().set_input_as_handled()

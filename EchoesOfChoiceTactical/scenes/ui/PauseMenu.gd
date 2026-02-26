@@ -101,6 +101,6 @@ func _on_quit_title() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if _settings_open:
 		return
-	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+	if event.is_action_pressed("cancel") or event.is_action_pressed("pause"):
 		_on_resume()
 		get_viewport().set_input_as_handled()

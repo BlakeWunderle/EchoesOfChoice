@@ -75,12 +75,12 @@ const TUTORIALS: Dictionary = {
 	"tutorial_movement": {
 		"flag": "tutorial_movement_seen",
 		"title": "Movement",
-		"body": "Blue tiles show where you can move. Use arrow keys or WASD to select a tile, then press Enter/Z to confirm. Press Esc/X to cancel.",
+		"body": "Blue tiles show where you can move. Move the cursor to select a tile, then confirm to move there. Press cancel to go back.",
 	},
 	"tutorial_targeting": {
 		"flag": "tutorial_targeting_seen",
 		"title": "Targeting",
-		"body": "Red tiles show attack range. Move the cursor to an enemy and press Enter/Z to attack. The damage preview shows estimated damage.",
+		"body": "Red tiles show attack range. Move the cursor to an enemy and confirm to attack. The damage preview shows estimated damage.",
 	},
 	"tutorial_reactions": {
 		"flag": "tutorial_reactions_seen",

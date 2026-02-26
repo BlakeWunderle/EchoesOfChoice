@@ -62,9 +62,8 @@ func _input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseButton and event.pressed:
 		_handle_advance()
-	elif event is InputEventKey and event.pressed:
-		if event.keycode == KEY_ENTER or event.keycode == KEY_SPACE:
-			_handle_advance()
+	elif event.is_action_pressed("confirm"):
+		_handle_advance()
 
 
 func _update_portrait(speaker: String) -> void:

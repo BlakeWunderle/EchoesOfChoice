@@ -776,11 +776,11 @@ func _on_cursor_cancelled() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and event.keycode == KEY_TAB:
+	if event.is_action_pressed("inspect"):
 		_toggle_unit_inspector()
 		get_viewport().set_input_as_handled()
 		return
-	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+	if event.is_action_pressed("cancel") or event.is_action_pressed("pause"):
 		if _pause_menu != null:
 			return
 		if grid_cursor.active:

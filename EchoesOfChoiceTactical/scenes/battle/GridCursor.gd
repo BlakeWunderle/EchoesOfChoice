@@ -15,6 +15,10 @@ const CORNER_LEN := 12.0
 const LINE_WIDTH := 3.0
 
 var _pulse_time: float = 0.0
+var _repeat_timer: float = 0.0
+var _is_repeating: bool = false
+const _REPEAT_DELAY := 0.4
+const _REPEAT_INTERVAL := 0.12
 
 
 func _ready() -> void:
@@ -24,6 +28,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if active:
 		_pulse_time += delta
+		_handle_held_direction(delta)
 		queue_redraw()
 
 
@@ -74,23 +79,59 @@ func _input(event: InputEvent) -> void:
 	if not active:
 		return
 
-	if event is InputEventKey and event.pressed:
-		match event.keycode:
-			KEY_UP, KEY_W:
-				_move_cursor(Vector2i(0, -1))
-			KEY_DOWN, KEY_S:
-				_move_cursor(Vector2i(0, 1))
-			KEY_LEFT, KEY_A:
-				_move_cursor(Vector2i(-1, 0))
-			KEY_RIGHT, KEY_D:
-				_move_cursor(Vector2i(1, 0))
-			KEY_ENTER, KEY_SPACE, KEY_Z:
-				if grid_position in valid_cells:
-					SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
-					cell_selected.emit(grid_position)
-			KEY_ESCAPE, KEY_X:
-				SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
-				cancelled.emit()
+	if event.is_action_pressed("move_up"):
+		_move_cursor(Vector2i(0, -1))
+		_repeat_timer = 0.0
+		_is_repeating = false
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_down"):
+		_move_cursor(Vector2i(0, 1))
+		_repeat_timer = 0.0
+		_is_repeating = false
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_left"):
+		_move_cursor(Vector2i(-1, 0))
+		_repeat_timer = 0.0
+		_is_repeating = false
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("move_right"):
+		_move_cursor(Vector2i(1, 0))
+		_repeat_timer = 0.0
+		_is_repeating = false
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("confirm"):
+		if grid_position in valid_cells:
+			SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
+			cell_selected.emit(grid_position)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("cancel"):
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
+		cancelled.emit()
+		get_viewport().set_input_as_handled()
+
+
+func _handle_held_direction(delta: float) -> void:
+	var dir := Vector2i.ZERO
+	if Input.is_action_pressed("move_up"):
+		dir = Vector2i(0, -1)
+	elif Input.is_action_pressed("move_down"):
+		dir = Vector2i(0, 1)
+	elif Input.is_action_pressed("move_left"):
+		dir = Vector2i(-1, 0)
+	elif Input.is_action_pressed("move_right"):
+		dir = Vector2i(1, 0)
+
+	if dir == Vector2i.ZERO:
+		_repeat_timer = 0.0
+		_is_repeating = false
+		return
+
+	_repeat_timer += delta
+	var threshold := _REPEAT_INTERVAL if _is_repeating else _REPEAT_DELAY
+	if _repeat_timer >= threshold:
+		_move_cursor(dir)
+		_repeat_timer = 0.0
+		_is_repeating = true
 
 
 func _move_cursor(dir: Vector2i) -> void:
