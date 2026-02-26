@@ -8,6 +8,7 @@ signal summary_closed
 
 
 func _ready() -> void:
+	SFXManager.play(SFXManager.Category.UI_FANFARE, 0.8)
 	continue_button.pressed.connect(func():
 		SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 		summary_closed.emit()

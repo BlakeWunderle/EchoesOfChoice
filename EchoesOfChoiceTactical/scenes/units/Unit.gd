@@ -54,6 +54,7 @@ var is_alive: bool = true
 
 var _reaction_indicator: ReactionIndicator
 var _status_icon_bar: StatusIconBar
+var _low_hp_tween: Tween = null
 
 const TILE_SIZE := 64
 
@@ -195,6 +196,7 @@ func take_damage(amount: int) -> void:
 	health = maxi(health - amount, 0)
 	took_damage.emit(self, amount)
 	_update_health_bar()
+	_check_low_hp_pulse()
 	if health <= 0:
 		is_alive = false
 		if not voice_pack.is_empty():
@@ -207,6 +209,7 @@ func take_damage(amount: int) -> void:
 func heal(amount: int) -> void:
 	health = mini(health + amount, max_health)
 	_update_health_bar()
+	_check_low_hp_pulse()
 
 
 func spend_mana(amount: int) -> void:
@@ -350,6 +353,20 @@ func _refresh_status_icons() -> void:
 func _update_health_bar() -> void:
 	if health_bar:
 		health_bar.value = float(health) / float(max_health) * 100.0
+
+
+func _check_low_hp_pulse() -> void:
+	var threshold := int(max_health * 0.25)
+	if health > 0 and health <= threshold:
+		if _low_hp_tween == null or not _low_hp_tween.is_running():
+			_low_hp_tween = create_tween().set_loops()
+			_low_hp_tween.tween_property(self, "modulate", Color(1.0, 0.5, 0.5), 0.4)
+			_low_hp_tween.tween_property(self, "modulate", Color.WHITE, 0.4)
+	else:
+		if _low_hp_tween and _low_hp_tween.is_running():
+			_low_hp_tween.kill()
+			_low_hp_tween = null
+			modulate = Color.WHITE
 
 
 func animate_move_along_path(path: Array[Vector2i]) -> void:
