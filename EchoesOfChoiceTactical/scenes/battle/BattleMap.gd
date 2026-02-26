@@ -26,6 +26,9 @@ var _is_replay: bool = false
 var _ai: BattleAI
 var _executor: AbilityExecutor
 var _combat_animator: CombatAnimator
+var _pause_menu: Control = null
+var _pause_menu_scene: PackedScene = preload("res://scenes/ui/PauseMenu.tscn")
+var _settings_menu_scene: PackedScene = preload("res://scenes/ui/SettingsMenu.tscn")
 
 
 func _ready() -> void:
@@ -694,6 +697,52 @@ func _on_cursor_cancelled() -> void:
 			_selected_ability = null
 			_selected_item = null
 			_show_action_menu(unit)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		if _pause_menu != null:
+			return
+		if grid_cursor.active:
+			return
+		if _current_phase == Enums.TurnPhase.CHOOSE_FACING:
+			return
+		_open_pause_menu()
+		get_viewport().set_input_as_handled()
+
+
+func _open_pause_menu() -> void:
+	turn_manager.paused = true
+	_pause_menu = _pause_menu_scene.instantiate()
+	_pause_menu.resumed.connect(func() -> void:
+		_pause_menu.queue_free()
+		_pause_menu = null
+		turn_manager.paused = false
+	)
+	_pause_menu.quit_to_overworld.connect(func() -> void:
+		turn_manager.battle_active = false
+		turn_manager.paused = false
+		_pause_menu.queue_free()
+		_pause_menu = null
+		SceneManager.go_to_overworld()
+	)
+	_pause_menu.quit_to_title.connect(func() -> void:
+		turn_manager.battle_active = false
+		turn_manager.paused = false
+		_pause_menu.queue_free()
+		_pause_menu = null
+		SceneManager.go_to_title_screen()
+	)
+	_pause_menu.settings_requested.connect(func() -> void:
+		_pause_menu._settings_open = true
+		var settings_menu: Control = _settings_menu_scene.instantiate()
+		settings_menu.settings_closed.connect(func() -> void:
+			settings_menu.queue_free()
+			_pause_menu._settings_open = false
+		)
+		hud.add_child(settings_menu)
+	)
+	hud.add_child(_pause_menu)
 
 
 func _ai_execute_ability(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> void:

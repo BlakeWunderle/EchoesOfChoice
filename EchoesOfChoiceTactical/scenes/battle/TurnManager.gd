@@ -11,6 +11,7 @@ var enemy_units: Array[Unit] = []
 var current_unit: Unit = null
 var round_number: int = 0
 var battle_active: bool = false
+var paused: bool = false
 
 const TURN_THRESHOLD := 100
 
@@ -56,6 +57,8 @@ func run_battle() -> void:
 
 		round_number += 1
 		round_ended.emit()
+		while paused:
+			await get_tree().process_frame
 
 
 func advance_time() -> void:
