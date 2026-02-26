@@ -20,6 +20,7 @@ var _facing_container: HBoxContainer
 var _ability_container: VBoxContainer
 var _item_container: VBoxContainer
 var _current_unit: Unit
+var _tooltip: AbilityTooltip = null
 
 
 func _ready() -> void:
@@ -100,6 +101,7 @@ func hide_menu() -> void:
 	_ability_container.visible = false
 	_item_container.visible = false
 	_facing_container.visible = false
+	_hide_tooltip()
 
 
 func show_facing() -> void:
@@ -143,6 +145,10 @@ func _on_ability_pressed() -> void:
 		btn.text = "%s (MP: %d, Range: %d)" % [ability.ability_name, ability.mana_cost, ability.ability_range]
 		var idx := i
 		btn.pressed.connect(func(): _on_ability_picked(affordable[idx]))
+		btn.focus_entered.connect(func(): _show_tooltip(ability, btn))
+		btn.mouse_entered.connect(func(): _show_tooltip(ability, btn))
+		btn.focus_exited.connect(_hide_tooltip)
+		btn.mouse_exited.connect(_hide_tooltip)
 		_ability_container.add_child(btn)
 
 	var back_btn := Button.new()
@@ -230,3 +236,16 @@ func _on_facing_selected(dir: int) -> void:
 	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	hide_menu()
 	facing_chosen.emit(dir)
+
+
+func _show_tooltip(ability: AbilityData, anchor: Button) -> void:
+	_hide_tooltip()
+	_tooltip = AbilityTooltip.create(ability)
+	add_child(_tooltip)
+	_tooltip.position = Vector2(anchor.size.x + 8, anchor.position.y)
+
+
+func _hide_tooltip() -> void:
+	if _tooltip:
+		_tooltip.queue_free()
+		_tooltip = null

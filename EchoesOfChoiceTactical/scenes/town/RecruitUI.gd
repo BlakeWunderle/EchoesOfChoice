@@ -147,10 +147,15 @@ func _show_class_detail(data: FighterData) -> void:
 		ab_title.add_theme_color_override("font_color", Color(0.8, 0.7, 0.5))
 		detail_panel.add_child(ab_title)
 		for ability in data.abilities:
-			var ab_lbl := Label.new()
-			ab_lbl.text = "  " + ability.display_name
-			ab_lbl.add_theme_font_size_override("font_size", 12)
-			detail_panel.add_child(ab_lbl)
+			var ab_btn := Button.new()
+			ab_btn.text = "  %s (MP: %d, R: %d)" % [ability.ability_name, ability.mana_cost, ability.ability_range]
+			ab_btn.flat = true
+			ab_btn.add_theme_font_size_override("font_size", 12)
+			ab_btn.mouse_entered.connect(_show_ability_tooltip.bind(ability, ab_btn))
+			ab_btn.mouse_exited.connect(_hide_ability_tooltip)
+			ab_btn.focus_entered.connect(_show_ability_tooltip.bind(ability, ab_btn))
+			ab_btn.focus_exited.connect(_hide_ability_tooltip)
+			detail_panel.add_child(ab_btn)
 
 	var cost := GameState.get_recruit_cost(data.class_id)
 	var sep3 := HSeparator.new()
@@ -264,6 +269,23 @@ func _on_name_confirmed(name_input: LineEdit) -> void:
 	detail_panel.add_child(success)
 
 
+var _ability_tooltip: AbilityTooltip = null
+
+
+func _show_ability_tooltip(ability: AbilityData, anchor: Button) -> void:
+	_hide_ability_tooltip()
+	_ability_tooltip = AbilityTooltip.create(ability)
+	detail_panel.add_child(_ability_tooltip)
+	_ability_tooltip.position = Vector2(anchor.size.x + 8, anchor.position.y)
+
+
+func _hide_ability_tooltip() -> void:
+	if _ability_tooltip:
+		_ability_tooltip.queue_free()
+		_ability_tooltip = null
+
+
 func _clear_children(container: Node) -> void:
+	_hide_ability_tooltip()
 	for child in container.get_children():
 		child.queue_free()
