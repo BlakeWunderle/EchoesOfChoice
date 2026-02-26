@@ -154,6 +154,7 @@ func _animate_damage_hit(target: Unit, amount: int, is_crit: bool, result: Dicti
 	_play_hit_flash(target)
 	if is_crit:
 		_spawn_popup(target, str(amount), COLOR_CRIT, 22)
+		_spawn_crit_sparkles(target)
 	else:
 		_spawn_popup(target, str(amount), COLOR_DAMAGE, 16)
 	_tween_health_bar(target, result)
@@ -197,6 +198,27 @@ func _spawn_popup(unit: Unit, text: String, color: Color, font_size: int = 16) -
 	tween.tween_property(label, "modulate:a", 0.0, POPUP_DURATION).set_delay(0.3)
 	tween.set_parallel(false)
 	tween.tween_callback(label.queue_free)
+
+
+func _spawn_crit_sparkles(unit: Unit) -> void:
+	var sparkle_chars := ["*", "+", "*", "+", "*", "+"]
+	for i in range(6):
+		var spark := Label.new()
+		spark.text = sparkle_chars[i]
+		spark.add_theme_color_override("font_color", COLOR_CRIT if i % 2 == 0 else Color.WHITE)
+		spark.add_theme_font_size_override("font_size", 10)
+		spark.position = unit.position + Vector2(-4, -20)
+		spark.z_index = 101
+		_scene_root.add_child(spark)
+
+		var angle := TAU * i / 6.0
+		var end_pos := spark.position + Vector2(cos(angle), sin(angle)) * 28.0
+		var tween := _scene_root.create_tween()
+		tween.set_parallel(true)
+		tween.tween_property(spark, "position", end_pos, 0.4).set_ease(Tween.EASE_OUT)
+		tween.tween_property(spark, "modulate:a", 0.0, 0.4).set_delay(0.15)
+		tween.set_parallel(false)
+		tween.tween_callback(spark.queue_free)
 
 
 func _shake_camera(intensity: float = 4.0, duration: float = 0.2) -> void:

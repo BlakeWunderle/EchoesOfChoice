@@ -15,6 +15,15 @@ func _ready() -> void:
 	var slot := GameState.current_slot
 	load_button.visible = slot >= 0 and GameState.has_save(slot)
 
+	# Add Retry Battle button if we have autosave and a valid battle
+	if GameState.has_autosave() and not GameState.current_battle_id.is_empty():
+		var retry_btn := Button.new()
+		retry_btn.text = "Retry Battle"
+		retry_btn.pressed.connect(_on_retry)
+		var buttons_container: Node = load_button.get_parent()
+		buttons_container.add_child(retry_btn)
+		buttons_container.move_child(retry_btn, 0)
+
 
 func _on_load() -> void:
 	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
@@ -24,6 +33,11 @@ func _on_load() -> void:
 func _on_title() -> void:
 	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	SceneManager.go_to_title_screen()
+
+
+func _on_retry() -> void:
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
+	SceneManager.retry_battle()
 
 
 func _on_credits() -> void:

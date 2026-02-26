@@ -90,3 +90,15 @@ func go_to_game_over() -> void:
 
 func go_to_credits() -> void:
 	change_scene("res://scenes/story/Credits.tscn")
+
+
+func retry_battle() -> void:
+	if GameState.has_autosave():
+		var data: Dictionary = GameState._save_manager.load_from_slot(GameState.AUTOSAVE_SLOT)
+		if not data.is_empty():
+			var battle_id := GameState.current_battle_id
+			GameState.load_game(GameState.AUTOSAVE_SLOT)
+			GameState.current_battle_id = battle_id
+			go_to_party_select()
+			return
+	go_to_overworld()
