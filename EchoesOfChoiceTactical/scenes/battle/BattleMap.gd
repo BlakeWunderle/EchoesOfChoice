@@ -31,6 +31,7 @@ var _pause_menu_scene: PackedScene = preload("res://scenes/ui/PauseMenu.tscn")
 var _settings_menu_scene: PackedScene = preload("res://scenes/ui/SettingsMenu.tscn")
 var _turn_order_panel: TurnOrderPanel
 var _damage_preview: DamagePreview
+var _unit_inspector: UnitInspector
 
 
 func _ready() -> void:
@@ -228,6 +229,31 @@ func _setup_battle_hud() -> void:
 	# Damage preview
 	_damage_preview = DamagePreview.new()
 	add_child(_damage_preview)
+
+	# Unit inspector
+	_unit_inspector = UnitInspector.new()
+	_unit_inspector.visible = false
+	hud.add_child(_unit_inspector)
+
+
+func _toggle_unit_inspector() -> void:
+	if _unit_inspector and _unit_inspector.visible:
+		_unit_inspector.visible = false
+		return
+	# Find unit under cursor or current unit
+	var unit: Unit = null
+	if grid_cursor.active:
+		var occupant := grid.get_occupant(grid_cursor.grid_position)
+		if occupant is Unit:
+			unit = occupant
+	if unit == null and turn_manager.current_unit:
+		unit = turn_manager.current_unit
+	if unit:
+		if not _unit_inspector:
+			_unit_inspector = UnitInspector.new()
+			_unit_inspector.visible = false
+			hud.add_child(_unit_inspector)
+		_unit_inspector.show_unit(unit)
 
 
 func _show_dialogue(lines: Array[Dictionary]) -> void:
@@ -736,6 +762,10 @@ func _on_cursor_cancelled() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_TAB:
+		_toggle_unit_inspector()
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		if _pause_menu != null:
 			return
