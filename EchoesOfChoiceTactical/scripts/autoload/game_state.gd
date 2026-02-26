@@ -30,6 +30,13 @@ var player_jp: int = 0
 
 var fired_travel_event_ids: Array[String] = []
 
+var settings: Dictionary = {
+	"master_volume": 1.0,
+	"music_volume": 0.8,
+	"sfx_volume": 1.0,
+	"text_speed": 1.0,
+}
+
 const MAX_SAVE_SLOTS := 3
 const AUTOSAVE_SLOT := 3
 const REST_HEAL_FRACTION := 0.30
@@ -41,6 +48,7 @@ var _equipment  # EquipmentManager — initialized in _ready()
 
 func _ready() -> void:
 	_equipment = preload("res://scripts/autoload/equipment_manager.gd").new(self)
+	_load_settings()
 
 
 func set_player_info(p_name: String, p_gender: String) -> void:
@@ -586,3 +594,26 @@ func get_last_used_slot() -> int:
 
 func get_save_summary(slot: int) -> Dictionary:
 	return _save_manager.get_save_summary(slot)
+
+
+# --- Settings ---
+
+func apply_settings() -> void:
+	var master_idx := AudioServer.get_bus_index("Master")
+	if master_idx >= 0:
+		AudioServer.set_bus_volume_db(master_idx, linear_to_db(settings.get("master_volume", 1.0)))
+	MusicManager.set_music_volume(settings.get("music_volume", 0.8))
+	SFXManager.set_sfx_volume(settings.get("sfx_volume", 1.0))
+
+
+func save_settings() -> void:
+	_save_manager.save_settings(settings)
+
+
+func _load_settings() -> void:
+	var data: Dictionary = _save_manager.load_settings()
+	if not data.is_empty():
+		for key: String in data:
+			settings[key] = data[key]
+	# Defer so audio autoloads are ready
+	call_deferred("apply_settings")

@@ -4,6 +4,7 @@ const MAX_SAVE_SLOTS := 3
 const AUTOSAVE_SLOT := 3
 const SAVE_META_PATH := "user://save_meta.json"
 const AUTOSAVE_PATH := "user://autosave.json"
+const SETTINGS_PATH := "user://settings.json"
 
 
 func _save_path(slot: int) -> String:
@@ -101,3 +102,23 @@ func get_save_summary(slot: int) -> Dictionary:
 
 func has_autosave() -> bool:
 	return FileAccess.file_exists(AUTOSAVE_PATH)
+
+
+func save_settings(data: Dictionary) -> void:
+	var file := FileAccess.open(SETTINGS_PATH, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(data, "\t"))
+		file.close()
+
+
+func load_settings() -> Dictionary:
+	if not FileAccess.file_exists(SETTINGS_PATH):
+		return {}
+	var file := FileAccess.open(SETTINGS_PATH, FileAccess.READ)
+	if not file:
+		return {}
+	var json := JSON.new()
+	if json.parse(file.get_as_text()) != OK:
+		return {}
+	file.close()
+	return json.data

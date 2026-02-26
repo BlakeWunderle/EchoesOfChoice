@@ -37,7 +37,8 @@ func _advance() -> void:
 
 	var total_chars := text_label.text.length()
 	if total_chars > 0:
-		var duration := total_chars / CHARS_PER_SECOND
+		var speed_mult: float = GameState.settings.get("text_speed", 1.0)
+		var duration := total_chars / (CHARS_PER_SECOND * speed_mult)
 		var tween := create_tween()
 		tween.tween_property(text_label, "visible_ratio", 1.0, duration)
 		await tween.finished
