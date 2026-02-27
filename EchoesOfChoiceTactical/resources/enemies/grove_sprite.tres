@@ -27,6 +27,6 @@ growth_magic_defense = 1
 growth_speed = 0
 movement = 4
 jump = 2
-reaction_types = []
+reaction_types = [1, 3]
 abilities = [ExtResource("2")]
 upgrade_options = []
