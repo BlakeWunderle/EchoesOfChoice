@@ -33,7 +33,7 @@ const TERRAIN_RING_COLORS: Dictionary = {
 	MapData.Terrain.PORTAL: Color(0.5, 0.3, 0.7),
 	MapData.Terrain.CIRCUS: Color(0.7, 0.35, 0.25),
 	MapData.Terrain.CEMETERY: Color(0.35, 0.38, 0.34),
-	MapData.Terrain.LAB: Color(0.4, 0.42, 0.5),
+	MapData.Terrain.CRYPT: Color(0.4, 0.42, 0.5),
 	MapData.Terrain.ARMY_CAMP: Color(0.45, 0.38, 0.28),
 	MapData.Terrain.MIRROR: Color(0.35, 0.4, 0.55),
 	MapData.Terrain.SHRINE: Color(0.4, 0.55, 0.75),
@@ -93,7 +93,7 @@ func _build_map() -> void:
 	for nid in MapData.NODES:
 		var node_data: Dictionary = MapData.NODES[nid]
 		var pos: Vector2 = node_data["pos"]
-		var is_revealed := nid in revealed
+		var is_revealed: bool = nid in revealed
 
 		if is_revealed:
 			_create_terrain_landmark(nid, node_data)

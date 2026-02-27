@@ -107,7 +107,7 @@ func _build_class_buttons() -> void:
 		var btn := Button.new()
 		btn.text = "Train with " + data["mentor"]
 		btn.size_flags_vertical = Control.SIZE_SHRINK_END
-		var cid := class_id
+		var cid: String = class_id
 		btn.pressed.connect(func(): _on_class_selected(cid))
 		vbox.add_child(btn)
 

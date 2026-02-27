@@ -118,7 +118,7 @@ func _recruit_next_guard() -> void:
 		_finish_recruitment()
 		return
 
-	var ordinal := ["first", "second", "third", "fourth"][_guards_recruited]
+	var ordinal: String = ["first", "second", "third", "fourth"][_guards_recruited]
 	scene_label.text = "Barracks — Choose your %s guard" % ordinal
 
 	_show_class_selection()
@@ -167,7 +167,7 @@ func _show_class_selection() -> void:
 
 		var btn := Button.new()
 		btn.text = "Select " + info["display_name"]
-		var cid := class_id
+		var cid: String = class_id
 		btn.pressed.connect(func(): _on_guard_class_selected(cid))
 		vbox.add_child(btn)
 
@@ -342,7 +342,7 @@ func _get_class_sprite(class_id: String, gender: String) -> Texture2D:
 	var data: FighterData = BattleConfig.load_class(class_id)
 	if not data:
 		return null
-	var sid := data.sprite_id
+	var sid: String = data.sprite_id
 	if gender in ["female", "princess"] and not data.sprite_id_female.is_empty():
 		sid = data.sprite_id_female
 	if sid.is_empty():
