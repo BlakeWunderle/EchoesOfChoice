@@ -245,7 +245,7 @@ func _toggle_unit_inspector() -> void:
 	# Find unit under cursor or current unit
 	var unit: Unit = null
 	if grid_cursor.active:
-		var occupant := grid.get_occupant(grid_cursor.grid_position)
+		var occupant = grid.get_occupant(grid_cursor.grid_position)
 		if occupant is Unit:
 			unit = occupant
 	if unit == null and turn_manager.current_unit:
@@ -499,7 +499,7 @@ func _execute_item(unit: Unit, target_pos: Vector2i) -> void:
 			var ms := ModifiedStat.create(item.buff_stat, item.consumable_value, item.buff_turns, false)
 			target.modified_stats.append(ms)
 			target.apply_stat_modifier(item.buff_stat, item.consumable_value, false)
-			var stat_name := Enums.StatType.keys()[item.buff_stat] if item.buff_stat < Enums.StatType.size() else "STAT"
+			var stat_name: String = Enums.StatType.keys()[item.buff_stat] if item.buff_stat < Enums.StatType.size() else "STAT"
 			item_results.append({"target": target, "type": "buff", "stat_name": stat_name})
 
 	SFXManager.play(SFXManager.Category.SHIMMER)
@@ -748,7 +748,7 @@ func _on_cell_hovered(pos: Vector2i) -> void:
 func _show_damage_preview(pos: Vector2i) -> void:
 	if not _damage_preview or not _selected_ability:
 		return
-	var occupant := grid.get_occupant(pos)
+	var occupant = grid.get_occupant(pos)
 	if occupant is Unit and occupant.is_alive:
 		var attacker := turn_manager.current_unit
 		var preview := DamagePreview.get_preview_text(_selected_ability, attacker, occupant)
