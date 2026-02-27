@@ -10,6 +10,12 @@ signal took_damage(unit: Unit, amount: int)
 const PLAYER_COLOR := Color(0.3, 0.5, 0.9)
 const ENEMY_COLOR := Color(0.9, 0.3, 0.3)
 const PLACEHOLDER_SIZE := 24.0
+const TEAM_RING_RADIUS_X := 20.0
+const TEAM_RING_RADIUS_Y := 10.0
+const TEAM_RING_Y_OFFSET := 14.0
+const TEAM_RING_COLOR_PLAYER := Color(0.3, 0.6, 1.0, 0.55)
+const TEAM_RING_COLOR_ENEMY := Color(1.0, 0.3, 0.3, 0.55)
+const TEAM_RING_SEGMENTS := 24
 
 var unit_name: String
 var unit_class: String
@@ -66,12 +72,27 @@ static var _strike_ability: AbilityData = preload("res://resources/abilities/str
 
 
 func _draw() -> void:
-	if sprite.sprite_frames and sprite.sprite_frames.get_animation_names().size() > 0:
-		return
-	var color := PLAYER_COLOR if team == Enums.Team.PLAYER else ENEMY_COLOR
-	var half := PLACEHOLDER_SIZE / 2.0
-	draw_rect(Rect2(-half, -half, PLACEHOLDER_SIZE, PLACEHOLDER_SIZE), color)
-	draw_rect(Rect2(-half, -half, PLACEHOLDER_SIZE, PLACEHOLDER_SIZE), color.lightened(0.3), false, 2.0)
+	# Team-colored base ring (always drawn beneath sprite)
+	var ring_color := TEAM_RING_COLOR_PLAYER if team == Enums.Team.PLAYER else TEAM_RING_COLOR_ENEMY
+	var center := Vector2(0, TEAM_RING_Y_OFFSET)
+	var points := PackedVector2Array()
+	for i in range(TEAM_RING_SEGMENTS + 1):
+		var angle := TAU * i / TEAM_RING_SEGMENTS
+		points.append(center + Vector2(cos(angle) * TEAM_RING_RADIUS_X, sin(angle) * TEAM_RING_RADIUS_Y))
+	draw_colored_polygon(points, ring_color)
+	for i in range(TEAM_RING_SEGMENTS):
+		var a1 := TAU * i / TEAM_RING_SEGMENTS
+		var a2 := TAU * (i + 1) / TEAM_RING_SEGMENTS
+		var p1 := center + Vector2(cos(a1) * TEAM_RING_RADIUS_X, sin(a1) * TEAM_RING_RADIUS_Y)
+		var p2 := center + Vector2(cos(a2) * TEAM_RING_RADIUS_X, sin(a2) * TEAM_RING_RADIUS_Y)
+		draw_line(p1, p2, ring_color.lightened(0.3), 1.5)
+
+	# Placeholder rectangle when no sprites loaded
+	if not sprite.sprite_frames or sprite.sprite_frames.get_animation_names().size() == 0:
+		var color := PLAYER_COLOR if team == Enums.Team.PLAYER else ENEMY_COLOR
+		var half := PLACEHOLDER_SIZE / 2.0
+		draw_rect(Rect2(-half, -half, PLACEHOLDER_SIZE, PLACEHOLDER_SIZE), color)
+		draw_rect(Rect2(-half, -half, PLACEHOLDER_SIZE, PLACEHOLDER_SIZE), color.lightened(0.3), false, 2.0)
 
 
 func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: int = 1, p_gender: String = "") -> void:
@@ -112,6 +133,7 @@ func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: 
 	if _is_female(p_gender) and not data.sprite_id_female.is_empty():
 		sid = data.sprite_id_female
 	_load_sprite(sid)
+	_apply_team_health_bar_style()
 
 	# Unit indicators
 	_reaction_indicator = ReactionIndicator.new()
@@ -383,6 +405,25 @@ func _refresh_status_icons() -> void:
 func _update_health_bar() -> void:
 	if health_bar:
 		health_bar.value = float(health) / float(max_health) * 100.0
+
+
+func _apply_team_health_bar_style() -> void:
+	if not health_bar:
+		return
+	var fill_color: Color
+	var border_color: Color
+	if team == Enums.Team.PLAYER:
+		fill_color = Color(0.25, 0.55, 0.9)
+		border_color = Color(0.15, 0.35, 0.6, 0.5)
+	else:
+		fill_color = Color(0.85, 0.25, 0.25)
+		border_color = Color(0.55, 0.15, 0.15, 0.5)
+	var fill_style := StyleBoxFlat.new()
+	fill_style.bg_color = fill_color
+	fill_style.border_color = border_color
+	fill_style.set_border_width_all(1)
+	fill_style.set_corner_radius_all(2)
+	health_bar.add_theme_stylebox_override("fill", fill_style)
 
 
 func _check_low_hp_pulse() -> void:

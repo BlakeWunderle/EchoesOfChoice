@@ -360,6 +360,10 @@ func _spawn_unit(data: FighterData, unit_name: String, team: Enums.Team, pos: Ve
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.position = Vector2(-30, 24)
 	label.add_theme_font_size_override("font_size", 10)
+	if team == Enums.Team.PLAYER:
+		label.add_theme_color_override("font_color", Color(0.7, 0.85, 1.0))
+	else:
+		label.add_theme_color_override("font_color", Color(1.0, 0.75, 0.7))
 	unit.add_child(label)
 
 	return unit
