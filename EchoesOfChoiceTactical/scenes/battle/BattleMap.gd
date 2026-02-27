@@ -182,17 +182,72 @@ func _setup_from_config(config: BattleConfig) -> void:
 
 	terrain_renderer.setup(grid, config.environment)
 
+	# Spawn enemies at fixed positions facing west
+	for entry in config.enemy_units:
+		var unit := _spawn_unit(entry["data"], entry["name"], Enums.Team.ENEMY, entry["pos"], entry["level"])
+		unit.facing = Enums.Facing.WEST
+		unit._update_facing_animation()
+
+	if _needs_deployment(config):
+		_start_deployment(config)
+	else:
+		_spawn_player_units_fixed(config)
+		_finalize_battle_setup(config)
+
+
+func _needs_deployment(config: BattleConfig) -> bool:
+	for entry in config.player_units:
+		if entry["pos"] == Vector2i(-1, -1):
+			return true
+	return false
+
+
+func _spawn_player_units_fixed(config: BattleConfig) -> void:
 	for entry in config.player_units:
 		var member_gender := _get_member_gender(entry["name"])
 		var unit := _spawn_unit(entry["data"], entry["name"], Enums.Team.PLAYER, entry["pos"], entry["level"], member_gender)
+		unit.facing = Enums.Facing.EAST
+		unit._update_facing_animation()
 		var member_xp := _find_party_member_xp(entry["name"])
 		unit.initialize_xp(member_xp[0], member_xp[1])
 		unit.voice_pack = GameState.get_voice_pack(entry["name"])
 		unit.ai_controlled = entry.get("ai_controlled", false)
 
-	for entry in config.enemy_units:
-		_spawn_unit(entry["data"], entry["name"], Enums.Team.ENEMY, entry["pos"], entry["level"])
 
+func _start_deployment(config: BattleConfig) -> void:
+	var deploy_ctrl := DeploymentController.new()
+	deploy_ctrl.grid = grid
+	deploy_ctrl.grid_overlay = grid_overlay
+	deploy_ctrl.grid_cursor = grid_cursor
+	deploy_ctrl.deployment_zone = config.deployment_zone.duplicate()
+	deploy_ctrl.available_units = config.player_units.duplicate()
+	deploy_ctrl.units_container = units_container
+	deploy_ctrl.unit_scene = unit_scene
+	deploy_ctrl.battle_map = self
+	deploy_ctrl.deployment_complete.connect(_on_deployment_complete.bind(config))
+	hud.add_child(deploy_ctrl)
+
+	# Pan camera to show deployment zone
+	if config.deployment_zone.size() > 0:
+		var center := Vector2.ZERO
+		for pos in config.deployment_zone:
+			center += Vector2(pos.x * 64 + 32, pos.y * 64 + 32)
+		center /= config.deployment_zone.size()
+		camera.position = center
+	MusicManager.play_context(config.music_context)
+
+
+func _on_deployment_complete(config: BattleConfig) -> void:
+	# Initialize XP/JP and voice packs for placed units
+	for child in units_container.get_children():
+		if child is Unit and child.team == Enums.Team.PLAYER:
+			var member_xp := _find_party_member_xp(child.unit_name)
+			child.initialize_xp(member_xp[0], member_xp[1])
+			child.voice_pack = GameState.get_voice_pack(child.unit_name)
+	_finalize_battle_setup(config)
+
+
+func _finalize_battle_setup(config: BattleConfig) -> void:
 	var all_units: Array[Unit] = []
 	for child in units_container.get_children():
 		if child is Unit:

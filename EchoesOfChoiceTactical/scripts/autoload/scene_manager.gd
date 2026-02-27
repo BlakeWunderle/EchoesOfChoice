@@ -130,7 +130,11 @@ func go_to_town(town_node_id: String) -> void:
 
 
 func go_to_party_select() -> void:
-	change_scene("res://scenes/battle/PartySelect.tscn")
+	go_to_battle()
+
+
+func go_to_battle() -> void:
+	change_scene("res://scenes/battle/BattleMap.tscn")
 
 
 func go_to_game_over() -> void:

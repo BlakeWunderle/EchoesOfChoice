@@ -8,6 +8,7 @@ class_name BattleConfig extends Resource
 @export_group("Units")
 @export var player_units: Array[Dictionary] = []
 @export var enemy_units: Array[Dictionary] = []
+@export var deployment_zone: Array[Vector2i] = []
 
 @export_group("Audio")
 @export var music_context: int = 1  # MusicManager.MusicContext.BATTLE
@@ -33,26 +34,29 @@ static func _build_party_units(config: BattleConfig) -> void:
 	var player_data: FighterData = load_class(player_class_id)
 
 	config.player_units.append(
-		{"data": player_data, "name": GameState.player_name, "pos": Vector2i(2, 3), "level": GameState.player_level}
+		{"data": player_data, "name": GameState.player_name, "pos": Vector2i(-1, -1), "level": GameState.player_level}
 	)
 
-	var selected: Array[String] = GameState.selected_party
-	var members_to_use: Array[Dictionary] = []
-	if selected.is_empty():
-		members_to_use = GameState.party_members.duplicate()
-	else:
-		for member in GameState.party_members:
-			if member["name"] in selected:
-				members_to_use.append(member)
+	var members_to_use: Array[Dictionary] = GameState.party_members.duplicate()
 
-	var y_slots := [1, 2, 4, 5]
 	for i in range(members_to_use.size()):
 		var member: Dictionary = members_to_use[i]
 		var mdata: FighterData = load_class(member["class_id"])
-		var y_pos: int = y_slots[i] if i < y_slots.size() else 3 + i
 		config.player_units.append(
-			{"data": mdata, "name": member["name"], "pos": Vector2i(3, y_pos), "level": member.get("level", 1)}
+			{"data": mdata, "name": member["name"], "pos": Vector2i(-1, -1), "level": member.get("level", 1)}
 		)
+
+	if config.deployment_zone.is_empty():
+		config.deployment_zone = _default_deployment_zone(config.grid_width, config.grid_height)
+
+
+static func _default_deployment_zone(grid_w: int, grid_h: int) -> Array[Vector2i]:
+	var zone: Array[Vector2i] = []
+	var max_col := mini(2, grid_w - 1)
+	for x in range(max_col + 1):
+		for y in range(grid_h):
+			zone.append(Vector2i(x, y))
+	return zone
 
 
 static func create_placeholder(battle_id: String) -> BattleConfig:
