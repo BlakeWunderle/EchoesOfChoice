@@ -27,6 +27,7 @@ SceneManager="*res://scripts/autoload/scene_manager.gd"
 MusicManager="*res://scripts/autoload/music_manager.gd"
 SFXManager="*res://scripts/autoload/sfx_manager.gd"
 SpriteLoader="*res://scripts/autoload/sprite_loader.gd"
+BattlePreloader="*res://scripts/autoload/battle_preloader.gd"
 
 [display]
 

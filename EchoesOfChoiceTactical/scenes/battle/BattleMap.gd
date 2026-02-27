@@ -166,6 +166,7 @@ func _setup_test_battle() -> void:
 
 
 func _setup_from_config(config: BattleConfig) -> void:
+	BattlePreloader.warm_caches()
 	_battle_config = config
 	grid = Grid.new(config.grid_width, config.grid_height)
 	reaction_system = ReactionSystem.new(grid)

@@ -168,6 +168,10 @@ func _on_node_clicked(node_id: String) -> void:
 	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
 	_selected_node_id = node_id
 	_show_info(node_id)
+	# Speculatively preload battle assets while the player reads the info panel
+	var nd: Dictionary = MapData.get_node(node_id)
+	if not nd.is_empty() and nd.get("is_battle", true):
+		BattlePreloader.begin_preload(node_id)
 
 
 func _show_info(node_id: String) -> void:

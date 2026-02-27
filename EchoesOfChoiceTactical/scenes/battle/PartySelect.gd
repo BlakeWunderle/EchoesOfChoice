@@ -13,6 +13,9 @@ var _member_buttons: Dictionary = {}
 
 func _ready() -> void:
 	start_button.pressed.connect(_on_start_battle)
+	# Continue/start preloading battle assets while the player picks their party
+	if not GameState.current_battle_id.is_empty():
+		BattlePreloader.begin_preload(GameState.current_battle_id)
 
 	var roster_size := GameState.party_members.size()
 	if roster_size <= MAX_PARTY_SIZE - 1:
