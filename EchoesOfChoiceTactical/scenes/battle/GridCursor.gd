@@ -108,6 +108,40 @@ func _input(event: InputEvent) -> void:
 		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
 		cancelled.emit()
 		get_viewport().set_input_as_handled()
+	elif event is InputEventMouseButton:
+		_handle_mouse_button(event as InputEventMouseButton)
+	elif event is InputEventMouseMotion:
+		_handle_mouse_motion(event as InputEventMouseMotion)
+
+
+func _handle_mouse_button(event: InputEventMouseButton) -> void:
+	if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var cell := _screen_to_grid(event.position)
+		grid_position = cell
+		_update_position()
+		if grid_position in valid_cells:
+			SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
+			cell_selected.emit(grid_position)
+		else:
+			cell_hovered.emit(grid_position)
+		get_viewport().set_input_as_handled()
+	elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		SFXManager.play(SFXManager.Category.UI_CANCEL, 0.5)
+		cancelled.emit()
+		get_viewport().set_input_as_handled()
+
+
+func _handle_mouse_motion(event: InputEventMouseMotion) -> void:
+	var cell := _screen_to_grid(event.position)
+	if cell != grid_position:
+		grid_position = cell
+		_update_position()
+		cell_hovered.emit(grid_position)
+
+
+func _screen_to_grid(screen_pos: Vector2) -> Vector2i:
+	var world_pos := get_viewport().get_canvas_transform().affine_inverse() * screen_pos
+	return Vector2i(int(floor(world_pos.x / TILE_SIZE)), int(floor(world_pos.y / TILE_SIZE)))
 
 
 func _handle_held_direction(delta: float) -> void:
