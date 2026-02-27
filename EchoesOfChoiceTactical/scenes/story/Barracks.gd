@@ -40,7 +40,7 @@ var _entered_name: String = ""
 
 
 func _ready() -> void:
-	MusicManager.play_context(MusicManager.MusicContext.MENU)
+	MusicManager.play_music("res://assets/audio/music/menu/Guild of Adventurers 30 sec.wav")
 	selection_panel.visible = false
 	name_panel.visible = false
 	dialogue_box.visible = false

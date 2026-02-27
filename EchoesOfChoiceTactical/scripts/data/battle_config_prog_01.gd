@@ -7,6 +7,7 @@ static func create_tutorial() -> BattleConfig:
 	config.grid_width = 8
 	config.grid_height = 6
 	config.environment = "city"
+	config.music_track = "res://assets/audio/music/battle/Battle Theme 09(L).wav"
 
 	var prince_data := load("res://resources/classes/prince.tres")
 	var princess_data := load("res://resources/classes/princess.tres")
@@ -50,6 +51,7 @@ static func create_city_street() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "city"
+	config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Doomed.ogg"
 	BattleConfig._build_party_units(config)
 
 	var thug := load("res://resources/enemies/thug.tres")
@@ -81,6 +83,7 @@ static func create_forest() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "forest"
+	config.music_track = "res://assets/audio/music/battle/Against The Winds LOOP.wav"
 	BattleConfig._build_party_units(config)
 
 	var guardian := load("res://resources/enemies/forest_guardian.tres")
@@ -113,6 +116,7 @@ static func create_village_raid() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "village"
+	config.music_track = "res://assets/audio/music/battle/Duel Drums Only LOOP.wav"
 	BattleConfig._build_party_units(config)
 
 	var goblin := load("res://resources/enemies/goblin.tres")

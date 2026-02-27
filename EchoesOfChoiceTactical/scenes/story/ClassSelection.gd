@@ -36,7 +36,7 @@ var _selected_class: String = ""
 
 
 func _ready() -> void:
-	MusicManager.play_context(MusicManager.MusicContext.MENU)
+	MusicManager.play_music("res://assets/audio/music/menu/Chosen One LOOP.wav")
 	dialogue_box.visible = false
 
 	# Title + subtitle fade-in

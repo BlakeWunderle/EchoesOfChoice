@@ -7,6 +7,7 @@ static func create_city_gate_ambush() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "city"
+	config.music_track = "res://assets/audio/music/battle/Fantasy Tension - The Battle Chorus.ogg"
 	BattleConfig._build_party_units(config)
 
 	var gorgon_queen := load("res://resources/enemies/gorgon_queen.tres")
@@ -39,6 +40,7 @@ static func create_return_city_1() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "city"
+	config.music_track = "res://assets/audio/music/battle/Battle Theme 01(L).wav"
 	BattleConfig._build_party_units(config)
 
 	var seraph := load("res://resources/enemies/seraph.tres")
@@ -70,6 +72,7 @@ static func create_return_city_2() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "city"
+	config.music_track = "res://assets/audio/music/battle/Battle Theme 03(L).wav"
 	BattleConfig._build_party_units(config)
 
 	var necromancer := load("res://resources/enemies/necromancer.tres")
@@ -102,6 +105,7 @@ static func create_return_city_3() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "city"
+	config.music_track = "res://assets/audio/music/battle/Battle Theme 05(L).wav"
 	BattleConfig._build_party_units(config)
 
 	var psion := load("res://resources/enemies/psion.tres")
@@ -133,6 +137,7 @@ static func create_return_city_4() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "city"
+	config.music_track = "res://assets/audio/music/battle/Battle Theme 07(L).wav"
 	BattleConfig._build_party_units(config)
 
 	var warlock := load("res://resources/enemies/warlock.tres")
@@ -165,6 +170,7 @@ static func create_elemental_1() -> BattleConfig:
 	config.grid_height = 10
 	config.environment = "shrine"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
+	config.music_track = "res://assets/audio/music/boss/The Battle of Ages_FULL.wav"
 	BattleConfig._build_party_units(config)
 
 	# Shrine of Flames: mono-fire (1 lead lvl 8 + 4 lesser lvl 7)
@@ -196,6 +202,7 @@ static func create_elemental_2() -> BattleConfig:
 	config.grid_height = 10
 	config.environment = "shrine"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
+	config.music_track = "res://assets/audio/music/boss/Awakening of the Juggernaut_FULL.wav"
 	BattleConfig._build_party_units(config)
 
 	# Shrine of Tides: mono-water (1 lead lvl 8 + 4 lesser lvl 7)
@@ -226,6 +233,7 @@ static func create_elemental_3() -> BattleConfig:
 	config.grid_height = 10
 	config.environment = "shrine"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
+	config.music_track = "res://assets/audio/music/boss/Dance of the Blades A_FULL.wav"
 	BattleConfig._build_party_units(config)
 
 	# Shrine of Winds: mono-air (1 lead lvl 8 + 4 lesser lvl 7)
@@ -256,6 +264,7 @@ static func create_elemental_4() -> BattleConfig:
 	config.grid_height = 10
 	config.environment = "shrine"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
+	config.music_track = "res://assets/audio/music/boss/Impending Terror_FULL.wav"
 	BattleConfig._build_party_units(config)
 
 	# Shrine of Stone: mono-earth (1 lead lvl 8 + 4 lesser lvl 7)
@@ -288,6 +297,7 @@ static func create_final_castle() -> BattleConfig:
 	config.grid_height = 12
 	config.environment = "castle"
 	config.music_context = 2  # MusicManager.MusicContext.BATTLE_BOSS
+	config.music_track = "res://assets/audio/music/boss/The Essence of a Soul_FULL.wav"
 	BattleConfig._build_party_units(config)
 
 	# The Stranger — final boss — plus elite castle guard. Level 8.

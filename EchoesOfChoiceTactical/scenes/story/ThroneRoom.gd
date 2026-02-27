@@ -20,7 +20,7 @@ const CLASS_NAMES := {
 
 
 func _ready() -> void:
-	MusicManager.play_context(MusicManager.MusicContext.CUTSCENE)
+	MusicManager.play_music("res://assets/audio/music/cutscene/#14.wav")
 	var mentor: String = MENTOR_NAMES.get(GameState.player_class_id, "Mentor")
 	var class_name_str: String = CLASS_NAMES.get(GameState.player_class_id, "warrior")
 	var royal_title := "Prince" if GameState.player_gender == "prince" else "Princess"

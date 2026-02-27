@@ -10,7 +10,7 @@ var _back_btn: Button
 
 
 func _ready() -> void:
-	MusicManager.play_context(MusicManager.MusicContext.MENU)
+	MusicManager.play_music("res://assets/audio/music/cutscene/#1 Alt 2.wav")
 	_build_ui()
 	_play_reveal()
 

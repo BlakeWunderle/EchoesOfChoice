@@ -133,9 +133,21 @@ const NPC_VISUAL_CONFIG: Dictionary = {
 }
 
 
+const TOWN_TRACKS: Dictionary = {
+	"castle": "res://assets/audio/music/town/Medieval Celtic 01(L).wav",
+	"forest_village": "res://assets/audio/music/town/Town Village 05(L).wav",
+	"crossroads_inn": "res://assets/audio/music/town/Medieval Tavern 03.wav",
+	"gate_town": "res://assets/audio/music/town/Medieval Celtic 07(L).wav",
+}
+
+
 func _ready() -> void:
-	MusicManager.play_context(MusicManager.MusicContext.TOWN)
 	_town_id = GameState.current_town_id
+	var town_track: String = TOWN_TRACKS.get(_town_id, "")
+	if not town_track.is_empty():
+		MusicManager.play_music(town_track)
+	else:
+		MusicManager.play_context(MusicManager.MusicContext.TOWN)
 	var node_data: Dictionary = MapData.get_node(_town_id)
 
 	var terrain: int = node_data.get("terrain", -1)

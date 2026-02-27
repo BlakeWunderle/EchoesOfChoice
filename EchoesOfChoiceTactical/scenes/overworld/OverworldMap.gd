@@ -53,7 +53,7 @@ var _slot_popup_scene: PackedScene = preload("res://scenes/overworld/SaveSlotPop
 
 
 func _ready() -> void:
-	MusicManager.play_context(MusicManager.MusicContext.EXPLORATION)
+	MusicManager.play_music("res://assets/audio/music/exploration/A Bard's Tale LOOP.wav")
 	info_panel.visible = false
 	enter_button.pressed.connect(_on_enter_battle)
 

@@ -7,6 +7,7 @@ static func create_shore() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "shore"
+	config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Circle of the Serpent.ogg"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("shore")
@@ -41,6 +42,7 @@ static func create_beach() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "shore"
+	config.music_track = "res://assets/audio/music/battle/Pillage LOOP.wav"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("beach")
@@ -76,6 +78,7 @@ static func create_cemetery_battle() -> BattleConfig:
 	config.grid_height = 8
 	config.environment = "cemetery"
 	config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
+	config.music_track = "res://assets/audio/music/battle_dark/MUSC_Black_Moon_52BPM_Eminor_1644_Full_Loop.wav"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("cemetery_battle")
@@ -110,6 +113,7 @@ static func create_box_battle() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "carnival"
+	config.music_track = "res://assets/audio/music/battle_scifi/Cantina - Smooth Talk LOOP.wav"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("box_battle")
@@ -146,6 +150,7 @@ static func create_army_battle() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "camp"
+	config.music_track = "res://assets/audio/music/battle/Defending The Kingdom LOOP.wav"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("army_battle")
@@ -182,6 +187,7 @@ static func create_lab_battle() -> BattleConfig:
 	config.grid_height = 8
 	config.environment = "crypt"
 	config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
+	config.music_track = "res://assets/audio/music/battle_dark/08_Rotten_Memories.wav"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("lab_battle")
@@ -218,6 +224,7 @@ static func create_mirror_battle() -> BattleConfig:
 	config.grid_width = 14
 	config.grid_height = 10
 	config.environment = "mirror"
+	config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Dark Fables.ogg"
 	BattleConfig._build_party_units(config)
 
 	var node_data: Dictionary = MapData.get_node("mirror_battle")
@@ -255,6 +262,7 @@ static func create_gate_ambush() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "city"
+	config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Storming the Citadel.ogg"
 	BattleConfig._build_party_units(config)
 
 	# Shadow agents deployed at Gate Town: ghost corsair leads, dark elf blades flank, bone sorcerer as specialist.

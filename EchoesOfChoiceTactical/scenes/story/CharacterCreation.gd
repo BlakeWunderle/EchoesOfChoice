@@ -14,7 +14,7 @@ var _sprite_preview: TextureRect = null
 
 
 func _ready() -> void:
-	MusicManager.play_context(MusicManager.MusicContext.MENU)
+	MusicManager.play_music("res://assets/audio/music/menu/SHORT Peaceful #1 LOOP.wav")
 	name_container.visible = false
 	selection_label.visible = false
 	prince_button.pressed.connect(_on_prince_selected)

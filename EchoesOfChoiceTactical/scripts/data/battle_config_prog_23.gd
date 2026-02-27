@@ -7,6 +7,7 @@ static func create_smoke() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "scorched"
+	config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Fire Water.ogg"
 	BattleConfig._build_party_units(config)
 
 	var firestarter := load("res://resources/enemies/goblin_firestarter.tres")
@@ -38,6 +39,7 @@ static func create_deep_forest() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "forest"
+	config.music_track = "res://assets/audio/music/battle_dark/04_Eyes_in_the_Woods.wav"
 	BattleConfig._build_party_units(config)
 
 	var witch := load("res://resources/enemies/witch.tres")
@@ -71,6 +73,7 @@ static func create_clearing() -> BattleConfig:
 	config.grid_width = 14
 	config.grid_height = 10
 	config.environment = "grassland"
+	config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Arcane Thrones.ogg"
 	BattleConfig._build_party_units(config)
 
 	var satyr := load("res://resources/enemies/satyr.tres")
@@ -103,6 +106,7 @@ static func create_ruins() -> BattleConfig:
 	config.grid_width = 12
 	config.grid_height = 10
 	config.environment = "ruins"
+	config.music_track = "res://assets/audio/music/battle_dark/MUSC_Secret_Garden_76BPM_Eminor_1644_Full_Loop.wav"
 	BattleConfig._build_party_units(config)
 
 	var shade := load("res://resources/enemies/shade.tres")
@@ -132,6 +136,7 @@ static func create_cave() -> BattleConfig:
 	config.grid_width = 8
 	config.grid_height = 6
 	config.environment = "cave"
+	config.music_track = "res://assets/audio/music/battle/Demon's Lair LOOP.wav"
 	BattleConfig._build_party_units(config)
 
 	var demon_archer := load("res://resources/enemies/demon_archer.tres")
@@ -162,6 +167,7 @@ static func create_portal() -> BattleConfig:
 	config.grid_height = 8
 	config.environment = "portal"
 	config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
+	config.music_track = "res://assets/audio/music/battle_dark/01_Static_Presence.wav"
 	BattleConfig._build_party_units(config)
 
 	var hellion := load("res://resources/enemies/hellion.tres")
@@ -191,6 +197,7 @@ static func create_inn_ambush() -> BattleConfig:
 	config.grid_width = 10
 	config.grid_height = 8
 	config.environment = "inn"
+	config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Bloody Night.ogg"
 	BattleConfig._build_party_units(config)
 
 	var hunter := load("res://resources/enemies/skeleton_hunter.tres")

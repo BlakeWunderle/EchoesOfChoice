@@ -6,7 +6,7 @@ extends Control
 
 
 func _ready() -> void:
-	MusicManager.stop_music(0.5)
+	MusicManager.play_music("res://assets/audio/music/game_over/Sad Despair 03.wav", 0.5)
 	SFXManager.play(SFXManager.Category.UI_FANFARE, 0.6)
 	load_button.pressed.connect(_on_load)
 	title_button.pressed.connect(_on_title)
