@@ -71,7 +71,7 @@ func _execute_damage(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i
 		if this_crit:
 			SFXManager.play(SFXManager.Category.IMPACT, 0.8)
 
-		var killed := not target.is_alive
+		var killed: bool = not target.is_alive
 		if killed:
 			got_kill = true
 
@@ -130,7 +130,7 @@ func _execute_buff(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]) -
 		target.apply_stat_modifier(ability.modified_stat, ability.modifier, is_debuff)
 		SFXManager.play(SFXManager.Category.SHIMMER, 0.8)
 
-		var stat_name := Enums.StatType.keys()[ability.modified_stat] if ability.modified_stat < Enums.StatType.size() else "STAT"
+		var stat_name: String = Enums.StatType.keys()[ability.modified_stat] if ability.modified_stat < Enums.StatType.size() else "STAT"
 		_results.append({
 			"target": target, "type": "debuff" if is_debuff else "buff",
 			"stat_name": stat_name,
@@ -156,7 +156,7 @@ func _execute_terrain(caster: Unit, ability: AbilityData, tiles: Array[Vector2i]
 
 
 func apply_fire_damage(unit: Unit) -> void:
-	var dmg := max(1, 10 - unit.magic_defense)
+	var dmg: int = max(1, 10 - unit.magic_defense)
 	var old_hp_ratio := float(unit.health) / float(unit.max_health) if unit.max_health > 0 else 0.0
 	unit.take_damage(dmg)
 	var new_hp_ratio := float(unit.health) / float(unit.max_health) if unit.max_health > 0 else 0.0
