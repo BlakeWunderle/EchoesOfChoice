@@ -344,14 +344,15 @@ func _spawn_unit(data: FighterData, unit_name: String, team: Enums.Team, pos: Ve
 	unit.place_on_grid(pos)
 	grid.set_occupant(pos, unit)
 
-	var placeholder := ColorRect.new()
-	placeholder.size = Vector2(48, 48)
-	placeholder.position = Vector2(-24, -24)
-	if team == Enums.Team.PLAYER:
-		placeholder.color = Color(0.2, 0.5, 1.0)
-	else:
-		placeholder.color = Color(1.0, 0.2, 0.2)
-	unit.add_child(placeholder)
+	if not unit.sprite.sprite_frames or unit.sprite.sprite_frames.get_animation_names().size() == 0:
+		var placeholder := ColorRect.new()
+		placeholder.size = Vector2(48, 48)
+		placeholder.position = Vector2(-24, -24)
+		if team == Enums.Team.PLAYER:
+			placeholder.color = Color(0.2, 0.5, 1.0)
+		else:
+			placeholder.color = Color(1.0, 0.2, 0.2)
+		unit.add_child(placeholder)
 
 	var label := Label.new()
 	label.text = unit_name
