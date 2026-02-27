@@ -44,6 +44,11 @@ func run_turn(unit: Unit) -> void:
 			await _perform_action(unit, post_action)
 			await _scene_root.get_tree().create_timer(0.3).timeout
 
+	if not unit.has_acted:
+		var ms := ModifiedStat.create(Enums.StatType.SPEED, 3, 1, false)
+		unit.modified_stats.append(ms)
+		unit.apply_stat_modifier(Enums.StatType.SPEED, 3, false)
+
 	await _scene_root.get_tree().create_timer(0.4).timeout
 	unit.end_turn()
 

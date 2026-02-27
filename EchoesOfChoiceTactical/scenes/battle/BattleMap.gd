@@ -455,10 +455,18 @@ func _on_move_chosen() -> void:
 	_enter_move_phase(unit)
 
 
+const WAIT_SPEED_BUFF := 3
+const WAIT_SPEED_BUFF_TURNS := 1
+
 func _on_wait_chosen() -> void:
 	var unit := turn_manager.current_unit
 	if unit == null:
 		return
+	if not unit.has_acted:
+		var ms := ModifiedStat.create(Enums.StatType.SPEED, WAIT_SPEED_BUFF, WAIT_SPEED_BUFF_TURNS, false)
+		unit.modified_stats.append(ms)
+		unit.apply_stat_modifier(Enums.StatType.SPEED, WAIT_SPEED_BUFF, false)
+		_combat_animator.spawn_popup(unit, "+SPD", Color(0.3, 0.8, 1.0))
 	grid_overlay.clear_all()
 	_enter_facing_phase(unit)
 

@@ -66,7 +66,7 @@ func animate_ability_results(attacker: Unit, exec_result: Dictionary) -> void:
 		var rtype: String = r.get("type", "")
 		match rtype:
 			"dodge":
-				_spawn_popup(target, "MISS", COLOR_MISS, 14)
+				spawn_popup(target, "MISS", COLOR_MISS, 14)
 			"damage":
 				var amount: int = r.get("amount", 0)
 				var is_crit: bool = r.get("is_crit", false)
@@ -77,17 +77,17 @@ func animate_ability_results(attacker: Unit, exec_result: Dictionary) -> void:
 					killed_units.append(target)
 			"heal":
 				var amount: int = r.get("amount", 0)
-				_spawn_popup(target, "+%d" % amount, COLOR_HEAL, 16)
+				spawn_popup(target, "+%d" % amount, COLOR_HEAL, 16)
 				_tween_health_bar(target, r)
 			"mana_heal":
 				var amount: int = r.get("amount", 0)
-				_spawn_popup(target, "+%d MP" % amount, COLOR_MANA, 14)
+				spawn_popup(target, "+%d MP" % amount, COLOR_MANA, 14)
 			"buff":
 				var stat_name: String = r.get("stat_name", "STAT")
-				_spawn_popup(target, "%s UP" % stat_name, COLOR_BUFF, 14)
+				spawn_popup(target, "%s UP" % stat_name, COLOR_BUFF, 14)
 			"debuff":
 				var stat_name: String = r.get("stat_name", "STAT")
-				_spawn_popup(target, "%s DOWN" % stat_name, COLOR_DEBUFF, 14)
+				spawn_popup(target, "%s DOWN" % stat_name, COLOR_DEBUFF, 14)
 			"terrain":
 				pass  # Terrain placement has no per-unit visual
 
@@ -115,14 +115,14 @@ func animate_reaction_results(results: Array[Dictionary]) -> void:
 		await _play_attack(reactor)
 
 		if r.get("dodged", false):
-			_spawn_popup(target, "MISS", COLOR_MISS, 14)
+			spawn_popup(target, "MISS", COLOR_MISS, 14)
 		elif r.get("heal", 0) > 0:
 			var heal_amount: int = r["heal"]
-			_spawn_popup(target, "+%d" % heal_amount, COLOR_HEAL, 16)
+			spawn_popup(target, "+%d" % heal_amount, COLOR_HEAL, 16)
 		else:
 			var damage: int = r.get("damage", 0)
 			_play_hit_flash(target)
-			_spawn_popup(target, str(damage), COLOR_DAMAGE, 16)
+			spawn_popup(target, str(damage), COLOR_DAMAGE, 16)
 
 		await _scene_root.get_tree().create_timer(SETTLE_TIME).timeout
 
@@ -153,10 +153,10 @@ func _play_death(unit: Unit) -> void:
 func _animate_damage_hit(target: Unit, amount: int, is_crit: bool, result: Dictionary) -> void:
 	_play_hit_flash(target)
 	if is_crit:
-		_spawn_popup(target, str(amount), COLOR_CRIT, 22)
+		spawn_popup(target, str(amount), COLOR_CRIT, 22)
 		_spawn_crit_sparkles(target)
 	else:
-		_spawn_popup(target, str(amount), COLOR_DAMAGE, 16)
+		spawn_popup(target, str(amount), COLOR_DAMAGE, 16)
 	_tween_health_bar(target, result)
 
 
@@ -166,11 +166,11 @@ func _animate_defensive_reaction(dr: Dictionary) -> void:
 	var target: Unit = dr.get("target")
 	if rtype == Enums.ReactionType.BODYGUARD and reactor:
 		var absorbed: int = dr.get("damage_to_tank", 0)
-		_spawn_popup(reactor, "GUARD %d" % absorbed, COLOR_BODYGUARD, 14)
+		spawn_popup(reactor, "GUARD %d" % absorbed, COLOR_BODYGUARD, 14)
 		_play_hit_flash(reactor)
 	elif rtype == Enums.ReactionType.DAMAGE_MITIGATION and reactor:
 		var reduced: int = dr.get("reduction", 0)
-		_spawn_popup(target if target else reactor, "-%d MIT" % reduced, COLOR_MITIGATE, 14)
+		spawn_popup(target if target else reactor, "-%d MIT" % reduced, COLOR_MITIGATE, 14)
 
 
 func _tween_health_bar(target: Unit, result: Dictionary) -> void:
@@ -182,7 +182,7 @@ func _tween_health_bar(target: Unit, result: Dictionary) -> void:
 		tween.tween_property(target.health_bar, "value", new_ratio * 100.0, HEALTH_TWEEN_DURATION)
 
 
-func _spawn_popup(unit: Unit, text: String, color: Color, font_size: int = 16) -> void:
+func spawn_popup(unit: Unit, text: String, color: Color, font_size: int = 16) -> void:
 	var label := Label.new()
 	label.text = text
 	label.add_theme_color_override("font_color", color)
