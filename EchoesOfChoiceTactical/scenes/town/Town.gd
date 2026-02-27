@@ -147,7 +147,7 @@ func _ready() -> void:
 	if not town_track.is_empty():
 		MusicManager.play_music(town_track)
 	else:
-		MusicManager.play_context(MusicManager.MusicContext.TOWN)
+		push_warning("Town: No track assigned for town '%s'" % _town_id)
 	var node_data: Dictionary = MapData.get_node(_town_id)
 
 	var terrain: int = node_data.get("terrain", -1)

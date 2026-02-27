@@ -92,10 +92,13 @@ static func create_travel_ambush() -> BattleConfig:
 
 	if prog <= 2:
 		config.environment = "grassland"
+		config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Weeping Walls.ogg"
 	elif prog <= 5:
 		config.environment = "forest"
+		config.music_track = "res://assets/audio/music/battle/Duel Drums Only LOOP.wav"
 	else:
 		config.environment = "forest"
+		config.music_track = "res://assets/audio/music/battle/Fantasy Tension - Bloody Night.ogg"
 
 	if prog <= 2:
 		var thug: FighterData = load("res://resources/enemies/thug.tres")
@@ -133,7 +136,6 @@ static func create_travel_ambush() -> BattleConfig:
 			{"speaker": "Thane", "text": "Someone sent them. These were not random opportunists."},
 		]
 	else:
-		config.music_context = 4  # MusicManager.MusicContext.BATTLE_DARK
 		var assassin: FighterData = load("res://resources/enemies/dark_elf_assassin.tres")
 		var hunter: FighterData = load("res://resources/enemies/skeleton_hunter.tres")
 		var demon: FighterData = load("res://resources/enemies/shadow_demon.tres")

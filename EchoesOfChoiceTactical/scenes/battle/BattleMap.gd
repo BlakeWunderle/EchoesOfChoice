@@ -239,7 +239,7 @@ func _start_deployment(config: BattleConfig) -> void:
 		MusicManager.clear_context()
 		MusicManager.play_music(config.music_track)
 	else:
-		MusicManager.play_context(config.music_context)
+		push_warning("BattleMap: No music_track set for battle '%s'" % config.battle_id)
 
 
 func _on_deployment_complete(config: BattleConfig) -> void:
@@ -276,7 +276,7 @@ func _finalize_battle_setup(config: BattleConfig) -> void:
 		MusicManager.clear_context()
 		MusicManager.play_music(config.music_track)
 	else:
-		MusicManager.play_context(config.music_context)
+		push_warning("BattleMap: No music_track set for battle '%s'" % config.battle_id)
 	_begin_battle()
 
 

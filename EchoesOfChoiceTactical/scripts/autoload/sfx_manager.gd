@@ -6,7 +6,6 @@ const Enums = preload("res://scripts/data/enums.gd")
 enum Category {
 	# Combat — melee/physical
 	STRIKE,
-	PUNCH,
 	IMPACT,
 	SLASH,
 	WHOOSH,
@@ -22,11 +21,7 @@ enum Category {
 	EARTH,
 	SHIMMER,
 	MONSTER,
-	LAND,
 	# Ranged
-	RANGED_DRAW,
-	RANGED_RELEASE,
-	RANGED_FLIGHT,
 	RANGED_IMPACT,
 	# Movement
 	FOOTSTEP,
@@ -43,7 +38,6 @@ const _SFX_ROOT: String = "res://assets/audio/sfx/"
 
 const CATEGORY_FOLDERS: Dictionary = {
 	Category.STRIKE: ["combat/Clean_Strike_Sword_Katana_Dagger/", "combat/Crystal_Sword_Strike/"],
-	Category.PUNCH: ["combat/Punch/", "combat/Woof_Punch/"],
 	Category.IMPACT: ["combat/Bright_Crisp_Strike_Impact/", "combat/Clean_Object_Impact/", "combat/Object_Impact_Hit_Typ1/"],
 	Category.SLASH: ["combat/Bright_Slash_Attack/", "combat/Sliced_Whirl/"],
 	Category.WHOOSH: ["combat/Quick_Swish_Swoosh_Whoosh/", "combat/Bright_Swoosh_Whoosh/", "combat/Flyby_Passby/"],
@@ -57,10 +51,6 @@ const CATEGORY_FOLDERS: Dictionary = {
 	Category.EARTH: ["combat/Earthy_Rumble_Rock_Move/", "combat/Strike_Large_Object/"],
 	Category.SHIMMER: ["combat/Sparkly_Shimmer_Charged_Particles/"],
 	Category.MONSTER: ["combat/"],
-	Category.LAND: ["combat/Fighter_Jump_Landing/"],
-	Category.RANGED_DRAW: ["ranged/string_stretch/"],
-	Category.RANGED_RELEASE: ["ranged/arrow_release/"],
-	Category.RANGED_FLIGHT: ["ranged/arrow_flight/"],
 	Category.RANGED_IMPACT: ["ranged/arrow_impacts/"],
 	Category.FOOTSTEP: ["movement/"],
 	Category.UI_SELECT: ["ui/"],
