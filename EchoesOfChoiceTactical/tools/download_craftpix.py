@@ -40,7 +40,7 @@ if sys.platform == "win32":
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = SCRIPT_DIR.parent
-ASSETS_DIR = PROJECT_DIR / "assets" / "art"
+ASSETS_DIR = PROJECT_DIR.parent / "assets_library"
 COOKIES_FILE = SCRIPT_DIR / "craftpix_cookies.txt"
 
 BASE_URL = "https://craftpix.net"

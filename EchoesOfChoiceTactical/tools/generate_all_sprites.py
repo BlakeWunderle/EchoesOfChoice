@@ -22,6 +22,7 @@ if sys.platform == "win32":
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = SCRIPT_DIR.parent
 ASSETS_DIR = PROJECT_DIR / "assets" / "art" / "sprites"
+SOURCE_DIR = PROJECT_DIR.parent / "assets_library" / "sprites"
 OUTPUT_DIR = ASSETS_DIR / "spriteframes"
 PROCESSED_DIR = ASSETS_DIR / "processed"
 
@@ -789,7 +790,7 @@ def main() -> None:
 
     for sprite_id, config in sorted(sprites_to_gen.items()):
         mode = config.get("mode", "sheet")
-        dir_path = ASSETS_DIR / config["path"]
+        dir_path = SOURCE_DIR / config["path"]
 
         if not dir_path.is_dir():
             print(f"  SKIP {sprite_id}: directory not found")

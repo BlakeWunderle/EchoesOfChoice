@@ -25,6 +25,7 @@ EchoesOfChoiceTactical/assets/art/sprites/*
 !EchoesOfChoiceTactical/assets/art/sprites/spriteframes/
 Assets_Staged/
 /Assets/
+assets_library/
 
 # Sprite reference files (local bulk-view aids)
 EchoesOfChoiceTactical/class_sprites.png
