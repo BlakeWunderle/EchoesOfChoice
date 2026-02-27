@@ -160,6 +160,7 @@ func _setup_test_battle() -> void:
 	_combat_animator = CombatAnimator.new(self, camera)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info, _combat_animator)
 	_connect_action_menu()
+	camera.position = Vector2(grid.width * 32, grid.height * 32)
 	_begin_battle()
 
 
@@ -207,6 +208,7 @@ func _setup_from_config(config: BattleConfig) -> void:
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info, _combat_animator)
 	_connect_action_menu()
 
+	camera.position = Vector2(grid.width * 32, grid.height * 32)
 	MusicManager.play_context(config.music_context)
 	_begin_battle()
 
