@@ -27,8 +27,16 @@ EchoesOfChoiceTactical/assets/art/sprites/*
 Assets_Staged/
 /Assets/
 
+# Sprite reference files (local bulk-view aids)
+EchoesOfChoiceTactical/class_sprites.png
+EchoesOfChoiceTactical/sprite_reference.md
+
+# Python cache
+__pycache__/
+
 # IDE
 .vs/
+.vscode/
 *.sln.docstates
 
 # OS
