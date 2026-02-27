@@ -93,6 +93,11 @@ func _build_map() -> void:
 	for nid in MapData.NODES:
 		var node_data: Dictionary = MapData.NODES[nid]
 		var pos: Vector2 = node_data["pos"]
+
+		# Skip optional battles with no map position (launched from towns)
+		if pos == Vector2.ZERO:
+			continue
+
 		var is_revealed: bool = nid in revealed
 
 		if is_revealed:
@@ -334,6 +339,8 @@ func _draw() -> void:
 	# Draw revealed area glow — soft gradient rings around explored nodes
 	for nid in revealed:
 		var pos: Vector2 = MapData.NODES[nid]["pos"]
+		if pos == Vector2.ZERO:
+			continue
 		# Outer soft edge
 		draw_circle(pos, REVEAL_RADIUS * 1.1, Color(0.14, 0.18, 0.1, 0.15))
 		# Main reveal
@@ -346,6 +353,8 @@ func _draw() -> void:
 	for nid in revealed:
 		var node_data: Dictionary = MapData.NODES[nid]
 		var from_pos: Vector2 = node_data["pos"]
+		if from_pos == Vector2.ZERO:
+			continue
 		for next_id in node_data.get("next_nodes", []):
 			if next_id in revealed:
 				var to_pos: Vector2 = MapData.NODES[next_id]["pos"]
