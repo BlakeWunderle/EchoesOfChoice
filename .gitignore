@@ -34,6 +34,9 @@ EchoesOfChoiceTactical/sprite_reference.md
 # Python cache
 __pycache__/
 
+# Claude Code (local permissions)
+.claude/settings.local.json
+
 # IDE
 .vs/
 .vscode/
