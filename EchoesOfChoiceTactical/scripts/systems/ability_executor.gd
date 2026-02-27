@@ -4,6 +4,7 @@ var _grid: Grid
 var _reaction_system: ReactionSystem
 var _results: Array[Dictionary] = []
 var _defensive_reactions: Array[Dictionary] = []
+var _offensive_reactions: Array[Dictionary] = []
 
 
 func _init(p_grid: Grid, p_reaction: ReactionSystem) -> void:
@@ -17,6 +18,7 @@ func _init(p_grid: Grid, p_reaction: ReactionSystem) -> void:
 func execute(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> Dictionary:
 	_results = []
 	_defensive_reactions = []
+	_offensive_reactions = []
 	var terrain_changed := false
 
 	if ability.is_terrain_ability():
@@ -34,6 +36,7 @@ func execute(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> Di
 		"results": _results,
 		"ability": ability,
 		"defensive_reactions": _defensive_reactions,
+		"offensive_reactions": _offensive_reactions,
 	}
 
 
@@ -81,10 +84,12 @@ func _execute_damage(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i
 			"old_hp_ratio": old_hp_ratio, "new_hp_ratio": new_hp_ratio,
 		})
 
-		_reaction_system.check_flanking_strikes(attacker, target)
+		var flanking_results := _reaction_system.check_flanking_strikes(attacker, target)
+		_offensive_reactions.append_array(flanking_results)
 
 		if target.is_alive:
-			_reaction_system.check_reactive_heal(target, damage)
+			var heal_results := _reaction_system.check_reactive_heal(target, damage)
+			_offensive_reactions.append_array(heal_results)
 
 	attacker.award_ability_xp_jp(ability, got_crit, got_kill)
 

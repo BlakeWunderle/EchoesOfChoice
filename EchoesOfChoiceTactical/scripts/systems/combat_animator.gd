@@ -96,6 +96,14 @@ func animate_ability_results(attacker: Unit, exec_result: Dictionary) -> void:
 	for dr in def_reactions:
 		_animate_defensive_reaction(dr)
 
+	# Animate offensive reactions (flanking strikes, reactive heals)
+	var off_reactions: Array = exec_result.get("offensive_reactions", [])
+	if off_reactions.size() > 0:
+		var typed_reactions: Array[Dictionary] = []
+		for r in off_reactions:
+			typed_reactions.append(r)
+		await animate_reaction_results(typed_reactions)
+
 	# Wait for hit animations to settle
 	await _scene_root.get_tree().create_timer(SETTLE_TIME).timeout
 
