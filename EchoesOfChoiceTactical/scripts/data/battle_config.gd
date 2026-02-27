@@ -12,6 +12,7 @@ class_name BattleConfig extends Resource
 
 @export_group("Audio")
 @export var music_context: int = 1  # MusicManager.MusicContext.BATTLE
+@export var music_track: String = ""  # Specific track path; overrides music_context when set
 
 @export_group("Dialogue")
 @export var pre_battle_dialogue: Array[Dictionary] = []   # [{speaker, text}, ...] shown before combat

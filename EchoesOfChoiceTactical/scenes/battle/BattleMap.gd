@@ -235,7 +235,11 @@ func _start_deployment(config: BattleConfig) -> void:
 			center += Vector2(pos.x * 64 + 32, pos.y * 64 + 32)
 		center /= config.deployment_zone.size()
 		camera.position = center
-	MusicManager.play_context(config.music_context)
+	if not config.music_track.is_empty():
+		MusicManager.clear_context()
+		MusicManager.play_music(config.music_track)
+	else:
+		MusicManager.play_context(config.music_context)
 
 
 func _on_deployment_complete(config: BattleConfig) -> void:
@@ -268,7 +272,11 @@ func _finalize_battle_setup(config: BattleConfig) -> void:
 	_connect_action_menu()
 
 	camera.position = Vector2(grid.width * 32, grid.height * 32)
-	MusicManager.play_context(config.music_context)
+	if not config.music_track.is_empty():
+		MusicManager.clear_context()
+		MusicManager.play_music(config.music_track)
+	else:
+		MusicManager.play_context(config.music_context)
 	_begin_battle()
 
 

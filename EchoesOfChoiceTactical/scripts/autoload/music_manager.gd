@@ -24,6 +24,8 @@ const CONTEXT_FOLDERS: Dictionary = {
 	MusicContext.EXPLORATION: "res://assets/audio/music/exploration/",
 	MusicContext.TOWN: "res://assets/audio/music/town/",
 	MusicContext.CUTSCENE: "res://assets/audio/music/cutscene/",
+	MusicContext.GAME_OVER: "res://assets/audio/music/game_over/",
+	MusicContext.VICTORY: "res://assets/audio/music/victory/",
 }
 
 const _MAX_MUSIC_CACHE: int = 3
@@ -97,6 +99,8 @@ func play_music(path: String, fade_duration: float = 1.0) -> void:
 		push_warning("MusicManager: Could not load: " + path)
 		return
 
+	_set_stream_loop(stream, true)
+
 	var old_player: AudioStreamPlayer = _active_player
 	var new_player: AudioStreamPlayer = _player_b if _active_player == _player_a else _player_a
 	_active_player = new_player
@@ -135,6 +139,15 @@ func clear_context() -> void:
 	_current_context = -1
 
 
+func _set_stream_loop(stream: AudioStream, loop_on: bool) -> void:
+	if stream is AudioStreamOggVorbis:
+		stream.loop = loop_on
+	elif stream is AudioStreamMP3:
+		stream.loop = loop_on
+	elif stream is AudioStreamWAV:
+		stream.loop_mode = AudioStreamWAV.LOOP_FORWARD if loop_on else AudioStreamWAV.LOOP_DISABLED
+
+
 func _load_cached_stream(path: String) -> AudioStream:
 	if _stream_cache.has(path):
 		_stream_access_order.erase(path)
@@ -168,7 +181,9 @@ func _list_tracks(folder: String) -> Array[String]:
 				tracks.append(folder + file_name)
 			elif lower.ends_with(".wav.import") or lower.ends_with(".ogg.import") or lower.ends_with(".mp3.import"):
 				var original := file_name.substr(0, file_name.length() - 7)
-				tracks.append(folder + original)
+				var original_path := folder + original
+				if FileAccess.file_exists(original_path):
+					tracks.append(original_path)
 		file_name = dir.get_next()
 	dir.list_dir_end()
 	_folder_cache[folder] = tracks
