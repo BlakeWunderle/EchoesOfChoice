@@ -49,6 +49,7 @@ var _grass_tex: Texture2D
 var _objective_marker: Label = null
 
 var _travel_event_scene: PackedScene = preload("res://scenes/story/TravelEvent.tscn")
+var _menu_scene: PackedScene = preload("res://scenes/overworld/OverworldMenu.tscn")
 
 
 func _ready() -> void:
@@ -62,6 +63,13 @@ func _ready() -> void:
 	party_btn.position = Vector2(10, 10)
 	party_btn.pressed.connect(_on_party_pressed)
 	$UILayer.add_child(party_btn)
+
+	var menu_btn := Button.new()
+	menu_btn.text = "Menu"
+	menu_btn.custom_minimum_size = Vector2(80, 32)
+	menu_btn.position = Vector2(10, 48)
+	menu_btn.pressed.connect(_on_menu_pressed)
+	$UILayer.add_child(menu_btn)
 
 	# Load grass background texture for revealed areas
 	var grass_path := "res://assets/art/tilesets/overworld/path_road/PNG_Tiled/Ground_grass.png"
@@ -319,6 +327,13 @@ func _on_party_pressed() -> void:
 	var status_ui: Control = status_scene.instantiate()
 	status_ui.status_closed.connect(func(): status_ui.queue_free())
 	$UILayer.add_child(status_ui)
+
+
+func _on_menu_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
+	var menu_ui: Control = _menu_scene.instantiate()
+	menu_ui.menu_closed.connect(func(): menu_ui.queue_free())
+	$UILayer.add_child(menu_ui)
 
 
 func _center_camera_on_latest() -> void:
