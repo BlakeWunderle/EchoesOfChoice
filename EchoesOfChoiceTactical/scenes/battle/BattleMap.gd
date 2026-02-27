@@ -26,6 +26,7 @@ var _is_replay: bool = false
 var _ai: BattleAI
 var _executor: AbilityExecutor
 var _combat_animator: CombatAnimator
+var _camera_tween: Tween
 var _pause_menu: Control = null
 var _pause_menu_scene: PackedScene = preload("res://scenes/ui/PauseMenu.tscn")
 var _settings_menu_scene: PackedScene = preload("res://scenes/ui/SettingsMenu.tscn")
@@ -516,8 +517,19 @@ func _execute_item(unit: Unit, target_pos: Vector2i) -> void:
 
 # --- Turn Flow ---
 
+func _pan_camera_to(target: Vector2, duration: float = 0.4) -> void:
+	if _camera_tween:
+		_camera_tween.kill()
+	if camera.position.distance_to(target) < 64.0:
+		camera.position = target
+		return
+	_camera_tween = create_tween()
+	_camera_tween.tween_property(camera, "position", target, duration) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+
+
 func _on_unit_turn_started(unit: Unit) -> void:
-	camera.position = unit.position
+	_pan_camera_to(unit.position)
 
 	# Fire tile damage at start of turn
 	var fire_positions := grid.get_active_terrain_positions(Enums.TileType.FIRE_TILE)
