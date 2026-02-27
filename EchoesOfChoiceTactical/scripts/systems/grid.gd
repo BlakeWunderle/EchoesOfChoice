@@ -60,6 +60,9 @@ func get_occupant(pos: Vector2i):
 
 func set_occupant(pos: Vector2i, unit) -> void:
 	if in_bounds(pos):
+		var existing = _occupants[_idx(pos)]
+		if existing != null and existing != unit:
+			push_warning("Grid: overwriting occupant at %s: %s -> %s" % [pos, existing, unit])
 		_occupants[_idx(pos)] = unit
 
 

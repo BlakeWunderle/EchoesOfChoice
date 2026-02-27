@@ -157,7 +157,7 @@ func _on_cell_selected(pos: Vector2i) -> void:
 
 	# If another unit is already on this tile, swap or reject
 	var occupant = grid.get_occupant(pos)
-	if occupant is Unit and occupant.team == Enums.Team.PLAYER:
+	if occupant is Unit:
 		return
 
 	var uname: String = _selected_entry["name"]

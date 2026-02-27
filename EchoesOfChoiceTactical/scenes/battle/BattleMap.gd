@@ -833,7 +833,8 @@ func _execute_action(unit: Unit, target_pos: Vector2i) -> void:
 func _clear_dead_occupants() -> void:
 	for child in units_container.get_children():
 		if child is Unit and not child.is_alive:
-			grid.clear_occupant(child.grid_position)
+			if grid.get_occupant(child.grid_position) == child:
+				grid.clear_occupant(child.grid_position)
 
 
 # --- Cursor Feedback ---
