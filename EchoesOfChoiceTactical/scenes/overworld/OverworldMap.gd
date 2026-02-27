@@ -49,7 +49,7 @@ var _grass_tex: Texture2D
 var _objective_marker: Label = null
 
 var _travel_event_scene: PackedScene = preload("res://scenes/story/TravelEvent.tscn")
-var _menu_scene: PackedScene = preload("res://scenes/overworld/OverworldMenu.tscn")
+var _slot_popup_scene: PackedScene = preload("res://scenes/overworld/SaveSlotPopup.tscn")
 
 
 func _ready() -> void:
@@ -57,19 +57,21 @@ func _ready() -> void:
 	info_panel.visible = false
 	enter_button.pressed.connect(_on_enter_battle)
 
-	var party_btn := Button.new()
-	party_btn.text = "Party"
-	party_btn.custom_minimum_size = Vector2(80, 32)
-	party_btn.position = Vector2(10, 10)
-	party_btn.pressed.connect(_on_party_pressed)
-	$UILayer.add_child(party_btn)
-
-	var menu_btn := Button.new()
-	menu_btn.text = "Menu"
-	menu_btn.custom_minimum_size = Vector2(80, 32)
-	menu_btn.position = Vector2(10, 48)
-	menu_btn.pressed.connect(_on_menu_pressed)
-	$UILayer.add_child(menu_btn)
+	var btn_data: Array[Array] = [
+		["Party", _on_party_pressed],
+		["Save", _on_save_pressed],
+		["Load", _on_load_pressed],
+		["Items", _on_items_pressed],
+		["Settings", _on_settings_pressed],
+		["Title", _on_title_pressed],
+	]
+	for i in btn_data.size():
+		var btn := Button.new()
+		btn.text = btn_data[i][0]
+		btn.custom_minimum_size = Vector2(80, 32)
+		btn.position = Vector2(10, 10 + i * 38)
+		btn.pressed.connect(btn_data[i][1])
+		$UILayer.add_child(btn)
 
 	# Load grass background texture for revealed areas
 	var grass_path := "res://assets/art/tilesets/overworld/path_road/PNG_Tiled/Ground_grass.png"
@@ -329,11 +331,39 @@ func _on_party_pressed() -> void:
 	$UILayer.add_child(status_ui)
 
 
-func _on_menu_pressed() -> void:
+func _on_save_pressed() -> void:
 	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
-	var menu_ui: Control = _menu_scene.instantiate()
-	menu_ui.menu_closed.connect(func(): menu_ui.queue_free())
-	$UILayer.add_child(menu_ui)
+	var popup: Control = _slot_popup_scene.instantiate()
+	popup.popup_closed.connect(func(): popup.queue_free())
+	$UILayer.add_child(popup)
+	popup.open_save()
+
+
+func _on_load_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
+	var popup: Control = _slot_popup_scene.instantiate()
+	popup.popup_closed.connect(func(): popup.queue_free())
+	$UILayer.add_child(popup)
+	popup.open_load()
+
+
+func _on_items_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
+	var items_ui: Control = preload("res://scenes/ui/ItemsUI.tscn").instantiate()
+	items_ui.items_closed.connect(func(): items_ui.queue_free())
+	$UILayer.add_child(items_ui)
+
+
+func _on_settings_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.5)
+	var settings_ui: Control = preload("res://scenes/ui/SettingsMenu.tscn").instantiate()
+	settings_ui.settings_closed.connect(func(): settings_ui.queue_free())
+	$UILayer.add_child(settings_ui)
+
+
+func _on_title_pressed() -> void:
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
+	SceneManager.go_to_title_screen()
 
 
 func _center_camera_on_latest() -> void:
