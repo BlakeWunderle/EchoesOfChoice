@@ -193,6 +193,9 @@ func find_path(start: Vector2i, end: Vector2i, movement: int, jump_stat: int) ->
 # Get all tiles within a given range using Manhattan distance, accounting for elevation bonus
 func get_tiles_in_range(origin: Vector2i, base_range: int, origin_elevation: int) -> Array[Vector2i]:
 	var tiles: Array[Vector2i] = []
+	if base_range == 0:
+		tiles.append(origin)
+		return tiles
 	for x in range(-base_range, base_range + 1):
 		for y in range(-base_range, base_range + 1):
 			if absi(x) + absi(y) > base_range:

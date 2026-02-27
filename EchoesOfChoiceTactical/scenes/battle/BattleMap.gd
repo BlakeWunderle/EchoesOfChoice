@@ -614,7 +614,9 @@ func _show_targeting(ability: AbilityData, unit: Unit) -> void:
 	var valid: Array[Vector2i] = []
 	for tile in _attack_tiles:
 		var occupant = grid.get_occupant(tile)
-		if ability.is_terrain_ability():
+		if ability.aoe_shape == Enums.AoEShape.GLOBAL:
+			valid.append(tile)  # GLOBAL AoE: caster's tile is the cast point
+		elif ability.is_terrain_ability():
 			valid.append(tile)  # terrain can be placed on any in-range tile
 		elif ability.use_on_enemy:
 			if occupant is Unit and occupant.team != unit.team and occupant.is_alive:
@@ -623,6 +625,11 @@ func _show_targeting(ability: AbilityData, unit: Unit) -> void:
 			if occupant is Unit and occupant.team == unit.team and occupant.is_alive:
 				valid.append(tile)
 	_attack_tiles = valid
+
+	# Self-cast: auto-execute when the only valid target is the caster
+	if _attack_tiles.size() == 1 and _attack_tiles[0] == unit.grid_position:
+		_execute_action(unit, unit.grid_position)
+		return
 
 	grid_overlay.show_attack_range(_attack_tiles)
 	grid_cursor.activate(_attack_tiles, unit.grid_position)
