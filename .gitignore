@@ -18,6 +18,11 @@ EchoesOfChoiceTactical/.import/
 # But allow spriteframes/*.tres (generated metadata, small)
 EchoesOfChoiceTactical/assets/*
 !EchoesOfChoiceTactical/assets/MANIFEST.md
+!EchoesOfChoiceTactical/assets/audio/
+EchoesOfChoiceTactical/assets/audio/*
+!EchoesOfChoiceTactical/assets/audio/music/
+EchoesOfChoiceTactical/assets/audio/music/*
+!EchoesOfChoiceTactical/assets/audio/music/MUSIC_MANIFEST.json
 !EchoesOfChoiceTactical/assets/art/
 EchoesOfChoiceTactical/assets/art/*
 !EchoesOfChoiceTactical/assets/art/sprites/
