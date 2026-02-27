@@ -158,26 +158,24 @@ func _draw() -> void:
 
 func _draw_ground(rect: Rect2, x: int, y: int, elevation: int,
 		ground: Color, ground_alt: Color, elev_tint: Color, variant_count: int) -> void:
-	# Calculate elevation color modifier
-	var color_mod := Color.WHITE
-	if elevation > 0:
-		for _e in range(elevation):
-			color_mod = Color(color_mod.r * elev_tint.r, color_mod.g * elev_tint.g, color_mod.b * elev_tint.b)
-
-	# Try textured tile first
-	if variant_count > 0 and _tile_cache:
-		var variant := (x + y) % variant_count
-		var tex := _tile_cache.get_ground_texture(_environment, variant)
-		if tex:
-			draw_texture_rect(tex, rect, false, color_mod)
-			return
-
-	# Fallback: flat color with checkerboard
+	# Always draw base color first (prevents black gaps from transparent textures)
 	var base_color := ground if (x + y) % 2 == 0 else ground_alt
 	if elevation > 0:
 		for _e in range(elevation):
 			base_color = Color(base_color.r * elev_tint.r, base_color.g * elev_tint.g, base_color.b * elev_tint.b)
 	draw_rect(rect, base_color)
+
+	# Overlay texture if available
+	var color_mod := Color.WHITE
+	if elevation > 0:
+		for _e in range(elevation):
+			color_mod = Color(color_mod.r * elev_tint.r, color_mod.g * elev_tint.g, color_mod.b * elev_tint.b)
+
+	if variant_count > 0 and _tile_cache:
+		var variant := (x + y) % variant_count
+		var tex := _tile_cache.get_ground_texture(_environment, variant)
+		if tex:
+			draw_texture_rect(tex, rect, false, color_mod)
 
 
 func _draw_wall(rect: Rect2, wall_color: Color, variant: int = 0) -> void:

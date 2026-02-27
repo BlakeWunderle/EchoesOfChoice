@@ -22,7 +22,7 @@ const ENVIRONMENT_TILES: Dictionary = {
 	},
 	"city": {
 		"path": "res://assets/art/tilesets/battle/guild_hall/PNG/Walls_street.png",
-		"regions": [Rect2i(64, 32, 16, 16), Rect2i(80, 32, 16, 16), Rect2i(64, 48, 16, 16), Rect2i(80, 48, 16, 16)],
+		"regions": [Rect2i(64, 192, 16, 16), Rect2i(80, 192, 16, 16), Rect2i(64, 208, 16, 16), Rect2i(80, 208, 16, 16)],
 	},
 	"ruins": {
 		"path": "res://assets/art/tilesets/battle/rocky/PNG/Ground_moss.png",
@@ -37,7 +37,7 @@ const ENVIRONMENT_TILES: Dictionary = {
 		"regions": [Rect2i(64, 32, 16, 16), Rect2i(80, 32, 16, 16), Rect2i(64, 48, 16, 16), Rect2i(80, 48, 16, 16)],
 	},
 	"inn": {
-		"path": "res://assets/art/tilesets/battle/guild_hall/PNG/Walls_interior.png",
+		"path": "res://assets/art/tilesets/battle/dungeon_free/PNG/walls_floor.png",
 		"regions": [Rect2i(64, 32, 16, 16), Rect2i(80, 32, 16, 16), Rect2i(64, 48, 16, 16), Rect2i(80, 48, 16, 16)],
 	},
 	"scorched": {
@@ -45,7 +45,7 @@ const ENVIRONMENT_TILES: Dictionary = {
 		"regions": [Rect2i(64, 32, 16, 16), Rect2i(80, 32, 16, 16), Rect2i(64, 48, 16, 16), Rect2i(80, 48, 16, 16)],
 	},
 	"crypt": {
-		"path": "res://assets/art/tilesets/battle/mage_tower/PNG/Interior_walls.png",
+		"path": "res://assets/art/tilesets/battle/dungeon_premium/PNG/walls_floor.png",
 		"regions": [Rect2i(64, 32, 16, 16), Rect2i(80, 32, 16, 16), Rect2i(64, 48, 16, 16), Rect2i(80, 48, 16, 16)],
 	},
 	"castle": {
@@ -89,6 +89,8 @@ const WALL_TILES: Dictionary = {
 	"cave": {"path": "res://assets/art/tilesets/battle/cave/PNG/ground_source.png", "region": Rect2i(0, 64, 16, 16)},
 	"city": {"path": "res://assets/art/tilesets/battle/guild_hall/PNG/Walls_street.png", "region": Rect2i(0, 192, 16, 16)},
 	"castle": {"path": "res://assets/art/tilesets/battle/dungeon_premium/PNG/walls_floor.png", "region": Rect2i(0, 192, 16, 16)},
+	"inn": {"path": "res://assets/art/tilesets/battle/dungeon_free/PNG/walls_floor.png", "region": Rect2i(0, 64, 16, 16)},
+	"crypt": {"path": "res://assets/art/tilesets/battle/dungeon_premium/PNG/walls_floor.png", "region": Rect2i(0, 64, 16, 16)},
 }
 
 var _cache: Dictionary = {}  # "env_ground_0" -> AtlasTexture
