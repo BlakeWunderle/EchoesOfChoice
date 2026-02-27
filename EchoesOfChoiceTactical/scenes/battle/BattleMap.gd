@@ -15,6 +15,7 @@ var grid: Grid
 var reaction_system: ReactionSystem
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 var _dialogue_box_scene: PackedScene = preload("res://scenes/ui/DialogueBox.tscn")
+const _DeploymentController = preload("res://scenes/battle/DeploymentController.gd")
 
 var _battle_config: BattleConfig
 var _current_phase: Enums.TurnPhase = Enums.TurnPhase.AWAITING_INPUT
@@ -215,7 +216,7 @@ func _spawn_player_units_fixed(config: BattleConfig) -> void:
 
 
 func _start_deployment(config: BattleConfig) -> void:
-	var deploy_ctrl := DeploymentController.new()
+	var deploy_ctrl := _DeploymentController.new()
 	deploy_ctrl.grid = grid
 	deploy_ctrl.grid_overlay = grid_overlay
 	deploy_ctrl.grid_cursor = grid_cursor
