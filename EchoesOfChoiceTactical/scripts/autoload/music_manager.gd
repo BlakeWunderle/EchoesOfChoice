@@ -26,6 +26,8 @@ const CONTEXT_FOLDERS: Dictionary = {
 	MusicContext.CUTSCENE: "res://assets/audio/music/cutscene/",
 }
 
+const _MAX_MUSIC_CACHE: int = 3
+
 var _player_a: AudioStreamPlayer
 var _player_b: AudioStreamPlayer
 var _active_player: AudioStreamPlayer
@@ -33,6 +35,9 @@ var _current_path: String = ""
 var _current_context: int = -1
 var _music_volume_linear: float = 0.8
 var _headless: bool = false
+var _stream_cache: Dictionary = {}
+var _stream_access_order: Array[String] = []
+var _folder_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -87,7 +92,7 @@ func play_music(path: String, fade_duration: float = 1.0) -> void:
 		return
 	_current_path = path
 
-	var stream: AudioStream = AudioLoader.load_stream(path)
+	var stream: AudioStream = _load_cached_stream(path)
 	if stream == null:
 		push_warning("MusicManager: Could not load: " + path)
 		return
@@ -130,7 +135,26 @@ func clear_context() -> void:
 	_current_context = -1
 
 
+func _load_cached_stream(path: String) -> AudioStream:
+	if _stream_cache.has(path):
+		_stream_access_order.erase(path)
+		_stream_access_order.append(path)
+		return _stream_cache[path]
+	var stream: AudioStream = AudioLoader.load_stream(path)
+	if stream == null:
+		return null
+	while _stream_cache.size() >= _MAX_MUSIC_CACHE and not _stream_access_order.is_empty():
+		var evict_path: String = _stream_access_order[0]
+		_stream_access_order.remove_at(0)
+		_stream_cache.erase(evict_path)
+	_stream_cache[path] = stream
+	_stream_access_order.append(path)
+	return stream
+
+
 func _list_tracks(folder: String) -> Array[String]:
+	if _folder_cache.has(folder):
+		return _folder_cache[folder]
 	var tracks: Array[String] = []
 	var dir := DirAccess.open(folder)
 	if dir == null:
@@ -147,4 +171,5 @@ func _list_tracks(folder: String) -> Array[String]:
 				tracks.append(folder + original)
 		file_name = dir.get_next()
 	dir.list_dir_end()
+	_folder_cache[folder] = tracks
 	return tracks

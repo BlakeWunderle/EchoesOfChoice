@@ -94,6 +94,7 @@ var _players: Array[AudioStreamPlayer] = []
 var _play_times: Array[float] = []
 var _sfx_volume_linear: float = 1.0
 var _track_cache: Dictionary = {}
+var _stream_cache: Dictionary = {}
 var _last_played: Dictionary = {}
 var _cooldown_timers: Dictionary = {}
 var _headless: bool = false
@@ -242,8 +243,17 @@ func _get_available_player() -> AudioStreamPlayer:
 	return _players[oldest_idx]
 
 
-func _play_on_player(player: AudioStreamPlayer, path: String, volume: float, pitch_var: float) -> void:
+func _load_cached_stream(path: String) -> AudioStream:
+	if _stream_cache.has(path):
+		return _stream_cache[path]
 	var stream: AudioStream = AudioLoader.load_stream(path)
+	if stream != null:
+		_stream_cache[path] = stream
+	return stream
+
+
+func _play_on_player(player: AudioStreamPlayer, path: String, volume: float, pitch_var: float) -> void:
+	var stream: AudioStream = _load_cached_stream(path)
 	if stream == null:
 		return
 	player.stream = stream
