@@ -23,10 +23,10 @@ static func create_tutorial() -> BattleConfig:
 
 	config.player_units = [
 		{"data": royal_data, "name": GameState.player_name, "pos": Vector2i(3, 3), "level": 1},
-		{"data": squire_data, "name": "Sir Aldric", "pos": Vector2i(2, 2), "level": 1},
-		{"data": mage_data, "name": "Elara", "pos": Vector2i(2, 4), "level": 1},
-		{"data": entertainer_data, "name": "Lyris", "pos": Vector2i(3, 2), "level": 1},
-		{"data": scholar_data, "name": "Professor Thane", "pos": Vector2i(3, 4), "level": 1},
+		{"data": squire_data, "name": "Sir Aldric", "pos": Vector2i(2, 2), "level": 1, "ai_controlled": true},
+		{"data": mage_data, "name": "Elara", "pos": Vector2i(2, 4), "level": 1, "ai_controlled": true},
+		{"data": entertainer_data, "name": "Lyris", "pos": Vector2i(3, 2), "level": 1, "ai_controlled": true},
+		{"data": scholar_data, "name": "Professor Thane", "pos": Vector2i(3, 4), "level": 1, "ai_controlled": true},
 	]
 
 	var guard_squire := load("res://resources/enemies/guard_squire.tres")

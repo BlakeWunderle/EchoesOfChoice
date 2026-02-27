@@ -127,7 +127,7 @@ func _score_action(unit: Unit, ability: AbilityData, target_tile: Vector2i, from
 			if target is Unit and target.is_alive and target.team != unit.team:
 				score += 8.0
 	elif ability.is_terrain_ability():
-		for player_unit in _turn_manager.player_units:
+		for player_unit in _get_enemies(unit):
 			if player_unit.is_alive:
 				var dist := _manhattan_distance(target_tile, player_unit.grid_position)
 				if dist <= 2:
@@ -178,7 +178,7 @@ func _score_move_tile(unit: Unit, tile: Vector2i) -> float:
 
 	if has_heal:
 		var heal_score := 0.0
-		for ally in _turn_manager.enemy_units:
+		for ally in _get_allies(unit):
 			if ally.is_alive and ally != unit:
 				var missing := ally.max_health - ally.health
 				if missing > 0:
@@ -189,7 +189,7 @@ func _score_move_tile(unit: Unit, tile: Vector2i) -> float:
 
 	var weakest: Unit = null
 	var lowest_hp := INF
-	for player in _turn_manager.player_units:
+	for player in _get_enemies(unit):
 		if player.is_alive and float(player.health) < lowest_hp:
 			lowest_hp = float(player.health)
 			weakest = player
@@ -206,6 +206,18 @@ func _score_move_tile(unit: Unit, tile: Vector2i) -> float:
 		if dist == 1:
 			return 100.0
 		return 100.0 - float(dist) * 10.0
+
+
+func _get_allies(unit: Unit) -> Array[Unit]:
+	if unit.team == Enums.Team.PLAYER:
+		return _turn_manager.player_units
+	return _turn_manager.enemy_units
+
+
+func _get_enemies(unit: Unit) -> Array[Unit]:
+	if unit.team == Enums.Team.PLAYER:
+		return _turn_manager.enemy_units
+	return _turn_manager.player_units
 
 
 static func _manhattan_distance(a: Vector2i, b: Vector2i) -> int:

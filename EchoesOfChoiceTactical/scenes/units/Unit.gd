@@ -34,6 +34,7 @@ var jump: int
 
 var gender: String = ""
 var voice_pack: String = ""
+var ai_controlled: bool = false
 var grid_position: Vector2i
 var facing: Enums.Facing = Enums.Facing.SOUTH
 var abilities: Array[AbilityData] = []

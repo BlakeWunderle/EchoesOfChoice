@@ -186,6 +186,7 @@ func _setup_from_config(config: BattleConfig) -> void:
 		var member_xp := _find_party_member_xp(entry["name"])
 		unit.initialize_xp(member_xp[0], member_xp[1])
 		unit.voice_pack = GameState.get_voice_pack(entry["name"])
+		unit.ai_controlled = entry.get("ai_controlled", false)
 
 	for entry in config.enemy_units:
 		_spawn_unit(entry["data"], entry["name"], Enums.Team.ENEMY, entry["pos"], entry["level"])
@@ -526,13 +527,13 @@ func _on_unit_turn_started(unit: Unit) -> void:
 			unit.end_turn()
 			return
 
-	if unit.team == Enums.Team.PLAYER:
+	if unit.team == Enums.Team.PLAYER and not unit.ai_controlled:
 		if not unit.voice_pack.is_empty():
 			SFXManager.play_voice(unit.voice_pack, "confirm", 0.6)
 		_current_phase = Enums.TurnPhase.AWAITING_INPUT
 		_show_action_menu(unit)
 	else:
-		if randf() < 0.3:
+		if unit.team == Enums.Team.ENEMY and randf() < 0.3:
 			SFXManager.play(SFXManager.Category.MONSTER, 0.5)
 		_ai.run_turn(unit)
 
