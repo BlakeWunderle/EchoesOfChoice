@@ -577,9 +577,11 @@ func _enter_move_phase(unit: Unit) -> void:
 	grid_cursor.activate(_reachable_tiles, unit.grid_position)
 
 	if unit.team == Enums.Team.PLAYER and TutorialOverlay.should_show("tutorial_movement"):
+		grid_cursor.deactivate()
 		var overlay := TutorialOverlay.show_tutorial("tutorial_movement", hud)
 		if overlay:
 			await overlay.dismissed
+		grid_cursor.activate(_reachable_tiles, unit.grid_position)
 
 
 func _show_targeting(ability: AbilityData, unit: Unit) -> void:
@@ -612,9 +614,11 @@ func _show_targeting(ability: AbilityData, unit: Unit) -> void:
 	grid_cursor.activate(_attack_tiles, unit.grid_position)
 
 	if unit.team == Enums.Team.PLAYER and TutorialOverlay.should_show("tutorial_targeting"):
+		grid_cursor.deactivate()
 		var overlay := TutorialOverlay.show_tutorial("tutorial_targeting", hud)
 		if overlay:
 			await overlay.dismissed
+		grid_cursor.activate(_attack_tiles, unit.grid_position)
 
 
 func _enter_facing_phase(unit: Unit) -> void:
