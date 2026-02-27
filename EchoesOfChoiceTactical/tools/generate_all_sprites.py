@@ -415,6 +415,7 @@ _chibi_3dir_sprites = [
     # Reapers
     "chibi_black_reaper_1",
     "chibi_black_reaper_1_neutral",
+    "chibi_black_reaper_1_brown",
     "chibi_black_reaper_2",
     "chibi_black_reaper_3",
     # Golem extras (already synthesized with player classes)

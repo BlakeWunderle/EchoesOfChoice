@@ -23,8 +23,8 @@ const MENTOR_SPRITES: Dictionary = {
 }
 
 const STRANGER_SPRITES: Dictionary = {
-	"???": "chibi_black_reaper_1_neutral",
-	"Cloaked Stranger": "chibi_black_reaper_1_neutral",
+	"???": "chibi_black_reaper_1_brown",
+	"Cloaked Stranger": "chibi_black_reaper_1_brown",
 	"The Stranger": "chibi_black_reaper_1",
 }
 
