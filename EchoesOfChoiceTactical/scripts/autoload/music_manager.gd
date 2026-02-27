@@ -1,5 +1,7 @@
 extends Node
 
+const AudioLoader = preload("res://scripts/autoload/audio_loader.gd")
+
 enum MusicContext {
 	MENU,
 	BATTLE,
@@ -30,9 +32,14 @@ var _active_player: AudioStreamPlayer
 var _current_path: String = ""
 var _current_context: int = -1
 var _music_volume_linear: float = 0.8
+var _headless: bool = false
 
 
 func _ready() -> void:
+	if AudioLoader.is_headless():
+		_headless = true
+		return
+
 	_player_a = AudioStreamPlayer.new()
 	_player_a.bus = "Music"
 	_player_a.volume_db = linear_to_db(_music_volume_linear)
@@ -57,6 +64,8 @@ func _ensure_audio_bus() -> void:
 
 
 func play_context(context: int, fade: float = 1.0) -> void:
+	if _headless:
+		return
 	if context == _current_context:
 		return
 	_current_context = context
@@ -72,11 +81,13 @@ func play_context(context: int, fade: float = 1.0) -> void:
 
 
 func play_music(path: String, fade_duration: float = 1.0) -> void:
+	if _headless:
+		return
 	if path == _current_path:
 		return
 	_current_path = path
 
-	var stream: AudioStream = load(path)
+	var stream: AudioStream = AudioLoader.load_stream(path)
 	if stream == null:
 		push_warning("MusicManager: Could not load: " + path)
 		return
@@ -98,6 +109,8 @@ func play_music(path: String, fade_duration: float = 1.0) -> void:
 
 
 func stop_music(fade_duration: float = 1.0) -> void:
+	if _headless:
+		return
 	_current_path = ""
 	_current_context = -1
 	var tween := create_tween()
@@ -107,6 +120,8 @@ func stop_music(fade_duration: float = 1.0) -> void:
 
 func set_music_volume(linear: float) -> void:
 	_music_volume_linear = clampf(linear, 0.0, 1.0)
+	if _headless:
+		return
 	if _active_player.playing:
 		_active_player.volume_db = linear_to_db(_music_volume_linear)
 

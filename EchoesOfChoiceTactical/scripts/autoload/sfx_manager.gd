@@ -1,5 +1,6 @@
 extends Node
 
+const AudioLoader = preload("res://scripts/autoload/audio_loader.gd")
 const Enums = preload("res://scripts/data/enums.gd")
 
 enum Category {
@@ -95,9 +96,13 @@ var _sfx_volume_linear: float = 1.0
 var _track_cache: Dictionary = {}
 var _last_played: Dictionary = {}
 var _cooldown_timers: Dictionary = {}
+var _headless: bool = false
 
 
 func _ready() -> void:
+	if AudioLoader.is_headless():
+		_headless = true
+		return
 	_ensure_audio_bus()
 	for i in POOL_SIZE:
 		var player := AudioStreamPlayer.new()
@@ -116,6 +121,8 @@ func _ensure_audio_bus() -> void:
 
 
 func play(category: int, volume: float = 1.0, pitch_shift: bool = true) -> void:
+	if _headless:
+		return
 	var key: String = "cat:%d" % category
 	if not _check_cooldown(key, DEFAULT_COOLDOWN_MS):
 		return
@@ -128,6 +135,8 @@ func play(category: int, volume: float = 1.0, pitch_shift: bool = true) -> void:
 
 
 func play_voice(pack_id: String, action: String, volume: float = 1.0) -> void:
+	if _headless:
+		return
 	if action not in VOICE_ACTIONS:
 		push_warning("SFXManager: Unknown voice action: " + action)
 		return
@@ -148,6 +157,8 @@ func play_voice(pack_id: String, action: String, volume: float = 1.0) -> void:
 
 
 func play_at_path(path: String, volume: float = 1.0, pitch_shift: bool = false) -> void:
+	if _headless:
+		return
 	var player := _get_available_player()
 	_play_on_player(player, path, volume, PITCH_VARIATION if pitch_shift else 0.0)
 
@@ -165,6 +176,8 @@ func stop_all() -> void:
 
 
 func play_ability_sfx(ability: Resource) -> void:
+	if _headless:
+		return
 	if ability.is_heal():
 		play(Category.SHIMMER)
 		return
@@ -230,9 +243,8 @@ func _get_available_player() -> AudioStreamPlayer:
 
 
 func _play_on_player(player: AudioStreamPlayer, path: String, volume: float, pitch_var: float) -> void:
-	var stream: AudioStream = load(path)
+	var stream: AudioStream = AudioLoader.load_stream(path)
 	if stream == null:
-		push_warning("SFXManager: Could not load: " + path)
 		return
 	player.stream = stream
 	player.volume_db = linear_to_db(volume * _sfx_volume_linear)

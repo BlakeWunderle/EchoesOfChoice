@@ -50,6 +50,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `music_manager.gd` -- Background music with crossfade, context-based track pools (battle, exploration, town, menu, boss, cutscene)
 - `sfx_manager.gd` -- SFX playback: 28 category enum with folder-based pools, 8-player polyphonic pool, per-category cooldown (80ms), voice pack system (per-unit packs × 4 actions), play_ability_sfx() maps ability type/name to SFX category
 - `sprite_loader.gd` -- Loads and caches SpriteFrames resources by sprite_id for unit rendering
+- `audio_loader.gd` -- Static utility (class_name AudioLoader, not autoloaded): runtime audio file loading via load_from_file() for WAV/OGG/MP3, headless mode detection, path globalization
 
 ### Battle (`scenes/battle/`)
 - `BattleMap.gd/.tscn` -- Main battle scene: terrain rendering, turn flow (act-then-move), targeting with AoE preview, facing chooser, AI, reaction integration, gender-aware unit spawning
