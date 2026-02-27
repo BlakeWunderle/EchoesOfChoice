@@ -399,11 +399,24 @@ func _on_attack_chosen() -> void:
 	if unit == null:
 		return
 	_current_phase = Enums.TurnPhase.ACT
-	_selected_ability = unit.abilities[0] if unit.abilities.size() > 0 else null
+	_selected_ability = _get_basic_attack(unit)
 	if _selected_ability == null:
 		_show_action_menu(unit)
 		return
 	_show_targeting(_selected_ability, unit)
+
+
+func _get_basic_attack(unit: Unit) -> AbilityData:
+	for ability in unit.abilities:
+		if ability.ability_name == "Strike":
+			return ability
+	for ability in unit.abilities:
+		if ability.ability_type == Enums.AbilityType.DAMAGE and ability.mana_cost == 0:
+			return ability
+	for ability in unit.abilities:
+		if ability.ability_type == Enums.AbilityType.DAMAGE:
+			return ability
+	return unit.abilities[0] if unit.abilities.size() > 0 else null
 
 
 func _on_ability_chosen(ability: AbilityData) -> void:

@@ -59,6 +59,8 @@ var _low_hp_tween: Tween = null
 
 const TILE_SIZE := 64
 
+static var _strike_ability: AbilityData = preload("res://resources/abilities/strike.tres")
+
 
 func _draw() -> void:
 	if sprite.sprite_frames and sprite.sprite_frames.get_animation_names().size() > 0:
@@ -94,6 +96,13 @@ func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: 
 	jump = stats["jump"]
 
 	abilities = data.abilities.duplicate()
+	var has_strike := false
+	for a in abilities:
+		if a.ability_name == "Strike":
+			has_strike = true
+			break
+	if not has_strike:
+		abilities.insert(0, _strike_ability)
 	reaction_types = data.reaction_types.duplicate()
 
 	var sid := data.sprite_id
