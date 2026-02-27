@@ -23,7 +23,6 @@ EchoesOfChoiceTactical/assets/art/*
 !EchoesOfChoiceTactical/assets/art/sprites/
 EchoesOfChoiceTactical/assets/art/sprites/*
 !EchoesOfChoiceTactical/assets/art/sprites/spriteframes/
-!EchoesOfChoiceTactical/assets/art/sprites/processed/
 Assets_Staged/
 /Assets/
 
@@ -34,8 +33,12 @@ EchoesOfChoiceTactical/sprite_reference.md
 # Python cache
 __pycache__/
 
-# Claude Code (local permissions)
+# Claude Code (local settings)
+.claude/settings.json
 .claude/settings.local.json
+
+# Cursor IDE (duplicates of .claude/)
+.cursor/
 
 # IDE
 .vs/
