@@ -155,7 +155,6 @@ func _play_hit_flash(unit: Unit) -> void:
 
 func _play_death(unit: Unit) -> void:
 	await unit.play_death_animation()
-	unit.visible = false
 
 
 func _animate_damage_hit(target: Unit, amount: int, is_crit: bool, result: Dictionary) -> void:

@@ -723,7 +723,7 @@ func _execute_move(unit: Unit, target_pos: Vector2i) -> void:
 
 	if not unit.is_alive:
 		await unit.play_death_animation()
-		unit.visible = false
+		grid.clear_occupant(actual_dest)
 		unit.end_turn()
 		return
 
@@ -761,12 +761,19 @@ func _execute_action(unit: Unit, target_pos: Vector2i) -> void:
 		terrain_renderer.queue_redraw()
 
 	await _combat_animator.animate_ability_results(unit, exec_result)
+	_clear_dead_occupants()
 	unit.has_acted = true
 
 	if not unit.has_moved:
 		_show_action_menu(unit)
 	else:
 		_enter_facing_phase(unit)
+
+
+func _clear_dead_occupants() -> void:
+	for child in units_container.get_children():
+		if child is Unit and not child.is_alive:
+			grid.clear_occupant(child.grid_position)
 
 
 # --- Cursor Feedback ---
@@ -879,6 +886,7 @@ func _ai_execute_ability(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vect
 	if exec_result["terrain_changed"]:
 		terrain_renderer.queue_redraw()
 	await _combat_animator.animate_ability_results(unit, exec_result)
+	_clear_dead_occupants()
 
 
 func _find_party_member_xp(unit_name: String) -> Array:

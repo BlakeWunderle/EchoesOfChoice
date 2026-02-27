@@ -56,6 +56,7 @@ func run_battle() -> void:
 			_check_battle_end()
 
 		round_number += 1
+		_tick_death_timers()
 		round_ended.emit()
 		while paused:
 			await get_tree().process_frame
@@ -78,11 +79,7 @@ func _get_acting_units() -> Array[Unit]:
 	return acting
 
 
-func _on_unit_died(unit: Unit) -> void:
-	if unit.team == Enums.Team.PLAYER:
-		player_units.erase(unit)
-	else:
-		enemy_units.erase(unit)
+func _on_unit_died(_unit: Unit) -> void:
 	_check_battle_end()
 
 
@@ -90,12 +87,38 @@ func _check_battle_end() -> void:
 	var alive_players := player_units.filter(func(u: Unit) -> bool: return u.is_alive)
 	var alive_enemies := enemy_units.filter(func(u: Unit) -> bool: return u.is_alive)
 
-	if alive_players.size() == 0:
-		battle_active = false
-		battle_ended.emit(false)
-	elif alive_enemies.size() == 0:
+	# Enemies lose when all are dead (no revival window for enemies)
+	if alive_enemies.size() == 0:
 		battle_active = false
 		battle_ended.emit(true)
+		return
+
+	# Players lose only when all are dead AND no death timers remain
+	if alive_players.size() == 0:
+		var revivable := player_units.filter(
+			func(u: Unit) -> bool: return not u.is_alive and u.death_timer >= 0
+		)
+		if revivable.size() == 0:
+			battle_active = false
+			battle_ended.emit(false)
+
+
+func _tick_death_timers() -> void:
+	var to_remove: Array[Unit] = []
+	for unit in all_units:
+		if not unit.is_alive and unit.death_timer >= 0:
+			if unit.tick_death_timer():
+				to_remove.append(unit)
+	for unit in to_remove:
+		_permanently_remove_unit(unit)
+
+
+func _permanently_remove_unit(unit: Unit) -> void:
+	player_units.erase(unit)
+	enemy_units.erase(unit)
+	all_units.erase(unit)
+	unit.queue_free()
+	_check_battle_end()
 
 
 func get_turn_order_preview(count: int = 8) -> Array[Unit]:

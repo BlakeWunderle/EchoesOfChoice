@@ -52,6 +52,9 @@ var has_reaction: bool = true
 var has_acted: bool = false
 var has_moved: bool = false
 var is_alive: bool = true
+var death_timer: int = -1
+
+const DEATH_TIMER_DURATION := 3
 
 var _reaction_indicator: ReactionIndicator
 var _status_icon_bar: StatusIconBar
@@ -209,11 +212,28 @@ func take_damage(amount: int) -> void:
 	_check_low_hp_pulse()
 	if health <= 0:
 		is_alive = false
+		death_timer = DEATH_TIMER_DURATION
 		if not voice_pack.is_empty():
 			SFXManager.play_voice(voice_pack, "battle_cry")
 		died.emit(self)
 	elif not voice_pack.is_empty():
 		SFXManager.play_voice(voice_pack, "vocal", 0.7)
+
+
+func tick_death_timer() -> bool:
+	if death_timer < 0:
+		return false
+	death_timer -= 1
+	return death_timer < 0
+
+
+func revive(hp_amount: int) -> void:
+	health = mini(hp_amount, max_health)
+	is_alive = true
+	death_timer = -1
+	modulate = Color(1, 1, 1, 1)
+	visible = true
+	_update_health_bar()
 
 
 func heal(amount: int) -> void:
@@ -475,10 +495,16 @@ func play_hurt_animation() -> void:
 func play_death_animation() -> void:
 	if _play_anim("death"):
 		await sprite.animation_finished
+		sprite.stop()
 	else:
 		var tween := create_tween()
-		tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.4)
+		tween.tween_property(self, "modulate", Color(1, 1, 1, 0.4), 0.4)
 		await tween.finished
+		return
+	# Fade to translucent after death animation
+	var tween := create_tween()
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 0.4), 0.3)
+	await tween.finished
 
 
 # --- XP / JP ---
