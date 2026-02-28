@@ -1,0 +1,102 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/combat/BattleScene.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/combat/ActionMenu.tscn" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="battle_bg"]
+bg_color = Color(0.06, 0.08, 0.04, 1)
+
+[node name="BattleScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("battle_bg")
+
+[node name="BattleName" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_top = 8.0
+offset_bottom = 32.0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+
+[node name="TurnLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_top = 32.0
+offset_bottom = 56.0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+
+[node name="BattleArea" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02
+anchor_top = 0.1
+anchor_right = 0.98
+anchor_bottom = 0.78
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+theme_override_constants/separation = 40
+
+[node name="EnemySide" type="VBoxContainer" parent="BattleArea"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="EnemyBackRow" type="HBoxContainer" parent="BattleArea/EnemySide"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="EnemyFrontRow" type="HBoxContainer" parent="BattleArea/EnemySide"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="VSLabel" type="Label" parent="BattleArea"]
+layout_mode = 2
+text = "VS"
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 20
+
+[node name="PlayerSide" type="VBoxContainer" parent="BattleArea"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="PlayerBackRow" type="HBoxContainer" parent="BattleArea/PlayerSide"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="PlayerFrontRow" type="HBoxContainer" parent="BattleArea/PlayerSide"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="ActionMenu" parent="." instance=ExtResource("2")]
+unique_name_in_owner = true
