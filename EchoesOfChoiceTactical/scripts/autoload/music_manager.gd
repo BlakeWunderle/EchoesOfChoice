@@ -27,11 +27,8 @@ const CONTEXT_FOLDERS: Dictionary = {
 }
 
 const _MAX_MUSIC_CACHE: int = 3
-const _SILENT_DB: float = -80.0
 
-var _player_a: AudioStreamPlayer
-var _player_b: AudioStreamPlayer
-var _active_player: AudioStreamPlayer
+var _player: AudioStreamPlayer
 var _current_path: String = ""
 var _current_context: int = -1
 var _music_volume_linear: float = 0.8
@@ -44,29 +41,6 @@ var _folder_cache: Dictionary = {}
 func _ready() -> void:
 	if AudioLoader.is_headless():
 		_headless = true
-		return
-
-	_ensure_audio_bus()
-
-	_player_a = AudioStreamPlayer.new()
-	_player_a.bus = "Music"
-	_player_a.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
-	add_child(_player_a)
-
-	_player_b = AudioStreamPlayer.new()
-	_player_b.bus = "Music"
-	_player_b.volume_db = _SILENT_DB
-	add_child(_player_b)
-
-	_active_player = _player_a
-
-
-func _ensure_audio_bus() -> void:
-	if AudioServer.get_bus_index("Music") == -1:
-		var idx: int = AudioServer.bus_count
-		AudioServer.add_bus(idx)
-		AudioServer.set_bus_name(idx, "Music")
-		AudioServer.set_bus_send(idx, "Master")
 
 
 func play_context(context: int, fade: float = 1.0) -> void:
@@ -86,7 +60,7 @@ func play_context(context: int, fade: float = 1.0) -> void:
 	play_music(path, fade)
 
 
-func play_music(path: String, fade_duration: float = 1.0) -> void:
+func play_music(path: String, _fade_duration: float = 1.0) -> void:
 	if _headless:
 		return
 	if path == _current_path:
@@ -98,53 +72,36 @@ func play_music(path: String, fade_duration: float = 1.0) -> void:
 		push_warning("MusicManager: Could not load: " + path)
 		return
 
-	_set_stream_loop(stream, true)
-
-	var old_player: AudioStreamPlayer = _active_player
-	var new_player: AudioStreamPlayer = _player_b if _active_player == _player_a else _player_a
-	_active_player = new_player
-
-	new_player.stream = stream
-	new_player.volume_db = _SILENT_DB
-	new_player.play()
-
-	var tween := create_tween()
-	tween.set_parallel(true)
-	tween.tween_property(old_player, "volume_db", _SILENT_DB, fade_duration)
-	tween.tween_property(new_player, "volume_db", linear_to_db(maxf(0.0001, _music_volume_linear)), fade_duration)
-	tween.set_parallel(false)
-	tween.tween_callback(old_player.stop)
+	if _player:
+		_player.stop()
+		_player.queue_free()
+	_player = AudioStreamPlayer.new()
+	add_child(_player)
+	_player.stream = stream
+	_player.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
+	_player.finished.connect(_player.play)
+	_player.play()
 
 
-func stop_music(fade_duration: float = 1.0) -> void:
+func stop_music(_fade_duration: float = 1.0) -> void:
 	if _headless:
 		return
 	_current_path = ""
 	_current_context = -1
-	var tween := create_tween()
-	tween.tween_property(_active_player, "volume_db", _SILENT_DB, fade_duration)
-	tween.tween_callback(_active_player.stop)
+	_player.stop()
 
 
 func set_music_volume(linear: float) -> void:
 	_music_volume_linear = clampf(linear, 0.0, 1.0)
 	if _headless:
 		return
-	if _active_player.playing:
-		_active_player.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
+	if _player.playing:
+		_player.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
 
 
 func clear_context() -> void:
 	_current_context = -1
 
-
-func _set_stream_loop(stream: AudioStream, loop_on: bool) -> void:
-	if stream is AudioStreamOggVorbis:
-		stream.loop = loop_on
-	elif stream is AudioStreamMP3:
-		stream.loop = loop_on
-	elif stream is AudioStreamWAV:
-		stream.loop_mode = AudioStreamWAV.LOOP_FORWARD if loop_on else AudioStreamWAV.LOOP_DISABLED
 
 
 func _load_cached_stream(path: String) -> AudioStream:
@@ -152,7 +109,9 @@ func _load_cached_stream(path: String) -> AudioStream:
 		_stream_access_order.erase(path)
 		_stream_access_order.append(path)
 		return _stream_cache[path]
-	var stream: AudioStream = AudioLoader.load_stream(path)
+	var stream: AudioStream = load(path) as AudioStream
+	if stream == null:
+		stream = AudioLoader.load_stream(path)
 	if stream == null:
 		return null
 	while _stream_cache.size() >= _MAX_MUSIC_CACHE and not _stream_access_order.is_empty():
