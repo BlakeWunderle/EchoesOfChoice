@@ -54,6 +54,18 @@ _panel = _MyNewPanel.new()  # preloaded const for instantiation
 
 ---
 
+## Static Method Name Collisions
+
+When calling a static method via a preloaded const, Godot may fail with `Could not resolve external class member` if the method name collides with an inherited method. Common collisions:
+
+- `show()` — conflicts with `Control.show()` / `CanvasItem.show()`
+- `hide()` — conflicts with `Control.hide()`
+- `get_name()` — conflicts with `Node.get_name()`
+
+**Fix:** Rename the static method to avoid the collision (e.g., `show()` → `announce()`).
+
+---
+
 ## When This Applies
 
 | Situation | Needs preload? |

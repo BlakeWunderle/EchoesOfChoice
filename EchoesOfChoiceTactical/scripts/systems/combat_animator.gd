@@ -50,7 +50,7 @@ func animate_ability_results(attacker: Unit, exec_result: Dictionary) -> void:
 
 	# Show ability name announcement (skip basic Strike and items)
 	if ability and ability.ability_name != "Strike" and _hud:
-		_AbilityAnnouncement.show(_hud, attacker, ability)
+		_AbilityAnnouncement.announce(_hud, attacker, ability)
 
 	# Attacker plays attack animation
 	await _play_attack(attacker)
@@ -67,11 +67,21 @@ func animate_ability_results(attacker: Unit, exec_result: Dictionary) -> void:
 	# Process each result with visual feedback
 	var killed_units: Array[Unit] = []
 	for r in results:
+		var rtype: String = r.get("type", "")
+
+		if rtype == "destructible":
+			var tile_pos: Vector2i = r.get("pos", Vector2i.ZERO)
+			var world_pos := Vector2(tile_pos.x * 64 + 32, tile_pos.y * 64 + 32)
+			var amount: int = r.get("amount", 0)
+			_spawn_popup_at_pos(world_pos, str(amount), COLOR_DAMAGE, 16)
+			if r.get("destroyed", false):
+				_shake_camera(3.0, 0.15)
+			continue
+
 		var target: Unit = r.get("target")
 		if target == null:
 			continue
 
-		var rtype: String = r.get("type", "")
 		match rtype:
 			"dodge":
 				spawn_popup(target, "MISS", COLOR_MISS, 14)
@@ -204,6 +214,24 @@ func spawn_popup(unit: Unit, text: String, color: Color, font_size: int = 16) ->
 	label.add_theme_font_size_override("font_size", font_size)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.position = unit.position + Vector2(-20, -45)
+	label.z_index = 100
+	_scene_root.add_child(label)
+
+	var tween := _scene_root.create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(label, "position:y", label.position.y - POPUP_RISE, POPUP_DURATION)
+	tween.tween_property(label, "modulate:a", 0.0, POPUP_DURATION).set_delay(0.3)
+	tween.set_parallel(false)
+	tween.tween_callback(label.queue_free)
+
+
+func _spawn_popup_at_pos(world_pos: Vector2, text: String, color: Color, font_size: int = 16) -> void:
+	var label := Label.new()
+	label.text = text
+	label.add_theme_color_override("font_color", color)
+	label.add_theme_font_size_override("font_size", font_size)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.position = world_pos + Vector2(-20, -45)
 	label.z_index = 100
 	_scene_root.add_child(label)
 

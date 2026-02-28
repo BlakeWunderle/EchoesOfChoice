@@ -14,7 +14,7 @@ const COLOR_ENEMY := Color(1.0, 0.5, 0.4)
 const COLOR_VERB := Color(0.55, 0.52, 0.48)
 
 
-static func show(parent: CanvasLayer, unit: Unit, ability: AbilityData) -> AbilityAnnouncement:
+static func announce(parent: CanvasLayer, unit: Unit, ability: AbilityData) -> AbilityAnnouncement:
 	var ann := AbilityAnnouncement.new()
 	ann._setup(unit, ability)
 	parent.add_child(ann)
