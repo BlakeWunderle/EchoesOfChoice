@@ -46,6 +46,8 @@ func _ready() -> void:
 		_headless = true
 		return
 
+	_ensure_audio_bus()
+
 	_player_a = AudioStreamPlayer.new()
 	_player_a.bus = "Music"
 	_player_a.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
@@ -57,8 +59,6 @@ func _ready() -> void:
 	add_child(_player_b)
 
 	_active_player = _player_a
-
-	_ensure_audio_bus()
 
 
 func _ensure_audio_bus() -> void:
