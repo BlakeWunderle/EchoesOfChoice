@@ -14,14 +14,7 @@ const COLOR_ENEMY := Color(1.0, 0.5, 0.4)
 const COLOR_VERB := Color(0.55, 0.52, 0.48)
 
 
-static func announce(parent: CanvasLayer, unit: Unit, ability: AbilityData) -> AbilityAnnouncement:
-	var ann := AbilityAnnouncement.new()
-	ann._setup(unit, ability)
-	parent.add_child(ann)
-	return ann
-
-
-func _setup(unit: Unit, ability: AbilityData) -> void:
+func setup(unit: Unit, ability: AbilityData) -> void:
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.13, 0.11, 0.16, 0.92)
 	style.border_color = Color(0.55, 0.45, 0.3, 0.6)

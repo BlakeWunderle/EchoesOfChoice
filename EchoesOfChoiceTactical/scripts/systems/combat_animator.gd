@@ -50,7 +50,9 @@ func animate_ability_results(attacker: Unit, exec_result: Dictionary) -> void:
 
 	# Show ability name announcement (skip basic Strike and items)
 	if ability and ability.ability_name != "Strike" and _hud:
-		_AbilityAnnouncement.announce(_hud, attacker, ability)
+		var ann = _AbilityAnnouncement.new()
+		ann.setup(attacker, ability)
+		_hud.add_child(ann)
 
 	# Attacker plays attack animation
 	await _play_attack(attacker)

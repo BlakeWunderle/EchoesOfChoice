@@ -64,6 +64,30 @@ When calling a static method via a preloaded const, Godot may fail with `Could n
 
 **Fix:** Rename the static method to avoid the collision (e.g., `show()` → `announce()`).
 
+## Self-Referencing class_name in Static Methods
+
+A script loaded via `preload()` **cannot reference its own `class_name`** inside static methods. This fails:
+
+```gdscript
+class_name MyPanel extends PanelContainer
+
+static func create() -> MyPanel:
+    var p := MyPanel.new()  # ERROR: "Identifier not found: MyPanel"
+    return p
+```
+
+**Fix:** Don't use static factory methods. Have the caller create instances via the preloaded const:
+
+```gdscript
+# Caller creates the instance directly:
+const _MyPanel = preload("res://scenes/ui/MyPanel.gd")
+
+func _use_panel() -> void:
+    var p = _MyPanel.new()
+    p.setup(args)
+    add_child(p)
+```
+
 ---
 
 ## When This Applies
