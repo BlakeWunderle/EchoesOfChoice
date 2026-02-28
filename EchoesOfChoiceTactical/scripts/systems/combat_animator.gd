@@ -1,5 +1,7 @@
 class_name CombatAnimator extends RefCounted
 
+const _AbilityAnnouncement = preload("res://scenes/battle/AbilityAnnouncement.gd")
+
 var _scene_root: Node
 var _camera: Camera2D
 var _hud: CanvasLayer
@@ -48,7 +50,7 @@ func animate_ability_results(attacker: Unit, exec_result: Dictionary) -> void:
 
 	# Show ability name announcement (skip basic Strike and items)
 	if ability and ability.ability_name != "Strike" and _hud:
-		AbilityAnnouncement.show(_hud, attacker, ability)
+		_AbilityAnnouncement.show(_hud, attacker, ability)
 
 	# Attacker plays attack animation
 	await _play_attack(attacker)
