@@ -27,6 +27,7 @@ const CONTEXT_FOLDERS: Dictionary = {
 }
 
 const _MAX_MUSIC_CACHE: int = 3
+const _SILENT_DB: float = -80.0
 
 var _player_a: AudioStreamPlayer
 var _player_b: AudioStreamPlayer
@@ -47,12 +48,12 @@ func _ready() -> void:
 
 	_player_a = AudioStreamPlayer.new()
 	_player_a.bus = "Music"
-	_player_a.volume_db = linear_to_db(_music_volume_linear)
+	_player_a.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
 	add_child(_player_a)
 
 	_player_b = AudioStreamPlayer.new()
 	_player_b.bus = "Music"
-	_player_b.volume_db = linear_to_db(0.0)
+	_player_b.volume_db = _SILENT_DB
 	add_child(_player_b)
 
 	_active_player = _player_a
@@ -104,13 +105,13 @@ func play_music(path: String, fade_duration: float = 1.0) -> void:
 	_active_player = new_player
 
 	new_player.stream = stream
-	new_player.volume_db = linear_to_db(0.0)
+	new_player.volume_db = _SILENT_DB
 	new_player.play()
 
 	var tween := create_tween()
 	tween.set_parallel(true)
-	tween.tween_property(old_player, "volume_db", linear_to_db(0.0), fade_duration)
-	tween.tween_property(new_player, "volume_db", linear_to_db(_music_volume_linear), fade_duration)
+	tween.tween_property(old_player, "volume_db", _SILENT_DB, fade_duration)
+	tween.tween_property(new_player, "volume_db", linear_to_db(maxf(0.0001, _music_volume_linear)), fade_duration)
 	tween.set_parallel(false)
 	tween.tween_callback(old_player.stop)
 
@@ -121,7 +122,7 @@ func stop_music(fade_duration: float = 1.0) -> void:
 	_current_path = ""
 	_current_context = -1
 	var tween := create_tween()
-	tween.tween_property(_active_player, "volume_db", linear_to_db(0.0), fade_duration)
+	tween.tween_property(_active_player, "volume_db", _SILENT_DB, fade_duration)
 	tween.tween_callback(_active_player.stop)
 
 
@@ -130,7 +131,7 @@ func set_music_volume(linear: float) -> void:
 	if _headless:
 		return
 	if _active_player.playing:
-		_active_player.volume_db = linear_to_db(_music_volume_linear)
+		_active_player.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
 
 
 func clear_context() -> void:

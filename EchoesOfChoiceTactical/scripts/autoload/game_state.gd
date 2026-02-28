@@ -601,7 +601,7 @@ func get_save_summary(slot: int) -> Dictionary:
 func apply_settings() -> void:
 	var master_idx := AudioServer.get_bus_index("Master")
 	if master_idx >= 0:
-		AudioServer.set_bus_volume_db(master_idx, linear_to_db(settings.get("master_volume", 1.0)))
+		AudioServer.set_bus_volume_db(master_idx, linear_to_db(maxf(0.0001, settings.get("master_volume", 1.0))))
 	MusicManager.set_music_volume(settings.get("music_volume", 0.8))
 	SFXManager.set_sfx_volume(settings.get("sfx_volume", 1.0))
 

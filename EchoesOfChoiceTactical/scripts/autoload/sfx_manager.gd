@@ -158,7 +158,7 @@ func set_sfx_volume(linear: float) -> void:
 	_sfx_volume_linear = clampf(linear, 0.0, 1.0)
 	var bus_idx: int = AudioServer.get_bus_index("SFX")
 	if bus_idx >= 0:
-		AudioServer.set_bus_volume_db(bus_idx, linear_to_db(_sfx_volume_linear))
+		AudioServer.set_bus_volume_db(bus_idx, linear_to_db(maxf(0.0001, _sfx_volume_linear)))
 
 
 func stop_all() -> void:
@@ -247,7 +247,7 @@ func _play_on_player(player: AudioStreamPlayer, path: String, volume: float, pit
 	if stream == null:
 		return
 	player.stream = stream
-	player.volume_db = linear_to_db(volume * _sfx_volume_linear)
+	player.volume_db = linear_to_db(maxf(0.0001, volume * _sfx_volume_linear))
 	if pitch_var > 0.0:
 		player.pitch_scale = 1.0 + randf_range(-pitch_var, pitch_var)
 	else:
