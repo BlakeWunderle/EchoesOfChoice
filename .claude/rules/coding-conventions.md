@@ -16,3 +16,4 @@ alwaysApply: false
 - Constants use `UPPER_SNAKE_CASE`
 - Grid positions are always `Vector2i`, world positions are `Vector2`
 - Tile size is 64px (constant `TILE_SIZE` in Unit.gd and GridCursor.gd)
+- When creating a new `.gd` file with `class_name`, other scripts must use `preload()` to reference it — do not rely on bare `class_name` resolution (see `new-gdscript-files` skill)

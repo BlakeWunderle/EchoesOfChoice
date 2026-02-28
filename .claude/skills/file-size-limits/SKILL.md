@@ -130,7 +130,9 @@ func equip_item(unit_name: String, item_id: String) -> bool:
 
 ---
 
-## Autoload Gotcha
+## Preload Gotcha
+
+Godot 4's `class_name` resolution is unreliable for newly added files and autoloads. **Always use `preload()` when referencing a new class from another script.** See the **new-gdscript-files** skill for the full checklist.
 
 Autoload scripts load before `class_name` registration. Use `preload()` instead of class names for helpers instantiated at declaration time:
 
