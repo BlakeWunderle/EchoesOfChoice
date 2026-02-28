@@ -16,6 +16,7 @@ var reaction_system: ReactionSystem
 var unit_scene: PackedScene = preload("res://scenes/units/Unit.tscn")
 var _dialogue_box_scene: PackedScene = preload("res://scenes/ui/DialogueBox.tscn")
 const _DeploymentController = preload("res://scenes/battle/DeploymentController.gd")
+const _CursorInfoPanelScript = preload("res://scenes/battle/CursorInfoPanel.gd")
 
 var _battle_config: BattleConfig
 var _current_phase: Enums.TurnPhase = Enums.TurnPhase.AWAITING_INPUT
@@ -34,6 +35,7 @@ var _settings_menu_scene: PackedScene = preload("res://scenes/ui/SettingsMenu.ts
 var _turn_order_panel: TurnOrderPanel
 var _damage_preview: DamagePreview
 var _unit_inspector: UnitInspector
+var _cursor_info_panel: PanelContainer
 
 
 func _ready() -> void:
@@ -304,6 +306,13 @@ func _setup_battle_hud() -> void:
 	_unit_inspector.visible = false
 	hud.add_child(_unit_inspector)
 
+	# Cursor info panel (bottom-left, shows hovered unit details)
+	_cursor_info_panel = _CursorInfoPanelScript.new()
+	hud.add_child(_cursor_info_panel)
+
+	# Show current unit info when turns change
+	turn_manager.unit_turn_started.connect(_on_turn_started_update_panel)
+
 
 func _toggle_unit_inspector() -> void:
 	if _unit_inspector and _unit_inspector.visible:
@@ -418,17 +427,6 @@ func _spawn_unit(data: FighterData, unit_name: String, team: Enums.Team, pos: Ve
 		else:
 			placeholder.color = Color(1.0, 0.2, 0.2)
 		unit.add_child(placeholder)
-
-	var label := Label.new()
-	label.text = unit_name
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.position = Vector2(-30, 24)
-	label.add_theme_font_size_override("font_size", 10)
-	if team == Enums.Team.PLAYER:
-		label.add_theme_color_override("font_color", Color(0.7, 0.85, 1.0))
-	else:
-		label.add_theme_color_override("font_color", Color(1.0, 0.75, 0.7))
-	unit.add_child(label)
 
 	return unit
 
@@ -866,6 +864,24 @@ func _on_cell_hovered(pos: Vector2i) -> void:
 				grid_overlay.show_aoe_preview([])
 				if _damage_preview:
 					_damage_preview.hide_preview()
+
+	# Update cursor info panel with hovered unit
+	_update_cursor_info_panel(pos)
+
+
+func _update_cursor_info_panel(pos: Vector2i) -> void:
+	if not _cursor_info_panel:
+		return
+	var occupant = grid.get_occupant(pos)
+	if occupant is Unit and occupant.is_alive:
+		_cursor_info_panel.show_unit(occupant)
+	else:
+		_cursor_info_panel.clear()
+
+
+func _on_turn_started_update_panel(unit: Unit) -> void:
+	if _cursor_info_panel and unit:
+		_cursor_info_panel.show_unit(unit)
 
 
 func _show_damage_preview(pos: Vector2i) -> void:

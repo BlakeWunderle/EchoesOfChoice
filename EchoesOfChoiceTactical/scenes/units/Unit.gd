@@ -62,8 +62,6 @@ var death_timer: int = -1
 
 const DEATH_TIMER_DURATION := 3
 
-var _reaction_indicator: ReactionIndicator
-var _status_icon_bar: StatusIconBar
 var _low_hp_tween: Tween = null
 
 const TILE_SIZE := 64
@@ -134,16 +132,6 @@ func initialize(data: FighterData, p_name: String, p_team: Enums.Team, p_level: 
 		sid = data.sprite_id_female
 	_load_sprite(sid)
 	_apply_team_health_bar_style()
-
-	# Unit indicators
-	_reaction_indicator = ReactionIndicator.new()
-	_reaction_indicator.position = Vector2(0, 28)
-	add_child(_reaction_indicator)
-	_reaction_indicator.setup(reaction_types)
-
-	_status_icon_bar = StatusIconBar.new()
-	_status_icon_bar.position = Vector2(0, -40)
-	add_child(_status_icon_bar)
 
 	if p_team == Enums.Team.PLAYER:
 		_apply_equipment()
@@ -305,8 +293,6 @@ func end_turn() -> void:
 
 func use_reaction() -> void:
 	has_reaction = false
-	if _reaction_indicator:
-		_reaction_indicator.set_available(false)
 
 
 func has_reaction_type(rt: Enums.ReactionType) -> bool:
@@ -341,7 +327,6 @@ func is_facing_toward(from_pos: Vector2i) -> bool:
 
 func apply_stat_modifier(stat: Enums.StatType, modifier: int, is_negative: bool) -> void:
 	_modify_stat(stat, modifier, is_negative)
-	_refresh_status_icons()
 
 
 func _tick_modified_stats() -> void:
@@ -392,14 +377,7 @@ func _modify_stat(stat: Enums.StatType, modifier: int, is_negative: bool) -> voi
 
 
 func _refresh_indicators() -> void:
-	if _reaction_indicator:
-		_reaction_indicator.set_available(has_reaction)
-	_refresh_status_icons()
-
-
-func _refresh_status_icons() -> void:
-	if _status_icon_bar:
-		_status_icon_bar.refresh(modified_stats)
+	pass
 
 
 func _update_health_bar() -> void:
