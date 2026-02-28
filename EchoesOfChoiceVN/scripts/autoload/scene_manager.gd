@@ -88,6 +88,10 @@ func continue_game() -> void:
 		load_game_slot(slot)
 
 
+func go_to_tavern_opening() -> void:
+	change_scene("res://scenes/story/TavernOpening.tscn")
+
+
 func go_to_title_screen() -> void:
 	change_scene("res://scenes/story/TitleScreen.tscn")
 
