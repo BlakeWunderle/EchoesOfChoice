@@ -2,6 +2,7 @@ extends Control
 
 signal settings_closed
 
+var _fullscreen_check: CheckBox
 var _master_slider: HSlider
 var _music_slider: HSlider
 var _sfx_slider: HSlider
@@ -24,7 +25,7 @@ func _build_ui() -> void:
 	var panel := PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.offset_left = -200.0
-	panel.offset_top = -180.0
+	panel.offset_top = -210.0
 	panel.offset_right = 200.0
 	panel.offset_bottom = 180.0
 	add_child(panel)
@@ -50,6 +51,16 @@ func _build_ui() -> void:
 
 	var sep := HSeparator.new()
 	vbox.add_child(sep)
+
+	# Fullscreen toggle
+	_fullscreen_check = CheckBox.new()
+	_fullscreen_check.text = "Fullscreen"
+	_fullscreen_check.add_theme_font_size_override("font_size", 14)
+	_fullscreen_check.toggled.connect(_on_fullscreen_toggled)
+	vbox.add_child(_fullscreen_check)
+
+	var sep_fs := HSeparator.new()
+	vbox.add_child(sep_fs)
 
 	# Volume sliders
 	_master_slider = _add_slider_row(vbox, "Master Volume", 0.0, 1.0, 0.05)
@@ -111,10 +122,16 @@ func _add_slider_row(parent: VBoxContainer, label_text: String, min_val: float, 
 
 
 func _load_current_values() -> void:
+	_fullscreen_check.button_pressed = GameState.settings.get("fullscreen", true)
 	_master_slider.value = GameState.settings.get("master_volume", 1.0)
 	_music_slider.value = GameState.settings.get("music_volume", 0.8)
 	_sfx_slider.value = GameState.settings.get("sfx_volume", 1.0)
 	_text_speed_slider.value = GameState.settings.get("text_speed", 1.0)
+
+
+func _on_fullscreen_toggled(enabled: bool) -> void:
+	GameState.settings["fullscreen"] = enabled
+	GameState.apply_settings()
 
 
 func _on_master_changed(val: float) -> void:

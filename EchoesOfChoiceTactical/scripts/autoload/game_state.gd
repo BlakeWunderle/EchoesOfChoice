@@ -35,6 +35,7 @@ var settings: Dictionary = {
 	"music_volume": 0.8,
 	"sfx_volume": 1.0,
 	"text_speed": 1.0,
+	"fullscreen": true,
 }
 
 const MAX_SAVE_SLOTS := 3
@@ -604,6 +605,11 @@ func apply_settings() -> void:
 		AudioServer.set_bus_volume_db(master_idx, linear_to_db(maxf(0.0001, settings.get("master_volume", 1.0))))
 	MusicManager.set_music_volume(settings.get("music_volume", 0.8))
 	SFXManager.set_sfx_volume(settings.get("sfx_volume", 1.0))
+	var fs: bool = settings.get("fullscreen", true)
+	DisplayServer.window_set_mode(
+		DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN if fs
+		else DisplayServer.WINDOW_MODE_WINDOWED
+	)
 
 
 func save_settings() -> void:
