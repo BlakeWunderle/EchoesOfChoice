@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/shadow_bolt.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/bewitch.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/abilities/curse.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+class_id = "elder_witch"
+class_display_name = "Elder Witch"
+portrait_id = "chibi_skeleton_witch_2"
+base_max_health = 121
+base_max_mana = 27
+base_physical_attack = 14
+base_physical_defense = 15
+base_magic_attack = 25
+base_magic_defense = 26
+base_speed = 22
+base_crit_chance = 5
+base_crit_damage = 4
+base_dodge_chance = 5
+growth_health = 11
+growth_mana = 0
+growth_physical_attack = 0
+growth_physical_defense = 1
+growth_magic_attack = 5
+growth_magic_defense = 1
+growth_speed = 0
+preferred_row = 0
+abilities = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+upgrade_options = []

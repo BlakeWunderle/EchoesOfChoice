@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/ability_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ability_name = "Flame Wave"
+flavor_text = "A wave of scorching fire."
+modified_stat = 2
+modifier = 4
+impacted_turns = 0
+use_on_enemy = true
+mana_cost = 4
+target_scope = 1
+requires_front_row = false
+ability_type = 0

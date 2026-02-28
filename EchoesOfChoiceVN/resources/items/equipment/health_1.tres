@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "health_1"
+display_name = "Lifestone Ring"
+description = "A silver ring set with a warm red gem that pulses faintly with life. +10 Max HP."
+item_type = 1
+buy_price = 120
+sell_price_override = -1
+stat_bonuses = {
+10: 10
+}
+unlock_tier = 1
+unlock_class_ids = []
+consumable_effect = 0
+consumable_value = 0
+buff_stat = 0
+buff_turns = 0

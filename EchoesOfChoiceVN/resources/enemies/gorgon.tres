@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/void_pulse.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/stone_gaze.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+class_id = "gorgon"
+class_display_name = "Gorgon"
+portrait_id = "chibi_medusa_2"
+base_max_health = 106
+base_max_mana = 26
+base_physical_attack = 21
+base_physical_defense = 18
+base_magic_attack = 35
+base_magic_defense = 24
+base_speed = 17
+base_crit_chance = 10
+base_crit_damage = 4
+base_dodge_chance = 10
+growth_health = 12
+growth_mana = 0
+growth_physical_attack = 4
+growth_physical_defense = 0
+growth_magic_attack = 0
+growth_magic_defense = 1
+growth_speed = 0
+preferred_row = 0
+abilities = [ExtResource("2"), ExtResource("3")]
+upgrade_options = []

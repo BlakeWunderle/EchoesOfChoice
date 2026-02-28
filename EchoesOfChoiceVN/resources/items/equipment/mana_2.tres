@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "mana_2"
+display_name = "Wellspring Pendant"
+description = "A pendant housing a tiny rift — those who listen claim to hear rushing water inside. +8 Max MP."
+item_type = 1
+buy_price = 250
+sell_price_override = -1
+stat_bonuses = {
+11: 8
+}
+unlock_tier = 2
+unlock_class_ids = PackedStringArray("chronomancer", "astronomer", "cryomancer", "hydromancer")
+consumable_effect = 0
+consumable_value = 0
+buff_stat = 0
+buff_turns = 0

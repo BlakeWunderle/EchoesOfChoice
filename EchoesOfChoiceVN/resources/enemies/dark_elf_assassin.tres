@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/backstab.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/smoke_bomb.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+class_id = "dark_elf_assassin"
+class_display_name = "Dark Elf Assassin"
+portrait_id = "chibi_dark_elves_1"
+base_max_health = 91
+base_max_mana = 8
+base_physical_attack = 32
+base_physical_defense = 10
+base_magic_attack = 6
+base_magic_defense = 8
+base_speed = 18
+base_crit_chance = 15
+base_crit_damage = 6
+base_dodge_chance = 15
+growth_health = 7
+growth_mana = 0
+growth_physical_attack = 4
+growth_physical_defense = 1
+growth_magic_attack = 0
+growth_magic_defense = 1
+growth_speed = 0
+preferred_row = 0
+abilities = [ExtResource("2"), ExtResource("3")]
+upgrade_options = []

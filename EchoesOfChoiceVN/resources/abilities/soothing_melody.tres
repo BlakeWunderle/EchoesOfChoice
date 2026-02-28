@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/ability_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ability_name = "Soothing Melody"
+flavor_text = "A melody that restores health to nearby allies."
+modified_stat = 2
+modifier = 5
+impacted_turns = 0
+use_on_enemy = false
+mana_cost = 4
+target_scope = 2
+requires_front_row = false
+ability_type = 1

@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/time_warp.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/black_hole.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/abilities/gravity.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/classes/astronomer.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/classes/chronomancer.tres" id="6"]
+
+[resource]
+script = ExtResource("1")
+class_id = "cosmologist"
+class_display_name = "Cosmologist"
+portrait_id = "chibi_dark_oracle_3"
+base_max_health = 44
+base_max_mana = 14
+base_physical_attack = 7
+base_physical_defense = 12
+base_magic_attack = 20
+base_magic_defense = 20
+base_speed = 11
+base_crit_chance = 5
+base_crit_damage = 1
+base_dodge_chance = 5
+growth_health = 7
+growth_mana = 2
+growth_physical_attack = 2
+growth_physical_defense = 2
+growth_magic_attack = 4
+growth_magic_defense = 2
+growth_speed = 2
+preferred_row = 1
+abilities = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+tier = 1
+upgrade_options = [ExtResource("5"), ExtResource("6")]

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/ability_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ability_name = "Smite"
+flavor_text = "Holy power that strikes the wicked."
+modified_stat = 6
+modifier = 7
+impacted_turns = 0
+use_on_enemy = true
+mana_cost = 4
+target_scope = 0
+requires_front_row = false
+ability_type = 0

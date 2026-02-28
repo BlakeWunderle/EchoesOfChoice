@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "shadow_sigil"
+display_name = "Shadow Sigil"
+description = "Taken from the assassin who came in the night. Ghostly swiftness — hard to hit, harder to catch."
+item_type = 1
+buy_price = 0
+sell_price_override = 100
+stat_bonuses = {
+8: 10,
+7: 3
+}
+unlock_tier = 0
+unlock_class_ids = []
+consumable_effect = 0
+consumable_value = 0
+buff_stat = 0
+buff_turns = 0

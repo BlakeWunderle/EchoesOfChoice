@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/frost_strike.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/wall.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/abilities/overclock.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+class_id = "frost_sentinel"
+class_display_name = "Frost Sentinel"
+portrait_id = "chibi_frost_knight_3"
+base_max_health = 93
+base_max_mana = 28
+base_physical_attack = 29
+base_physical_defense = 15
+base_magic_attack = 31
+base_magic_defense = 18
+base_speed = 22
+base_crit_chance = 10
+base_crit_damage = 2
+base_dodge_chance = 5
+growth_health = 5
+growth_mana = 0
+growth_physical_attack = 1
+growth_physical_defense = 1
+growth_magic_attack = 2
+growth_magic_defense = 1
+growth_speed = 0
+preferred_row = 0
+abilities = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+upgrade_options = []

@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/block.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/valor.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/abilities/second_wind.tres" id="4"]
+
+[resource]
+script = ExtResource("1")
+class_id = "knight"
+class_display_name = "Knight"
+portrait_id = "chibi_knight_1"
+base_max_health = 67
+base_max_mana = 9
+base_physical_attack = 19
+base_physical_defense = 26
+base_magic_attack = 9
+base_magic_defense = 15
+base_speed = 13
+base_crit_chance = 5
+base_crit_damage = 2
+base_dodge_chance = 0
+growth_health = 12
+growth_mana = 2
+growth_physical_attack = 3
+growth_physical_defense = 6
+growth_magic_attack = 2
+growth_magic_defense = 3
+growth_speed = 3
+preferred_row = 0
+abilities = [ExtResource("2"), ExtResource("3"), ExtResource("4")]
+tier = 2
+upgrade_options = []

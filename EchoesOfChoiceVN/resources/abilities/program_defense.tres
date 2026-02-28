@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/ability_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ability_name = "Program Defense"
+flavor_text = "Optimize an ally's defensive protocols."
+modified_stat = 5
+modifier = 4
+impacted_turns = 2
+use_on_enemy = false
+mana_cost = 3
+target_scope = 0
+requires_front_row = false
+ability_type = 2

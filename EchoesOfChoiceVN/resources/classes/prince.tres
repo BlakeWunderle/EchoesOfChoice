@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/abilities/royal_strike.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+class_id = "prince"
+class_display_name = "Prince"
+portrait_id = "chibi_armored_knight_medieval_knight_royal"
+base_max_health = 58
+base_max_mana = 12
+base_physical_attack = 18
+base_physical_defense = 16
+base_magic_attack = 15
+base_magic_defense = 15
+base_speed = 12
+base_crit_chance = 10
+base_crit_damage = 1
+base_dodge_chance = 5
+growth_health = 7
+growth_mana = 2
+growth_physical_attack = 2
+growth_physical_defense = 2
+growth_magic_attack = 2
+growth_magic_defense = 2
+growth_speed = 2
+preferred_row = 0
+abilities = [ExtResource("2")]
+tier = 0
+upgrade_options = []

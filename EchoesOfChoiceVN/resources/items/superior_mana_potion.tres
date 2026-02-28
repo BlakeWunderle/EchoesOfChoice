@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+item_id = "superior_mana_potion"
+display_name = "Superior Mana Potion"
+description = "A refined essence that restores 70 MP."
+item_type = 0
+buy_price = 130
+sell_price_override = -1
+stat_bonuses = {}
+consumable_effect = 1
+consumable_value = 70
+buff_stat = 0
+buff_turns = 0

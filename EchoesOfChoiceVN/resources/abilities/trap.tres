@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/ability_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+ability_name = "Trap"
+flavor_text = "Lay a mechanical trap on any tile. The first unit to step on it is stopped cold and loses their action."
+modified_stat = 5
+modifier = 0
+impacted_turns = 0
+use_on_enemy = false
+mana_cost = 2
+target_scope = 0
+requires_front_row = false
+ability_type = 4

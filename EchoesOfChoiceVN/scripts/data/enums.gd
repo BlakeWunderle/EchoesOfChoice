@@ -1,0 +1,61 @@
+class_name Enums
+
+enum StatType {
+	PHYSICAL_ATTACK,
+	PHYSICAL_DEFENSE,
+	MAGIC_ATTACK,
+	MAGIC_DEFENSE,
+	ATTACK,
+	DEFENSE,
+	MIXED_ATTACK,
+	SPEED,
+	DODGE_CHANCE,
+	TAUNT,
+	MAX_HEALTH,
+	MAX_MANA,
+	CRIT_CHANCE,
+	CRIT_DAMAGE,
+}
+
+enum AbilityType {
+	DAMAGE,
+	HEAL,
+	BUFF,
+	DEBUFF,
+}
+
+enum TargetScope {
+	SINGLE,
+	ALL_ENEMIES,
+	ALL_ALLIES,
+	FRONT_ROW,
+	BACK_ROW,
+}
+
+enum RowPosition {
+	FRONT,
+	BACK,
+}
+
+enum TurnPhase {
+	AWAITING_INPUT,
+	ACT,
+	DONE,
+}
+
+enum Team {
+	PLAYER,
+	ENEMY,
+}
+
+enum ItemType {
+	CONSUMABLE,
+	EQUIPMENT,
+}
+
+enum ConsumableEffect {
+	HEAL_HP,
+	RESTORE_MANA,
+	BUFF_STAT,
+	FULL_REST_ALL,
+}
