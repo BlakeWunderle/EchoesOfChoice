@@ -496,7 +496,7 @@ func auto_save() -> void:
 
 
 func _build_save_data() -> Dictionary:
-	return {
+	var data := {
 		"player_name": player_name,
 		"player_gender": player_gender,
 		"player_class_id": player_class_id,
@@ -514,6 +514,9 @@ func _build_save_data() -> Dictionary:
 		"equipment": equipment,
 		"unlocked_classes": unlocked_classes,
 	}
+	if has_node("/root/StoryFlow"):
+		data["story_flow"] = get_node("/root/StoryFlow").save_progress()
+	return data
 
 
 func load_game(slot: int) -> bool:
@@ -544,6 +547,8 @@ func load_game(slot: int) -> bool:
 		unlocked_classes.append(str(c))
 	current_slot = slot
 	_save_manager.mark_last_used(slot)
+	if data.has("story_flow") and has_node("/root/StoryFlow"):
+		get_node("/root/StoryFlow").load_progress(data["story_flow"])
 	return true
 
 

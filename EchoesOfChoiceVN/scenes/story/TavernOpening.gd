@@ -88,9 +88,9 @@ func _play_story() -> void:
 	_dialogue_box.show_dialogue(_stranger_briefing())
 	await _dialogue_box.dialogue_finished
 
-	# Transition to first battle
-	GameState.current_battle_id = "city_street"
-	SceneManager.go_to_battle()
+	# Start the story flow (first beat is pre_city_street story)
+	StoryFlow.current_beat_index = 0
+	StoryFlow.advance()
 
 
 func _recruit_companion(index: int) -> Dictionary:

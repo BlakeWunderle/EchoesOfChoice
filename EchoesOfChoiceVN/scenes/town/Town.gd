@@ -97,7 +97,7 @@ func _on_rest() -> void:
 
 func _on_leave() -> void:
 	GameState.auto_save()
-	SceneManager.go_to_title_screen()  # TODO: route to next story beat
+	StoryFlow.advance()
 
 
 func _on_sub_panel_closed() -> void:

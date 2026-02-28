@@ -452,5 +452,5 @@ func _show_summary(victory: bool, gold: int) -> void:
 	var btn := Button.new()
 	btn.text = "Continue"
 	btn.custom_minimum_size = Vector2(0, 40)
-	btn.pressed.connect(func(): SceneManager.go_to_title_screen())
+	btn.pressed.connect(func(): StoryFlow.advance())
 	inner_vbox.add_child(btn)
