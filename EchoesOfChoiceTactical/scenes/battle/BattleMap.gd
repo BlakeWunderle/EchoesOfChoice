@@ -159,7 +159,7 @@ func _setup_test_battle() -> void:
 	grid_cursor.cancelled.connect(_on_cursor_cancelled)
 
 	_executor = AbilityExecutor.new(grid, reaction_system)
-	_combat_animator = CombatAnimator.new(self, camera)
+	_combat_animator = CombatAnimator.new(self, camera, hud)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info, _combat_animator)
 	_connect_action_menu()
 	camera.position = Vector2(grid.width * 32, grid.height * 32)
@@ -267,7 +267,7 @@ func _finalize_battle_setup(config: BattleConfig) -> void:
 	grid_cursor.cancelled.connect(_on_cursor_cancelled)
 
 	_executor = AbilityExecutor.new(grid, reaction_system)
-	_combat_animator = CombatAnimator.new(self, camera)
+	_combat_animator = CombatAnimator.new(self, camera, hud)
 	_ai = BattleAI.new(grid, reaction_system, turn_manager, self, _ai_execute_ability, _update_turn_info, _combat_animator)
 	_connect_action_menu()
 

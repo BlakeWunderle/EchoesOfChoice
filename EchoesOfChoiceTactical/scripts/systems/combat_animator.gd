@@ -2,6 +2,7 @@ class_name CombatAnimator extends RefCounted
 
 var _scene_root: Node
 var _camera: Camera2D
+var _hud: CanvasLayer
 
 const POPUP_RISE := 40.0
 const POPUP_DURATION := 0.7
@@ -32,9 +33,10 @@ const COLOR_BODYGUARD := Color(0.9, 0.7, 0.3)
 const COLOR_MITIGATE := Color(0.5, 0.8, 0.9)
 
 
-func _init(p_scene_root: Node, p_camera: Camera2D = null) -> void:
+func _init(p_scene_root: Node, p_camera: Camera2D = null, p_hud: CanvasLayer = null) -> void:
 	_scene_root = p_scene_root
 	_camera = p_camera
+	_hud = p_hud
 
 
 ## Animate all results from an ability execution.
@@ -43,6 +45,10 @@ func animate_ability_results(attacker: Unit, exec_result: Dictionary) -> void:
 	var ability: AbilityData = exec_result.get("ability", null)
 	if results.is_empty():
 		return
+
+	# Show ability name announcement (skip basic Strike and items)
+	if ability and ability.ability_name != "Strike" and _hud:
+		AbilityAnnouncement.show(_hud, attacker, ability)
 
 	# Attacker plays attack animation
 	await _play_attack(attacker)
