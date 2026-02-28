@@ -741,7 +741,7 @@ def generate_tres(sprite_id: str, anim_files: dict[str, Path],
     for anim in animations:
         frame_entries = []
         for fref in anim["frames"]:
-            frame_entries.append('{{\n"duration": 1.0,\n"texture": SubResource("%s")\n}}' % fref)
+            frame_entries.append(f'{{\n"duration": 1.0,\n"texture": SubResource("{fref}")\n}}')
 
         frames_str = "[" + ", ".join(frame_entries) + "]"
         loop_str = "true" if anim["loop"] else "false"
