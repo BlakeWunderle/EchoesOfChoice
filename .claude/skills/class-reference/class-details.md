@@ -21,20 +21,20 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 | Duelist | Slash, Feint | 3/3/1 | Cavalry (Horse), Dragoon (Spear) |
 | Ranger | Pierce, DoubleArrow | 3/3/1 | Mercenary (Gun), Hunter (Trap) |
 | Warden | Block, ShieldBash | 1/1/1 | Knight (Sword), Bastion (Helmet) |
-| MartialArtist | Punch, Topple | 3/3/2 | Ninja (Sword), Monk (Staff) |
+| MartialArtist | Punch, Sweep | 3/3/2 | Ninja (Sword), Monk (Staff) |
 
 ### Tier 2
 
 | Class | Abilities | Crit/Dmg/Dodge | Role |
 |-------|-----------|----------------|------|
 | Cavalry | Lance, Trample, Rally | 3/2/2 | Mobile offensive |
-| Dragoon | Jump, WyvernStrike, DragonWard | 2/2/2 | Hybrid attack + magic defense |
-| Knight | Block, Valor, Aegis | 2/2/1 | Defensive tank |
-| Bastion | ShieldSlam, Fortify, Taunt | 1/1/1 | Pure tank with Taunt |
-| Mercenary | GunShot, CalledShot, QuickDraw | 4/7/1 | Fast physical DPS |
+| Dragoon | Jump, DragonBreath, DragonWard | 2/2/2 | Hybrid attack + magic defense |
+| Knight | Block, Valor, SecondWind | 2/2/1 | Defensive tank |
+| Bastion | ShieldSlam, Fortify, Bulwark | 1/1/1 | Pure tank with Bulwark |
+| Mercenary | GunShot, CalledShot, Evasion | 4/7/1 | Fast physical DPS |
 | Hunter | TripleArrow, Snare, HuntersMark | 3/3/4 | Ranged DPS with debuff |
 | Ninja | SweepingSlash, Dash, SmokeBomb | 3/3/3 | Evasive physical DPS |
-| Monk | SpiritAttack, PreciseStrike, Meditate | 3/3/3 | Hybrid physical + magic |
+| Monk | SpiritAttack, PreciseStrike, ChiMend | 3/3/3 | Hybrid physical + magic |
 
 ---
 

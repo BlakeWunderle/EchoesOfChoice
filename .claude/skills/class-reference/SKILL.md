@@ -13,10 +13,10 @@ Each line: `Base -> (Item) -> Tier1 [abilities] -> (Item) -> Tier2 [abilities]`
 
 ### Fighter
 
-- Squire [Slash, Guard] -> (Sword) -> Duelist [Slash, Feint] -> (Horse) -> Cavalry [Lance, Trample, Rally] | (Spear) -> Dragoon [Jump, WyvernStrike, DragonWard]
-- Squire -> (Bow) -> Ranger [Pierce, DoubleArrow] -> (Gun) -> Mercenary [GunShot, CalledShot, QuickDraw] | (Trap) -> Hunter [TripleArrow, Snare, HuntersMark]
-- Squire -> (Shield) -> Warden [Block, ShieldBash] -> (Sword) -> Knight [Block, Valor, Aegis] | (Helmet) -> Bastion [ShieldSlam, Fortify, Taunt]
-- Squire -> (Headband) -> MartialArtist [Punch, Topple] -> (Sword) -> Ninja [SweepingSlash, Dash, SmokeBomb] | (Staff) -> Monk [SpiritAttack, PreciseStrike, Meditate]
+- Squire [Slash, Guard] -> (Sword) -> Duelist [Slash, Feint] -> (Horse) -> Cavalry [Lance, Trample, Rally] | (Spear) -> Dragoon [Jump, DragonBreath, DragonWard]
+- Squire -> (Bow) -> Ranger [Pierce, DoubleArrow] -> (Gun) -> Mercenary [GunShot, CalledShot, Evasion] | (Trap) -> Hunter [TripleArrow, Snare, HuntersMark]
+- Squire -> (Shield) -> Warden [Block, ShieldBash] -> (Sword) -> Knight [Block, Valor, SecondWind] | (Helmet) -> Bastion [ShieldSlam, Fortify, Bulwark]
+- Squire -> (Headband) -> MartialArtist [Punch, Sweep] -> (Sword) -> Ninja [SweepingSlash, Dash, SmokeBomb] | (Staff) -> Monk [SpiritAttack, PreciseStrike, ChiMend]
 
 ### Mage
 
