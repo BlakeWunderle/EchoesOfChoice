@@ -14,20 +14,17 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Echoes of Choice - Tactical"
-config/description="A tactical RPG with grid-based combat, elevation, and role-based reactions."
-run/main_scene="res://scenes/story/TitleScreen.tscn"
+config/name="Echoes of Choice"
+config/description="A visual RPG built on the Echoes of Choice universe."
+run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 
 [autoload]
 
 InputConfig="*res://scripts/autoload/input_config.gd"
-GameState="*res://scripts/autoload/game_state.gd"
 SceneManager="*res://scripts/autoload/scene_manager.gd"
 MusicManager="*res://scripts/autoload/music_manager.gd"
 SFXManager="*res://scripts/autoload/sfx_manager.gd"
-SpriteLoader="*res://scripts/autoload/sprite_loader.gd"
-BattlePreloader="*res://scripts/autoload/battle_preloader.gd"
 
 [display]
 
