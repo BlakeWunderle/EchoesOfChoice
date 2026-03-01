@@ -10,9 +10,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Thug(int level = 1)
         {
             Level = level;
-            Health = Stat(42, 52, 3, 7);
+            Health = Stat(48, 58, 3, 7);
             MaxHealth = Health;
-            PhysicalAttack = Stat(13, 17, 1, 3);
+            PhysicalAttack = Stat(14, 18, 1, 3);
             PhysicalDefense = Stat(8, 12, 1, 2);
             MagicAttack = Stat(3, 6, 0, 2);
             MagicDefense = Stat(8, 12, 1, 2);

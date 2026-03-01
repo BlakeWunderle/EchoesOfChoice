@@ -100,7 +100,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new MountainPassBattle(units),
                     LevelUps = 5,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.80,
+                    TargetWinRate = 0.81,
                     ProgressionStage = 4
                 },
                 new BattleStage
@@ -109,7 +109,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new CaveBattle(units),
                     LevelUps = 5,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.80,
+                    TargetWinRate = 0.81,
                     ProgressionStage = 4
                 },
                 new BattleStage
@@ -118,7 +118,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new BeachBattle(units),
                     LevelUps = 5,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.80,
+                    TargetWinRate = 0.81,
                     ProgressionStage = 4
                 },
 
@@ -129,7 +129,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new CircusBattle(units),
                     LevelUps = 6,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.78,
+                    TargetWinRate = 0.79,
                     ProgressionStage = 5
                 },
                 new BattleStage
@@ -138,7 +138,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new LabBattle(units),
                     LevelUps = 6,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.78,
+                    TargetWinRate = 0.79,
                     ProgressionStage = 5
                 },
                 new BattleStage
@@ -147,7 +147,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new ArmyBattle(units),
                     LevelUps = 6,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.78,
+                    TargetWinRate = 0.79,
                     ProgressionStage = 5
                 },
                 new BattleStage
@@ -156,7 +156,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new CemeteryBattle(units),
                     LevelUps = 6,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.78,
+                    TargetWinRate = 0.79,
                     ProgressionStage = 5
                 },
 
@@ -167,7 +167,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new OutpostDefenseBattle(units),
                     LevelUps = 7,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.75,
+                    TargetWinRate = 0.77,
                     ProgressionStage = 6
                 },
 
@@ -178,7 +178,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new MirrorBattle(units),
                     LevelUps = 8,
                     PartySource = PartyComposer.GetTier1Parties,
-                    TargetWinRate = 0.72,
+                    TargetWinRate = 0.75,
                     ProgressionStage = 7
                 },
 
@@ -189,7 +189,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new ReturnToCityStreetBattle(units),
                     LevelUps = 10,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.78,
+                    TargetWinRate = 0.80,
                     ProgressionStage = 8
                 },
 
@@ -200,7 +200,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new StrangerTowerBattle(units),
                     LevelUps = 11,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.75,
+                    TargetWinRate = 0.78,
                     ProgressionStage = 9
                 },
 
@@ -211,7 +211,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new CorruptedCityBattle(units),
                     LevelUps = 12,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.72,
+                    TargetWinRate = 0.75,
                     ProgressionStage = 10
                 },
                 new BattleStage
@@ -220,7 +220,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new CorruptedWildsBattle(units),
                     LevelUps = 12,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.72,
+                    TargetWinRate = 0.75,
                     ProgressionStage = 10
                 },
 
@@ -231,7 +231,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new TempleBattle(units),
                     LevelUps = 13,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.70,
+                    TargetWinRate = 0.72,
                     ProgressionStage = 11
                 },
                 new BattleStage
@@ -240,7 +240,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new BlightBattle(units),
                     LevelUps = 13,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.70,
+                    TargetWinRate = 0.72,
                     ProgressionStage = 11
                 },
 
@@ -251,7 +251,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new GateBattle(units),
                     LevelUps = 14,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.68,
+                    TargetWinRate = 0.69,
                     ProgressionStage = 12
                 },
                 new BattleStage
@@ -260,7 +260,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new DepthsBattle(units),
                     LevelUps = 14,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.68,
+                    TargetWinRate = 0.69,
                     ProgressionStage = 12
                 },
 
@@ -271,7 +271,7 @@ namespace EchoesOfChoice.BattleSimulator
                     BattleFactory = units => new StrangerFinalBattle(units),
                     LevelUps = 15,
                     PartySource = PartyComposer.GetTier2Parties,
-                    TargetWinRate = 0.60,
+                    TargetWinRate = 0.65,
                     ProgressionStage = 13
                 },
             };

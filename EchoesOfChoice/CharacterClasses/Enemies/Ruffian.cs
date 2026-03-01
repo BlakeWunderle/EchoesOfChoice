@@ -10,9 +10,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Ruffian(int level = 1)
         {
             Level = level;
-            Health = Stat(38, 48, 3, 6);
+            Health = Stat(44, 54, 3, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(14, 18, 1, 3);
+            PhysicalAttack = Stat(16, 20, 1, 3);
             PhysicalDefense = Stat(7, 11, 1, 2);
             MagicAttack = Stat(2, 5, 0, 1);
             MagicDefense = Stat(6, 10, 1, 2);

@@ -9,9 +9,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Pickpocket(int level = 1)
         {
             Level = level;
-            Health = Stat(28, 36, 2, 5);
+            Health = Stat(32, 41, 2, 5);
             MaxHealth = Health;
-            PhysicalAttack = Stat(11, 15, 1, 3);
+            PhysicalAttack = Stat(12, 16, 1, 3);
             PhysicalDefense = Stat(5, 8, 0, 2);
             MagicAttack = Stat(2, 4, 0, 1);
             MagicDefense = Stat(5, 9, 0, 2);

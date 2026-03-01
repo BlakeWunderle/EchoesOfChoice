@@ -9,9 +9,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Wolf(int level = 2)
         {
             Level = level;
-            Health = Stat(45, 55, 3, 6, 2);
+            Health = Stat(50, 60, 4, 7, 2);
             MaxHealth = Health;
-            PhysicalAttack = Stat(16, 20, 1, 3, 2);
+            PhysicalAttack = Stat(18, 22, 2, 3, 2);
             PhysicalDefense = Stat(8, 12, 1, 2, 2);
             MagicAttack = Stat(2, 4, 0, 1, 2);
             MagicDefense = Stat(6, 10, 1, 2, 2);
