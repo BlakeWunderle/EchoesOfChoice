@@ -1,7 +1,7 @@
 # Class Upgrade Trees
 
-54 player classes: 4 base (Tier 0), 16 Tier 1, 32 Tier 2, 2 Royal.
-Each T0 has 4 T1 branches. Each T1 has 2 T2 upgrades.
+51 player classes: 4 base (Tier 0), 15 Tier 1, 30 Tier 2, 2 Royal.
+Each T0 has 3-4 T1 branches. Each T1 has 2 T2 upgrades.
 
 ## Squire Tree (physical fighters)
 
@@ -9,13 +9,11 @@ Each T0 has 4 T1 branches. Each T1 has 2 T2 upgrades.
 Squire (T0)
 ├── Duelist (T1) ─── Cavalry (T2), Dragoon (T2)
 ├── Ranger (T1) ──── Mercenary (T2), Hunter (T2)
-├── Warden (T1) ──── Knight (T2), Bastion (T2)
 └── Martial Artist (T1) ── Ninja (T2), Monk (T2)
 ```
 
 - Duelist branch: precision swords → mounted lance / jumping dragoon
 - Ranger branch: bows → guns+crits / traps+tracking
-- Warden branch: defense → full plate tank / immovable fortress
 - Martial Artist branch: unarmed → stealth assassin / spiritual healer-fighter
 
 ## Mage Tree (casters)

@@ -108,12 +108,6 @@ const CLASS_PROFILES: Dictionary = {
 		6: {"pa": 52, "pd": 24, "ma": 19, "md": 20, "hp": 109, "mana": 22,
 			"speed": 44, "crit": 25, "crit_dmg": 3, "dodge": 15, "move": 5, "jump": 3},
 	},
-	"bastion": {
-		# PA=17+2*(L-1), PD=28+7*(L-1), HP=67+13*(L-1), MA=9+2*(L-1), MD=15+3*(L-1)
-		# Spd=14+2*(L-1), Crit=5, CritDmg=1, Dodge=0, Move=3, Jump=1
-		6: {"pa": 27, "pd": 63, "ma": 19, "md": 30, "hp": 132, "mana": 19,
-			"speed": 24, "crit": 5, "crit_dmg": 1, "dodge": 0, "move": 3, "jump": 1},
-	},
 	"illusionist": {
 		# PA=14+3*(L-1), PD=10+2*(L-1), HP=55+9*(L-1), MA=26+6*(L-1), MD=17+3*(L-1)
 		# Spd=18+5*(L-1), Crit=15, CritDmg=2, Dodge=20, Move=4, Jump=2
@@ -131,7 +125,7 @@ const CLASS_PROFILES: Dictionary = {
 const CLASS_DISPLAY_ORDER: Array = [
 	"squire", "mage", "scholar",
 	"ranger", "firebrand", "dervish",
-	"ninja", "bastion", "illusionist", "mercenary",
+	"ninja", "illusionist", "mercenary",
 ]
 
 # Tier → (level checkpoint, equipment slot count)
@@ -203,11 +197,6 @@ const COMBOS: Dictionary = {
 		{"label": "3x PA",            "bonuses": {0: 24},               "slots": 3},
 		{"label": "PA2+Dod2+Spd2",    "bonuses": {0: 8, 8: 10, 7: 5},  "slots": 3},
 	],
-	"bastion": [
-		{"label": "3x PD",            "bonuses": {1: 24},               "slots": 3},
-		{"label": "PD2+HP2+MD2",      "bonuses": {1: 8, 10: 15, 3: 8}, "slots": 3},
-		{"label": "PD2+PD1+HP1",      "bonuses": {1: 13, 10: 10},      "slots": 3},
-	],
 	"illusionist": [
 		{"label": "MA2+Dod2+Spd2",    "bonuses": {2: 8, 8: 10, 7: 5},  "slots": 3},
 		{"label": "3x MA",            "bonuses": {2: 24},               "slots": 3},
@@ -223,17 +212,17 @@ const COMBOS: Dictionary = {
 # Best-fit class per primary stat for story item testing
 const BEST_FIT: Dictionary = {
 	0:  "ranger",      # P.Atk → physical attacker
-	1:  "bastion",     # P.Def → physical tank
+	1:  "squire",      # P.Def → physical tank
 	2:  "firebrand",   # M.Atk → magic glass cannon
 	3:  "scholar",     # M.Def → magic defender
 	7:  "dervish",     # Speed → dodge-based benefits most from speed
 	8:  "illusionist", # Dodge% → highest dodge base
-	10: "bastion",     # HP → tank benefits most from bulk
+	10: "squire",      # HP → tank benefits most from bulk
 	11: "firebrand",   # Mana → mana-hungry caster
 	12: "mercenary",   # Crit% → crit specialist
 	13: "mercenary",   # CritDmg → crit specialist
-	14: "bastion",     # Move → slowest class benefits most
-	15: "bastion",     # Jump → lowest jump (1) benefits most
+	14: "squire",      # Move → slowest class benefits most
+	15: "squire",      # Jump → lowest jump benefits most
 }
 
 

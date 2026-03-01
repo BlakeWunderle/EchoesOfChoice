@@ -14,7 +14,7 @@ stat_bonuses = {
 1: 8
 }
 unlock_tier = 2
-unlock_class_ids = PackedStringArray("knight", "bastion", "paladin")
+unlock_class_ids = PackedStringArray("paladin")
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

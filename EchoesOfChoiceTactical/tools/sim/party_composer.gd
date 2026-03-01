@@ -6,9 +6,9 @@ class_name PartyComposer extends RefCounted
 const ARCHETYPE_TREE := {
 	"fighter": {
 		"t0": ["squire"],
-		"t1": ["duelist", "ranger", "warden", "martial_artist"],
+		"t1": ["duelist", "ranger", "martial_artist"],
 		"t2": ["cavalry", "dragoon", "mercenary", "hunter",
-			"knight", "bastion", "ninja", "monk"],
+			"ninja", "monk"],
 	},
 	"mage": {
 		"t0": ["mage"],

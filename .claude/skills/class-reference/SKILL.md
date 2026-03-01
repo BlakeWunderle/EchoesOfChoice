@@ -5,7 +5,7 @@ description: Quick-reference for all 52 player classes in Echoes of Choice, incl
 
 # Class Reference
 
-52 player classes across 4 archetypes. Each archetype has 1 Tier 0 base, 4 Tier 1, and 8 Tier 2 classes.
+49 player classes across 4 archetypes (plus 2 Royal). Squire has 3 T1 branches; Mage, Entertainer, Scholar each have 4.
 
 ## Upgrade Trees
 
@@ -15,7 +15,6 @@ Each line: `Base -> (Item) -> Tier1 [abilities] -> (Item) -> Tier2 [abilities]`
 
 - Squire [Slash, Guard] -> (Sword) -> Duelist [Slash, Feint] -> (Horse) -> Cavalry [Lance, Trample, Rally] | (Spear) -> Dragoon [Jump, DragonBreath, DragonWard]
 - Squire -> (Bow) -> Ranger [Pierce, DoubleArrow] -> (Gun) -> Mercenary [GunShot, CalledShot, Evasion] | (Trap) -> Hunter [TripleArrow, Snare, HuntersMark]
-- Squire -> (Shield) -> Warden [Block, ShieldBash] -> (Sword) -> Knight [Block, Valor, SecondWind] | (Helmet) -> Bastion [ShieldSlam, Fortify, Bulwark]
 - Squire -> (Headband) -> MartialArtist [Punch, Sweep] -> (Sword) -> Ninja [SweepingSlash, Dash, SmokeBomb] | (Staff) -> Monk [SpiritAttack, PreciseStrike, ChiMend]
 
 ### Mage

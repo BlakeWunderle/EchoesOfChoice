@@ -1,12 +1,11 @@
-[gd_resource type="Resource" script_class="FighterData" load_steps=8 format=3]
+[gd_resource type="Resource" script_class="FighterData" load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/abilities/slash.tres" id="2"]
 [ext_resource type="Resource" path="res://resources/abilities/guard.tres" id="3"]
 [ext_resource type="Resource" path="res://resources/classes/duelist.tres" id="4"]
 [ext_resource type="Resource" path="res://resources/classes/ranger.tres" id="5"]
-[ext_resource type="Resource" path="res://resources/classes/warden.tres" id="6"]
-[ext_resource type="Resource" path="res://resources/classes/martial_artist.tres" id="7"]
+[ext_resource type="Resource" path="res://resources/classes/martial_artist.tres" id="6"]
 
 [resource]
 script = ExtResource("1")
@@ -36,4 +35,4 @@ jump = 2
 reaction_types = [0, 1]
 abilities = [ExtResource("2"), ExtResource("3")]
 tier = 0
-upgrade_options = [ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7")]
+upgrade_options = [ExtResource("4"), ExtResource("5"), ExtResource("6")]
