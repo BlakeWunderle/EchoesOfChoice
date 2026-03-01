@@ -7,22 +7,22 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class Dragon : BaseFighter
     {
-        public Dragon(int level = 6)
+        public Dragon(int level = 15)
         {
             Level = level;
-            Health = Stat(218, 228, 0, 0, 6);
+            Health = Stat(340, 380, 10, 14, 15);
             MaxHealth = Health;
-            PhysicalAttack = Stat(20, 24, 0, 0, 6);
-            PhysicalDefense = Stat(23, 27, 0, 0, 6);
-            MagicAttack = Stat(27, 31, 0, 0, 6);
-            MagicDefense = Stat(18, 22, 0, 0, 6);
-            Speed = Stat(25, 30, 0, 0, 6);
+            PhysicalAttack = Stat(30, 36, 2, 3, 15);
+            PhysicalDefense = Stat(30, 36, 2, 4, 15);
+            MagicAttack = Stat(44, 52, 3, 5, 15);
+            MagicDefense = Stat(26, 32, 2, 3, 15);
+            Speed = Stat(30, 36, 2, 3, 15);
             Abilities = new List<Ability>() { new DragonBreath(), new TailStrike(), new Roar() };
             CharacterType = "Dragon";
-            Mana = Stat(29, 34, 0, 0, 6);
+            Mana = Stat(36, 42, 3, 5, 15);
             MaxMana = Mana;
             CritChance = 30;
-            CritDamage = 2;
+            CritDamage = 4;
             DodgeChance = 20;
         }
 

@@ -6,23 +6,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class Demon : BaseFighter
     {
-        public Demon(int level = 6)
+        public Demon(int level = 14)
         {
             Level = level;
-            Health = Stat(255, 265, 0, 0, 6);
+            Health = Stat(300, 340, 8, 12, 14);
             MaxHealth = Health;
-            PhysicalAttack = Stat(17, 21, 0, 0, 6);
-            PhysicalDefense = Stat(17, 21, 0, 0, 6);
-            MagicAttack = Stat(40, 44, 0, 0, 6);
-            MagicDefense = Stat(22, 26, 0, 0, 6);
-            Speed = Stat(25, 30, 0, 0, 6);
+            PhysicalAttack = Stat(20, 26, 1, 2, 14);
+            PhysicalDefense = Stat(22, 28, 2, 3, 14);
+            MagicAttack = Stat(52, 60, 4, 6, 14);
+            MagicDefense = Stat(28, 34, 2, 3, 14);
+            Speed = Stat(30, 36, 2, 3, 14);
             Abilities = new List<Ability>() { new Brimstone(), new InfernalStrike(), new Dread() };
             CharacterType = "Demon";
-            Mana = Stat(38, 42, 0, 0, 6);
+            Mana = Stat(42, 50, 3, 5, 14);
             MaxMana = Mana;
-            CritChance = 20;
-            CritDamage = 2;
-            DodgeChance = 30;
+            CritChance = 22;
+            CritDamage = 3;
+            DodgeChance = 28;
         }
 
         public Demon(BaseFighter fighter) : base(fighter) { }

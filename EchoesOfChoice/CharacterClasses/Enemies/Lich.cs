@@ -6,23 +6,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class Lich : BaseFighter
     {
-        public Lich(int level = 11)
+        public Lich(int level = 14)
         {
             Level = level;
-            Health = Stat(230, 260, 6, 9, 11);
+            Health = Stat(280, 320, 8, 12, 14);
             MaxHealth = Health;
-            PhysicalAttack = Stat(10, 14, 0, 2, 11);
-            PhysicalDefense = Stat(16, 20, 1, 2, 11);
-            MagicAttack = Stat(36, 42, 2, 4, 11);
-            MagicDefense = Stat(28, 32, 2, 3, 11);
-            Speed = Stat(26, 32, 1, 3, 11);
+            PhysicalAttack = Stat(12, 16, 0, 2, 14);
+            PhysicalDefense = Stat(20, 26, 2, 3, 14);
+            MagicAttack = Stat(50, 58, 4, 6, 14);
+            MagicDefense = Stat(34, 40, 2, 4, 14);
+            Speed = Stat(30, 36, 2, 3, 14);
             Abilities = new List<Ability>() { new DeathBolt(), new RaiseDead(), new SoulCage() };
             CharacterType = "Lich";
-            Mana = Stat(30, 38, 2, 4, 11);
+            Mana = Stat(36, 44, 3, 5, 14);
             MaxMana = Mana;
-            CritChance = 20;
-            CritDamage = 4;
-            DodgeChance = 15;
+            CritChance = 25;
+            CritDamage = 5;
+            DodgeChance = 18;
         }
 
         public Lich(BaseFighter fighter) : base(fighter) { }

@@ -6,23 +6,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class FellHound : BaseFighter
     {
-        public FellHound(int level = 13)
+        public FellHound(int level = 16)
         {
             Level = level;
-            Health = Stat(195, 220, 5, 8, 13);
+            Health = Stat(240, 270, 7, 10, 16);
             MaxHealth = Health;
-            PhysicalAttack = Stat(16, 20, 1, 2, 13);
-            PhysicalDefense = Stat(18, 22, 1, 2, 13);
-            MagicAttack = Stat(30, 36, 2, 4, 13);
-            MagicDefense = Stat(22, 26, 1, 3, 13);
-            Speed = Stat(30, 36, 2, 3, 13);
-            Abilities = new List<Ability>() { new ShadowBite(), new HowlOfDread() };
+            PhysicalAttack = Stat(20, 26, 1, 2, 16);
+            PhysicalDefense = Stat(22, 28, 1, 3, 16);
+            MagicAttack = Stat(42, 50, 3, 5, 16);
+            MagicDefense = Stat(28, 34, 2, 3, 16);
+            Speed = Stat(36, 42, 3, 4, 16);
+            Abilities = new List<Ability>() { new ShadowBite(), new HowlOfDread(), new Blight() };
             CharacterType = "Fell Hound";
-            Mana = Stat(18, 24, 2, 4, 13);
+            Mana = Stat(24, 30, 2, 4, 16);
             MaxMana = Mana;
-            CritChance = 15;
-            CritDamage = 3;
-            DodgeChance = 20;
+            CritChance = 20;
+            CritDamage = 4;
+            DodgeChance = 22;
         }
 
         public FellHound(BaseFighter fighter) : base(fighter) { }

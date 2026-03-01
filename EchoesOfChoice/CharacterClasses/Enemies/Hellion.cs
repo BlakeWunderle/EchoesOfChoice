@@ -6,23 +6,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class Hellion : BaseFighter
     {
-        public Hellion(int level = 6)
+        public Hellion(int level = 15)
         {
             Level = level;
-            Health = Stat(130, 140, 0, 0, 6);
+            Health = Stat(200, 230, 7, 10, 15);
             MaxHealth = Health;
-            PhysicalAttack = Stat(24, 28, 0, 0, 6);
-            PhysicalDefense = Stat(20, 24, 0, 0, 6);
-            MagicAttack = Stat(18, 22, 0, 0, 6);
-            MagicDefense = Stat(16, 20, 0, 0, 6);
-            Speed = Stat(27, 32, 0, 0, 6);
+            PhysicalAttack = Stat(38, 44, 3, 5, 15);
+            PhysicalDefense = Stat(26, 32, 2, 3, 15);
+            MagicAttack = Stat(30, 36, 2, 4, 15);
+            MagicDefense = Stat(22, 28, 2, 3, 15);
+            Speed = Stat(32, 38, 2, 4, 15);
             Abilities = new List<Ability>() { new InfernalStrike(), new ShadowStrike(), new Hex() };
             CharacterType = "Hellion";
-            Mana = Stat(22, 26, 0, 0, 6);
+            Mana = Stat(28, 34, 2, 4, 15);
             MaxMana = Mana;
-            CritChance = 20;
-            CritDamage = 2;
-            DodgeChance = 20;
+            CritChance = 24;
+            CritDamage = 3;
+            DodgeChance = 22;
         }
 
         public Hellion(BaseFighter fighter) : base(fighter) { }

@@ -7,23 +7,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class StrangerFinal : BaseFighter
     {
-        public StrangerFinal(int level = 15)
+        public StrangerFinal(int level = 18)
         {
             Level = level;
-            Health = Stat(380, 420, 10, 15, 15);
+            Health = Stat(600, 680, 18, 25, 18);
             MaxHealth = Health;
-            PhysicalAttack = Stat(38, 44, 2, 4, 15);
-            PhysicalDefense = Stat(30, 36, 2, 4, 15);
-            MagicAttack = Stat(42, 48, 3, 5, 15);
-            MagicDefense = Stat(30, 36, 2, 4, 15);
-            Speed = Stat(34, 40, 2, 4, 15);
+            PhysicalAttack = Stat(60, 70, 4, 6, 18);
+            PhysicalDefense = Stat(38, 44, 3, 5, 18);
+            MagicAttack = Stat(65, 75, 4, 7, 18);
+            MagicDefense = Stat(38, 44, 3, 5, 18);
+            Speed = Stat(40, 46, 3, 5, 18);
             Abilities = new List<Ability>() { new ShadowBlast(), new Siphon(), new DarkVeil(), new Unmake(), new Corruption() };
             CharacterType = "Stranger";
-            Mana = Stat(40, 50, 3, 5, 15);
+            Mana = Stat(50, 60, 4, 6, 18);
             MaxMana = Mana;
-            CritChance = 25;
-            CritDamage = 5;
-            DodgeChance = 20;
+            CritChance = 30;
+            CritDamage = 6;
+            DodgeChance = 25;
         }
 
         public StrangerFinal(BaseFighter fighter) : base(fighter) { }

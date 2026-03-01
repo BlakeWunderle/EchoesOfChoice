@@ -6,23 +6,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class BlightedStag : BaseFighter
     {
-        public BlightedStag(int level = 12)
+        public BlightedStag(int level = 15)
         {
             Level = level;
-            Health = Stat(190, 215, 5, 8, 12);
+            Health = Stat(240, 270, 7, 10, 15);
             MaxHealth = Health;
-            PhysicalAttack = Stat(32, 38, 2, 4, 12);
-            PhysicalDefense = Stat(18, 22, 1, 3, 12);
-            MagicAttack = Stat(16, 20, 1, 2, 12);
-            MagicDefense = Stat(16, 20, 1, 2, 12);
-            Speed = Stat(28, 34, 2, 3, 12);
-            Abilities = new List<Ability>() { new AntlerCharge(), new RotAura() };
+            PhysicalAttack = Stat(42, 50, 3, 5, 15);
+            PhysicalDefense = Stat(22, 28, 2, 3, 15);
+            MagicAttack = Stat(20, 26, 1, 3, 15);
+            MagicDefense = Stat(20, 26, 1, 3, 15);
+            Speed = Stat(34, 40, 3, 4, 15);
+            Abilities = new List<Ability>() { new AntlerCharge(), new RotAura(), new Blight() };
             CharacterType = "Blighted Stag";
-            Mana = Stat(16, 22, 1, 3, 12);
+            Mana = Stat(22, 28, 2, 4, 15);
             MaxMana = Mana;
-            CritChance = 15;
-            CritDamage = 3;
-            DodgeChance = 15;
+            CritChance = 20;
+            CritDamage = 4;
+            DodgeChance = 18;
         }
 
         public BlightedStag(BaseFighter fighter) : base(fighter) { }

@@ -6,23 +6,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class CaveSpider : BaseFighter
     {
-        public CaveSpider(int level = 13)
+        public CaveSpider(int level = 16)
         {
             Level = level;
-            Health = Stat(205, 235, 5, 8, 13);
+            Health = Stat(260, 290, 7, 10, 16);
             MaxHealth = Health;
-            PhysicalAttack = Stat(28, 34, 2, 3, 13);
-            PhysicalDefense = Stat(20, 24, 1, 3, 13);
-            MagicAttack = Stat(10, 14, 0, 2, 13);
-            MagicDefense = Stat(18, 22, 1, 2, 13);
-            Speed = Stat(28, 34, 2, 3, 13);
-            Abilities = new List<Ability>() { new VenomousBite(), new Web() };
+            PhysicalAttack = Stat(40, 48, 3, 5, 16);
+            PhysicalDefense = Stat(26, 32, 2, 3, 16);
+            MagicAttack = Stat(14, 18, 1, 2, 16);
+            MagicDefense = Stat(22, 28, 1, 3, 16);
+            Speed = Stat(34, 40, 3, 4, 16);
+            Abilities = new List<Ability>() { new VenomousBite(), new Web(), new PoisonCloud() };
             CharacterType = "Cave Spider";
-            Mana = Stat(14, 18, 1, 3, 13);
+            Mana = Stat(20, 26, 2, 4, 16);
             MaxMana = Mana;
-            CritChance = 20;
-            CritDamage = 3;
-            DodgeChance = 20;
+            CritChance = 24;
+            CritDamage = 4;
+            DodgeChance = 22;
         }
 
         public CaveSpider(BaseFighter fighter) : base(fighter) { }

@@ -7,23 +7,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class Imp : BaseFighter
     {
-        public Imp(int level = 4)
+        public Imp(int level = 16)
         {
             Level = level;
-            Health = Stat(58, 80, 5, 10, 4);
+            Health = Stat(160, 190, 5, 8, 16);
             MaxHealth = Health;
-            PhysicalAttack = Stat(7, 16, 1, 3, 4);
-            PhysicalDefense = Stat(8, 16, 1, 3, 4);
-            MagicAttack = Stat(16, 27, 2, 5, 4);
-            MagicDefense = Stat(13, 24, 2, 5, 4);
-            Speed = Stat(24, 35, 1, 3, 4);
-            Abilities = new List<Ability>() { new Spark(), new Ember() };
+            PhysicalAttack = Stat(12, 16, 0, 2, 16);
+            PhysicalDefense = Stat(14, 18, 1, 2, 16);
+            MagicAttack = Stat(38, 46, 3, 5, 16);
+            MagicDefense = Stat(22, 28, 2, 3, 16);
+            Speed = Stat(38, 44, 3, 5, 16);
+            Abilities = new List<Ability>() { new Spark(), new Ember(), new Abilities.Enemy.Hex() };
             CharacterType = "Imp";
-            Mana = Stat(26, 49, 2, 7, 4);
+            Mana = Stat(34, 42, 3, 5, 16);
             MaxMana = Mana;
-            CritChance = 10;
-            CritDamage = 1;
-            DodgeChance = 20;
+            CritChance = 18;
+            CritDamage = 3;
+            DodgeChance = 28;
         }
 
         public Imp(BaseFighter fighter) : base(fighter) { }
