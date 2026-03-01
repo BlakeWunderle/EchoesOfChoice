@@ -46,41 +46,41 @@ const CLASS_LABELS: Array = ["vs Squire", "vs Mage", "vs Scholar", "vs Ent"]
 # ─── Tier 1 representative defenders (available from Prog 1) ─────────────────
 # No equipment bonus assumed. Format: [P.Def, M.Def] = base + growth*(level-1).
 # Acolyte (mag tank): PD=13 g2, MD=23 g3 | Ranger (phys mid): PD=17 g2, MD=11 g2
-# Firebrand (mag glass): PD=12 g2, MD=18 g3 | Dervish (dodge): PD=12 g2, MD=18 g2
+# Invoker (mag glass): PD=11 g2, MD=18 g3 | Dervish (dodge): PD=12 g2, MD=18 g2
 # Martial Artist (phys glass): PD=14 g3, MD=12 g2
-const T1_ORDER: Array = ["acolyte", "ranger", "firebrand", "dervish", "martial_artist"]
+const T1_ORDER: Array = ["acolyte", "ranger", "invoker", "dervish", "martial_artist"]
 const PARTY_T1: Dictionary = {
-	1: {"acolyte": [15, 26], "ranger": [19, 13], "firebrand": [14, 21], "dervish": [14, 20], "martial_artist": [17, 14]},
-	2: {"acolyte": [17, 29], "ranger": [21, 15], "firebrand": [16, 24], "dervish": [16, 22], "martial_artist": [20, 16]},
-	3: {"acolyte": [19, 32], "ranger": [23, 17], "firebrand": [18, 27], "dervish": [18, 24], "martial_artist": [23, 18]},
-	4: {"acolyte": [19, 32], "ranger": [23, 17], "firebrand": [18, 27], "dervish": [18, 24], "martial_artist": [23, 18]},
-	5: {"acolyte": [21, 35], "ranger": [25, 19], "firebrand": [20, 30], "dervish": [20, 26], "martial_artist": [26, 20]},
-	6: {"acolyte": [23, 38], "ranger": [27, 21], "firebrand": [22, 33], "dervish": [22, 28], "martial_artist": [29, 22]},
-	7: {"acolyte": [23, 38], "ranger": [27, 21], "firebrand": [22, 33], "dervish": [22, 28], "martial_artist": [29, 22]},
-	8: {"acolyte": [25, 41], "ranger": [29, 23], "firebrand": [24, 36], "dervish": [24, 30], "martial_artist": [32, 24]},
+	1: {"acolyte": [15, 26], "ranger": [19, 13], "invoker": [13, 21], "dervish": [14, 20], "martial_artist": [17, 14]},
+	2: {"acolyte": [17, 29], "ranger": [21, 15], "invoker": [15, 24], "dervish": [16, 22], "martial_artist": [20, 16]},
+	3: {"acolyte": [19, 32], "ranger": [23, 17], "invoker": [17, 27], "dervish": [18, 24], "martial_artist": [23, 18]},
+	4: {"acolyte": [19, 32], "ranger": [23, 17], "invoker": [17, 27], "dervish": [18, 24], "martial_artist": [23, 18]},
+	5: {"acolyte": [21, 35], "ranger": [25, 19], "invoker": [19, 30], "dervish": [20, 26], "martial_artist": [26, 20]},
+	6: {"acolyte": [23, 38], "ranger": [27, 21], "invoker": [21, 33], "dervish": [22, 28], "martial_artist": [29, 22]},
+	7: {"acolyte": [23, 38], "ranger": [27, 21], "invoker": [21, 33], "dervish": [22, 28], "martial_artist": [29, 22]},
+	8: {"acolyte": [25, 41], "ranger": [29, 23], "invoker": [23, 36], "dervish": [24, 30], "martial_artist": [32, 24]},
 }
 
 # ─── Tier 2 representative defenders (available from Prog 3) ─────────────────
 # Paladin (balanced): PD=22 g5, MD=18 g4 | Ninja (phys glass): PD=14 g2, MD=10 g2
-# Cavalry (phys atk): PD=14 g3, MD=10 g2 | Pyromancer (mag glass): PD=10 g2, MD=17 g3
+# Cavalry (phys atk): PD=14 g3, MD=10 g2 | Infernalist (mag glass): PD=10 g2, MD=17 g3
 # Priest (mag extreme): PD=13 g2, MD=21 g4 | Mercenary (crit): PD=14 g2, MD=10 g2
 # Illusionist (dodge): PD=10 g2, MD=17 g3
-const T2_ORDER: Array = ["paladin", "ninja", "cavalry", "pyromancer", "priest", "mercenary", "illusionist"]
+const T2_ORDER: Array = ["paladin", "ninja", "cavalry", "infernalist", "priest", "mercenary", "illusionist"]
 
 # Short column labels for tier tables
 const T_LABELS: Dictionary = {
 	"acolyte": "Aco", "ranger": "Rang",
-	"firebrand": "Fire", "dervish": "Derv", "martial_artist": "MArt",
+	"invoker": "Invk", "dervish": "Derv", "martial_artist": "MArt",
 	"paladin": "Pala", "ninja": "Ninj", "cavalry": "Cav",
-	"pyromancer": "Pyro", "priest": "Prie", "mercenary": "Merc", "illusionist": "Illu",
+	"infernalist": "Infr", "priest": "Prie", "mercenary": "Merc", "illusionist": "Illu",
 }
 const PARTY_T2: Dictionary = {
-	3: {"paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "pyromancer": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
-	4: {"paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "pyromancer": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
-	5: {"paladin": [42, 34], "ninja": [22, 18], "cavalry": [26, 18], "pyromancer": [18, 29], "priest": [21, 37], "mercenary": [22, 18], "illusionist": [18, 29]},
-	6: {"paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "pyromancer": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
-	7: {"paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "pyromancer": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
-	8: {"paladin": [52, 42], "ninja": [26, 22], "cavalry": [32, 22], "pyromancer": [22, 35], "priest": [25, 45], "mercenary": [26, 22], "illusionist": [22, 35]},
+	3: {"paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "infernalist": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
+	4: {"paladin": [37, 30], "ninja": [20, 16], "cavalry": [23, 16], "infernalist": [16, 26], "priest": [19, 33], "mercenary": [20, 16], "illusionist": [16, 26]},
+	5: {"paladin": [42, 34], "ninja": [22, 18], "cavalry": [26, 18], "infernalist": [18, 29], "priest": [21, 37], "mercenary": [22, 18], "illusionist": [18, 29]},
+	6: {"paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "infernalist": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
+	7: {"paladin": [47, 38], "ninja": [24, 20], "cavalry": [29, 20], "infernalist": [20, 32], "priest": [23, 41], "mercenary": [24, 20], "illusionist": [20, 32]},
+	8: {"paladin": [52, 42], "ninja": [26, 22], "cavalry": [32, 22], "infernalist": [22, 35], "priest": [25, 45], "mercenary": [26, 22], "illusionist": [22, 35]},
 }
 
 # ─── Battle roster ────────────────────────────────────────────────────────────

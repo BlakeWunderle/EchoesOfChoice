@@ -12,9 +12,9 @@ const ARCHETYPE_TREE := {
 	},
 	"mage": {
 		"t0": ["mage"],
-		"t1": ["mistweaver", "firebrand", "stormcaller", "acolyte"],
-		"t2": ["cryomancer", "hydromancer", "pyromancer", "geomancer",
-			"electromancer", "tempest", "paladin", "priest"],
+		"t1": ["invoker", "acolyte"],
+		"t2": ["infernalist", "tidecaller", "tempest",
+			"paladin", "priest", "warlock"],
 	},
 	"entertainer": {
 		"t0": ["entertainer"],

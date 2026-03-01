@@ -85,13 +85,13 @@ const CLASS_PROFILES: Dictionary = {
 		6: {"pa": 39, "pd": 27, "ma": 24, "md": 21, "hp": 109, "mana": 19,
 			"speed": 31, "crit": 20, "crit_dmg": 3, "dodge": 5, "move": 5, "jump": 3},
 	},
-	"firebrand": {
-		# PA=14+2*(L-1), PD=10+2*(L-1), HP=49+7*(L-1), MA=28+7*(L-1), MD=18+3*(L-1)
-		# Spd=17+3*(L-1), Crit=10, CritDmg=2, Dodge=5, Move=3, Jump=1
-		4: {"pa": 20, "pd": 16, "ma": 49, "md": 27, "hp": 70, "mana": 34,
-			"speed": 26, "crit": 10, "crit_dmg": 2, "dodge": 5, "move": 3, "jump": 1},
-		6: {"pa": 24, "pd": 20, "ma": 63, "md": 33, "hp": 84, "mana": 44,
-			"speed": 32, "crit": 10, "crit_dmg": 2, "dodge": 5, "move": 3, "jump": 1},
+	"invoker": {
+		# PA=14+2*(L-1), PD=11+2*(L-1), HP=49+7*(L-1), MA=27+7*(L-1), MD=18+3*(L-1)
+		# Spd=13+3*(L-1), Crit=10, CritDmg=2, Dodge=5, Move=3, Jump=1
+		4: {"pa": 20, "pd": 17, "ma": 48, "md": 27, "hp": 70, "mana": 34,
+			"speed": 22, "crit": 10, "crit_dmg": 2, "dodge": 5, "move": 3, "jump": 1},
+		6: {"pa": 24, "pd": 21, "ma": 62, "md": 33, "hp": 84, "mana": 44,
+			"speed": 28, "crit": 10, "crit_dmg": 2, "dodge": 5, "move": 3, "jump": 1},
 	},
 	"dervish": {
 		# PA=14+4*(L-1), PD=12+2*(L-1), HP=49+6*(L-1), MA=21+4*(L-1), MD=18+2*(L-1)
@@ -124,7 +124,7 @@ const CLASS_PROFILES: Dictionary = {
 
 const CLASS_DISPLAY_ORDER: Array = [
 	"squire", "mage", "scholar",
-	"ranger", "firebrand", "dervish",
+	"ranger", "invoker", "dervish",
 	"ninja", "illusionist", "mercenary",
 ]
 
@@ -180,7 +180,7 @@ const COMBOS: Dictionary = {
 		{"label": "PA2+Crit2+Spd2",   "bonuses": {0: 8, 12: 10, 7: 5}, "slots": 3},
 		{"label": "3x PA",            "bonuses": {0: 24},               "slots": 3},
 	],
-	"firebrand": [
+	"invoker": [
 		{"label": "MA1 + HP1",        "bonuses": {2: 5, 10: 10},        "slots": 2},
 		{"label": "MA1 + MD1",        "bonuses": {2: 5, 3: 5},          "slots": 2},
 		{"label": "MA2+Crit2+Spd2",   "bonuses": {2: 8, 12: 10, 7: 5}, "slots": 3},
@@ -213,12 +213,12 @@ const COMBOS: Dictionary = {
 const BEST_FIT: Dictionary = {
 	0:  "ranger",      # P.Atk → physical attacker
 	1:  "squire",      # P.Def → physical tank
-	2:  "firebrand",   # M.Atk → magic glass cannon
+	2:  "invoker",     # M.Atk → magic glass cannon
 	3:  "scholar",     # M.Def → magic defender
 	7:  "dervish",     # Speed → dodge-based benefits most from speed
 	8:  "illusionist", # Dodge% → highest dodge base
 	10: "squire",      # HP → tank benefits most from bulk
-	11: "firebrand",   # Mana → mana-hungry caster
+	11: "invoker",     # Mana → mana-hungry caster
 	12: "mercenary",   # Crit% → crit specialist
 	13: "mercenary",   # CritDmg → crit specialist
 	14: "squire",      # Move → slowest class benefits most

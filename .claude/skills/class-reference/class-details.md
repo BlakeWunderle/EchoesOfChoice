@@ -41,29 +41,25 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 
 | Class | Abilities | Crit/Dmg/Dodge | Upgrades To |
 |-------|-----------|----------------|-------------|
-| Mage | ArcaneBolt | 1/1/1 | Mistweaver (BlueStone), Firebrand (RedStone), Stormcaller (YellowStone), Acolyte (WhiteStone) |
+| Mage | ArcaneBolt | 1/1/1 | Invoker (RedStone), Acolyte (WhiteStone) |
 
 ### Tier 1
 
 | Class | Abilities | Crit/Dmg/Dodge | Upgrades To |
 |-------|-----------|----------------|-------------|
-| Mistweaver | Ice, Chill | 2/2/1 | Cryomancer (IceStone), Hydromancer (WaterStone) |
-| Firebrand | Fire, Scorch | 2/2/1 | Pyromancer (FireStone), Geomancer (LavaStone) |
-| Stormcaller | Lightning, Gust | 3/2/2 | Electromancer (LightningStone), Tempest (AirStone) |
-| Acolyte | Cure, Protect, Radiance | 1/1/1 | Paladin (Hammer), Priest (HolyBook) |
+| Invoker | ArcaneBolt, ElementalSurge | 2/2/1 | Infernalist (FireStone), Tidecaller (WaterStone), Tempest (LightningStone) |
+| Acolyte | Cure, Protect, Radiance | 1/1/1 | Paladin (Hammer), Priest (HolyBook), Warlock (DarkOrb) |
 
 ### Tier 2
 
 | Class | Abilities | Crit/Dmg/Dodge | Role |
 |-------|-----------|----------------|------|
-| Cryomancer | Blizzard, Frostbite, Wall | 2/2/1 | Ice magic DPS + defense buff |
-| Hydromancer | Purify, Tsunami, Undertow | 2/2/3 | Water magic + heal |
-| Pyromancer | FireBall, Inferno, Ignite | 2/2/3 | Pure fire DPS (glass cannon) |
-| Geomancer | Tremor, Lava, Wall | 2/2/1 | Earth magic DPS + defense buff |
-| Electromancer | Thunderbolt, ChainLightning, LightningRush | 4/3/2 | Lightning DPS |
-| Tempest | Hurricane, Tornado, Knockdown | 2/2/4 | Wind magic DPS + debuff |
+| Infernalist | FireBall, Inferno, Enrage | 2/2/3 | Fire glass cannon DPS |
+| Tidecaller | Purify, Tsunami, Undertow | 2/2/1 | Supportive water mage |
+| Tempest | Thunderbolt, ChainLightning, Hurricane | 3/2/2 | Storm/lightning crit DPS |
 | Paladin | Cure, Smash, Smite | 1/1/1 | Hybrid healer + physical |
 | Priest | Restoration, HeavenlyBody, Holy | 1/1/1 | Healer + magic DPS |
+| Warlock | ShadowBolt, Curse, DrainLife | 2/2/2 | Dark magic debuffer |
 
 ---
 
@@ -135,20 +131,18 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 
 When a class is flagged weak/strong, check its sibling (same Tier 1 parent):
 
-| Tier 1 Parent | Sibling A | Sibling B |
-|---------------|-----------|-----------|
-| Duelist | Cavalry | Dragoon |
-| Ranger | Mercenary | Hunter |
-| MartialArtist | Ninja | Monk |
-| Mistweaver | Cryomancer | Hydromancer |
-| Firebrand | Pyromancer | Geomancer |
-| Stormcaller | Electromancer | Tempest |
-| Acolyte | Paladin | Priest |
-| Bard | Warcrier | Minstrel |
-| Dervish | Illusionist | Mime |
-| Orator | Laureate | Elegist |
-| Chorister | Herald | Muse |
-| Artificer | Alchemist | Thaumaturge |
-| Tinker | Bombardier | Siegemaster |
-| Cosmologist | Chronomancer | Astronomer |
-| Arithmancer | Automaton | Technomancer |
+| Tier 1 Parent | Sibling A | Sibling B | Sibling C |
+|---------------|-----------|-----------|-----------|
+| Duelist | Cavalry | Dragoon | — |
+| Ranger | Mercenary | Hunter | — |
+| MartialArtist | Ninja | Monk | — |
+| Invoker | Infernalist | Tidecaller | Tempest |
+| Acolyte | Paladin | Priest | Warlock |
+| Bard | Warcrier | Minstrel | — |
+| Dervish | Illusionist | Mime | — |
+| Orator | Laureate | Elegist | — |
+| Chorister | Herald | Muse | — |
+| Artificer | Alchemist | Thaumaturge | — |
+| Tinker | Bombardier | Siegemaster | — |
+| Cosmologist | Chronomancer | Astronomer | — |
+| Arithmancer | Automaton | Technomancer | — |

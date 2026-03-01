@@ -4,14 +4,14 @@
 
 [resource]
 script = ExtResource("1")
-ability_name = "Curse"
-flavor_text = "A dark hex that weakens magical resistance."
-modified_stat = 3
-modifier = 4
-impacted_turns = 2
+ability_name = "Elemental Surge"
+flavor_text = "A raw blast of elemental energy."
+modified_stat = 2
+modifier = 5
+impacted_turns = 0
 use_on_enemy = true
-mana_cost = 4
+mana_cost = 3
 ability_range = 3
 aoe_shape = 0
 aoe_size = 0
-ability_type = 3
+ability_type = 0

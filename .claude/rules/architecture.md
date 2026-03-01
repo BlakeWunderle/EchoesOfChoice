@@ -89,7 +89,7 @@ All paths below are relative to `EchoesOfChoiceTactical/`.
 - `Unit.gd/.tscn` -- Unit node: AnimatedSprite2D (2x scale for 32px art on 64px tiles), directional animations (idle/walk/attack/hurt/death), gender-aware sprite loading (sprite_id_female for female/princess units) via SpriteLoader, flip_h mirroring fallback (left↔right) for 3-direction sprites, placeholder colored rectangles, all stats, facing, reaction tracking, animated grid movement, stat modification, health bar
 
 ### Resources (`resources/`)
-- `classes/` -- 51 FighterData .tres files (4 base + 15 T1 + 30 T2 + 2 royal)
+- `classes/` -- 47 FighterData .tres files (4 base + 13 T1 + 28 T2 + 2 royal)
 - `abilities/` -- 168 AbilityData .tres files
 - `enemies/` -- 78 FighterData .tres files
 - `items/` -- 58 item .tres files (consumables + equipment across 3 progression tiers)

@@ -1,7 +1,7 @@
 # Class Upgrade Trees
 
-51 player classes: 4 base (Tier 0), 15 Tier 1, 30 Tier 2, 2 Royal.
-Each T0 has 3-4 T1 branches. Each T1 has 2 T2 upgrades.
+47 player classes: 4 base (Tier 0), 13 Tier 1, 28 Tier 2, 2 Royal.
+Each T0 has 2-4 T1 branches. Each T1 has 2-3 T2 upgrades.
 
 ## Squire Tree (physical fighters)
 
@@ -20,16 +20,12 @@ Squire (T0)
 
 ```
 Mage (T0)
-├── Mistweaver (T1) ── Cryomancer (T2), Hydromancer (T2)
-├── Firebrand (T1) ─── Pyromancer (T2), Geomancer (T2)
-├── Stormcaller (T1) ─ Electromancer (T2), Tempest (T2)
-└── Acolyte (T1) ───── Paladin (T2), Priest (T2)
+├── Invoker (T1) ─── Infernalist (T2), Tidecaller (T2), Tempest (T2)
+└── Acolyte (T1) ── Paladin (T2), Priest (T2), Warlock (T2)
 ```
 
-- Mistweaver branch: fog/mist → ice walls+freeze / water healing
-- Firebrand branch: fire hybrid → pure fire / earth+terrain
-- Stormcaller branch: lightning → chain lightning / wind warrior
-- Acolyte branch: apprentice healer → holy knight / holy caster
+- Invoker branch: offensive elemental caster → fire glass cannon / supportive water / storm lightning DPS
+- Acolyte branch: apprentice healer → holy knight / holy caster / dark magic debuffer
 
 ## Entertainer Tree (performers & support)
 

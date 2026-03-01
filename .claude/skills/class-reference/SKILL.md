@@ -1,11 +1,11 @@
 ---
 name: class-reference
-description: Quick-reference for all 52 player classes in Echoes of Choice, including upgrade trees, abilities, and archetype groupings. Use when analyzing class win rates, identifying which upgrade tree a class belongs to, checking class abilities, or mapping simulation output back to archetypes. Also use when a whole tree branch appears weak or strong to determine if the issue is the Tier 1 parent, the Tier 2 class, or shared abilities.
+description: Quick-reference for all 47 player classes in Echoes of Choice, including upgrade trees, abilities, and archetype groupings. Use when analyzing class win rates, identifying which upgrade tree a class belongs to, checking class abilities, or mapping simulation output back to archetypes. Also use when a whole tree branch appears weak or strong to determine if the issue is the Tier 1 parent, the Tier 2 class, or shared abilities.
 ---
 
 # Class Reference
 
-49 player classes across 4 archetypes (plus 2 Royal). Squire has 3 T1 branches; Mage, Entertainer, Scholar each have 4.
+45 player classes across 4 archetypes (plus 2 Royal). Squire has 3 T1 branches; Entertainer and Scholar have 4; Mage has 2.
 
 ## Upgrade Trees
 
@@ -19,10 +19,8 @@ Each line: `Base -> (Item) -> Tier1 [abilities] -> (Item) -> Tier2 [abilities]`
 
 ### Mage
 
-- Mage [ArcaneBolt] -> (BlueStone) -> Mistweaver [Ice, Chill] -> (IceStone) -> Cryomancer [Blizzard, Frostbite, Wall] | (WaterStone) -> Hydromancer [Purify, Tsunami, Undertow]
-- Mage -> (RedStone) -> Firebrand [Fire, Scorch] -> (FireStone) -> Pyromancer [FireBall, Inferno, Ignite] | (LavaStone) -> Geomancer [Tremor, Lava, Wall]
-- Mage -> (YellowStone) -> Stormcaller [Lightning, Gust] -> (LightningStone) -> Electromancer [Thunderbolt, ChainLightning, LightningRush] | (AirStone) -> Tempest [Hurricane, Tornado, Knockdown]
-- Mage -> (WhiteStone) -> Acolyte [Cure, Protect, Radiance] -> (Hammer) -> Paladin [Cure, Smash, Smite] | (HolyBook) -> Priest [Restoration, HeavenlyBody, Holy]
+- Mage [ArcaneBolt] -> (RedStone) -> Invoker [ArcaneBolt, ElementalSurge] -> (FireStone) -> Infernalist [FireBall, Inferno, Enrage] | (WaterStone) -> Tidecaller [Purify, Tsunami, Undertow] | (LightningStone) -> Tempest [Thunderbolt, ChainLightning, Hurricane]
+- Mage -> (WhiteStone) -> Acolyte [Cure, Protect, Radiance] -> (Hammer) -> Paladin [Cure, Smash, Smite] | (HolyBook) -> Priest [Restoration, HeavenlyBody, Holy] | (DarkOrb) -> Warlock [ShadowBolt, Curse, DrainLife]
 
 ### Entertainer
 

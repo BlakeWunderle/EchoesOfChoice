@@ -14,7 +14,7 @@ stat_bonuses = {
 2: 8
 }
 unlock_tier = 2
-unlock_class_ids = PackedStringArray("cryomancer", "hydromancer", "pyromancer", "geomancer", "electromancer", "tempest")
+unlock_class_ids = PackedStringArray("infernalist", "tidecaller", "tempest", "warlock")
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0
