@@ -12,7 +12,7 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 
 | Class | Abilities | Crit/Dmg/Dodge | Upgrades To |
 |-------|-----------|----------------|-------------|
-| Squire | Slash, Guard | 2/2/1 | Duelist (Sword), Ranger (Bow), Warden (Shield), MartialArtist (Headband) |
+| Squire | Slash, Guard | 2/2/1 | Duelist (Sword), Ranger (Bow), MartialArtist (Headband) |
 
 ### Tier 1
 
