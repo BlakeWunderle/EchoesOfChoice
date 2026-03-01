@@ -92,21 +92,20 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 
 ---
 
-## Scholar
+## Tinker
 
 ### Tier 0
 
 | Class | Abilities | Crit/Dmg/Dodge | Upgrades To |
 |-------|-----------|----------------|-------------|
-| Scholar | Proof, EnergyBlast | 1/1/1 | Artificer (Crystal), Tinker (Blueprint), Cosmologist (Textbook), Arithmancer (Abacus) |
+| Tinker | Proof, EnergyBlast | 1/1/1 | Artificer (Crystal), Philosopher (Textbook), Arithmancer (Abacus) |
 
 ### Tier 1
 
 | Class | Abilities | Crit/Dmg/Dodge | Upgrades To |
 |-------|-----------|----------------|-------------|
-| Artificer | EnergyBlast, MagicalTinkering | 1/1/1 | Alchemist (Potion), Thaumaturge (Hammer) |
-| Tinker | Trap, SpringLoaded | 1/1/1 | Bombardier (Dynamite), Siegemaster (Brick) |
-| Cosmologist | TimeWarp, BlackHole, Gravity | 1/1/1 | Chronomancer (TimeMachine), Astronomer (Telescope) |
+| Artificer | EnergyBlast, MagicalTinkering | 1/1/1 | Alchemist (Potion), Bombardier (Dynamite) |
+| Philosopher | TimeWarp, BlackHole, Gravity | 1/1/1 | Chronomancer (TimeMachine), Astronomer (Telescope) |
 | Arithmancer | Recite, Calculate | 1/1/1 | Automaton (ClockworkCore), Technomancer (Computer) |
 
 ### Tier 2
@@ -114,13 +113,11 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 | Class | Abilities | Crit/Dmg/Dodge | Role |
 |-------|-----------|----------------|------|
 | Alchemist | Transmute, VialToss, Elixir | 1/1/1 | Mixed DPS + heal + debuff |
-| Thaumaturge | RunicStrike, ArcaneWard, RunicBlast | 1/1/1 | Tanky magic bruiser + defense buff |
-| Bombardier | Shrapnel, Explosion, Detonate | 2/2/1 | Physical/mixed DPS + debuff |
-| Siegemaster | Earthquake, Demolish, Taunt | 2/2/1 | Defensive tank with Taunt |
+| Bombardier | Shrapnel, Explosion, Detonate | 2/2/1 | Physical/mixed AoE DPS |
 | Chronomancer | WarpSpeed, TimeBomb, TimeFreeze | 1/1/1 | Utility + time magic |
 | Astronomer | Starfall, MeteorShower, Eclipse | 1/1/1 | Pure magic DPS |
-| Technomancer | Random, ProgramDefense, ProgramOffense | 1/1/1 | Utility + buff/debuff |
 | Automaton | ServoStrike, ProgramDefense, Overclock | 3/3/1 | Mixed DPS + defense buff |
+| Technomancer | Random, ProgramDefense, ProgramOffense | 1/1/1 | Utility + buff/debuff |
 
 ---
 
@@ -138,7 +135,6 @@ When a class is flagged weak/strong, check its sibling (same Tier 1 parent):
 | Bard | Warcrier | Minstrel | — |
 | Dervish | Illusionist | Mime | — |
 | Orator | Laureate | Elegist | — |
-| Artificer | Alchemist | Thaumaturge | — |
-| Tinker | Bombardier | Siegemaster | — |
-| Cosmologist | Chronomancer | Astronomer | — |
+| Artificer | Alchemist | Bombardier | — |
+| Philosopher | Chronomancer | Astronomer | — |
 | Arithmancer | Automaton | Technomancer | — |

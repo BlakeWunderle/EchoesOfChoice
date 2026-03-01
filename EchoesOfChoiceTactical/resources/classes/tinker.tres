@@ -1,37 +1,38 @@
 [gd_resource type="Resource" script_class="FighterData" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
-[ext_resource type="Resource" path="res://resources/abilities/trap.tres" id="2"]
-[ext_resource type="Resource" path="res://resources/abilities/spring_loaded.tres" id="3"]
-[ext_resource type="Resource" path="res://resources/classes/bombardier.tres" id="4"]
-[ext_resource type="Resource" path="res://resources/classes/siegemaster.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/abilities/proof.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/abilities/energy_blast.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/classes/artificer.tres" id="4"]
+[ext_resource type="Resource" path="res://resources/classes/philosopher.tres" id="5"]
+[ext_resource type="Resource" path="res://resources/classes/arithmancer.tres" id="6"]
 
 [resource]
 script = ExtResource("1")
 class_id = "tinker"
 class_display_name = "Tinker"
-sprite_id = "chibi_gnome_1"
-sprite_id_female = "chibi_women_citizen_women_2_tinker"
+sprite_id = "chibi_old_hero_2"
+sprite_id_female = "chibi_dark_elves_1_scholar"
 base_max_health = 44
 base_max_mana = 14
-base_physical_attack = 9
-base_physical_defense = 11
+base_physical_attack = 7
+base_physical_defense = 12
 base_magic_attack = 20
-base_magic_defense = 18
+base_magic_defense = 20
 base_speed = 11
-base_crit_chance = 10
+base_crit_chance = 5
 base_crit_damage = 1
 base_dodge_chance = 5
 growth_health = 7
 growth_mana = 2
-growth_physical_attack = 3
+growth_physical_attack = 2
 growth_physical_defense = 2
-growth_magic_attack = 3
+growth_magic_attack = 2
 growth_magic_defense = 2
 growth_speed = 2
 movement = 3
 jump = 1
 reaction_types = [1, 4]
 abilities = [ExtResource("2"), ExtResource("3")]
-tier = 1
-upgrade_options = [ExtResource("4"), ExtResource("5")]
+tier = 0
+upgrade_options = [ExtResource("4"), ExtResource("5"), ExtResource("6")]

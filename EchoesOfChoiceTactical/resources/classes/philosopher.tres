@@ -9,8 +9,8 @@
 
 [resource]
 script = ExtResource("1")
-class_id = "cosmologist"
-class_display_name = "Cosmologist"
+class_id = "philosopher"
+class_display_name = "Philosopher"
 sprite_id = "chibi_dark_oracle_3"
 sprite_id_female = "chibi_dark_oracle_3_cosmologist_f"
 base_max_health = 44

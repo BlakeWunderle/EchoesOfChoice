@@ -25,7 +25,7 @@ const CLASS_IDENTITY: Dictionary = {
 	"entertainer": {
 		"ability_types": [Enums.AbilityType.DEBUFF, Enums.AbilityType.BUFF],
 	},
-	"scholar": {
+	"tinker": {
 		"ability_types": [Enums.AbilityType.DEBUFF],
 		"stat_types": [Enums.StatType.MAGIC_ATTACK],
 	},

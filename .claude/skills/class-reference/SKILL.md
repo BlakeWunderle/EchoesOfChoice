@@ -1,11 +1,11 @@
 ---
 name: class-reference
-description: Quick-reference for all 44 player classes in Echoes of Choice, including upgrade trees, abilities, and archetype groupings. Use when analyzing class win rates, identifying which upgrade tree a class belongs to, checking class abilities, or mapping simulation output back to archetypes. Also use when a whole tree branch appears weak or strong to determine if the issue is the Tier 1 parent, the Tier 2 class, or shared abilities.
+description: Quick-reference for all 41 player classes in Echoes of Choice, including upgrade trees, abilities, and archetype groupings. Use when analyzing class win rates, identifying which upgrade tree a class belongs to, checking class abilities, or mapping simulation output back to archetypes. Also use when a whole tree branch appears weak or strong to determine if the issue is the Tier 1 parent, the Tier 2 class, or shared abilities.
 ---
 
 # Class Reference
 
-42 player classes across 4 archetypes (plus 2 Royal). Squire and Entertainer have 3 T1 branches; Scholar has 4; Mage has 2.
+39 player classes across 4 archetypes (plus 2 Royal). Squire and Entertainer have 3 T1 branches; Tinker has 3; Mage has 2.
 
 ## Upgrade Trees
 
@@ -28,12 +28,11 @@ Each line: `Base -> (Item) -> Tier1 [abilities] -> (Item) -> Tier2 [abilities]`
 - Entertainer -> (Slippers) -> Dervish [Seduce, Dance] -> (Light) -> Illusionist [ShadowAttack, Mirage, Bewilderment] | (Paint) -> Mime [InvisibleWall, Anvil, InvisibleBox]
 - Entertainer -> (Scroll) -> Orator [Oration, Encourage] -> (Pen) -> Elegist [Nightfall, Inspire, Dirge] | (Medal) -> Laureate [Ovation, Recite, Eulogy]
 
-### Scholar
+### Tinker
 
-- Scholar [Proof, EnergyBlast] -> (Crystal) -> Artificer [EnergyBlast, MagicalTinkering] -> (Potion) -> Alchemist [Transmute, VialToss, Elixir] | (Hammer) -> Thaumaturge [RunicStrike, ArcaneWard, RunicBlast]
-- Scholar -> (Blueprint) -> Tinker [Trap, SpringLoaded] -> (Dynamite) -> Bombardier [Shrapnel, Explosion, Detonate] | (Brick) -> Siegemaster [Earthquake, Demolish, Taunt]
-- Scholar -> (Textbook) -> Cosmologist [TimeWarp, BlackHole, Gravity] -> (TimeMachine) -> Chronomancer [WarpSpeed, TimeBomb, TimeFreeze] | (Telescope) -> Astronomer [Starfall, MeteorShower, Eclipse]
-- Scholar -> (Abacus) -> Arithmancer [Recite, Calculate] -> (ClockworkCore) -> Automaton [ServoStrike, ProgramDefense, Overclock] | (Computer) -> Technomancer [Random, ProgramDefense, ProgramOffense]
+- Tinker [Proof, EnergyBlast] -> (Crystal) -> Artificer [EnergyBlast, MagicalTinkering] -> (Potion) -> Alchemist [Transmute, VialToss, Elixir] | (Dynamite) -> Bombardier [Shrapnel, Explosion, Detonate]
+- Tinker -> (Textbook) -> Philosopher [TimeWarp, BlackHole, Gravity] -> (TimeMachine) -> Chronomancer [WarpSpeed, TimeBomb, TimeFreeze] | (Telescope) -> Astronomer [Starfall, MeteorShower, Eclipse]
+- Tinker -> (Abacus) -> Arithmancer [Recite, Calculate] -> (ClockworkCore) -> Automaton [ServoStrike, ProgramDefense, Overclock] | (Computer) -> Technomancer [Random, ProgramDefense, ProgramOffense]
 
 ## Using This Reference
 

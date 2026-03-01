@@ -22,10 +22,10 @@ const ARCHETYPE_TREE := {
 		"t2": ["warcrier", "minstrel", "illusionist", "mime",
 			"laureate", "elegist"],
 	},
-	"scholar": {
-		"t0": ["scholar"],
-		"t1": ["artificer", "tinker", "cosmologist", "arithmancer"],
-		"t2": ["alchemist", "thaumaturge", "bombardier", "siegemaster",
+	"tinker": {
+		"t0": ["tinker"],
+		"t1": ["artificer", "philosopher", "arithmancer"],
+		"t2": ["alchemist", "bombardier",
 			"astronomer", "chronomancer", "automaton", "technomancer"],
 	},
 }

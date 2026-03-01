@@ -27,17 +27,17 @@ const CLASS_IDENTITY: Dictionary = {
 	"squire": {"ability_types": [AT_BUFF], "stat_types": [ST_PHYS_ATK]},
 	"mage": {"ability_types": [], "stat_types": [ST_MAG_ATK]},
 	"entertainer": {"ability_types": [AT_DEBUFF, AT_BUFF], "stat_types": []},
-	"scholar": {"ability_types": [AT_DEBUFF], "stat_types": [ST_MAG_ATK]},
+	"tinker": {"ability_types": [AT_DEBUFF], "stat_types": [ST_MAG_ATK]},
 }
 
 const BASE_CLASSES: Dictionary = {
 	"squire": "res://resources/classes/squire.tres",
 	"mage": "res://resources/classes/mage.tres",
 	"entertainer": "res://resources/classes/entertainer.tres",
-	"scholar": "res://resources/classes/scholar.tres",
+	"tinker": "res://resources/classes/tinker.tres",
 }
 
-const CLASS_ORDER: Array = ["squire", "mage", "entertainer", "scholar"]
+const CLASS_ORDER: Array = ["squire", "mage", "entertainer", "tinker"]
 
 # ─── Progression: conservative unit level at each battle index ────────────────
 # Battle 0 = city_street (prog 0, L1), Battle 1 = forest (prog 1, still L1),

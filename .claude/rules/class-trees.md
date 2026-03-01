@@ -1,7 +1,7 @@
 # Class Upgrade Trees
 
-44 player classes: 4 base (Tier 0), 12 Tier 1, 26 Tier 2, 2 Royal.
-Each T0 has 2-4 T1 branches. Each T1 has 2-3 T2 upgrades.
+41 player classes: 4 base (Tier 0), 11 Tier 1, 24 Tier 2, 2 Royal.
+Each T0 has 2-3 T1 branches. Each T1 has 2-3 T2 upgrades.
 
 ## Squire Tree (physical fighters)
 
@@ -40,19 +40,17 @@ Entertainer (T0)
 - Dervish branch: dance → illusion evasive DPS / terrain mimicry
 - Orator branch: speech → AoE inspiring buffs / demoralizing debuffs
 
-## Scholar Tree (inventors & academics)
+## Tinker Tree (inventors & academics)
 
 ```
-Scholar (T0)
-├── Artificer (T1) ──── Alchemist (T2), Thaumaturge (T2)
-├── Tinker (T1) ─────── Bombardier (T2), Siegemaster (T2)
-├── Cosmologist (T1) ── Astronomer (T2), Chronomancer (T2)
+Tinker (T0)
+├── Artificer (T1) ──── Alchemist (T2), Bombardier (T2)
+├── Philosopher (T1) ── Chronomancer (T2), Astronomer (T2)
 └── Arithmancer (T1) ── Automaton (T2), Technomancer (T2)
 ```
 
-- Artificer branch: crafting → potions+buffs / advanced spell research
-- Tinker branch: gadgets → explosives AoE / fortification+siege
-- Cosmologist branch: cosmic → celestial magic / time manipulation
+- Artificer branch: crafting → potions+healing / explosives AoE
+- Philosopher branch: cosmic → time manipulation / celestial magic DPS
 - Arithmancer branch: math magic → construct body / tech+magic hybrid
 
 ## Royal Classes (standalone)

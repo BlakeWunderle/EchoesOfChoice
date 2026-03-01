@@ -66,7 +66,7 @@ const CLASS_PROFILES: Dictionary = {
 		6: {"pa": 21, "pd": 21, "ma": 33, "md": 28, "hp": 79, "mana": 31,
 			"speed": 30, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 3, "jump": 1},
 	},
-	"scholar": {
+	"tinker": {
 		# PA=7+2*(L-1), PD=12+2*(L-1), HP=44+7*(L-1), MA=20+2*(L-1), MD=20+2*(L-1)
 		# Spd=13+3*(L-1), Crit=5, CritDmg=1, Dodge=5, Move=3, Jump=1
 		2: {"pa": 9, "pd": 14, "ma": 22, "md": 22, "hp": 51, "mana": 16,
@@ -123,7 +123,7 @@ const CLASS_PROFILES: Dictionary = {
 }
 
 const CLASS_DISPLAY_ORDER: Array = [
-	"squire", "mage", "scholar",
+	"squire", "mage", "tinker",
 	"ranger", "invoker", "dervish",
 	"ninja", "illusionist", "mercenary",
 ]
@@ -163,7 +163,7 @@ const COMBOS: Dictionary = {
 		{"label": "MD2+HP2+PD2",      "bonuses": {3: 8, 10: 15, 1: 8}, "slots": 3},
 		{"label": "MA2+MD2+HP2",      "bonuses": {2: 8, 3: 8, 10: 15}, "slots": 3},
 	],
-	"scholar": [
+	"tinker": [
 		{"label": "2x MA T1",         "bonuses": {2: 10},               "slots": 2},
 		{"label": "MA1 + MD1",        "bonuses": {2: 5, 3: 5},          "slots": 2},
 		{"label": "MA1 + Dodge1",     "bonuses": {2: 5, 8: 5},          "slots": 2},
@@ -214,7 +214,7 @@ const BEST_FIT: Dictionary = {
 	0:  "ranger",      # P.Atk → physical attacker
 	1:  "squire",      # P.Def → physical tank
 	2:  "invoker",     # M.Atk → magic glass cannon
-	3:  "scholar",     # M.Def → magic defender
+	3:  "tinker",     # M.Def → magic defender
 	7:  "dervish",     # Speed → dodge-based benefits most from speed
 	8:  "illusionist", # Dodge% → highest dodge base
 	10: "squire",      # HP → tank benefits most from bulk
