@@ -18,7 +18,6 @@ func show_for(unit: BattleUnit) -> void:
 func _show_main() -> void:
 	_main_box.visible = true
 	_sub_panel.visible = false
-	# Update button states
 	for child in _main_box.get_children():
 		if child is Button and child.name == "AbilityBtn":
 			child.disabled = _unit.abilities.size() <= 1
@@ -41,7 +40,7 @@ func _on_ability() -> void:
 		btn.text = "%s  MP:%d" % [ability.ability_name, ability.mana_cost]
 		btn.disabled = not _unit.can_use_ability(ability)
 		btn.custom_minimum_size = Vector2(0, 36)
-		var ab := ability  # capture for lambda
+		var ab := ability
 		btn.pressed.connect(func():
 			visible = false
 			action_chosen.emit({"type": "ability", "ability": ab}))
@@ -61,11 +60,6 @@ func _on_item() -> void:
 	_show_main()
 
 
-func _on_row_swap() -> void:
-	visible = false
-	action_chosen.emit({"type": "row_swap"})
-
-
 func _on_defend() -> void:
 	visible = false
 	action_chosen.emit({"type": "defend"})
@@ -76,5 +70,4 @@ func _ready() -> void:
 	%AttackBtn.pressed.connect(_on_attack)
 	%AbilityBtn.pressed.connect(_on_ability)
 	%ItemBtn.pressed.connect(_on_item)
-	%RowSwapBtn.pressed.connect(_on_row_swap)
 	%DefendBtn.pressed.connect(_on_defend)

@@ -26,7 +26,7 @@ static func _execute_damage(ability: AbilityData, caster: BattleUnit, targets: A
 		var defender_stats := target.get_stats()
 		var damage := Combat.calculate_ability_damage(ability, attacker_stats, defender_stats)
 
-		if Combat.roll_dodge(target.dodge_chance, target.is_back_row()):
+		if Combat.roll_dodge(target.dodge_chance):
 			results.append({"target": target, "type": "dodge"})
 			continue
 

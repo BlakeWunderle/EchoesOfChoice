@@ -10,22 +10,20 @@ const _ModifiedStat = preload("res://scripts/data/modified_stat.gd")
 
 const TURN_THRESHOLD := 100.0
 
-@onready var _enemy_front_row: HBoxContainer = %EnemyFrontRow
-@onready var _enemy_back_row: HBoxContainer = %EnemyBackRow
-@onready var _player_front_row: HBoxContainer = %PlayerFrontRow
-@onready var _player_back_row: HBoxContainer = %PlayerBackRow
+@onready var _enemy_row: HBoxContainer = %EnemyRow
+@onready var _player_row: HBoxContainer = %PlayerRow
 @onready var _action_menu: Control = %ActionMenu
 @onready var _turn_label: Label = %TurnLabel
 @onready var _battle_name_label: Label = %BattleName
 
-var _player_units: Array = []  # Array of BattleUnit
+var _player_units: Array = []
 var _enemy_units: Array = []
 var _all_units: Array = []
 var _battle_active: bool = false
 var _cards: Dictionary = {}  # BattleUnit -> PortraitCard node
 var _config: Dictionary = {}
 
-var _selected_target = null  # BattleUnit or null
+var _selected_target = null
 signal _target_selected
 
 
@@ -51,7 +49,7 @@ func _spawn_player_units() -> void:
 	pu.xp = GameState.player_xp
 	pu.jp = GameState.player_jp
 	_player_units.append(pu)
-	_create_card(pu)
+	_create_card(pu, _player_row)
 
 	for member in GameState.party_members:
 		var data: FighterData = _BattleConfig.load_class(member.get("class_id", ""))
@@ -66,10 +64,8 @@ func _spawn_player_units() -> void:
 			unit.health = mini(tracked["hp"], unit.max_health)
 		if tracked["mp"] >= 0:
 			unit.mana = mini(tracked["mp"], unit.max_mana)
-		if member.has("row"):
-			unit.row = Enums.RowPosition.BACK if member["row"] == "back" else Enums.RowPosition.FRONT
 		_player_units.append(unit)
-		_create_card(unit)
+		_create_card(unit, _player_row)
 
 
 func _spawn_enemy_units() -> void:
@@ -79,34 +75,24 @@ func _spawn_enemy_units() -> void:
 			push_error("BattleScene: Could not load enemy '%s'" % enemy_def["id"])
 			continue
 		var display_name := data.class_display_name
-		# Append letter for duplicates
 		var count := 0
 		for existing in _enemy_units:
 			if existing.class_id == data.class_id:
 				count += 1
 		if count > 0:
-			display_name += " " + char(65 + count)  # A, B, C...
+			display_name += " " + char(65 + count)
 		var unit := _BattleUnit.from_fighter_data(
 			data, display_name, enemy_def.get("level", 1), Enums.Team.ENEMY)
-		if enemy_def.has("row"):
-			unit.row = enemy_def["row"]
 		_enemy_units.append(unit)
-		_create_card(unit)
+		_create_card(unit, _enemy_row)
 
 
-func _create_card(unit) -> void:
+func _create_card(unit, container: HBoxContainer) -> void:
 	var card := PortraitCardScene.instantiate()
-	var container := _get_row_container(unit)
 	container.add_child(card)
 	card.setup(unit)
 	card.clicked.connect(_on_card_clicked)
 	_cards[unit] = card
-
-
-func _get_row_container(unit) -> HBoxContainer:
-	if unit.team == Enums.Team.PLAYER:
-		return _player_front_row if unit.row == Enums.RowPosition.FRONT else _player_back_row
-	return _enemy_front_row if unit.row == Enums.RowPosition.FRONT else _enemy_back_row
 
 
 # --- ATB Loop ---
@@ -169,8 +155,6 @@ func _player_turn(unit) -> void:
 				unit.spend_mana(ability.mana_cost)
 				var results := _AbilityExecutor.execute(ability, unit, targets)
 				await _animate_results(results)
-		"row_swap":
-			_swap_row(unit)
 		"defend":
 			_apply_defend(unit)
 
@@ -185,7 +169,6 @@ func _select_targets(ability: AbilityData, caster) -> Array:
 	if ability.target_scope != Enums.TargetScope.SINGLE:
 		return valid
 
-	# Single target: highlight valid cards and wait for click
 	for u in valid:
 		if _cards.has(u):
 			_cards[u].set_targetable(true)
@@ -199,7 +182,7 @@ func _select_targets(ability: AbilityData, caster) -> Array:
 
 	if _selected_target and _selected_target in valid:
 		return [_selected_target]
-	return valid.slice(0, 1)  # fallback to first valid
+	return valid.slice(0, 1)
 
 
 func _on_card_clicked(unit) -> void:
@@ -208,29 +191,15 @@ func _on_card_clicked(unit) -> void:
 
 
 func _get_valid_targets(ability: AbilityData, caster) -> Array:
-	var pool: Array = []
 	var allies := _player_units if caster.team == Enums.Team.PLAYER else _enemy_units
 	var enemies := _enemy_units if caster.team == Enums.Team.PLAYER else _player_units
 
 	match ability.ability_type:
 		Enums.AbilityType.DAMAGE, Enums.AbilityType.DEBUFF:
-			pool = _filter_alive(enemies)
+			return _filter_alive(enemies)
 		Enums.AbilityType.HEAL, Enums.AbilityType.BUFF:
-			pool = _filter_alive(allies)
-
-	# Melee can't hit back row if front row has units
-	if ability.requires_front_row and ability.ability_type == Enums.AbilityType.DAMAGE:
-		var front_alive := pool.filter(func(u) -> bool: return u.row == Enums.RowPosition.FRONT)
-		if not front_alive.is_empty():
-			pool = front_alive
-
-	match ability.target_scope:
-		Enums.TargetScope.FRONT_ROW:
-			pool = pool.filter(func(u) -> bool: return u.row == Enums.RowPosition.FRONT)
-		Enums.TargetScope.BACK_ROW:
-			pool = pool.filter(func(u) -> bool: return u.row == Enums.RowPosition.BACK)
-
-	return pool
+			return _filter_alive(allies)
+	return []
 
 
 # --- AI Turn ---
@@ -311,18 +280,6 @@ func _flash_card(card: Control, color: Color) -> void:
 
 # --- Utilities ---
 
-func _swap_row(unit) -> void:
-	if unit.row == Enums.RowPosition.FRONT:
-		unit.row = Enums.RowPosition.BACK
-	else:
-		unit.row = Enums.RowPosition.FRONT
-	# Move card to new container
-	if _cards.has(unit):
-		var card: Control = _cards[unit]
-		card.get_parent().remove_child(card)
-		_get_row_container(unit).add_child(card)
-
-
 func _apply_defend(unit) -> void:
 	var def_mod := _ModifiedStat.create(Enums.StatType.PHYSICAL_DEFENSE, 3, 1, false)
 	var mdef_mod := _ModifiedStat.create(Enums.StatType.MAGIC_DEFENSE, 3, 1, false)
@@ -379,7 +336,6 @@ func _on_victory() -> void:
 	GameState.complete_battle(GameState.current_battle_id)
 	GameState.auto_save()
 	await get_tree().create_timer(1.5).timeout
-	# Show battle summary
 	_show_summary(true, gold)
 
 
@@ -406,7 +362,6 @@ func _build_party_snapshot() -> Array:
 
 
 func _show_summary(victory: bool, gold: int) -> void:
-	# Simple summary overlay
 	var summary_panel := Panel.new()
 	summary_panel.set_anchors_preset(Control.PRESET_CENTER)
 	summary_panel.custom_minimum_size = Vector2(400, 300)
@@ -415,11 +370,6 @@ func _show_summary(victory: bool, gold: int) -> void:
 	summary_panel.offset_right = 200
 	summary_panel.offset_bottom = 150
 	add_child(summary_panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vbox.add_theme_constant_override("separation", 8)
-	summary_panel.add_child(vbox)
 
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)

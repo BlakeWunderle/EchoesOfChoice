@@ -48,31 +48,25 @@ theme_override_constants/separation = 8
 [node name="AttackBtn" type="Button" parent="MenuPanel/MainButtons"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(100, 40)
+custom_minimum_size = Vector2(120, 40)
 text = "Attack"
 
 [node name="AbilityBtn" type="Button" parent="MenuPanel/MainButtons"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(100, 40)
+custom_minimum_size = Vector2(120, 40)
 text = "Ability"
 
 [node name="ItemBtn" type="Button" parent="MenuPanel/MainButtons"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(100, 40)
+custom_minimum_size = Vector2(120, 40)
 text = "Item"
-
-[node name="RowSwapBtn" type="Button" parent="MenuPanel/MainButtons"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(100, 40)
-text = "Row Swap"
 
 [node name="DefendBtn" type="Button" parent="MenuPanel/MainButtons"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(100, 40)
+custom_minimum_size = Vector2(120, 40)
 text = "Defend"
 
 [node name="SubPanel" type="Panel" parent="MenuPanel"]

@@ -56,23 +56,12 @@ grow_vertical = 2
 alignment = 1
 theme_override_constants/separation = 40
 
-[node name="EnemySide" type="VBoxContainer" parent="BattleArea"]
+[node name="EnemyRow" type="HBoxContainer" parent="BattleArea"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 theme_override_constants/separation = 12
-
-[node name="EnemyBackRow" type="HBoxContainer" parent="BattleArea/EnemySide"]
-unique_name_in_owner = true
-layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 8
-
-[node name="EnemyFrontRow" type="HBoxContainer" parent="BattleArea/EnemySide"]
-unique_name_in_owner = true
-layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 8
 
 [node name="VSLabel" type="Label" parent="BattleArea"]
 layout_mode = 2
@@ -80,23 +69,12 @@ text = "VS"
 vertical_alignment = 1
 theme_override_font_sizes/font_size = 20
 
-[node name="PlayerSide" type="VBoxContainer" parent="BattleArea"]
+[node name="PlayerRow" type="HBoxContainer" parent="BattleArea"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 theme_override_constants/separation = 12
-
-[node name="PlayerBackRow" type="HBoxContainer" parent="BattleArea/PlayerSide"]
-unique_name_in_owner = true
-layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 8
-
-[node name="PlayerFrontRow" type="HBoxContainer" parent="BattleArea/PlayerSide"]
-unique_name_in_owner = true
-layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 8
 
 [node name="ActionMenu" parent="." instance=ExtResource("2")]
 unique_name_in_owner = true

@@ -33,7 +33,7 @@ var settings: Dictionary = {
 	"fullscreen": true,
 }
 
-const MAX_PARTY_SIZE := 4
+const MAX_PARTY_SIZE := 3
 const MAX_SAVE_SLOTS := 3
 const AUTOSAVE_SLOT := 3
 const REST_HEAL_FRACTION := 0.30
@@ -71,7 +71,6 @@ func add_party_member(p_name: String, p_gender: String, class_id: String, level:
 		"current_hp": -1,
 		"current_mp": -1,
 		"voice_pack": _assign_voice_pack(p_gender),
-		"row": "front",
 	})
 	unlock_class(class_id)
 

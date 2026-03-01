@@ -64,23 +64,10 @@ static func _get_targets(ability: AbilityData, caster: BattleUnit,
 		Enums.AbilityType.HEAL, Enums.AbilityType.BUFF:
 			pool = _alive(allies)
 
-	# Melee restriction: can't hit back row if front row has units
-	if ability.requires_front_row and ability.ability_type == Enums.AbilityType.DAMAGE:
-		var front := pool.filter(func(u: BattleUnit) -> bool:
-			return u.row == Enums.RowPosition.FRONT)
-		if not front.is_empty():
-			pool = front
-
 	match ability.target_scope:
 		Enums.TargetScope.SINGLE:
 			var target := _pick_best_single(ability, caster, pool)
 			return [target] if target else []
-		Enums.TargetScope.FRONT_ROW:
-			return pool.filter(func(u: BattleUnit) -> bool:
-				return u.row == Enums.RowPosition.FRONT)
-		Enums.TargetScope.BACK_ROW:
-			return pool.filter(func(u: BattleUnit) -> bool:
-				return u.row == Enums.RowPosition.BACK)
 		_:
 			return pool
 

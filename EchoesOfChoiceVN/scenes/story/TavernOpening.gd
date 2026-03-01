@@ -70,9 +70,9 @@ func _play_story() -> void:
 	_dialogue_box.show_dialogue(_stranger_greeting())
 	await _dialogue_box.dialogue_finished
 
-	# Recruit 3 companions
-	var intros := [_companion_intro_1(), _companion_intro_2(), _companion_intro_3()]
-	for i in range(3):
+	# Recruit 2 companions
+	var intros := [_companion_intro_1(), _companion_intro_2()]
+	for i in range(2):
 		_dialogue_box.show_dialogue(intros[i])
 		await _dialogue_box.dialogue_finished
 
@@ -199,7 +199,7 @@ func _companion_welcome(companion: Dictionary) -> Array[Dictionary]:
 func _stranger_briefing() -> Array[Dictionary]:
 	var pname := GameState.player_name
 	return [
-		{"speaker": "???", "text": "Four of you. Good. That should be enough.", "side": "left", "portrait": _STRANGER_PORTRAIT},
+		{"speaker": "???", "text": "Three of you. Good. That should be enough.", "side": "left", "portrait": _STRANGER_PORTRAIT},
 		{"speaker": pname, "text": "Enough for what, exactly?", "side": "right", "portrait": _player_portrait()},
 		{"speaker": "???", "text": "Head east through the city. The darkness starts at the forest's edge, but the rot runs far deeper.", "side": "left"},
 		{"speaker": "???", "text": "Find the source. End it. I'll find you again when the time is right.", "side": "left"},

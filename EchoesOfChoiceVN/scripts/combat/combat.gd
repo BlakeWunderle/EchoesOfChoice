@@ -2,7 +2,6 @@ class_name Combat
 
 const CRIT_ROLL_MAX := 100
 const DODGE_ROLL_MAX := 100
-const BACK_ROW_EVASION_BONUS := 15
 
 
 static func calculate_physical_damage(attacker_phys_atk: int, defender_phys_def: int) -> int:
@@ -43,10 +42,9 @@ static func roll_crit(crit_chance: int) -> bool:
 	return roll > (CRIT_ROLL_MAX - crit_chance)
 
 
-static func roll_dodge(dodge_chance: int, is_back_row: bool) -> bool:
-	var effective := dodge_chance + (BACK_ROW_EVASION_BONUS if is_back_row else 0)
+static func roll_dodge(dodge_chance: int) -> bool:
 	var roll := randi_range(1, DODGE_ROLL_MAX)
-	return roll <= effective
+	return roll <= dodge_chance
 
 
 static func calculate_heal(ability: AbilityData, caster_mag_atk: int, caster_phys_atk: int = 0) -> int:
