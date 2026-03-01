@@ -1,6 +1,6 @@
 # Class Upgrade Trees
 
-41 player classes: 4 base (Tier 0), 11 Tier 1, 24 Tier 2, 2 Royal.
+51 player classes: 5 base (Tier 0), 14 Tier 1, 30 Tier 2, 2 Royal.
 Each T0 has 2-3 T1 branches. Each T1 has 2-3 T2 upgrades.
 
 ## Squire Tree (physical fighters)
@@ -52,6 +52,19 @@ Tinker (T0)
 - Artificer branch: crafting → potions+healing / explosives AoE
 - Philosopher branch: cosmic → time manipulation / celestial magic DPS
 - Arithmancer branch: math magic → construct body / tech+magic hybrid
+
+## Wildling Tree (nature & beasts)
+
+```
+Wildling (T0)
+├── Herbalist (T1) ── Blighter (T2), Grove Keeper (T2)
+├── Shaman (T1) ──── Witch Doctor (T2), Spiritwalker (T2)
+└── Beastcaller (T1) ── Falconer (T2), Shapeshifter (T2)
+```
+
+- Herbalist branch: plant magic → decay/poison specialist / terrain controller (vine walls, root traps)
+- Shaman branch: spirit communion → curse/hex debuffer / spiritual buff/protection
+- Beastcaller branch: animal bond → ranged aerial precision / melee beast transformation
 
 ## Royal Classes (standalone)
 

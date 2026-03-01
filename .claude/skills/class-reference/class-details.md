@@ -121,6 +121,35 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 
 ---
 
+## Wildling
+
+### Tier 0
+
+| Class | Abilities | Crit/Dmg/Dodge | Upgrades To |
+|-------|-----------|----------------|-------------|
+| Wildling | (pending) | 1/1/1 | Herbalist, Shaman, Beastcaller |
+
+### Tier 1
+
+| Class | Abilities | Crit/Dmg/Dodge | Upgrades To |
+|-------|-----------|----------------|-------------|
+| Herbalist | (pending) | 1/1/1 | Blighter, Grove Keeper |
+| Shaman | (pending) | 1/1/1 | Witch Doctor, Spiritwalker |
+| Beastcaller | (pending) | 1/1/1 | Falconer, Shapeshifter |
+
+### Tier 2
+
+| Class | Abilities | Crit/Dmg/Dodge | Role |
+|-------|-----------|----------------|------|
+| Blighter | (pending) | 1/2/1 | Decay/poison magic DPS |
+| Grove Keeper | (pending) | 1/1/1 | Terrain controller + defense |
+| Witch Doctor | (pending) | 1/2/1 | Curse/hex debuffer |
+| Spiritwalker | (pending) | 1/1/1 | Spiritual buff/protection |
+| Falconer | (pending) | 1/3/1 | Ranged beast physical DPS |
+| Shapeshifter | (pending) | 1/3/1 | Melee beast physical DPS |
+
+---
+
 ## Sibling Quick-Reference
 
 When a class is flagged weak/strong, check its sibling (same Tier 1 parent):
@@ -138,3 +167,6 @@ When a class is flagged weak/strong, check its sibling (same Tier 1 parent):
 | Artificer | Alchemist | Bombardier | — |
 | Philosopher | Chronomancer | Astronomer | — |
 | Arithmancer | Automaton | Technomancer | — |
+| Herbalist | Blighter | Grove Keeper | — |
+| Shaman | Witch Doctor | Spiritwalker | — |
+| Beastcaller | Falconer | Shapeshifter | — |

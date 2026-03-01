@@ -24,11 +24,17 @@ const CLASS_DATA := {
 		"description": "A charismatic performer who weakens foes and bolsters allies. Fast and versatile with debuffing magic.",
 		"abilities": "Sing, Demoralize",
 	},
-	"scholar": {
-		"display_name": "Scholar",
+	"tinker": {
+		"display_name": "Tinker",
 		"mentor": "Professor Thane",
 		"description": "A brilliant mind who exposes weaknesses and unleashes devastating energy. Strong magic with analytical debuffs.",
 		"abilities": "Proof, Energy Blast",
+	},
+	"wildling": {
+		"display_name": "Wildling",
+		"mentor": "Thorne",
+		"description": "A child of the wild who communes with nature. Balanced physical and magical abilities rooted in the natural world.",
+		"abilities": "Nature Strike",
 	},
 }
 

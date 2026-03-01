@@ -15,6 +15,7 @@ static func create_tutorial() -> BattleConfig:
 	var mage_data := load("res://resources/classes/mage.tres")
 	var entertainer_data := load("res://resources/classes/entertainer.tres")
 	var tinker_data := load("res://resources/classes/tinker.tres")
+	var wildling_data := load("res://resources/classes/wildling.tres")
 
 	var royal_data: FighterData
 	if GameState.player_gender == "prince":
@@ -28,6 +29,7 @@ static func create_tutorial() -> BattleConfig:
 		{"data": mage_data, "name": "Elara", "pos": Vector2i(2, 4), "level": 1, "ai_controlled": true},
 		{"data": entertainer_data, "name": "Lyris", "pos": Vector2i(3, 2), "level": 1, "ai_controlled": true},
 		{"data": tinker_data, "name": "Professor Thane", "pos": Vector2i(3, 4), "level": 1, "ai_controlled": true},
+		{"data": wildling_data, "name": "Thorne", "pos": Vector2i(2, 3), "level": 1, "ai_controlled": true},
 	]
 
 	var guard_squire := load("res://resources/enemies/guard_squire.tres")

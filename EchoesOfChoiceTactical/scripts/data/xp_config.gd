@@ -32,6 +32,10 @@ const CLASS_IDENTITY: Dictionary = {
 	"acolyte": {
 		"ability_types": [Enums.AbilityType.HEAL, Enums.AbilityType.BUFF],
 	},
+	"wildling": {
+		"ability_types": [Enums.AbilityType.DEBUFF, Enums.AbilityType.TERRAIN],
+		"stat_types": [],
+	},
 }
 
 

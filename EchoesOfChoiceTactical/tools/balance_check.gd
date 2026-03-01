@@ -26,22 +26,22 @@ const MAX_TTK: Dictionary = {
 }
 
 # ─── Party profiles: [P.Def, M.Def, HP] (P.Def includes equipment bonus) ─────
-# Base L1:  Squire P15/M11/HP55  Mage P11/M18/HP49  Scholar P12/M20/HP44  Ent P12/M18/HP49
-# Growth:   Squire HP+12, Mage/Tinker/Ent HP+9; all +2 PD/+2 MD, Ent MD+3
+# Base L1:  Squire P15/M11/HP55  Mage P11/M18/HP49  Tinker P12/M20/HP44  Ent P12/M18/HP49  Wild P14/M16/HP50
+# Growth:   Squire HP+12, Mage/Tinker/Ent HP+9, Wild HP+8; all +2 PD, Ent/Wild MD+3, others MD+2
 const PARTY: Dictionary = {
-	0: {"level": 1, "squire": [15, 11, 55], "mage": [11, 18, 49], "tinker": [12, 20, 44], "entertainer": [12, 18, 49]},
-	1: {"level": 2, "squire": [20, 13, 67], "mage": [16, 20, 58], "tinker": [17, 22, 53], "entertainer": [17, 21, 58]},
-	2: {"level": 3, "squire": [22, 15, 79], "mage": [18, 22, 67], "tinker": [19, 24, 62], "entertainer": [19, 24, 67]},
-	3: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "tinker": [23, 26, 71], "entertainer": [23, 27, 76]},
-	4: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "tinker": [23, 26, 71], "entertainer": [23, 27, 76]},
-	5: {"level": 5, "squire": [33, 19, 103], "mage": [29, 26, 85], "tinker": [30, 28, 80], "entertainer": [30, 30, 85]},
-	6: {"level": 6, "squire": [35, 21, 115], "mage": [31, 28, 94], "tinker": [32, 30, 89], "entertainer": [32, 33, 94]},
-	7: {"level": 6, "squire": [38, 21, 115], "mage": [34, 28, 94], "tinker": [35, 30, 89], "entertainer": [35, 33, 94]},
-	8: {"level": 7, "squire": [41, 23, 127], "mage": [37, 30, 103], "tinker": [38, 32, 98], "entertainer": [38, 36, 103]},
+	0: {"level": 1, "squire": [15, 11, 55], "mage": [11, 18, 49], "tinker": [12, 20, 44], "entertainer": [12, 18, 49], "wildling": [14, 16, 50]},
+	1: {"level": 2, "squire": [20, 13, 67], "mage": [16, 20, 58], "tinker": [17, 22, 53], "entertainer": [17, 21, 58], "wildling": [19, 19, 58]},
+	2: {"level": 3, "squire": [22, 15, 79], "mage": [18, 22, 67], "tinker": [19, 24, 62], "entertainer": [19, 24, 67], "wildling": [21, 22, 66]},
+	3: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "tinker": [23, 26, 71], "entertainer": [23, 27, 76], "wildling": [25, 25, 74]},
+	4: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "tinker": [23, 26, 71], "entertainer": [23, 27, 76], "wildling": [25, 25, 74]},
+	5: {"level": 5, "squire": [33, 19, 103], "mage": [29, 26, 85], "tinker": [30, 28, 80], "entertainer": [30, 30, 85], "wildling": [32, 28, 82]},
+	6: {"level": 6, "squire": [35, 21, 115], "mage": [31, 28, 94], "tinker": [32, 30, 89], "entertainer": [32, 33, 94], "wildling": [34, 31, 90]},
+	7: {"level": 6, "squire": [38, 21, 115], "mage": [34, 28, 94], "tinker": [35, 30, 89], "entertainer": [35, 33, 94], "wildling": [37, 31, 90]},
+	8: {"level": 7, "squire": [41, 23, 127], "mage": [37, 30, 103], "tinker": [38, 32, 98], "entertainer": [38, 36, 103], "wildling": [40, 34, 98]},
 }
 
-const CLASS_ORDER: Array = ["squire", "mage", "tinker", "entertainer"]
-const CLASS_LABELS: Array = ["vs Squire", "vs Mage", "vs Tinker", "vs Ent"]
+const CLASS_ORDER: Array = ["squire", "mage", "tinker", "entertainer", "wildling"]
+const CLASS_LABELS: Array = ["vs Squire", "vs Mage", "vs Tinker", "vs Ent", "vs Wild"]
 
 # ─── Tier 1 representative defenders (available from Prog 1) ─────────────────
 # No equipment bonus assumed. Format: [P.Def, M.Def] = base + growth*(level-1).

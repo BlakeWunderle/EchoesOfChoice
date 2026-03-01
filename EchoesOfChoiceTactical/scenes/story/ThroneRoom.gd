@@ -8,14 +8,16 @@ const MENTOR_NAMES := {
 	"squire": "Sir Aldric",
 	"mage": "Elara",
 	"entertainer": "Lyris",
-	"scholar": "Professor Thane",
+	"tinker": "Professor Thane",
+	"wildling": "Thorne",
 }
 
 const CLASS_NAMES := {
 	"squire": "Squire",
 	"mage": "Mage",
 	"entertainer": "Entertainer",
-	"scholar": "Scholar",
+	"tinker": "Tinker",
+	"wildling": "Wildling",
 }
 
 

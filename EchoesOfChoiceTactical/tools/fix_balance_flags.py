@@ -21,16 +21,16 @@ ENEMIES_DIR = os.path.join(BASE_DIR, "resources", "enemies")
 
 # ── Party profiles from balance_check.gd: [P.Def, M.Def, HP] ──────────────
 PARTY = {
-    0: {"level": 1, "squire": [15, 11, 55], "mage": [11, 18, 49], "tinker": [12, 20, 44], "entertainer": [12, 18, 49]},
-    1: {"level": 2, "squire": [20, 13, 67], "mage": [16, 20, 58], "tinker": [17, 22, 53], "entertainer": [17, 21, 58]},
-    2: {"level": 3, "squire": [22, 15, 79], "mage": [18, 22, 67], "tinker": [19, 24, 62], "entertainer": [19, 24, 67]},
-    3: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "tinker": [23, 26, 71], "entertainer": [23, 27, 76]},
-    4: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "tinker": [23, 26, 71], "entertainer": [23, 27, 76]},
-    5: {"level": 5, "squire": [33, 19, 103], "mage": [29, 26, 85], "tinker": [30, 28, 80], "entertainer": [30, 30, 85]},
-    6: {"level": 6, "squire": [35, 21, 115], "mage": [31, 28, 94], "tinker": [32, 30, 89], "entertainer": [32, 33, 94]},
+    0: {"level": 1, "squire": [15, 11, 55], "mage": [11, 18, 49], "tinker": [12, 20, 44], "entertainer": [12, 18, 49], "wildling": [14, 16, 50]},
+    1: {"level": 2, "squire": [20, 13, 67], "mage": [16, 20, 58], "tinker": [17, 22, 53], "entertainer": [17, 21, 58], "wildling": [19, 19, 58]},
+    2: {"level": 3, "squire": [22, 15, 79], "mage": [18, 22, 67], "tinker": [19, 24, 62], "entertainer": [19, 24, 67], "wildling": [21, 22, 66]},
+    3: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "tinker": [23, 26, 71], "entertainer": [23, 27, 76], "wildling": [25, 25, 74]},
+    4: {"level": 4, "squire": [26, 17, 91], "mage": [22, 24, 76], "tinker": [23, 26, 71], "entertainer": [23, 27, 76], "wildling": [25, 25, 74]},
+    5: {"level": 5, "squire": [33, 19, 103], "mage": [29, 26, 85], "tinker": [30, 28, 80], "entertainer": [30, 30, 85], "wildling": [32, 28, 82]},
+    6: {"level": 6, "squire": [35, 21, 115], "mage": [31, 28, 94], "tinker": [32, 30, 89], "entertainer": [32, 33, 94], "wildling": [34, 31, 90]},
 }
 SQ_ATK = {0: 21, 1: 23, 2: 25, 3: 27, 4: 27, 5: 29, 6: 31}
-CLASS_ORDER = ["squire", "mage", "tinker", "entertainer"]
+CLASS_ORDER = ["squire", "mage", "tinker", "entertainer", "wildling"]
 
 # Ability constants
 ABILITY_TYPE_DAMAGE = 0

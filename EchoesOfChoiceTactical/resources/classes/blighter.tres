@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="FighterData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+class_id = "blighter"
+class_display_name = "Blighter"
+sprite_id = ""
+sprite_id_female = ""
+base_max_health = 50
+base_max_mana = 18
+base_physical_attack = 12
+base_physical_defense = 13
+base_magic_attack = 25
+base_magic_defense = 21
+base_speed = 12
+base_crit_chance = 5
+base_crit_damage = 2
+base_dodge_chance = 5
+growth_health = 7
+growth_mana = 3
+growth_physical_attack = 2
+growth_physical_defense = 2
+growth_magic_attack = 5
+growth_magic_defense = 3
+growth_speed = 2
+movement = 3
+jump = 1
+reaction_types = [1, 4]
+abilities = []
+tier = 2
+upgrade_options = []

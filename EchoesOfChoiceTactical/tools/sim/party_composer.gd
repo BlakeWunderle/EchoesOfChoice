@@ -28,6 +28,12 @@ const ARCHETYPE_TREE := {
 		"t2": ["alchemist", "bombardier",
 			"astronomer", "chronomancer", "automaton", "technomancer"],
 	},
+	"wildling": {
+		"t0": ["wildling"],
+		"t1": ["herbalist", "shaman", "beastcaller"],
+		"t2": ["blighter", "grove_keeper", "witch_doctor",
+			"spiritwalker", "falconer", "shapeshifter"],
+	},
 }
 
 ## Maps class_id -> archetype name for filtering

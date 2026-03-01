@@ -25,10 +25,15 @@ const CLASS_INFO := {
 		"description": "A fast support unit that debuffs enemies with Sing and Demoralize.",
 		"color": Color(0.7, 0.3, 0.6),
 	},
-	"scholar": {
-		"display_name": "Scholar",
+	"tinker": {
+		"display_name": "Tinker",
 		"description": "A magic specialist with Proof to weaken defenses and Energy Blast for damage.",
 		"color": Color(0.2, 0.6, 0.5),
+	},
+	"wildling": {
+		"display_name": "Wildling",
+		"description": "A nature-attuned fighter with balanced physical and magic abilities.",
+		"color": Color(0.3, 0.6, 0.2),
 	},
 }
 
@@ -61,7 +66,7 @@ func _populate_npc_display() -> void:
 		{"x": 80, "y": 140, "class_id": "squire", "gender": "male", "label": "Squire"},
 		{"x": 200, "y": 180, "class_id": "mage", "gender": "male", "label": "Mage"},
 		{"x": 350, "y": 120, "class_id": "entertainer", "gender": "female", "label": "Ent."},
-		{"x": 500, "y": 170, "class_id": "scholar", "gender": "male", "label": "Scholar"},
+		{"x": 500, "y": 170, "class_id": "tinker", "gender": "male", "label": "Tinker"},
 		{"x": 650, "y": 130, "class_id": "squire", "gender": "female", "label": "Squire"},
 		{"x": 800, "y": 160, "class_id": "mage", "gender": "female", "label": "Mage"},
 	]

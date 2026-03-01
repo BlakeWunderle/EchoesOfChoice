@@ -76,6 +76,16 @@ const CLASS_PROFILES: Dictionary = {
 		6: {"pa": 17, "pd": 22, "ma": 30, "md": 30, "hp": 79, "mana": 24,
 			"speed": 28, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 3, "jump": 1},
 	},
+	"wildling": {
+		# PA=14+2*(L-1), PD=14+2*(L-1), HP=50+8*(L-1), MA=16+3*(L-1), MD=16+3*(L-1)
+		# Spd=13+2*(L-1), Crit=5, CritDmg=1, Dodge=5, Move=4, Jump=2
+		2: {"pa": 16, "pd": 16, "ma": 19, "md": 19, "hp": 58, "mana": 14,
+			"speed": 15, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 4, "jump": 2},
+		4: {"pa": 20, "pd": 20, "ma": 25, "md": 25, "hp": 74, "mana": 18,
+			"speed": 19, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 4, "jump": 2},
+		6: {"pa": 24, "pd": 24, "ma": 31, "md": 31, "hp": 90, "mana": 22,
+			"speed": 23, "crit": 5, "crit_dmg": 1, "dodge": 5, "move": 4, "jump": 2},
+	},
 	# ── T1 representatives ───────────────────────────────────────────────────
 	"ranger": {
 		# PA=24+3*(L-1), PD=17+2*(L-1), HP=59+10*(L-1), MA=9+3*(L-1), MD=11+2*(L-1)
@@ -123,7 +133,7 @@ const CLASS_PROFILES: Dictionary = {
 }
 
 const CLASS_DISPLAY_ORDER: Array = [
-	"squire", "mage", "tinker",
+	"squire", "mage", "tinker", "wildling",
 	"ranger", "invoker", "dervish",
 	"ninja", "illusionist", "mercenary",
 ]
@@ -172,6 +182,17 @@ const COMBOS: Dictionary = {
 		{"label": "MA(0+1+2)",        "bonuses": {2: 16},               "slots": 3},
 		{"label": "MA2+Dod2+HP2",     "bonuses": {2: 8, 8: 10, 10: 15},"slots": 3},
 		{"label": "MD2+HP2+Spd2",     "bonuses": {3: 8, 10: 15, 7: 5}, "slots": 3},
+		{"label": "MA2+MD2+HP2",      "bonuses": {2: 8, 3: 8, 10: 15}, "slots": 3},
+	],
+	"wildling": [
+		{"label": "2x MA T1",         "bonuses": {2: 10},               "slots": 2},
+		{"label": "MA1 + MD1",        "bonuses": {2: 5, 3: 5},          "slots": 2},
+		{"label": "MA1 + HP1",        "bonuses": {2: 5, 10: 10},        "slots": 2},
+		{"label": "3x MA T2",         "bonuses": {2: 24},               "slots": 3},
+		{"label": "3x MD T2",         "bonuses": {3: 24},               "slots": 3},
+		{"label": "MA(0+1+2)",        "bonuses": {2: 16},               "slots": 3},
+		{"label": "MA2+HP2+MD2",      "bonuses": {2: 8, 10: 15, 3: 8}, "slots": 3},
+		{"label": "MD2+HP2+PD2",      "bonuses": {3: 8, 10: 15, 1: 8}, "slots": 3},
 		{"label": "MA2+MD2+HP2",      "bonuses": {2: 8, 3: 8, 10: 15}, "slots": 3},
 	],
 	"ranger": [
