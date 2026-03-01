@@ -8,7 +8,7 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
     {
         public Blighter()
         {
-            Abilities = new List<Ability>() { new Blight(), new Wither(), new Miasma() };
+            Abilities = new List<Ability>() { new Blight(), new LifeSiphon(), new PoisonSting() };
             CharacterType = "Blighter";
             CritChance = 1;
             CritDamage = 2;

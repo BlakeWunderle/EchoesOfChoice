@@ -6,5 +6,6 @@ namespace EchoesOfChoice.CharacterClasses.Common
         public int Modifier { get; set; }
         public int Turns { get; set; }
         public bool IsNegative { get; set; }
+        public int DamagePerTurn { get; set; }
     }
 }

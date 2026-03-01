@@ -287,25 +287,59 @@ namespace EchoesOfChoice.Battles
                     Console.WriteLine($"{actingUnit.CharacterName} did {damage} points of damage to {attackedEnemy.CharacterName}.");
                     CombatPause();
                 }
+
+                if (abilityToUse.LifeStealPercent > 0 && damage > 0)
+                {
+                    int healAmount = (int)(damage * abilityToUse.LifeStealPercent);
+                    actingUnit.Health = Math.Min(actingUnit.Health + healAmount, actingUnit.MaxHealth);
+                    if (!IsSilent)
+                    {
+                        Console.WriteLine($"{actingUnit.CharacterName} absorbed {healAmount} health.");
+                        CombatPause();
+                    }
+                }
             }
             else
             {
-                attackedEnemy.ModifiedStats.Add(new ModifiedStat()
+                if (abilityToUse.DamagePerTurn > 0)
                 {
-                    Modifier = abilityToUse.Modifier,
-                    Stat = abilityToUse.ModifiedStat,
-                    Turns = abilityToUse.impactedTurns,
-                    IsNegative = true
-                });
+                    attackedEnemy.ModifiedStats.Add(new ModifiedStat()
+                    {
+                        Modifier = 0,
+                        Stat = abilityToUse.ModifiedStat,
+                        Turns = abilityToUse.impactedTurns,
+                        IsNegative = true,
+                        DamagePerTurn = abilityToUse.DamagePerTurn
+                    });
 
-                ModifyStats(attackedEnemy, abilityToUse.ModifiedStat, abilityToUse.Modifier, true);
+                    if (!IsSilent)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine(abilityToUse.FlavorText);
+                        Console.WriteLine($"{attackedEnemy.CharacterName} will take {abilityToUse.DamagePerTurn} damage per turn for {abilityToUse.impactedTurns} turns.");
+                        CombatPause();
+                    }
+                }
 
-                if (!IsSilent)
+                if (abilityToUse.Modifier > 0 && (abilityToUse.DamagePerTurn == 0 || abilityToUse.ModifiedStat != StatEnum.Health))
                 {
-                    Console.WriteLine();
-                    Console.WriteLine(abilityToUse.FlavorText);
-                    Console.WriteLine($"{attackedEnemy.CharacterName} was hit with this ability.");
-                    CombatPause();
+                    attackedEnemy.ModifiedStats.Add(new ModifiedStat()
+                    {
+                        Modifier = abilityToUse.Modifier,
+                        Stat = abilityToUse.ModifiedStat,
+                        Turns = abilityToUse.impactedTurns,
+                        IsNegative = true
+                    });
+
+                    ModifyStats(attackedEnemy, abilityToUse.ModifiedStat, abilityToUse.Modifier, true);
+
+                    if (!IsSilent && abilityToUse.DamagePerTurn == 0)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine(abilityToUse.FlavorText);
+                        Console.WriteLine($"{attackedEnemy.CharacterName} was hit with this ability.");
+                        CombatPause();
+                    }
                 }
             }
         }
@@ -703,9 +737,23 @@ namespace EchoesOfChoice.Battles
             for (int i = 0; i < fighter.ModifiedStats.Count; i++)
             {
                 var modifiedStat = fighter.ModifiedStats[i];
+
+                if (modifiedStat.DamagePerTurn > 0)
+                {
+                    fighter.Health -= modifiedStat.DamagePerTurn;
+                    if (!IsSilent)
+                    {
+                        Console.WriteLine($"{fighter.CharacterName} takes {modifiedStat.DamagePerTurn} damage from a lingering effect.");
+                        CombatPause();
+                    }
+                }
+
                 if (modifiedStat.Turns == 0)
                 {
-                    ModifyStats(fighter, modifiedStat.Stat, modifiedStat.Modifier, !modifiedStat.IsNegative);
+                    if (modifiedStat.DamagePerTurn == 0)
+                    {
+                        ModifyStats(fighter, modifiedStat.Stat, modifiedStat.Modifier, !modifiedStat.IsNegative);
+                    }
                     statsToRemove.Add(i);
                 }
                 else

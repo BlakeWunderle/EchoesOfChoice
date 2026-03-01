@@ -8,7 +8,7 @@ namespace EchoesOfChoice.CharacterClasses.Mage
     {
         public Infernalist()
         {
-            Abilities = new List<Ability>() { new FireBall(), new Inferno(), new Enrage() };
+            Abilities = new List<Ability>() { new FireBall(), new BurningBrand(), new Enrage() };
             CharacterType = "Infernalist";
             CritChance = 2;
             CritDamage = 2;

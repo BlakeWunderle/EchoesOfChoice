@@ -8,7 +8,7 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
     {
         public WitchDoctor()
         {
-            Abilities = new List<Ability>() { new VoodooBolt(), new DarkHex(), new PlagueCurse() };
+            Abilities = new List<Ability>() { new VoodooBolt(), new DarkHex(), new CreepingRot() };
             CharacterType = "Witch Doctor";
             CritChance = 1;
             CritDamage = 2;

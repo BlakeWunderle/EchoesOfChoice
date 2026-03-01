@@ -9,7 +9,7 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
     {
         public Herbalist()
         {
-            Abilities = new List<Ability>() { new MendingHerbs(), new SporeCloud() };
+            Abilities = new List<Ability>() { new MendingHerbs(), new SappingVine() };
             CharacterType = "Herbalist";
             CritChance = 1;
             CritDamage = 1;

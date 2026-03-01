@@ -8,7 +8,7 @@ namespace EchoesOfChoice.CharacterClasses.Scholar
     {
         public Alchemist()
         {
-            Abilities = new List<Ability>() { new Transmute(), new VialToss(), new Elixir() };
+            Abilities = new List<Ability>() { new Transmute(), new CorrosiveAcid(), new Elixir() };
             CharacterType = "Alchemist";
             CritChance = 1;
             CritDamage = 1;

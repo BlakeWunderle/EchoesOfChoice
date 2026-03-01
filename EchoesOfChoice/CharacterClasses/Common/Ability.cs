@@ -10,5 +10,7 @@ namespace EchoesOfChoice.CharacterClasses.Common
         public bool UseOnEnemy { get; protected set; }
         public int ManaCost { get; protected set; }
         public bool TargetAll { get; protected set; }
+        public int DamagePerTurn { get; protected set; }
+        public float LifeStealPercent { get; protected set; }
     }
 }

@@ -2,13 +2,13 @@ using EchoesOfChoice.CharacterClasses.Common;
 
 namespace EchoesOfChoice.CharacterClasses.Abilities
 {
-    public class DrainLife : Ability
+    public class SappingVine : Ability
     {
-        public DrainLife()
+        public SappingVine()
         {
-            Name = "Drain Life";
-            FlavorText = "Siphon the life force from an enemy.";
-            ModifiedStat = StatEnum.MixedAttack;
+            Name = "Sapping Vine";
+            FlavorText = "Lash the enemy with thorned vines that drain their vitality.";
+            ModifiedStat = StatEnum.MagicAttack;
             Modifier = 4;
             impactedTurns = 0;
             UseOnEnemy = true;
