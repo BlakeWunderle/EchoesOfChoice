@@ -19,7 +19,7 @@ namespace EchoesOfChoice.Battles
 
         public override void DetermineNextBattle()
         {
-                NextBattle = new MirrorBattle(Units);
+                NextBattle = new OutpostDefenseBattle(Units);
         }
 
         public override void PostBattleInteraction()
@@ -39,8 +39,10 @@ namespace EchoesOfChoice.Battles
             Console.WriteLine();
             if (PreviousBattleName == nameof(BeachBattle))
                 Console.WriteLine("The trail leads north from the coast, winding through rolling hills with the sound of distant music growing louder. It seems peaceful enough until everyone suddenly hits something. An invisible wall.");
-            else
+            else if (PreviousBattleName == nameof(CaveBattle))
                 Console.WriteLine("The path east from the cave threads through wooded hills. Quiet, unremarkable terrain — until everyone suddenly hits something. An invisible wall.");
+            else
+                Console.WriteLine("Following the sound of music through the trees, the party pushes deeper into unfamiliar territory. The laughter grows louder — until everyone suddenly hits something. An invisible wall.");
             Console.WriteLine("They turn left, then right, and finally turn back but they're boxed in. Something is trapping them and they can't see what.");
             Console.WriteLine("The air around them begins to darken, the invisible walls turning black as ink.");
             Console.WriteLine("Their attackers reveal themselves with smiles far too wide for comfort.");

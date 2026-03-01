@@ -92,8 +92,10 @@ namespace EchoesOfChoice
                 }
                 else
                 {
-                    Console.WriteLine("The darkness has been vanquished and the city is safe once more.");
-                    Console.WriteLine("Our heroes stand tall, forever changed by the journey.");
+                    Console.WriteLine("The stranger is gone and with them, the shadow that covered the land.");
+                    Console.WriteLine("The sky clears. The city stirs. People emerge from hiding.");
+                    Console.WriteLine("It will take time, but the world will heal.");
+                    Console.WriteLine("Our heroes stand in the light, bruised and exhausted and alive.");
                     Console.WriteLine("Every choice left an echo, and theirs will ring through the ages.");
                     Console.WriteLine();
                     Console.WriteLine("Thank you for playing Echoes of Choice.");
@@ -178,10 +180,11 @@ namespace EchoesOfChoice
 
         private static List<BaseFighter> CreateParty()
         {
-            Console.WriteLine("Our story begins like any other, in a tavern of course.");
-            Console.WriteLine("The fire is low, the ale is warm, and a shrouded stranger sits alone in the corner booth.");
-            Console.WriteLine("A darkness has been creeping across the land and this stranger seems to know more than most.");
-            Console.WriteLine("One of our heroes catches the stranger's eye and is waved over to the table.");
+            Console.WriteLine("The Copper Mug. Your regular haunt. You know every crack in the floorboards, every stain on the bar.");
+            Console.WriteLine("But tonight something is different. The fire burns low without anyone stoking it. The other regulars have gone quiet.");
+            Console.WriteLine("A shrouded stranger sits in the corner booth — a booth that was empty a moment ago.");
+            Console.WriteLine("The air feels heavy. Wrong. Like the room itself is holding its breath.");
+            Console.WriteLine("The stranger catches your eye and waves you over.");
             Console.WriteLine("'What is your name, young warrior?'");
             var name = ReadName();
 
@@ -212,8 +215,9 @@ namespace EchoesOfChoice
             Console.WriteLine();
             Console.WriteLine("The stranger leans in close, voice barely above a whisper.");
             Console.WriteLine("'Something evil has taken root beyond the forest. The city needs heroes whether it knows it or not.'");
-            Console.WriteLine("'Find the source. End it. I'll find you again when the time is right.'");
-            Console.WriteLine("With that the stranger raises a glass, downs it, and vanishes into the crowd.");
+            Console.WriteLine("'Find the source. End it. I'll be watching — and I'll find you when the time is right.'");
+            Console.WriteLine("The stranger raises a glass but doesn't drink — just holds it, watching the liquid catch the firelight.");
+            Console.WriteLine("Then they set it down, untouched, and disappear into the crowd. The coin left on the table is gold. Blank on one side.");
 
             Pause();
 

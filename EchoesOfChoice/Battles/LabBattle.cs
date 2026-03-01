@@ -19,7 +19,7 @@ namespace EchoesOfChoice.Battles
 
         public override void DetermineNextBattle()
         {
-                NextBattle = new MirrorBattle(Units);
+                NextBattle = new OutpostDefenseBattle(Units);
         }
 
         public override void PostBattleInteraction()
@@ -37,7 +37,7 @@ namespace EchoesOfChoice.Battles
         public override void PreBattleInteraction()
         {
             Console.WriteLine();
-            var direction = PreviousBattleName == nameof(CaveBattle) ? "west" : "north";
+            var direction = PreviousBattleName == nameof(CaveBattle) ? "west" : "north-east";
             Console.WriteLine($"Heading {direction}, the air changes. There's a faint charge to it — a prickling on the skin and a taste like iron. Not magic. Something else.");
             Console.WriteLine("A large structure rises from the landscape, all clean angles and dark windows. No signs, no torches. Whatever it runs on, it isn't fire.");
             Console.WriteLine("Inside, the hum is louder. Banks of machinery line the walls. On a central table, something large lies covered by a cloth — something roughly human-shaped.");

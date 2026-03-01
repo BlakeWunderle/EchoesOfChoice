@@ -11,22 +11,22 @@ namespace EchoesOfChoice.Battles
         {
             Enemies = new List<BaseFighter>();
             Enemies.Add(new Thug() { CharacterName = "Alexander" });
-            Enemies.Add(new Thug() { CharacterName = "Jenna" });
-            Enemies.Add(new Thug() { CharacterName = "Ella" });
+            Enemies.Add(new Ruffian() { CharacterName = "Jenna" });
+            Enemies.Add(new Pickpocket() { CharacterName = "Ella" });
 
             IsFinalBattle = false;
         }
 
         public override void DetermineNextBattle()
         {
-            NextBattle = new ForestBattle(Units);
+            NextBattle = new WolfForestBattle(Units);
         }
 
         public override void PostBattleInteraction()
         {
             Console.WriteLine();
-            Console.WriteLine("The urchins scatter into the alleyways and our heroes dust themselves off.");
-            Console.WriteLine("The stranger's words echo in their minds. Something evil waits beyond the forest and they intend to find it.");
+            Console.WriteLine("The street gang scatters into the alleyways and the party dusts themselves off.");
+            Console.WriteLine("The stranger nods approvingly. 'See? The darkness is already here, in the city itself. Imagine what waits beyond the walls.'");
             Console.WriteLine("They push through the city gate and the tree line swallows the road ahead.");
             foreach(var unit in Units)
             {

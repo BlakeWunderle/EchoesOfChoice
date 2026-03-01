@@ -1,39 +1,20 @@
 using EchoesOfChoice.CharacterClasses.Common;
-using EchoesOfChoice.CharacterClasses.Enemies;
-using EchoesOfChoice.CharacterClasses.Entertainer;
 using EchoesOfChoice.CharacterClasses.Fighter;
 using EchoesOfChoice.CharacterClasses.Mage;
+using EchoesOfChoice.CharacterClasses.Entertainer;
 using EchoesOfChoice.CharacterClasses.Scholar;
 using EchoesOfChoice.CharacterClasses.Wildling;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EchoesOfChoice.BattleSimulator
 {
-    public class RecruitSpec
-    {
-        public string Type { get; }
-        public int LevelUps { get; }
-        public int HealthAdj { get; }
-        public int MagicAttackAdj { get; }
-        public int PhysicalAttackAdj { get; }
-
-        public RecruitSpec(string type, int levelUps, int healthAdj = 0, int magicAttackAdj = 0, int physicalAttackAdj = 0)
-        {
-            Type = type;
-            LevelUps = levelUps;
-            HealthAdj = healthAdj;
-            MagicAttackAdj = magicAttackAdj;
-            PhysicalAttackAdj = physicalAttackAdj;
-        }
-    }
-
     public static class PartyComposer
     {
-        // Mirrors game flow: 1 level up as base (after CityStreet), 2 as Tier 1 (after Forest + Stage 2)
-        private const int LevelsAsBase = 1;
-        private const int LevelsAsTier1 = 2;
+        // Mirrors game flow: 3 level ups as base (CityStreet, WolfForest, WaypointDefense),
+        // 5 as Tier 1 (Branch4, Branch5, SecondWild, OutpostDefense, Mirror)
+        private const int LevelsAsBase = 3;
+        private const int LevelsAsTier1 = 5;
 
         public static List<BaseFighter> CreateBaseClasses()
         {
@@ -120,62 +101,6 @@ namespace EchoesOfChoice.BattleSimulator
             }
 
             return fighter;
-        }
-
-        // Recruit specs per ElementalBattle, matching each ReturnToCityBattle's construction logic.
-        // Each recruit gets stat adjustments / pre-clone level ups from its battle constructor,
-        // plus 1 IncreaseLevel from PostBattleInteraction (included in LevelUps total).
-        public static readonly RecruitSpec[] ElementalBattle1Recruits = new[]
-        {
-            new RecruitSpec("Seraph", 0, healthAdj: -20, magicAttackAdj: -7, physicalAttackAdj: -5),
-            new RecruitSpec("Fiend", 0, healthAdj: 20, magicAttackAdj: 5, physicalAttackAdj: 7),
-        };
-
-        public static readonly RecruitSpec[] ElementalBattle2Recruits = new[]
-        {
-            new RecruitSpec("Druid", 0, healthAdj: -18, magicAttackAdj: -6, physicalAttackAdj: -4),
-            new RecruitSpec("Necromancer", 0, healthAdj: 18, magicAttackAdj: 4, physicalAttackAdj: 6),
-        };
-
-        public static readonly RecruitSpec[] ElementalBattle3Recruits = new[]
-        {
-            new RecruitSpec("Psion", 0, healthAdj: -10, magicAttackAdj: -8),
-            new RecruitSpec("Runewright", 0, healthAdj: 5, magicAttackAdj: 6, physicalAttackAdj: 4),
-        };
-
-        public static readonly RecruitSpec[] ElementalBattle4Recruits = new[]
-        {
-            new RecruitSpec("Shaman", 0, healthAdj: -22, magicAttackAdj: -6, physicalAttackAdj: -3),
-            new RecruitSpec("Warlock", 0, healthAdj: 22, magicAttackAdj: 4, physicalAttackAdj: 6),
-        };
-
-        public static BaseFighter CreateRecruit(RecruitSpec spec)
-        {
-            BaseFighter recruit = spec.Type switch
-            {
-                "Seraph" => new Seraph(),
-                "Fiend" => new Fiend(),
-                "Druid" => new Druid(),
-                "Necromancer" => new Necromancer(),
-                "Psion" => new Psion(),
-                "Runewright" => new Runewright(),
-                "Shaman" => new EchoesOfChoice.CharacterClasses.Enemies.Shaman(),
-                "Warlock" => new EchoesOfChoice.CharacterClasses.Enemies.Warlock(),
-                _ => throw new ArgumentException($"Unknown recruit type: {spec.Type}")
-            };
-
-            recruit.CharacterName = recruit.CharacterType;
-            recruit.IsUserControlled = false;
-
-            recruit.Health += spec.HealthAdj;
-            recruit.MaxHealth += spec.HealthAdj;
-            recruit.MagicAttack += spec.MagicAttackAdj;
-            recruit.PhysicalAttack += spec.PhysicalAttackAdj;
-
-            for (int i = 0; i < spec.LevelUps; i++)
-                recruit.IncreaseLevel();
-
-            return recruit;
         }
 
         private static readonly string[] BaseTypes = { "Squire", "Mage", "Entertainer", "Scholar", "Wildling" };
@@ -288,18 +213,6 @@ namespace EchoesOfChoice.BattleSimulator
             return parties;
         }
 
-        public static List<PartyDefinition> GetTier2PartiesWithRecruits(RecruitSpec[] recruits)
-        {
-            var baseParties = GetTier2Parties();
-            var parties = new List<PartyDefinition>(baseParties.Count * recruits.Length);
-            foreach (var p in baseParties)
-            {
-                foreach (var recruit in recruits)
-                    parties.Add(new PartyDefinition(p.BaseTypes, p.Tier1Items, p.Tier2Items, recruit));
-            }
-            return parties;
-        }
-
         /// <summary>
         /// Returns a stratified random sample from the full party list. Every class that
         /// appears in the full list is guaranteed to appear in at least <paramref name="minPerClass"/>
@@ -360,16 +273,14 @@ namespace EchoesOfChoice.BattleSimulator
         public string[] BaseTypes { get; }
         public UpgradeItemEnum?[] Tier1Items { get; }
         public UpgradeItemEnum?[] Tier2Items { get; }
-        public RecruitSpec Recruit { get; }
 
         private readonly string _description;
 
-        public PartyDefinition(string[] baseTypes, UpgradeItemEnum?[] tier1Items, UpgradeItemEnum?[] tier2Items, RecruitSpec recruit = null)
+        public PartyDefinition(string[] baseTypes, UpgradeItemEnum?[] tier1Items, UpgradeItemEnum?[] tier2Items)
         {
             BaseTypes = baseTypes;
             Tier1Items = tier1Items;
             Tier2Items = tier2Items;
-            Recruit = recruit;
             _description = BuildDescription();
         }
 
@@ -382,10 +293,6 @@ namespace EchoesOfChoice.BattleSimulator
                 fighter.CharacterName = $"Hero{i + 1}";
                 party.Add(fighter);
             }
-            if (Recruit != null)
-            {
-                party.Add(PartyComposer.CreateRecruit(Recruit));
-            }
             return party;
         }
 
@@ -393,13 +300,11 @@ namespace EchoesOfChoice.BattleSimulator
 
         private string BuildDescription()
         {
-            var parts = new string[BaseTypes.Length + (Recruit != null ? 1 : 0)];
+            var parts = new string[BaseTypes.Length];
             for (int i = 0; i < BaseTypes.Length; i++)
             {
                 parts[i] = PartyComposer.GetClassName(BaseTypes[i], Tier1Items[i], Tier2Items[i]);
             }
-            if (Recruit != null)
-                parts[BaseTypes.Length] = Recruit.Type;
             return string.Join(" / ", parts);
         }
     }

@@ -21,11 +21,10 @@ namespace EchoesOfChoice.Battles
             Console.WriteLine("'You came from deeper in? Good. You're still alive, that's something.'");
             Console.WriteLine("'Three weeks ago things started getting strange back in the city. Market district went quiet overnight. Animals started fleeing.'");
             Console.WriteLine("'Then the fog came. Cold, wrong-smelling fog rolling out in every direction. People started leaving.'");
-            Console.WriteLine("'I've got people back there. I'm not running. But I've been watching the roads, and I'll tell you what I've seen.'");
 
-            if (PreviousBattleName == nameof(PortalBattle))
+            if (PreviousBattleName == nameof(MountainPassBattle))
             {
-                Console.WriteLine("'North of here there's a building that's been humming for a month. I don't know what's inside. South — a military encampment. Big one. They showed up right when the fog did.'");
+                Console.WriteLine("'South of here there's a military encampment. Big one. They showed up right when the fog did. East, the fog is thickest — there's a path through the hills that smells of old earth and something worse.'");
             }
             else if (PreviousBattleName == nameof(CaveBattle))
             {
@@ -46,25 +45,25 @@ namespace EchoesOfChoice.Battles
         {
             Console.WriteLine();
 
-            if (PreviousBattleName == nameof(PortalBattle))
+            if (PreviousBattleName == nameof(MountainPassBattle))
             {
                 Console.WriteLine("Two paths lead onward from the outpost:");
-                Console.WriteLine("  [Static]  To the north, an unnatural charge in the air. Something metallic on the horizon.");
                 Console.WriteLine("  [Camp]    To the south, the tramp of marching boots and a barking voice echo across the plain.");
+                Console.WriteLine("  [Fog]     To the east, a fog-covered path winds into rolling hills. The air smells of damp earth and something older.");
 
                 while (NextBattle == null)
                 {
-                    Console.WriteLine("Please type 'Static' or 'Camp' and press enter.");
+                    Console.WriteLine("Please type 'Camp' or 'Fog' and press enter.");
                     var choice = (Console.ReadLine() ?? "").ToLower().Trim();
                     switch (choice)
                     {
-                        case "static":
-                            NextBattle = new LabBattle(Units);
-                            NextBattle.PreviousBattleName = nameof(PortalBattle);
-                            break;
                         case "camp":
                             NextBattle = new ArmyBattle(Units);
-                            NextBattle.PreviousBattleName = nameof(PortalBattle);
+                            NextBattle.PreviousBattleName = nameof(MountainPassBattle);
+                            break;
+                        case "fog":
+                            NextBattle = new CemeteryBattle(Units);
+                            NextBattle.PreviousBattleName = nameof(MountainPassBattle);
                             break;
                         default:
                             Console.WriteLine("That's not a valid choice. Try again.");
@@ -76,11 +75,11 @@ namespace EchoesOfChoice.Battles
             {
                 Console.WriteLine("Two paths lead onward from the outpost:");
                 Console.WriteLine("  [Laughter]  To the east, laughter and music drift through the trees. Whatever's making that sound isn't small.");
-                Console.WriteLine("  [Hum]       To the west, an unnatural energy pulses in the dark. Something mechanical, not quite magic.");
+                Console.WriteLine("  [Static]    To the west, an unnatural energy pulses in the dark. Something mechanical, not quite magic.");
 
                 while (NextBattle == null)
                 {
-                    Console.WriteLine("Please type 'Laughter' or 'Hum' and press enter.");
+                    Console.WriteLine("Please type 'Laughter' or 'Static' and press enter.");
                     var choice = (Console.ReadLine() ?? "").ToLower().Trim();
                     switch (choice)
                     {
@@ -88,7 +87,7 @@ namespace EchoesOfChoice.Battles
                             NextBattle = new CircusBattle(Units);
                             NextBattle.PreviousBattleName = nameof(CaveBattle);
                             break;
-                        case "hum":
+                        case "static":
                             NextBattle = new LabBattle(Units);
                             NextBattle.PreviousBattleName = nameof(CaveBattle);
                             break;

@@ -86,13 +86,6 @@ namespace EchoesOfChoice.CharacterClasses.Common
             { "Falconer", () => new Falconer() },
             { "Shapeshifter", () => new Shapeshifter() },
 
-            // Recruitable enemies (from ReturnToCity battles)
-            { "Seraph", () => new Seraph() },
-            { "Fiend", () => new Fiend() },
-            { "Druid", () => new Druid() },
-            { "Necromancer", () => new Necromancer() },
-            { "Psion", () => new Psion() },
-            { "Runewright", () => new Runewright() },
         };
 
         public static BaseFighter CreateFighter(FighterSaveData data)

@@ -19,7 +19,7 @@ namespace EchoesOfChoice.Battles
 
         public override void DetermineNextBattle()
         {
-                NextBattle = new MirrorBattle(Units);
+                NextBattle = new OutpostDefenseBattle(Units);
         }
 
         public override void PostBattleInteraction()

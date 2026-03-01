@@ -1,41 +1,40 @@
 using EchoesOfChoice.CharacterClasses.Common;
-using EchoesOfChoice.CharacterClasses.Enemies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace EchoesOfChoice.Battles
 {
-    public class ForestBattle : Battle
+    public class CityOutskirtsStop : Battle
     {
-        public ForestBattle(List<BaseFighter> units) : base(units)
+        public CityOutskirtsStop(List<BaseFighter> units) : base(units)
         {
-            
             Enemies = new List<BaseFighter>();
-            Enemies.Add(new Bear() { CharacterName = "Koda" });
-            Enemies.Add(new BearCub() { CharacterName = "Bramble" });
-
             IsFinalBattle = false;
+            IsTownStop = true;
         }
 
         public override void DetermineNextBattle()
         {
-            NextBattle = new ForestWaypoint(Units);
+            NextBattle = new ReturnToCityStreetBattle(Units);
         }
 
-        public override void PostBattleInteraction()
+        public override void PostBattleInteraction() { }
+
+        public override void PreBattleInteraction()
         {
             Console.WriteLine();
-            Console.WriteLine("While walking through the woods the adventurers stumble upon what looks like an old house. They knock.");
-            Console.WriteLine("No answer, but the door comes slightly ajar. They enter and begin looking around.");
-            Console.WriteLine("Inside, each of them finds a dusty chest tucked against the walls. The locks are rusted but give way easily.");
-            Console.WriteLine("Each chest holds relics of a past adventurer. Time to pick something useful.");
+            Console.WriteLine("The party reaches the outskirts of the city. Something is wrong.");
+            Console.WriteLine("Smoke rises from the market district and the streets are too quiet. No merchants calling out, no children running between the stalls.");
+            Console.WriteLine("An old armory sits abandoned near the gate, its door hanging open. Inside, racks of weapons and armor gather dust — but not all of it.");
+            Console.WriteLine("Each member of the party finds equipment that suits them perfectly, as if it were waiting for them.");
+
             var newUnits = new List<BaseFighter>();
 
             foreach (var unit in Units)
             {
                 Console.WriteLine();
-                Console.WriteLine($"{unit.CharacterName} the {unit.CharacterType} opens their chest and finds: ");
+                Console.WriteLine($"{unit.CharacterName} the {unit.CharacterType} finds: ");
                 foreach (var upgradeItem in unit.UpgradeItems)
                 {
                     Console.WriteLine(upgradeItem);
@@ -62,14 +61,9 @@ namespace EchoesOfChoice.Battles
             }
 
             Units = newUnits;
-        }
 
-        public override void PreBattleInteraction()
-        {
             Console.WriteLine();
-            Console.WriteLine("Upon making it to the forest the party looks to set up their camp. They get a fire going, make supper and pitch their tents.");
-            Console.WriteLine("After telling stories of past adventures, the party passes out for the night. Before going to bed though everyone forgot to hang up the food.");
-            Console.WriteLine("After drifting off to sleep they hear something intruding in the camp. A mother bear and her cub have come looking for an easy meal.");
+            Console.WriteLine("The city skyline looks wrong. Dark shapes move on the walls. Whatever happened here, it happened fast.");
         }
     }
 }

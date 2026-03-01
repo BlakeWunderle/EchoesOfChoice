@@ -9,32 +9,45 @@ namespace EchoesOfChoice.Battles.SaveSystem
         private static readonly Dictionary<string, Func<List<BaseFighter>, Battle>> Constructors =
             new Dictionary<string, Func<List<BaseFighter>, Battle>>
         {
+            // Act I
             { "CityStreetBattle", units => new CityStreetBattle(units) },
-            { "ForestBattle", units => new ForestBattle(units) },
+            { "WolfForestBattle", units => new WolfForestBattle(units) },
+            { "WaypointDefenseBattle", units => new WaypointDefenseBattle(units) },
             { "ForestWaypoint", units => new ForestWaypoint(units) },
-            { "WildernessOutpost", units => new WildernessOutpost(units) },
-            { "SmokeBattle", units => new SmokeBattle(units) },
+
+            // Act II — Branch battles
+            { "HighlandBattle", units => new HighlandBattle(units) },
+            { "MountainPassBattle", units => new MountainPassBattle(units) },
             { "DeepForestBattle", units => new DeepForestBattle(units) },
-            { "ClearingBattle", units => new ClearingBattle(units) },
             { "CaveBattle", units => new CaveBattle(units) },
-            { "BeachBattle", units => new BeachBattle(units) },
-            { "PortalBattle", units => new PortalBattle(units) },
             { "ShoreBattle", units => new ShoreBattle(units) },
-            { "RuinsBattle", units => new RuinsBattle(units) },
+            { "BeachBattle", units => new BeachBattle(units) },
+            { "WildernessOutpost", units => new WildernessOutpost(units) },
+
+            // Act II — Second wilderness + convergence
             { "CircusBattle", units => new CircusBattle(units) },
             { "BoxBattle", units => new CircusBattle(units) },
-            { "CemeteryBattle", units => new CemeteryBattle(units) },
             { "LabBattle", units => new LabBattle(units) },
             { "ArmyBattle", units => new ArmyBattle(units) },
+            { "CemeteryBattle", units => new CemeteryBattle(units) },
+            { "OutpostDefenseBattle", units => new OutpostDefenseBattle(units) },
             { "MirrorBattle", units => new MirrorBattle(units) },
-            { "ReturnToCityBattle1", units => new ReturnToCityBattle1(units) },
-            { "ReturnToCityBattle2", units => new ReturnToCityBattle2(units) },
-            { "ReturnToCityBattle3", units => new ReturnToCityBattle3(units) },
-            { "ReturnToCityBattle4", units => new ReturnToCityBattle4(units) },
-            { "ElementalBattle1", units => new ElementalBattle1(units) },
-            { "ElementalBattle2", units => new ElementalBattle2(units) },
-            { "ElementalBattle3", units => new ElementalBattle3(units) },
-            { "ElementalBattle4", units => new ElementalBattle4(units) },
+
+            // Act III
+            { "CityOutskirtsStop", units => new CityOutskirtsStop(units) },
+            { "ReturnToCityStreetBattle", units => new ReturnToCityStreetBattle(units) },
+            { "StrangerTowerBattle", units => new StrangerTowerBattle(units) },
+
+            // Act IV
+            { "CorruptedCityBattle", units => new CorruptedCityBattle(units) },
+            { "CorruptedWildsBattle", units => new CorruptedWildsBattle(units) },
+            { "TempleBattle", units => new TempleBattle(units) },
+            { "BlightBattle", units => new BlightBattle(units) },
+            { "GateBattle", units => new GateBattle(units) },
+            { "DepthsBattle", units => new DepthsBattle(units) },
+
+            // Act V
+            { "StrangerFinalBattle", units => new StrangerFinalBattle(units) },
         };
 
         public static Battle CreateBattle(string battleName, List<BaseFighter> units)

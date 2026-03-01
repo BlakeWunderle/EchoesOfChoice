@@ -1,8 +1,6 @@
 using EchoesOfChoice.CharacterClasses.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-
 namespace EchoesOfChoice.Battles
 {
     public class MirrorBattle : Battle
@@ -25,51 +23,7 @@ namespace EchoesOfChoice.Battles
 
         public override void DetermineNextBattle()
         {
-            var random = new Random();
-            var nextBattleInt = random.Next(1, 19);
-
-            switch(nextBattleInt)
-            {
-                case 1 :
-                case 2 :
-                case 3 :
-                    {
-                        NextBattle = new ReturnToCityBattle1(Units);
-                        break;
-                    }
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                    {
-                        NextBattle = new ReturnToCityBattle2(Units);
-                        break;
-                    }
-                case 9:
-                case 10:
-                case 11:
-                case 12:
-                case 13:
-                    {
-                        NextBattle = new ReturnToCityBattle3(Units);
-                        break;
-                    }
-                case 14:
-                case 15:
-                case 16:
-                case 17:
-                case 18:
-                    {
-                        NextBattle = new ReturnToCityBattle4(Units);
-                        break;
-                    }
-                default:
-                    {
-                        NextBattle = new ReturnToCityBattle2(Units);
-                        break;
-                    }
-            }
+            NextBattle = new CityOutskirtsStop(Units);
         }
 
         public override void PostBattleInteraction()
@@ -79,8 +33,8 @@ namespace EchoesOfChoice.Battles
             Console.WriteLine("The surface ripples and cloudy letters slowly form across the glass: 'Return to the city.'");
             Console.WriteLine("The letters pulse with urgency. Something is wrong back home and whoever left this message knew it.");
             Console.WriteLine("The adventurers exchange a look. No more detours. Time to head back.");
-            Console.WriteLine("The stranger said the source of the darkness was beyond the forest. They went looking. They found demons, dragons, an army, machines that shouldn't exist, performers that trap travelers, and the walking dead.");
-            Console.WriteLine("None of it felt like an origin. All of it felt like chaos spreading from somewhere else.");
+            Console.WriteLine("Where is the stranger? They haven't been seen since before the mirror appeared. Come to think of it, every mirror they've found was placed too perfectly — as if someone knew exactly where they'd be.");
+            Console.WriteLine("The stranger said the source of the darkness was beyond the forest. They went looking and found only chaos spreading from somewhere else.");
             Console.WriteLine("And now a mirror is pointing them home.");
             Console.WriteLine("The thought lands slowly, uncomfortably: maybe the source was never out here. Maybe it was always at the city.");
             Console.WriteLine("As they turn toward the city, something catches the eye. A faint smudge on the horizon where the skyline should be.");

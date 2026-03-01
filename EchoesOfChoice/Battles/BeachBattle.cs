@@ -2,8 +2,6 @@ using EchoesOfChoice.CharacterClasses.Common;
 using System;
 using System.Collections.Generic;
 using EchoesOfChoice.CharacterClasses.Enemies;
-using System.Linq;
-
 namespace EchoesOfChoice.Battles
 {
     public class BeachBattle : Battle
@@ -28,39 +26,11 @@ namespace EchoesOfChoice.Battles
         {
             Console.WriteLine();
             Console.WriteLine("With the pirate crew defeated the adventurers claim the ship's hold for themselves.");
-            Console.WriteLine("Among the crates and barrels each of them finds something worth keeping.");
-            var newUnits = new List<BaseFighter>();
-
+            Console.WriteLine("Among the crates and barrels they find supplies worth taking. Not treasure, but enough to keep going.");
             foreach (var unit in Units)
             {
-                Console.WriteLine();
-                Console.WriteLine($"{unit.CharacterName} the {unit.CharacterType} rummages through the hold and finds: ");
-                foreach (var upgradeItem in unit.UpgradeItems)
-                {
-                    Console.WriteLine(upgradeItem);
-                }
-                UpgradeItemEnum item;
-                while (true)
-                {
-                    Console.WriteLine("Which item will you take? Type your option and press enter.");
-                    var line = (Console.ReadLine() ?? "").ToLower().Trim();
-                    var match = unit.UpgradeItems.FirstOrDefault(x => x.ToString().ToLower() == line);
-                    if (line.Length > 0 && unit.UpgradeItems.Any(x => x.ToString().ToLower() == line))
-                    {
-                        item = match;
-                        break;
-                    }
-                    Console.WriteLine("That's not a valid item. Try again.");
-                }
-
-                var newUnit = unit.UpgradeClass(item);
-                newUnit.IncreaseLevel();
-
-                Console.WriteLine($"{newUnit.CharacterName} is now a {newUnit.CharacterType}!");
-                newUnits.Add(newUnit);
+                unit.IncreaseLevel();
             }
-
-            Units = newUnits;
         }
 
         public override void PreBattleInteraction()

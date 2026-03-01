@@ -12,8 +12,7 @@ namespace EchoesOfChoice.Battles
             Enemies = new List<BaseFighter>()
             {
                 new Siren() { CharacterName = "Lorelei" },
-                new Siren() { CharacterName = "Thalassa" },
-                new Siren() { CharacterName = "Ligeia" }
+                new Merfolk() { CharacterName = "Thalassa" }
             };
 
             IsFinalBattle = false;
@@ -40,7 +39,7 @@ namespace EchoesOfChoice.Battles
             Console.WriteLine();
             Console.WriteLine("The salt air hit them before the trees even thinned. Following it southeast, the forest gives way to rocky cliffs and the sound of surf crashing far below.");
             Console.WriteLine("A strange singing drifts across the water, beautiful enough to stop everyone in their tracks.");
-            Console.WriteLine("Three figures emerge from the tide pools, their haunting melody turning hostile as the adventurers draw near.");
+            Console.WriteLine("A siren emerges from the tide pools, her melody turning hostile. Beside her, a merfolk warrior rises from the shallows, trident in hand.");
         }
     }
 }

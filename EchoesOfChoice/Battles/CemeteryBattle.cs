@@ -11,15 +11,14 @@ namespace EchoesOfChoice.Battles
         {
             Enemies = new List<BaseFighter>();
             Enemies.Add(new Zombie() { CharacterName = "Mort--" });
-            Enemies.Add(new Zombie() { CharacterName = "Rave--" });
-            Enemies.Add(new Zombie() { CharacterName = "Jori--" });
+            Enemies.Add(new Ghoul() { CharacterName = "Rave--" });
 
             IsFinalBattle = false;
         }
 
         public override void DetermineNextBattle()
         {
-                NextBattle = new MirrorBattle(Units);
+                NextBattle = new OutpostDefenseBattle(Units);
         }
 
         public override void PostBattleInteraction()
@@ -40,8 +39,8 @@ namespace EchoesOfChoice.Battles
             Console.WriteLine("Leaving the coast behind, the party follows the fog-covered path to the south.");
             Console.WriteLine("The mist thickens with every step until the adventurers can barely see each other.");
             Console.WriteLine("When it finally thins they find themselves standing in a cemetery. The air smells of damp earth and something old.");
-            Console.WriteLine("Three graves have some writing on them and they read Mort--, Rave--, and Jori--.");
-            Console.WriteLine($"A hand reaches up from the ground and gets a hold of {Units[0].CharacterName}.");
+            Console.WriteLine("Two graves have some writing on them and they read Mort-- and Rave--.");
+            Console.WriteLine($"A hand reaches up from the ground and gets a hold of {Units[0].CharacterName}. Something faster scrabbles out of the second grave, eyes glowing.");
         }
     }
 }
