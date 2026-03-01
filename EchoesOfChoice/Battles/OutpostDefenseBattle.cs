@@ -13,6 +13,7 @@ namespace EchoesOfChoice.Battles
             Enemies.Add(new Shade() { CharacterName = "Umbra" });
             Enemies.Add(new Wraith() { CharacterName = "Revenant" });
             Enemies.Add(new Shade() { CharacterName = "Penumbra" });
+            Enemies.Add(new Wraith() { CharacterName = "Specter" });
 
             IsFinalBattle = false;
         }

@@ -9,20 +9,20 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Wraith(int level = 7)
         {
             Level = level;
-            Health = Stat(110, 125, 4, 7, 7);
+            Health = Stat(123, 143, 5, 9, 7);
             MaxHealth = Health;
-            PhysicalAttack = Stat(8, 12, 0, 2, 7);
-            PhysicalDefense = Stat(10, 14, 1, 2, 7);
-            MagicAttack = Stat(24, 28, 2, 3, 7);
-            MagicDefense = Stat(18, 22, 1, 3, 7);
-            Speed = Stat(26, 32, 2, 3, 7);
-            Abilities = new List<Ability>() { new SoulDrain(), new Terrify() };
+            PhysicalAttack = Stat(10, 14, 0, 2, 7);
+            PhysicalDefense = Stat(12, 16, 1, 2, 7);
+            MagicAttack = Stat(35, 43, 3, 5, 7);
+            MagicDefense = Stat(18, 24, 2, 3, 7);
+            Speed = Stat(31, 37, 2, 4, 7);
+            Abilities = new List<Ability>() { new SoulDrain(), new Blight(), new Terrify() };
             CharacterType = "Wraith";
             Mana = Stat(18, 22, 2, 4, 7);
             MaxMana = Mana;
-            CritChance = 15;
-            CritDamage = 2;
-            DodgeChance = 20;
+            CritChance = 24;
+            CritDamage = 3;
+            DodgeChance = 26;
         }
 
         public Wraith(BaseFighter fighter) : base(fighter) { }

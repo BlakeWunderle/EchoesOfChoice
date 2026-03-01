@@ -1,4 +1,5 @@
 using EchoesOfChoice.CharacterClasses.Abilities;
+using EchoesOfChoice.CharacterClasses.Abilities.Enemy;
 using EchoesOfChoice.CharacterClasses.Common;
 using System.Collections.Generic;
 
@@ -6,23 +7,23 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
 {
     public class Shade : BaseFighter
     {
-        public Shade(int level = 4)
+        public Shade(int level = 7)
         {
             Level = level;
-            Health = Stat(74, 89, 5, 10, 4);
+            Health = Stat(108, 128, 5, 9, 7);
             MaxHealth = Health;
-            PhysicalAttack = Stat(15, 22, 2, 4, 4);
-            PhysicalDefense = Stat(10, 16, 1, 3, 4);
-            MagicAttack = Stat(17, 24, 2, 5, 4);
-            MagicDefense = Stat(13, 19, 2, 4, 4);
-            Speed = Stat(25, 33, 1, 3, 4);
-            Abilities = new List<Ability>() { new ShadowAttack(), new Frustrate() };
+            PhysicalAttack = Stat(16, 22, 1, 3, 7);
+            PhysicalDefense = Stat(15, 20, 1, 3, 7);
+            MagicAttack = Stat(35, 43, 3, 5, 7);
+            MagicDefense = Stat(18, 24, 2, 4, 7);
+            Speed = Stat(33, 39, 2, 4, 7);
+            Abilities = new List<Ability>() { new ShadowAttack(), new Abilities.Enemy.Blight(), new Frustrate() };
             CharacterType = "Shade";
-            Mana = Stat(21, 32, 2, 5, 4);
+            Mana = Stat(24, 34, 2, 5, 7);
             MaxMana = Mana;
-            CritChance = 10;
-            CritDamage = 1;
-            DodgeChance = 20;
+            CritChance = 23;
+            CritDamage = 2;
+            DodgeChance = 31;
         }
 
         public Shade(BaseFighter fighter) : base(fighter) { }
