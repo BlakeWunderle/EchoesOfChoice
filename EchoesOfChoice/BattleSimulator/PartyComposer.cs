@@ -4,6 +4,7 @@ using EchoesOfChoice.CharacterClasses.Entertainer;
 using EchoesOfChoice.CharacterClasses.Fighter;
 using EchoesOfChoice.CharacterClasses.Mage;
 using EchoesOfChoice.CharacterClasses.Scholar;
+using EchoesOfChoice.CharacterClasses.Wildling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,8 @@ namespace EchoesOfChoice.BattleSimulator
                 new Squire(),
                 new CharacterClasses.Mage.Mage(),
                 new CharacterClasses.Entertainer.Entertainer(),
-                new Scholar()
+                new Scholar(),
+                new CharacterClasses.Wildling.Wildling()
             };
         }
 
@@ -50,7 +52,8 @@ namespace EchoesOfChoice.BattleSimulator
             ["Squire"] = new[] { UpgradeItemEnum.Sword, UpgradeItemEnum.Bow, UpgradeItemEnum.Headband },
             ["Mage"] = new[] { UpgradeItemEnum.RedStone, UpgradeItemEnum.WhiteStone },
             ["Entertainer"] = new[] { UpgradeItemEnum.Guitar, UpgradeItemEnum.Slippers, UpgradeItemEnum.Scroll },
-            ["Scholar"] = new[] { UpgradeItemEnum.Crystal, UpgradeItemEnum.Textbook, UpgradeItemEnum.Abacus }
+            ["Scholar"] = new[] { UpgradeItemEnum.Crystal, UpgradeItemEnum.Textbook, UpgradeItemEnum.Abacus },
+            ["Wildling"] = new[] { UpgradeItemEnum.Herbs, UpgradeItemEnum.Totem, UpgradeItemEnum.BeastClaw }
         };
 
         public static Dictionary<string, UpgradeItemEnum[]> Tier2Upgrades = new()
@@ -65,7 +68,10 @@ namespace EchoesOfChoice.BattleSimulator
             ["Orator"] = new[] { UpgradeItemEnum.Pen, UpgradeItemEnum.Medal },
             ["Arithmancer"] = new[] { UpgradeItemEnum.ClockworkCore, UpgradeItemEnum.Computer },
             ["Philosopher"] = new[] { UpgradeItemEnum.TimeMachine, UpgradeItemEnum.Telescope },
-            ["Artificer"] = new[] { UpgradeItemEnum.Potion, UpgradeItemEnum.Hammer }
+            ["Artificer"] = new[] { UpgradeItemEnum.Potion, UpgradeItemEnum.Hammer },
+            ["Herbalist"] = new[] { UpgradeItemEnum.Venom, UpgradeItemEnum.Seedling },
+            ["Shaman"] = new[] { UpgradeItemEnum.Shrunkenhead, UpgradeItemEnum.SpiritOrb },
+            ["Beastcaller"] = new[] { UpgradeItemEnum.Feather, UpgradeItemEnum.Pelt }
         };
 
         public static BaseFighter CreateFighter(string baseType, UpgradeItemEnum? tier1Item, UpgradeItemEnum? tier2Item, int totalLevelUps)
@@ -76,6 +82,7 @@ namespace EchoesOfChoice.BattleSimulator
                 "Mage" => new CharacterClasses.Mage.Mage(),
                 "Entertainer" => new CharacterClasses.Entertainer.Entertainer(),
                 "Scholar" => new Scholar(),
+                "Wildling" => new CharacterClasses.Wildling.Wildling(),
                 _ => new Squire()
             };
 
@@ -171,7 +178,7 @@ namespace EchoesOfChoice.BattleSimulator
             return recruit;
         }
 
-        private static readonly string[] BaseTypes = { "Squire", "Mage", "Entertainer", "Scholar" };
+        private static readonly string[] BaseTypes = { "Squire", "Mage", "Entertainer", "Scholar", "Wildling" };
 
         private static readonly Dictionary<(string, UpgradeItemEnum?, UpgradeItemEnum?), string> _classNameCache = new();
 
@@ -189,9 +196,9 @@ namespace EchoesOfChoice.BattleSimulator
         public static List<PartyDefinition> GetBaseParties()
         {
             var parties = new List<PartyDefinition>();
-            for (int i = 0; i < 4; i++)
-                for (int j = i; j < 4; j++)
-                    for (int k = j; k < 4; k++)
+            for (int i = 0; i < 5; i++)
+                for (int j = i; j < 5; j++)
+                    for (int k = j; k < 5; k++)
                     {
                         parties.Add(new PartyDefinition(
                             new[] { BaseTypes[i], BaseTypes[j], BaseTypes[k] },
@@ -205,9 +212,9 @@ namespace EchoesOfChoice.BattleSimulator
         public static List<PartyDefinition> GetTier1Parties()
         {
             var parties = new List<PartyDefinition>();
-            for (int i = 0; i < 4; i++)
-                for (int j = i; j < 4; j++)
-                    for (int k = j; k < 4; k++)
+            for (int i = 0; i < 5; i++)
+                for (int j = i; j < 5; j++)
+                    for (int k = j; k < 5; k++)
                     {
                         var arch = new[] { BaseTypes[i], BaseTypes[j], BaseTypes[k] };
                         var uA = Tier1Upgrades[arch[0]];
@@ -254,9 +261,9 @@ namespace EchoesOfChoice.BattleSimulator
             }
 
             var parties = new List<PartyDefinition>();
-            for (int i = 0; i < 4; i++)
-                for (int j = i; j < 4; j++)
-                    for (int k = j; k < 4; k++)
+            for (int i = 0; i < 5; i++)
+                for (int j = i; j < 5; j++)
+                    for (int k = j; k < 5; k++)
                     {
                         var arch = new[] { BaseTypes[i], BaseTypes[j], BaseTypes[k] };
                         var cA = chainsByArchetype[arch[0]];

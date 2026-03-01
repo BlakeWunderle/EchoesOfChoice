@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using EchoesOfChoice.CharacterClasses.Entertainer;
 using System;
 using EchoesOfChoice.CharacterClasses.Scholar;
+using EchoesOfChoice.CharacterClasses.Wildling;
 using EchoesOfChoice.CharacterClasses.Enemies;
 using System.Linq;
 
@@ -250,6 +251,7 @@ namespace EchoesOfChoice
             Console.WriteLine("  2. Mage        - A wielder of arcane forces and elemental magic.");
             Console.WriteLine("  3. Entertainer  - A charismatic performer who inspires allies.");
             Console.WriteLine("  4. Tinker      - A brilliant mind who turns knowledge into power.");
+            Console.WriteLine("  5. Wildling    - A primal soul who communes with nature and beasts.");
 
             while (true)
             {
@@ -264,6 +266,7 @@ namespace EchoesOfChoice
                     case "2": chosen = new Mage() { CharacterName = name, IsUserControlled = true }; break;
                     case "3": chosen = new Entertainer() { CharacterName = name, IsUserControlled = true }; break;
                     case "4": chosen = new Scholar() { CharacterName = name, IsUserControlled = true }; break;
+                    case "5": chosen = new EchoesOfChoice.CharacterClasses.Wildling.Wildling() { CharacterName = name, IsUserControlled = true }; break;
                     default:
                         Console.WriteLine("That's not a valid class. Try again.");
                         continue;

@@ -5,6 +5,7 @@ using EchoesOfChoice.CharacterClasses.Mage;
 using EchoesOfChoice.CharacterClasses.Entertainer;
 using EchoesOfChoice.CharacterClasses.Scholar;
 using EchoesOfChoice.CharacterClasses.Enemies;
+using EchoesOfChoice.CharacterClasses.Wildling;
 
 namespace EchoesOfChoice.CharacterClasses.Common
 {
@@ -69,6 +70,22 @@ namespace EchoesOfChoice.CharacterClasses.Common
             { "Technomancer", () => new Technomancer() },
             { "Chronomancer", () => new Chronomancer() },
 
+            // Wildling base
+            { "Wildling", () => new Wildling.Wildling() },
+
+            // Wildling tier 1
+            { "Herbalist", () => new Herbalist() },
+            { "Shaman", () => new Wildling.Shaman() },
+            { "Beastcaller", () => new Beastcaller() },
+
+            // Wildling tier 2
+            { "Blighter", () => new Blighter() },
+            { "Grove Keeper", () => new GroveKeeper() },
+            { "Witch Doctor", () => new WitchDoctor() },
+            { "Spiritwalker", () => new Spiritwalker() },
+            { "Falconer", () => new Falconer() },
+            { "Shapeshifter", () => new Shapeshifter() },
+
             // Recruitable enemies (from ReturnToCity battles)
             { "Seraph", () => new Seraph() },
             { "Fiend", () => new Fiend() },
@@ -76,7 +93,6 @@ namespace EchoesOfChoice.CharacterClasses.Common
             { "Necromancer", () => new Necromancer() },
             { "Psion", () => new Psion() },
             { "Runewright", () => new Runewright() },
-            { "Shaman", () => new Enemies.Shaman() },
         };
 
         public static BaseFighter CreateFighter(FighterSaveData data)

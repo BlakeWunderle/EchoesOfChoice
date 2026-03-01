@@ -47,6 +47,15 @@ namespace EchoesOfChoice.CharacterClasses.Common
         TimeMachine,
         Potion,
         Brick,
-        DarkOrb
+        DarkOrb,
+        Herbs,
+        Totem,
+        BeastClaw,
+        Venom,
+        Seedling,
+        Shrunkenhead,
+        SpiritOrb,
+        Feather,
+        Pelt
     }
 }
