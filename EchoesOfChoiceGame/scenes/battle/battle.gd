@@ -1,0 +1,506 @@
+extends Control
+
+## Battle scene — connects BattleEngine to visual UI.
+
+const BattleEngine := preload("res://scripts/battle/battle_engine.gd")
+const CombatLog := preload("res://scripts/ui/combat_log.gd")
+const ChoiceMenu := preload("res://scripts/ui/choice_menu.gd")
+const FighterBar := preload("res://scripts/ui/fighter_bar.gd")
+const StatsPanel := preload("res://scripts/ui/stats_panel.gd")
+const FighterData := preload("res://scripts/data/fighter_data.gd")
+const AbilityData := preload("res://scripts/data/ability_data.gd")
+const BattleData := preload("res://scripts/data/battle_data.gd")
+
+enum Phase {
+	STARTING,
+	TICKING_ATB,
+	PLAYER_ACTION,
+	PLAYER_TARGET_ATTACK,
+	PLAYER_ABILITY_SELECT,
+	PLAYER_ABILITY_TARGET_ENEMY,
+	PLAYER_ABILITY_TARGET_ALLY,
+	SHOWING_STATS,
+	STATS_PICK,
+	AI_ACTING,
+	MESSAGE_DELAY,
+	BATTLE_END,
+}
+
+const COMBAT_PAUSE: float = 1.2  ## Seconds between combat messages (C# Thread.Sleep(1200))
+
+var _engine: BattleEngine
+var _phase: Phase = Phase.STARTING
+var _current_actor: FighterData
+var _selected_ability: AbilityData
+var _message_queue: Array[String] = []
+var _processing_messages: bool = false
+
+# UI elements
+var _party_bars: Array[FighterBar] = []
+var _enemy_bars: Array[FighterBar] = []
+var _combat_log: CombatLog
+var _action_menu: ChoiceMenu
+var _turn_label: Label
+var _stats_panel: StatsPanel
+
+# Layout containers
+var _top_panel: HBoxContainer
+var _party_vbox: VBoxContainer
+var _enemy_vbox: VBoxContainer
+var _bottom_panel: VBoxContainer
+
+
+func _ready() -> void:
+	_build_ui()
+	_start_battle()
+
+
+func _build_ui() -> void:
+	var root := VBoxContainer.new()
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.add_theme_constant_override("separation", 4)
+	add_child(root)
+
+	# Top: party + enemy status bars
+	_top_panel = HBoxContainer.new()
+	_top_panel.add_theme_constant_override("separation", 24)
+	_top_panel.custom_minimum_size = Vector2(0, 120)
+	root.add_child(_top_panel)
+
+	_party_vbox = VBoxContainer.new()
+	_party_vbox.add_theme_constant_override("separation", 4)
+	_party_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_top_panel.add_child(_party_vbox)
+
+	var party_header := Label.new()
+	party_header.text = "  Party"
+	party_header.add_theme_font_size_override("font_size", 16)
+	_party_vbox.add_child(party_header)
+
+	_enemy_vbox = VBoxContainer.new()
+	_enemy_vbox.add_theme_constant_override("separation", 4)
+	_enemy_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_top_panel.add_child(_enemy_vbox)
+
+	var enemy_header := Label.new()
+	enemy_header.text = "  Enemies"
+	enemy_header.add_theme_font_size_override("font_size", 16)
+	_enemy_vbox.add_child(enemy_header)
+
+	# Middle: combat log
+	_combat_log = CombatLog.new()
+	_combat_log.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_combat_log.custom_minimum_size = Vector2(0, 200)
+	root.add_child(_combat_log)
+
+	# Turn indicator
+	_turn_label = Label.new()
+	_turn_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_turn_label.add_theme_font_size_override("font_size", 18)
+	_turn_label.visible = false
+	root.add_child(_turn_label)
+
+	# Bottom: action menu
+	_bottom_panel = VBoxContainer.new()
+	_bottom_panel.custom_minimum_size = Vector2(0, 160)
+	_bottom_panel.alignment = BoxContainer.ALIGNMENT_CENTER
+	root.add_child(_bottom_panel)
+
+	_action_menu = ChoiceMenu.new()
+	_action_menu.choice_selected.connect(_on_action_selected)
+	_action_menu.visible = false
+	_bottom_panel.add_child(_action_menu)
+
+	# Stats panel (overlay)
+	_stats_panel = StatsPanel.new()
+	_stats_panel.closed.connect(_on_stats_closed)
+	_stats_panel.visible = false
+	_stats_panel.set_anchors_preset(Control.PRESET_CENTER)
+	_stats_panel.custom_minimum_size = Vector2(350, 400)
+	add_child(_stats_panel)
+
+
+func _start_battle() -> void:
+	_engine = BattleEngine.new()
+	_engine.combat_message.connect(_on_combat_message)
+	_engine.fighter_died.connect(_on_fighter_died)
+	_engine.battle_won.connect(_on_battle_won)
+	_engine.battle_lost.connect(_on_battle_lost)
+
+	var battle: BattleData = GameState.current_battle
+	_engine.start_battle(GameState.party, battle.enemies)
+
+	_build_status_bars()
+	_combat_log.add_message("[color=gold]Battle begins![/color]")
+	_phase = Phase.TICKING_ATB
+	_tick_loop()
+
+
+func _build_status_bars() -> void:
+	for bar: FighterBar in _party_bars:
+		bar.queue_free()
+	_party_bars.clear()
+	for bar: FighterBar in _enemy_bars:
+		bar.queue_free()
+	_enemy_bars.clear()
+
+	for f: FighterData in _engine.units:
+		var bar := FighterBar.new()
+		_party_vbox.add_child(bar)
+		bar.setup(f, false)
+		_party_bars.append(bar)
+
+	for f: FighterData in _engine.enemies:
+		var bar := FighterBar.new()
+		_enemy_vbox.add_child(bar)
+		bar.setup(f, true)
+		_enemy_bars.append(bar)
+
+
+func _refresh_bars() -> void:
+	for i: int in _party_bars.size():
+		if i < _engine.units.size():
+			_party_bars[i].update_display(_engine.units[i])
+			_party_bars[i].visible = true
+		else:
+			_party_bars[i].visible = false
+	for i: int in _enemy_bars.size():
+		if i < _engine.enemies.size():
+			_enemy_bars[i].update_display(_engine.enemies[i])
+			_enemy_bars[i].visible = true
+		else:
+			_enemy_bars[i].visible = false
+
+
+# =============================================================================
+# Main ATB loop
+# =============================================================================
+
+func _tick_loop() -> void:
+	while _phase == Phase.TICKING_ATB:
+		if not _engine.tick_atb():
+			continue
+
+		var actors: Array[FighterData] = _engine.get_acting_units()
+		for actor: FighterData in actors:
+			if actor.health <= 0:
+				_engine.check_for_death()
+				_rebuild_bars_if_needed()
+				continue
+
+			_current_actor = actor
+			_engine.reset_modified_stat(actor)
+			await _drain_messages()
+
+			if _engine.is_battle_over():
+				_end_battle()
+				return
+
+			# Turn announcement
+			var turn_text: String
+			if actor.character_name.ends_with("s"):
+				turn_text = "It is %s' turn." % actor.character_name
+			else:
+				turn_text = "It is %s's turn." % actor.character_name
+			_combat_log.add_separator()
+			_combat_log.add_message("[color=yellow]%s[/color]" % turn_text)
+
+			if actor.is_user_controlled:
+				_phase = Phase.PLAYER_ACTION
+				_show_action_menu(actor)
+				return  # Wait for player input
+			else:
+				# AI turn
+				_phase = Phase.AI_ACTING
+				var is_party: bool = _engine.units.has(actor)
+				var targets: Array[FighterData] = _engine.enemies if is_party else _engine.units
+				var allies: Array[FighterData] = _engine.units if is_party else _engine.enemies
+				_engine.execute_ai_turn(actor, targets, allies)
+				await _drain_messages()
+				_refresh_bars()
+				_engine.check_for_death()
+				_rebuild_bars_if_needed()
+				await _drain_messages()
+
+				if _engine.is_battle_over():
+					_end_battle()
+					return
+
+		_engine.reset_turns()
+
+	# If we exit the loop due to phase change, the phase handler will resume
+
+
+# =============================================================================
+# Player action handling
+# =============================================================================
+
+func _show_action_menu(actor: FighterData) -> void:
+	_turn_label.text = "[%s the %s]" % [actor.character_name, actor.character_type]
+	_turn_label.visible = true
+
+	var has_affordable: bool = false
+	for a: AbilityData in actor.abilities:
+		if a.mana_cost <= actor.mana:
+			has_affordable = true
+			break
+
+	var options: Array[Dictionary] = [{"label": "Attack"}]
+	if has_affordable:
+		options.append({"label": "Ability"})
+	options.append({"label": "Stats"})
+	_action_menu.show_choices(options)
+
+
+func _on_action_selected(index: int) -> void:
+	_action_menu.hide_menu()
+	_turn_label.visible = false
+
+	# Map index accounting for possibly missing Ability option
+	var has_affordable: bool = false
+	for a: AbilityData in _current_actor.abilities:
+		if a.mana_cost <= _current_actor.mana:
+			has_affordable = true
+			break
+
+	var action: String
+	if index == 0:
+		action = "attack"
+	elif has_affordable and index == 1:
+		action = "ability"
+	else:
+		action = "stats"
+
+	match action:
+		"attack":
+			_phase = Phase.PLAYER_TARGET_ATTACK
+			_show_target_menu(_engine.enemies)
+		"ability":
+			_phase = Phase.PLAYER_ABILITY_SELECT
+			_show_ability_menu()
+		"stats":
+			_phase = Phase.STATS_PICK
+			_show_stats_pick()
+
+
+func _show_target_menu(fighters: Array[FighterData]) -> void:
+	var options: Array[Dictionary] = []
+	for f: FighterData in fighters:
+		options.append({"label": "%s the %s (HP: %d/%d)" % [
+			f.character_name, f.character_type, f.health, f.max_health]})
+	_action_menu.show_choices(options)
+	_action_menu.choice_selected.disconnect(_on_action_selected)
+	_action_menu.choice_selected.connect(_on_target_selected)
+
+
+func _on_target_selected(index: int) -> void:
+	_action_menu.choice_selected.disconnect(_on_target_selected)
+	_action_menu.choice_selected.connect(_on_action_selected)
+	_action_menu.hide_menu()
+
+	match _phase:
+		Phase.PLAYER_TARGET_ATTACK:
+			var taunter: FighterData = _engine.get_taunt_target(_engine.enemies)
+			var target: FighterData
+			if taunter:
+				target = taunter
+				_combat_log.add_message("%s has taunted your attention!" % taunter.character_name)
+			else:
+				target = _engine.enemies[index]
+			_engine.physical_attack(_current_actor, target)
+		Phase.PLAYER_ABILITY_TARGET_ENEMY:
+			var taunter: FighterData = _engine.get_taunt_target(_engine.enemies)
+			var target: FighterData
+			if taunter:
+				target = taunter
+				_combat_log.add_message("%s has taunted your attention!" % taunter.character_name)
+			else:
+				target = _engine.enemies[index]
+			_current_actor.mana -= _selected_ability.mana_cost
+			_engine.use_ability_on_enemy(_current_actor, target, _selected_ability)
+		Phase.PLAYER_ABILITY_TARGET_ALLY:
+			_current_actor.mana -= _selected_ability.mana_cost
+			_engine.use_ability_on_teammate(
+				_current_actor, _engine.units[index], _selected_ability)
+
+	await _drain_messages()
+	_refresh_bars()
+	_engine.check_for_death()
+	_rebuild_bars_if_needed()
+	await _drain_messages()
+
+	if _engine.is_battle_over():
+		_end_battle()
+		return
+
+	_phase = Phase.TICKING_ATB
+	_tick_loop()
+
+
+func _show_ability_menu() -> void:
+	var affordable: Array[AbilityData] = []
+	for a: AbilityData in _current_actor.abilities:
+		if a.mana_cost <= _current_actor.mana:
+			affordable.append(a)
+
+	var options: Array[Dictionary] = []
+	for a: AbilityData in affordable:
+		options.append({"label": "%s (Mana: %d)" % [a.ability_name, a.mana_cost],
+			"description": a.get_description()})
+
+	_action_menu.show_choices(options)
+	_action_menu.choice_selected.disconnect(_on_action_selected)
+	_action_menu.choice_selected.connect(_on_ability_selected)
+
+
+func _on_ability_selected(index: int) -> void:
+	_action_menu.choice_selected.disconnect(_on_ability_selected)
+	_action_menu.choice_selected.connect(_on_action_selected)
+	_action_menu.hide_menu()
+
+	var affordable: Array[AbilityData] = []
+	for a: AbilityData in _current_actor.abilities:
+		if a.mana_cost <= _current_actor.mana:
+			affordable.append(a)
+
+	_selected_ability = affordable[index]
+
+	if _selected_ability.target_all:
+		# AoE — no target selection needed
+		_current_actor.mana -= _selected_ability.mana_cost
+		if _selected_ability.use_on_enemy:
+			_combat_log.add_message("%s targets all enemies!" % _current_actor.character_name)
+			for enemy: FighterData in _engine.enemies.duplicate():
+				_engine.use_ability_on_enemy(_current_actor, enemy, _selected_ability)
+		else:
+			_combat_log.add_message("%s targets all allies!" % _current_actor.character_name)
+			for ally: FighterData in _engine.units.duplicate():
+				_engine.use_ability_on_teammate(_current_actor, ally, _selected_ability)
+
+		await _drain_messages()
+		_refresh_bars()
+		_engine.check_for_death()
+		_rebuild_bars_if_needed()
+		await _drain_messages()
+
+		if _engine.is_battle_over():
+			_end_battle()
+			return
+
+		_phase = Phase.TICKING_ATB
+		_tick_loop()
+	elif _selected_ability.use_on_enemy:
+		_phase = Phase.PLAYER_ABILITY_TARGET_ENEMY
+		_show_target_menu(_engine.enemies)
+	else:
+		_phase = Phase.PLAYER_ABILITY_TARGET_ALLY
+		_show_target_menu(_engine.units)
+
+
+# =============================================================================
+# Stats viewing
+# =============================================================================
+
+func _show_stats_pick() -> void:
+	var options: Array[Dictionary] = []
+	for f: FighterData in _engine.units:
+		options.append({"label": "%s the %s" % [f.character_name, f.character_type]})
+	for f: FighterData in _engine.enemies:
+		options.append({"label": "%s the %s" % [f.character_name, f.character_type]})
+	options.append({"label": "Back"})
+
+	_action_menu.show_choices(options)
+	_action_menu.choice_selected.disconnect(_on_action_selected)
+	_action_menu.choice_selected.connect(_on_stats_pick_selected)
+
+
+func _on_stats_pick_selected(index: int) -> void:
+	var total: int = _engine.units.size() + _engine.enemies.size()
+	if index >= total:
+		# Back
+		_action_menu.choice_selected.disconnect(_on_stats_pick_selected)
+		_action_menu.choice_selected.connect(_on_action_selected)
+		_action_menu.hide_menu()
+		_phase = Phase.PLAYER_ACTION
+		_show_action_menu(_current_actor)
+		return
+
+	_action_menu.hide_menu()
+	var fighter: FighterData
+	if index < _engine.units.size():
+		fighter = _engine.units[index]
+	else:
+		fighter = _engine.enemies[index - _engine.units.size()]
+
+	_phase = Phase.SHOWING_STATS
+	_stats_panel.show_fighter(fighter)
+
+
+func _on_stats_closed() -> void:
+	_stats_panel.visible = false
+	_phase = Phase.STATS_PICK
+	_show_stats_pick()
+
+
+# =============================================================================
+# Message queue & delays
+# =============================================================================
+
+func _on_combat_message(text: String) -> void:
+	_message_queue.append(text)
+
+
+func _drain_messages() -> void:
+	while not _message_queue.is_empty():
+		var msg: String = _message_queue.pop_front()
+		_combat_log.add_message(msg)
+		await get_tree().create_timer(COMBAT_PAUSE).timeout
+	_refresh_bars()
+
+
+# =============================================================================
+# Battle end
+# =============================================================================
+
+func _end_battle() -> void:
+	_phase = Phase.BATTLE_END
+	await _drain_messages()
+
+	_engine.finish_battle()
+
+	if _engine.did_player_win():
+		_combat_log.add_message("")
+		_combat_log.add_message("[color=gold]Victory! The enemies have been vanquished.[/color]")
+		await get_tree().create_timer(2.0).timeout
+		GameState.advance_to_post_battle()
+		SceneManager.change_scene("res://scenes/narrative/narrative.tscn")
+	else:
+		_combat_log.add_message("")
+		_combat_log.add_message("[color=red]The party has been defeated...[/color]")
+		await get_tree().create_timer(2.0).timeout
+		GameState.go_to_ending(false)
+		SceneManager.change_scene("res://scenes/narrative/narrative.tscn")
+
+
+func _on_fighter_died(_fighter: FighterData) -> void:
+	pass  # Death messages handled by engine signals
+
+
+func _on_battle_won() -> void:
+	pass  # Handled in _end_battle
+
+
+func _on_battle_lost() -> void:
+	pass  # Handled in _end_battle
+
+
+func _rebuild_bars_if_needed() -> void:
+	# Hide bars for dead fighters
+	for i: int in _party_bars.size():
+		_party_bars[i].visible = i < _engine.units.size()
+		if i < _engine.units.size():
+			_party_bars[i].update_display(_engine.units[i])
+	for i: int in _enemy_bars.size():
+		_enemy_bars[i].visible = i < _engine.enemies.size()
+		if i < _engine.enemies.size():
+			_enemy_bars[i].update_display(_engine.enemies[i])
