@@ -1,11 +1,11 @@
 ---
 name: class-reference
-description: Quick-reference for all 47 player classes in Echoes of Choice, including upgrade trees, abilities, and archetype groupings. Use when analyzing class win rates, identifying which upgrade tree a class belongs to, checking class abilities, or mapping simulation output back to archetypes. Also use when a whole tree branch appears weak or strong to determine if the issue is the Tier 1 parent, the Tier 2 class, or shared abilities.
+description: Quick-reference for all 44 player classes in Echoes of Choice, including upgrade trees, abilities, and archetype groupings. Use when analyzing class win rates, identifying which upgrade tree a class belongs to, checking class abilities, or mapping simulation output back to archetypes. Also use when a whole tree branch appears weak or strong to determine if the issue is the Tier 1 parent, the Tier 2 class, or shared abilities.
 ---
 
 # Class Reference
 
-45 player classes across 4 archetypes (plus 2 Royal). Squire has 3 T1 branches; Entertainer and Scholar have 4; Mage has 2.
+42 player classes across 4 archetypes (plus 2 Royal). Squire and Entertainer have 3 T1 branches; Scholar has 4; Mage has 2.
 
 ## Upgrade Trees
 
@@ -27,7 +27,6 @@ Each line: `Base -> (Item) -> Tier1 [abilities] -> (Item) -> Tier2 [abilities]`
 - Entertainer [Sing, Demoralize] -> (Guitar) -> Bard [Seduce, Melody, Encourage] -> (WarHorn) -> Warcrier [BattleCry, Smash, Encore] | (Hat) -> Minstrel [Ballad, Frustrate, Serenade]
 - Entertainer -> (Slippers) -> Dervish [Seduce, Dance] -> (Light) -> Illusionist [ShadowAttack, Mirage, Bewilderment] | (Paint) -> Mime [InvisibleWall, Anvil, InvisibleBox]
 - Entertainer -> (Scroll) -> Orator [Oration, Encourage] -> (Pen) -> Elegist [Nightfall, Inspire, Dirge] | (Medal) -> Laureate [Ovation, Recite, Eulogy]
-- Entertainer -> (Hymnal) -> Chorister [Melody, Sing, Encore] -> (Trumpet) -> Herald [Inspire, Proclamation, Decree] | (Lyre) -> Muse [Lullaby, Vocals, SoothingMelody]
 
 ### Scholar
 

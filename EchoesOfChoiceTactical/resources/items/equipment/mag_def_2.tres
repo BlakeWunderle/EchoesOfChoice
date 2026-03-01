@@ -14,7 +14,7 @@ stat_bonuses = {
 3: 8
 }
 unlock_tier = 2
-unlock_class_ids = PackedStringArray("priest", "laureate", "muse", "paladin", "minstrel", "herald", "elegist", "warcrier", "illusionist", "mime")
+unlock_class_ids = PackedStringArray("priest", "laureate", "paladin", "minstrel", "elegist", "warcrier", "illusionist", "mime")
 consumable_effect = 0
 consumable_value = 0
 buff_stat = 0

@@ -1,6 +1,6 @@
 # Class Upgrade Trees
 
-47 player classes: 4 base (Tier 0), 13 Tier 1, 28 Tier 2, 2 Royal.
+44 player classes: 4 base (Tier 0), 12 Tier 1, 26 Tier 2, 2 Royal.
 Each T0 has 2-4 T1 branches. Each T1 has 2-3 T2 upgrades.
 
 ## Squire Tree (physical fighters)
@@ -33,14 +33,12 @@ Mage (T0)
 Entertainer (T0)
 ├── Bard (T1) ─────── Warcrier (T2), Minstrel (T2)
 ├── Dervish (T1) ──── Illusionist (T2), Mime (T2)
-├── Orator (T1) ───── Laureate (T2), Elegist (T2)
-└── Chorister (T1) ── Herald (T2), Muse (T2)
+└── Orator (T1) ───── Laureate (T2), Elegist (T2)
 ```
 
-- Bard branch: music → battle shouts+aggro / mobile songs
-- Dervish branch: dance → illusions+debuffs / stealth mimicry
-- Orator branch: speech → buff amplification / melancholic curses
-- Chorister branch: choir → magical herald / inspiring artist
+- Bard branch: music → battle shouts+melee / healing melodies
+- Dervish branch: dance → illusion evasive DPS / terrain mimicry
+- Orator branch: speech → AoE inspiring buffs / demoralizing debuffs
 
 ## Scholar Tree (inventors & academics)
 

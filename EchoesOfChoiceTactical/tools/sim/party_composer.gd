@@ -18,9 +18,9 @@ const ARCHETYPE_TREE := {
 	},
 	"entertainer": {
 		"t0": ["entertainer"],
-		"t1": ["bard", "dervish", "orator", "chorister"],
+		"t1": ["bard", "dervish", "orator"],
 		"t2": ["warcrier", "minstrel", "illusionist", "mime",
-			"laureate", "elegist", "herald", "muse"],
+			"laureate", "elegist"],
 	},
 	"scholar": {
 		"t0": ["scholar"],

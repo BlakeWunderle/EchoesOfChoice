@@ -67,7 +67,7 @@ Placeholder sprites for now, iterate on art later.
 
 ## Class System
 
-47 player classes. 4 base -> 13 Tier 1 -> 28 Tier 2 + 2 Royal via upgrades. Each class has unique movement/jump/reaction values. The C# codebase at `EchoesOfChoice/CharacterClasses/` is the original reference for stat values, but the tactical version has diverged (Warden branch removed, Mage tree restructured from 4 T1 to 2 T1).
+44 player classes. 4 base -> 12 Tier 1 -> 26 Tier 2 + 2 Royal via upgrades. Each class has unique movement/jump/reaction values. The C# codebase at `EchoesOfChoice/CharacterClasses/` is the original reference for stat values, but the tactical version has diverged (Warden branch removed, Mage tree restructured from 4 T1 to 2 T1, Chorister branch removed from Entertainer).
 
 ## Progression & economy (tactical-specific)
 

@@ -69,7 +69,7 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 
 | Class | Abilities | Crit/Dmg/Dodge | Upgrades To |
 |-------|-----------|----------------|-------------|
-| Entertainer | Sing, Demoralize | 1/1/1 | Bard (Guitar), Dervish (Slippers), Orator (Scroll), Chorister (Hymnal) |
+| Entertainer | Sing, Demoralize | 1/1/1 | Bard (Guitar), Dervish (Slippers), Orator (Scroll) |
 
 ### Tier 1
 
@@ -78,7 +78,6 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 | Bard | Seduce, Melody, Encourage | 1/1/2 | Warcrier (WarHorn), Minstrel (Hat) |
 | Dervish | Seduce, Dance | 2/2/3 | Illusionist (Light), Mime (Paint) |
 | Orator | Oration, Encourage | 1/1/1 | Laureate (Medal), Elegist (Pen) |
-| Chorister | Melody, Sing, Encore | 1/1/1 | Herald (Trumpet), Muse (Lyre) |
 
 ### Tier 2
 
@@ -88,10 +87,8 @@ Crit/Dodge format: `Crit%/CritDmg/Dodge%`
 | Minstrel | Ballad, Frustrate, Serenade | 1/1/1 | Support debuffer + buff |
 | Illusionist | ShadowAttack, Mirage, Bewilderment | 3/2/4 | Evasive mixed DPS + debuff |
 | Mime | InvisibleWall, Anvil, InvisibleBox | 2/2/3 | Utility + mixed damage |
-| Herald | Inspire, Proclamation, Decree | 1/1/1 | Support buffer |
-| Muse | Lullaby, Vocals, SoothingMelody | 1/1/1 | Support healer + buff |
-| Laureate | Ovation, Recite, Eulogy | 1/1/1 | Magic DPS + support |
-| Elegist | Nightfall, Inspire, Dirge | 2/2/1 | Support buffer + magic defense |
+| Laureate | Ovation, Recite, Eulogy | 1/1/1 | AoE buffer + magic DPS |
+| Elegist | Nightfall, Inspire, Dirge | 2/2/1 | Single-target buffer + debuffer |
 
 ---
 
@@ -141,7 +138,6 @@ When a class is flagged weak/strong, check its sibling (same Tier 1 parent):
 | Bard | Warcrier | Minstrel | — |
 | Dervish | Illusionist | Mime | — |
 | Orator | Laureate | Elegist | — |
-| Chorister | Herald | Muse | — |
 | Artificer | Alchemist | Thaumaturge | — |
 | Tinker | Bombardier | Siegemaster | — |
 | Cosmologist | Chronomancer | Astronomer | — |

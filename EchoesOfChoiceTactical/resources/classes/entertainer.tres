@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="FighterData" load_steps=7 format=3]
+[gd_resource type="Resource" script_class="FighterData" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/fighter_data.gd" id="1"]
 [ext_resource type="Resource" path="res://resources/abilities/sing.tres" id="2"]
@@ -6,7 +6,6 @@
 [ext_resource type="Resource" path="res://resources/classes/bard.tres" id="4"]
 [ext_resource type="Resource" path="res://resources/classes/dervish.tres" id="5"]
 [ext_resource type="Resource" path="res://resources/classes/orator.tres" id="6"]
-[ext_resource type="Resource" path="res://resources/classes/chorister.tres" id="7"]
 
 [resource]
 script = ExtResource("1")
@@ -36,4 +35,4 @@ jump = 2
 reaction_types = [1, 4]
 abilities = [ExtResource("2"), ExtResource("3")]
 tier = 0
-upgrade_options = [ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7")]
+upgrade_options = [ExtResource("4"), ExtResource("5"), ExtResource("6")]
