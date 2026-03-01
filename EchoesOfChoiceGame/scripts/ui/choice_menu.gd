@@ -19,7 +19,7 @@ func _ready() -> void:
 ##   "label": String (required)
 ##   "description": String (optional — shown as smaller text below label)
 ##   "disabled": bool (optional)
-func show_choices(options: Array[Dictionary]) -> void:
+func show_choices(options: Array) -> void:
 	_clear_buttons()
 	visible = true
 

@@ -7,7 +7,7 @@ signal all_text_finished
 
 const CHAR_DELAY: float = 0.02  ## Seconds between characters for typewriter effect
 
-var _lines: Array[String] = []
+var _lines: Array = []
 var _current_line: int = 0
 var _typing: bool = false
 var _full_text: String = ""
@@ -53,7 +53,7 @@ func _build_ui() -> void:
 	vbox.add_child(_continue_label)
 
 
-func show_text(lines: Array[String]) -> void:
+func show_text(lines: Array) -> void:
 	_lines = lines
 	_current_line = 0
 	_label.clear()

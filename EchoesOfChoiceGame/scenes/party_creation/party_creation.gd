@@ -102,7 +102,7 @@ func _set_state(new_state: State) -> void:
 			_finish()
 
 
-func _show_dialogue(lines: Array[String]) -> void:
+func _show_dialogue(lines: Array) -> void:
 	_dialogue.show_text(lines)
 
 

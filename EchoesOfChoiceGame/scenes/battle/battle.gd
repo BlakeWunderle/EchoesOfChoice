@@ -181,7 +181,7 @@ func _tick_loop() -> void:
 		if not _engine.tick_atb():
 			continue
 
-		var actors: Array[FighterData] = _engine.get_acting_units()
+		var actors: Array = _engine.get_acting_units()
 		for actor: FighterData in actors:
 			if actor.health <= 0:
 				_engine.check_for_death()
@@ -213,8 +213,8 @@ func _tick_loop() -> void:
 				# AI turn
 				_phase = Phase.AI_ACTING
 				var is_party: bool = _engine.units.has(actor)
-				var targets: Array[FighterData] = _engine.enemies if is_party else _engine.units
-				var allies: Array[FighterData] = _engine.units if is_party else _engine.enemies
+				var targets: Array = _engine.enemies if is_party else _engine.units
+				var allies: Array = _engine.units if is_party else _engine.enemies
 				_engine.execute_ai_turn(actor, targets, allies)
 				await _drain_messages()
 				_refresh_bars()
@@ -283,7 +283,7 @@ func _on_action_selected(index: int) -> void:
 			_show_stats_pick()
 
 
-func _show_target_menu(fighters: Array[FighterData]) -> void:
+func _show_target_menu(fighters: Array) -> void:
 	var options: Array[Dictionary] = []
 	for f: FighterData in fighters:
 		options.append({"label": "%s the %s (HP: %d/%d)" % [

@@ -23,7 +23,7 @@ func preload_scene(path: String) -> void:
 	_preload_requests[path] = true
 
 
-func preload_resources(paths: Array[String]) -> void:
+func preload_resources(paths: Array) -> void:
 	for path in paths:
 		if path.is_empty() or _preload_requests.has(path):
 			continue

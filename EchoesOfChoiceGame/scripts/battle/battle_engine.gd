@@ -14,14 +14,14 @@ signal fighter_died(fighter: FighterData)
 signal battle_won
 signal battle_lost
 
-var units: Array[FighterData] = []      ## Player party (alive)
-var enemies: Array[FighterData] = []    ## Enemy team (alive)
-var dead_units: Array[FighterData] = [] ## Dead party members (revived at end)
+var units: Array = []      ## Player party (alive)
+var enemies: Array = []    ## Enemy team (alive)
+var dead_units: Array = [] ## Dead party members (revived at end)
 
-var _acting_units: Array[FighterData] = []
+var _acting_units: Array = []
 
 
-func start_battle(party: Array[FighterData], enemy_list: Array[FighterData]) -> void:
+func start_battle(party: Array, enemy_list: Array) -> void:
 	units = party.duplicate()
 	enemies = enemy_list.duplicate()
 	dead_units.clear()
@@ -41,7 +41,7 @@ func tick_atb() -> bool:
 
 
 ## Get all units ready to act, sorted by highest ATB first.
-func get_acting_units() -> Array[FighterData]:
+func get_acting_units() -> Array:
 	_acting_units.clear()
 	for f: FighterData in units:
 		if f.turn_calculation >= 100:
@@ -285,7 +285,7 @@ func _check_for_dodge(fighter: FighterData) -> bool:
 # Taunt
 # =============================================================================
 
-func get_taunt_target(targets: Array[FighterData]) -> FighterData:
+func get_taunt_target(targets: Array) -> FighterData:
 	for t: FighterData in targets:
 		if t.health > 0 and _has_modifier(t, Enums.StatType.TAUNT, false):
 			return t
@@ -304,8 +304,8 @@ func _has_modifier(fighter: FighterData, stat: Enums.StatType,
 # AI — port of C# ExecuteAITurn
 # =============================================================================
 
-func execute_ai_turn(unit: FighterData, targets: Array[FighterData],
-		allies: Array[FighterData]) -> void:
+func execute_ai_turn(unit: FighterData, targets: Array,
+		allies: Array) -> void:
 	var affordable: Array[AbilityData] = []
 	var heal_abilities: Array[AbilityData] = []
 	var buff_abilities: Array[AbilityData] = []
@@ -419,7 +419,7 @@ func execute_ai_turn(unit: FighterData, targets: Array[FighterData],
 		physical_attack(unit, target)
 
 
-func _choose_target(unit: FighterData, targets: Array[FighterData],
+func _choose_target(unit: FighterData, targets: Array,
 		magic_ratio: float) -> FighterData:
 	var taunter: FighterData = get_taunt_target(targets)
 	if taunter != null:
@@ -430,7 +430,7 @@ func _choose_target(unit: FighterData, targets: Array[FighterData],
 	return _find_min_health(targets) if pick_lowest else _find_max_health(targets)
 
 
-func _find_min_health(targets: Array[FighterData]) -> FighterData:
+func _find_min_health(targets: Array) -> FighterData:
 	var best: FighterData = targets[0]
 	for i: int in range(1, targets.size()):
 		if targets[i].health < best.health:
@@ -438,7 +438,7 @@ func _find_min_health(targets: Array[FighterData]) -> FighterData:
 	return best
 
 
-func _find_max_health(targets: Array[FighterData]) -> FighterData:
+func _find_max_health(targets: Array) -> FighterData:
 	var best: FighterData = targets[0]
 	for i: int in range(1, targets.size()):
 		if targets[i].health > best.health:
