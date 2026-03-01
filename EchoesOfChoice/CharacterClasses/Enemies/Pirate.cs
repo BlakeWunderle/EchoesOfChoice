@@ -10,9 +10,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Pirate(int level = 4)
         {
             Level = level;
-            Health = Stat(79, 111, 5, 10, 4);
+            Health = Stat(90, 124, 5, 11, 4);
             MaxHealth = Health;
-            PhysicalAttack = Stat(16, 25, 2, 5, 4);
+            PhysicalAttack = Stat(20, 29, 2, 5, 4);
             PhysicalDefense = Stat(16, 25, 2, 5, 4);
             MagicAttack = Stat(8, 16, 1, 3, 4);
             MagicDefense = Stat(8, 16, 1, 3, 4);

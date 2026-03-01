@@ -10,18 +10,18 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public FrostWyrmling(int level = 6)
         {
             Level = level;
-            Health = Stat(115, 125, 0, 0, 6);
+            Health = Stat(110, 121, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(26, 30, 0, 0, 6);
-            PhysicalDefense = Stat(20, 24, 0, 0, 6);
-            MagicAttack = Stat(17, 21, 0, 0, 6);
+            PhysicalAttack = Stat(25, 30, 0, 0, 6);
+            PhysicalDefense = Stat(19, 23, 0, 0, 6);
+            MagicAttack = Stat(15, 19, 0, 0, 6);
             MagicDefense = Stat(16, 20, 0, 0, 6);
             Speed = Stat(28, 33, 0, 0, 6);
             Abilities = new List<Ability>() { new Claw(), new TailStrike(), new Riptide() };
             CharacterType = "FrostWyrmling";
             Mana = Stat(20, 24, 0, 0, 6);
             MaxMana = Mana;
-            CritChance = 20;
+            CritChance = 19;
             CritDamage = 2;
             DodgeChance = 10;
         }

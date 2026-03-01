@@ -10,18 +10,18 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public FireWyrmling(int level = 6)
         {
             Level = level;
-            Health = Stat(115, 125, 0, 0, 6);
+            Health = Stat(108, 119, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(17, 21, 0, 0, 6);
-            PhysicalDefense = Stat(16, 20, 0, 0, 6);
-            MagicAttack = Stat(28, 32, 0, 0, 6);
+            PhysicalAttack = Stat(15, 19, 0, 0, 6);
+            PhysicalDefense = Stat(15, 19, 0, 0, 6);
+            MagicAttack = Stat(27, 32, 0, 0, 6);
             MagicDefense = Stat(20, 24, 0, 0, 6);
             Speed = Stat(28, 33, 0, 0, 6);
             Abilities = new List<Ability>() { new DragonBreath(), new TailStrike(), new Roar() };
             CharacterType = "FireWyrmling";
             Mana = Stat(25, 29, 0, 0, 6);
             MaxMana = Mana;
-            CritChance = 20;
+            CritChance = 19;
             CritDamage = 2;
             DodgeChance = 10;
         }

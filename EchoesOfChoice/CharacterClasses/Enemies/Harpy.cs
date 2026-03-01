@@ -9,9 +9,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Harpy(int level = 5)
         {
             Level = level;
-            Health = Stat(82, 95, 3, 6, 5);
+            Health = Stat(96, 112, 4, 7, 5);
             MaxHealth = Health;
-            PhysicalAttack = Stat(22, 26, 1, 3, 5);
+            PhysicalAttack = Stat(27, 32, 2, 4, 5);
             PhysicalDefense = Stat(10, 14, 1, 2, 5);
             MagicAttack = Stat(8, 12, 0, 2, 5);
             MagicDefense = Stat(12, 16, 1, 2, 5);

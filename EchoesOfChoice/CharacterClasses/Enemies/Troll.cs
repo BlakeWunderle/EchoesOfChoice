@@ -10,9 +10,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Troll(int level = 5)
         {
             Level = level;
-            Health = Stat(140, 160, 5, 8, 5);
+            Health = Stat(165, 190, 6, 10, 5);
             MaxHealth = Health;
-            PhysicalAttack = Stat(24, 28, 2, 3, 5);
+            PhysicalAttack = Stat(30, 35, 2, 4, 5);
             PhysicalDefense = Stat(18, 22, 1, 3, 5);
             MagicAttack = Stat(4, 8, 0, 1, 5);
             MagicDefense = Stat(12, 16, 1, 2, 5);
