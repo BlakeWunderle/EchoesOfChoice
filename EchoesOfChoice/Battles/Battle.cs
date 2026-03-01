@@ -1048,13 +1048,13 @@ namespace EchoesOfChoice.Battles
 
         private bool CheckForCritical(BaseFighter fighter)
         {
-            var critRoll = fighter.random.Next(1, 11);
-            return critRoll > 10 - fighter.CritChance;
+            var critRoll = fighter.random.Next(1, 101);
+            return critRoll <= fighter.CritChance;
         }
 
         private bool CheckForDodge(BaseFighter fighter)
         {
-            var dodgeRoll = fighter.random.Next(1, 11);
+            var dodgeRoll = fighter.random.Next(1, 101);
             return dodgeRoll <= fighter.DodgeChance;
         }
 

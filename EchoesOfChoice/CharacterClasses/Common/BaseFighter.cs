@@ -85,9 +85,9 @@ namespace EchoesOfChoice.CharacterClasses.Common
             Console.WriteLine($"Magic Attack: {MagicAttack}");
             Console.WriteLine($"Magic Defense: {MagicDefense}");
             Console.WriteLine($"Speed: {Speed}");
-            Console.WriteLine($"Crit Chance: {CritChance}/10");
+            Console.WriteLine($"Crit Chance: {CritChance}%");
             Console.WriteLine($"Crit Damage: {CritDamage}");
-            Console.WriteLine($"Dodge Chance: {DodgeChance}/10");
+            Console.WriteLine($"Dodge Chance: {DodgeChance}%");
         }
 
         public FighterSaveData ToSaveData()
