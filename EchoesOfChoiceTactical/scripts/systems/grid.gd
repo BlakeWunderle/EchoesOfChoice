@@ -79,6 +79,34 @@ func blocks_line_of_sight(pos: Vector2i) -> bool:
 	return in_bounds(pos) and _blocks_los[_idx(pos)]
 
 
+func is_destructible(pos: Vector2i) -> bool:
+	if not in_bounds(pos):
+		return false
+	var i := _idx(pos)
+	return not _walkable[i] and _destructible_hp[i] > 0
+
+
+func get_destructible_hp(pos: Vector2i) -> int:
+	if not in_bounds(pos):
+		return 0
+	return _destructible_hp[_idx(pos)]
+
+
+func damage_destructible(pos: Vector2i, damage: int) -> Dictionary:
+	if not is_destructible(pos):
+		return {"destroyed": false, "damage_dealt": 0, "hp_remaining": 0}
+	var i := _idx(pos)
+	var actual_damage := mini(damage, _destructible_hp[i])
+	_destructible_hp[i] -= actual_damage
+	var destroyed := _destructible_hp[i] <= 0
+	if destroyed:
+		_walkable[i] = true
+		_movement_cost[i] = 1
+		_blocks_los[i] = false
+		_destructible_hp[i] = 0
+	return {"destroyed": destroyed, "damage_dealt": actual_damage, "hp_remaining": _destructible_hp[i]}
+
+
 func set_tile(pos: Vector2i, walkable: bool, cost: int, elevation: int, blocks_los: bool = false, destructible_hp: int = 0) -> void:
 	if not in_bounds(pos):
 		return

@@ -60,7 +60,7 @@ func play_context(context: int, fade: float = 1.0) -> void:
 	play_music(path, fade)
 
 
-func play_music(path: String, _fade_duration: float = 1.0) -> void:
+func play_music(path: String, fade_duration: float = 0.5) -> void:
 	if _headless:
 		return
 	if path == _current_path:
@@ -72,9 +72,7 @@ func play_music(path: String, _fade_duration: float = 1.0) -> void:
 		push_warning("MusicManager: Could not load: " + path)
 		return
 
-	if _player:
-		_player.stop()
-		_player.queue_free()
+	_fade_out_player(fade_duration)
 	_player = AudioStreamPlayer.new()
 	add_child(_player)
 	_player.stream = stream
@@ -83,12 +81,29 @@ func play_music(path: String, _fade_duration: float = 1.0) -> void:
 	_player.play()
 
 
-func stop_music(_fade_duration: float = 1.0) -> void:
+func stop_music(fade_duration: float = 0.5) -> void:
 	if _headless:
 		return
 	_current_path = ""
 	_current_context = -1
-	_player.stop()
+	_fade_out_player(fade_duration)
+
+
+func _fade_out_player(duration: float) -> void:
+	if _player == null:
+		return
+	var dying := _player
+	_player = null
+	if not dying.playing or duration <= 0.0:
+		dying.stop()
+		dying.queue_free()
+		return
+	if dying.finished.is_connected(dying.play):
+		dying.finished.disconnect(dying.play)
+	var tween := dying.create_tween()
+	tween.tween_property(dying, "volume_db", -40.0, duration)
+	tween.tween_callback(dying.stop)
+	tween.tween_callback(dying.queue_free)
 
 
 func set_music_volume(linear: float) -> void:

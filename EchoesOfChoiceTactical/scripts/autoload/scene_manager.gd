@@ -34,6 +34,7 @@ func preload_resources(paths: Array[String]) -> void:
 
 func change_scene(path: String, fade_duration: float = 0.4) -> void:
 	_fader.mouse_filter = Control.MOUSE_FILTER_STOP
+	MusicManager.stop_music(fade_duration)
 
 	# Kick off threaded load immediately (runs in parallel with fade)
 	if not _preload_requests.has(path):

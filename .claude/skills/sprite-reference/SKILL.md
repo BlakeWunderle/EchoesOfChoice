@@ -57,3 +57,13 @@ All outputs are saved to the `EchoesOfChoiceTactical/` project root:
 - `tools/sprite_contact_sheet.py` -- Generates class_sprites.png and enemy_sprites.png
 - `tools/generate_sprite_reference.py` -- Generates sprite_reference.md, catalog_chibi.png, catalog_tiny_fantasy.png
 - `tools/set_sprite_ids.py` -- Source of truth for sprite ID mappings (CLASS_SPRITE_IDS, CLASS_SPRITE_IDS_FEMALE, ENEMY_SPRITE_IDS)
+- `tools/generate_all_sprites.py` -- Generates SpriteFrames .tres files from processed PNGs
+
+## Pitfall: Python Brace Escaping in generate_all_sprites.py
+
+The `.tres` writer in `generate_all_sprites.py` mixes f-strings and `%` formatting. **These have different brace escaping rules:**
+
+- **f-string**: `{{` outputs `{` (escape) -- CORRECT for Godot .tres dict syntax
+- **`%` formatting**: `{{` outputs `{{` (literal) -- WRONG for Godot .tres
+
+If modifying the `.tres` writer, always use **f-strings** for any string containing braces. Never use `%` or `.format()` for lines that need `{`/`}` in the output — those methods require `{{` to escape, but only f-strings are used consistently in the current code.

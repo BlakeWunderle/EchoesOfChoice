@@ -30,6 +30,10 @@ func execute(unit: Unit, ability: AbilityData, aoe_tiles: Array[Vector2i]) -> Di
 		_execute_buff(unit, ability, aoe_tiles)
 	else:
 		_execute_damage(unit, ability, aoe_tiles)
+		for r in _results:
+			if r.get("type") == "destructible" and r.get("destroyed", false):
+				terrain_changed = true
+				break
 
 	return {
 		"terrain_changed": terrain_changed,
@@ -90,6 +94,18 @@ func _execute_damage(attacker: Unit, ability: AbilityData, tiles: Array[Vector2i
 		if target.is_alive:
 			var heal_results := _reaction_system.check_reactive_heal(target, damage)
 			_offensive_reactions.append_array(heal_results)
+
+	# Damage destructible tiles in AoE
+	for tile in tiles:
+		if not _grid.is_destructible(tile):
+			continue
+		var destr_stats := {"phys_def": 0, "mag_def": 0, "dodge_chance": 0}
+		var dmg := maxi(Combat.calculate_ability_damage(ability, attacker.get_stats_dict(), destr_stats), 1)
+		var result := _grid.damage_destructible(tile, dmg)
+		_results.append({
+			"type": "destructible", "pos": tile,
+			"amount": result["damage_dealt"], "destroyed": result["destroyed"],
+		})
 
 	attacker.award_ability_xp_jp(ability, got_crit, got_kill)
 

@@ -77,7 +77,7 @@ These are real errors that exist in the project but are not caused by recent cha
 | Error | Files | Status |
 |-------|-------|--------|
 | Missing WAV audio files | `assets/audio/music/menu/*.wav`, `assets/audio/music/battle/*.wav` | Music files not yet sourced/downloaded |
-| Corrupt spriteframe .tres | `chibi_armored_knight_medieval_knight_royal.tres`, `chibi_knight_2.tres`, `chibi_magician_1_royal.tres` (Parse Error at line 734) | Need regeneration via `generate_all_sprites.py` |
+| ~~Corrupt spriteframe .tres~~ | ~~Parse Error at line 734~~ | FIXED — was double-brace `{{` bug in `generate_all_sprites.py` line 744 (`%` formatting outputs literal `{{`, f-strings escape to `{`) |
 
 ## Interpreting Output
 

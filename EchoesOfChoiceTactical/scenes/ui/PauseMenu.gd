@@ -25,7 +25,7 @@ func _build_ui() -> void:
 	panel.offset_left = -160.0
 	panel.offset_top = -130.0
 	panel.offset_right = 160.0
-	panel.offset_bottom = 130.0
+	panel.offset_bottom = 160.0
 	add_child(panel)
 
 	var margin := MarginContainer.new()
@@ -67,6 +67,10 @@ func _build_ui() -> void:
 	title_btn.pressed.connect(_on_quit_title)
 	vbox.add_child(title_btn)
 
+	var quit_btn := _make_button("Quit Game")
+	quit_btn.pressed.connect(_on_quit_game)
+	vbox.add_child(quit_btn)
+
 	resume_btn.grab_focus()
 
 
@@ -96,6 +100,10 @@ func _on_quit_overworld() -> void:
 func _on_quit_title() -> void:
 	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
 	quit_to_title.emit()
+
+
+func _on_quit_game() -> void:
+	get_tree().quit()
 
 
 func _unhandled_input(event: InputEvent) -> void:

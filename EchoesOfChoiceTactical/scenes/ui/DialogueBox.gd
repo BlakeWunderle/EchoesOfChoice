@@ -18,7 +18,7 @@ const CHARS_PER_SECOND := 40.0
 const MENTOR_SPRITES: Dictionary = {
 	"Sir Aldric": "chibi_armored_knight_medieval_knight",
 	"Elara": "chibi_dark_knight_archon_5",
-	"Lyris": "chibi_ninja_female_1",
+	"Lyris": "chibi_ninja_assassin_white_ninja",
 	"Professor Thane": "chibi_mage_1",
 }
 
