@@ -14,7 +14,7 @@ namespace EchoesOfChoice.CharacterClasses.Mage
             CritChance = 1;
             CritDamage = 1;
             DodgeChance = 1;
-            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.Hammer, UpgradeItemEnum.HolyBook };
+            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.Hammer, UpgradeItemEnum.HolyBook, UpgradeItemEnum.DarkOrb };
         }
 
         public Acolyte(BaseFighter fighter) : base(fighter) { }
@@ -60,6 +60,12 @@ namespace EchoesOfChoice.CharacterClasses.Mage
                 case UpgradeItemEnum.HolyBook:
                     {
                         var upgradedUnit = new Priest();
+                        upgradedUnit.KeepStatsOnUpgrade(this);
+                        return upgradedUnit;
+                    }
+                case UpgradeItemEnum.DarkOrb:
+                    {
+                        var upgradedUnit = new Warlock();
                         upgradedUnit.KeepStatsOnUpgrade(this);
                         return upgradedUnit;
                     }

@@ -19,7 +19,7 @@ namespace EchoesOfChoice.CharacterClasses.Fighter
             Speed = random.Next(10, 15);
             Abilities = new List<Ability>() { new Slash(), new Guard() };
             CharacterType = "Squire";
-            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.Sword, UpgradeItemEnum.Bow, UpgradeItemEnum.Shield, UpgradeItemEnum.Headband };
+            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.Sword, UpgradeItemEnum.Bow, UpgradeItemEnum.Headband };
             Mana = random.Next(4, 13);
             MaxMana = Mana;
             CritChance = 2;
@@ -57,12 +57,6 @@ namespace EchoesOfChoice.CharacterClasses.Fighter
                 case UpgradeItemEnum.Sword:
                     {
                         var upgradedUnit = new Duelist();
-                        upgradedUnit.KeepStatsOnUpgrade(this);
-                        return upgradedUnit;
-                    }
-                case UpgradeItemEnum.Shield:
-                    {
-                        var upgradedUnit = new Warden();
                         upgradedUnit.KeepStatsOnUpgrade(this);
                         return upgradedUnit;
                     }

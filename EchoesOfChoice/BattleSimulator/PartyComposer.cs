@@ -47,30 +47,25 @@ namespace EchoesOfChoice.BattleSimulator
 
         public static Dictionary<string, UpgradeItemEnum[]> Tier1Upgrades = new()
         {
-            ["Squire"] = new[] { UpgradeItemEnum.Sword, UpgradeItemEnum.Bow, UpgradeItemEnum.Shield, UpgradeItemEnum.Headband },
-            ["Mage"] = new[] { UpgradeItemEnum.BlueStone, UpgradeItemEnum.RedStone, UpgradeItemEnum.YellowStone, UpgradeItemEnum.WhiteStone },
-            ["Entertainer"] = new[] { UpgradeItemEnum.Guitar, UpgradeItemEnum.Slippers, UpgradeItemEnum.Scroll, UpgradeItemEnum.Hymnal },
-            ["Scholar"] = new[] { UpgradeItemEnum.Abacus, UpgradeItemEnum.Textbook, UpgradeItemEnum.Crystal, UpgradeItemEnum.Blueprint }
+            ["Squire"] = new[] { UpgradeItemEnum.Sword, UpgradeItemEnum.Bow, UpgradeItemEnum.Headband },
+            ["Mage"] = new[] { UpgradeItemEnum.RedStone, UpgradeItemEnum.WhiteStone },
+            ["Entertainer"] = new[] { UpgradeItemEnum.Guitar, UpgradeItemEnum.Slippers, UpgradeItemEnum.Scroll },
+            ["Scholar"] = new[] { UpgradeItemEnum.Crystal, UpgradeItemEnum.Textbook, UpgradeItemEnum.Abacus }
         };
 
         public static Dictionary<string, UpgradeItemEnum[]> Tier2Upgrades = new()
         {
             ["Duelist"] = new[] { UpgradeItemEnum.Horse, UpgradeItemEnum.Spear },
             ["Ranger"] = new[] { UpgradeItemEnum.Gun, UpgradeItemEnum.Trap },
-            ["Warden"] = new[] { UpgradeItemEnum.Sword, UpgradeItemEnum.Helmet },
             ["Martial Artist"] = new[] { UpgradeItemEnum.Sword, UpgradeItemEnum.Staff },
-            ["Mistweaver"] = new[] { UpgradeItemEnum.IceStone, UpgradeItemEnum.WaterStone },
-            ["Firebrand"] = new[] { UpgradeItemEnum.FireStone, UpgradeItemEnum.LavaStone },
-            ["Stormcaller"] = new[] { UpgradeItemEnum.LightningStone, UpgradeItemEnum.AirStone },
-            ["Acolyte"] = new[] { UpgradeItemEnum.Hammer, UpgradeItemEnum.HolyBook },
+            ["Invoker"] = new[] { UpgradeItemEnum.FireStone, UpgradeItemEnum.WaterStone, UpgradeItemEnum.LightningStone },
+            ["Acolyte"] = new[] { UpgradeItemEnum.Hammer, UpgradeItemEnum.HolyBook, UpgradeItemEnum.DarkOrb },
             ["Bard"] = new[] { UpgradeItemEnum.Hat, UpgradeItemEnum.WarHorn },
             ["Dervish"] = new[] { UpgradeItemEnum.Light, UpgradeItemEnum.Paint },
             ["Orator"] = new[] { UpgradeItemEnum.Pen, UpgradeItemEnum.Medal },
-            ["Chorister"] = new[] { UpgradeItemEnum.Trumpet, UpgradeItemEnum.Lyre },
             ["Arithmancer"] = new[] { UpgradeItemEnum.ClockworkCore, UpgradeItemEnum.Computer },
-            ["Cosmologist"] = new[] { UpgradeItemEnum.TimeMachine, UpgradeItemEnum.Telescope },
-            ["Artificer"] = new[] { UpgradeItemEnum.Potion, UpgradeItemEnum.Hammer },
-            ["Tinker"] = new[] { UpgradeItemEnum.Brick, UpgradeItemEnum.Dynamite }
+            ["Philosopher"] = new[] { UpgradeItemEnum.TimeMachine, UpgradeItemEnum.Telescope },
+            ["Artificer"] = new[] { UpgradeItemEnum.Potion, UpgradeItemEnum.Hammer }
         };
 
         public static BaseFighter CreateFighter(string baseType, UpgradeItemEnum? tier1Item, UpgradeItemEnum? tier2Item, int totalLevelUps)
@@ -157,8 +152,8 @@ namespace EchoesOfChoice.BattleSimulator
                 "Necromancer" => new Necromancer(),
                 "Psion" => new Psion(),
                 "Runewright" => new Runewright(),
-                "Shaman" => new Shaman(),
-                "Warlock" => new Warlock(),
+                "Shaman" => new EchoesOfChoice.CharacterClasses.Enemies.Shaman(),
+                "Warlock" => new EchoesOfChoice.CharacterClasses.Enemies.Warlock(),
                 _ => throw new ArgumentException($"Unknown recruit type: {spec.Type}")
             };
 

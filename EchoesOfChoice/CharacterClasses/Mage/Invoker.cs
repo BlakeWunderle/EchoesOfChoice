@@ -5,61 +5,68 @@ using System;
 
 namespace EchoesOfChoice.CharacterClasses.Mage
 {
-    public class Firebrand : BaseFighter
+    public class Invoker : BaseFighter
     {
-        public Firebrand()
+        public Invoker()
         {
-            Abilities = new List<Ability>() { new Fire(), new Scorch() };
-            CharacterType = "Firebrand";
+            Abilities = new List<Ability>() { new ArcaneBolt(), new ElementalSurge() };
+            CharacterType = "Invoker";
             CritChance = 2;
             CritDamage = 2;
             DodgeChance = 1;
-            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.FireStone, UpgradeItemEnum.LavaStone };
+            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.FireStone, UpgradeItemEnum.WaterStone, UpgradeItemEnum.LightningStone };
         }
 
-        public Firebrand(BaseFighter fighter) : base(fighter) { }
+        public Invoker(BaseFighter fighter) : base(fighter) { }
 
         public override BaseFighter Clone()
         {
-            return new Firebrand(this);
+            return new Invoker(this);
         }
 
         protected override void ApplyUpgradeBonuses()
         {
-            MagicAttack += 4;
-            Speed += 2;
+            Health += 3;
+            MaxHealth += 3;
+            MagicAttack += 3;
+            MagicDefense += 2;
         }
 
         public override void IncreaseLevel()
         {
             Level += 1;
-            var healthIncrease = random.Next(6, 9);
+            var healthIncrease = random.Next(5, 8);
             Health += healthIncrease;
             MaxHealth += healthIncrease;
-            var manaIncrease = random.Next(4, 7);
+            var manaIncrease = random.Next(3, 6);
             Mana += manaIncrease;
             MaxMana += manaIncrease;
             PhysicalAttack += random.Next(1, 3);
-            PhysicalDefense += random.Next(1, 2);
-            MagicAttack += random.Next(6, 9);
+            PhysicalDefense += random.Next(1, 3);
+            MagicAttack += random.Next(3, 6);
             MagicDefense += random.Next(2, 4);
-            Speed += random.Next(2, 5);
+            Speed += random.Next(2, 4);
         }
 
         public override BaseFighter UpgradeClass(UpgradeItemEnum upgradeItem)
         {
-
             switch (upgradeItem)
             {
-                case UpgradeItemEnum.LavaStone:
+                case UpgradeItemEnum.FireStone:
                     {
-                        var upgradedUnit = new Geomancer();
+                        var upgradedUnit = new Infernalist();
                         upgradedUnit.KeepStatsOnUpgrade(this);
                         return upgradedUnit;
                     }
-                case UpgradeItemEnum.FireStone:
+                case UpgradeItemEnum.WaterStone:
                     {
-                        var upgradedUnit = new Pyromancer();
+                        var upgradedUnit = new Tidecaller();
+                        upgradedUnit.KeepStatsOnUpgrade(this);
+                        return upgradedUnit;
+                    }
+                case UpgradeItemEnum.LightningStone:
+                    {
+                        var upgradedUnit = new Tempest();
                         upgradedUnit.KeepStatsOnUpgrade(this);
                         return upgradedUnit;
                     }

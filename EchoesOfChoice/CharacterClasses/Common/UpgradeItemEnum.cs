@@ -46,6 +46,7 @@ namespace EchoesOfChoice.CharacterClasses.Common
         Blueprint,
         TimeMachine,
         Potion,
-        Brick
+        Brick,
+        DarkOrb
     }
 }

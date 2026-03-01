@@ -4,43 +4,43 @@ using System.Collections.Generic;
 
 namespace EchoesOfChoice.CharacterClasses.Mage
 {
-    public class Cryomancer : BaseFighter
+    public class Infernalist : BaseFighter
     {
-        public Cryomancer()
+        public Infernalist()
         {
-            Abilities = new List<Ability>() { new Blizzard(), new Frostbite(), new Wall() };
-            CharacterType = "Cryomancer";
+            Abilities = new List<Ability>() { new FireBall(), new Inferno(), new Enrage() };
+            CharacterType = "Infernalist";
             CritChance = 2;
             CritDamage = 2;
-            DodgeChance = 1;
+            DodgeChance = 3;
         }
 
-        public Cryomancer(BaseFighter fighter) : base(fighter) { }
+        public Infernalist(BaseFighter fighter) : base(fighter) { }
 
         public override BaseFighter Clone()
         {
-            return new Cryomancer(this);
+            return new Infernalist(this);
         }
 
         protected override void ApplyUpgradeBonuses()
         {
             MagicAttack += 5;
-            MagicDefense += 5;
+            Speed += 3;
         }
 
         public override void IncreaseLevel()
         {
             Level += 1;
-            var healthIncrease = random.Next(8, 11);
+            var healthIncrease = random.Next(5, 8);
             Health += healthIncrease;
             MaxHealth += healthIncrease;
-            var manaIncrease = random.Next(2, 5);
+            var manaIncrease = random.Next(3, 6);
             Mana += manaIncrease;
             MaxMana += manaIncrease;
             PhysicalAttack += random.Next(1, 3);
-            PhysicalDefense += random.Next(3, 6);
+            PhysicalDefense += random.Next(1, 3);
             MagicAttack += random.Next(5, 8);
-            MagicDefense += random.Next(3, 6);
+            MagicDefense += random.Next(2, 4);
             Speed += random.Next(2, 5);
         }
 

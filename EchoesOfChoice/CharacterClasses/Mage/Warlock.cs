@@ -2,47 +2,46 @@ using EchoesOfChoice.CharacterClasses.Common;
 using EchoesOfChoice.CharacterClasses.Abilities;
 using System.Collections.Generic;
 
-namespace EchoesOfChoice.CharacterClasses.Scholar
+namespace EchoesOfChoice.CharacterClasses.Mage
 {
-    public class Siegemaster : BaseFighter
+    public class Warlock : BaseFighter
     {
-        public Siegemaster()
+        public Warlock()
         {
-            Abilities = new List<Ability>() { new Earthquake(), new Demolish(), new Taunt() };
-            CharacterType = "Siegemaster";
+            Abilities = new List<Ability>() { new ShadowBolt(), new Curse(), new DrainLife() };
+            CharacterType = "Warlock";
             CritChance = 2;
             CritDamage = 2;
-            DodgeChance = 1;
+            DodgeChance = 2;
         }
 
-        public Siegemaster(BaseFighter fighter) : base(fighter) { }
+        public Warlock(BaseFighter fighter) : base(fighter) { }
 
         public override BaseFighter Clone()
         {
-            return new Siegemaster(this);
+            return new Warlock(this);
         }
 
         protected override void ApplyUpgradeBonuses()
         {
-            Health += 12;
-            MaxHealth += 12;
-            PhysicalDefense += 5;
-            PhysicalAttack += 3;
+            MagicAttack += 5;
+            MagicDefense += 3;
+            Speed += 2;
         }
 
         public override void IncreaseLevel()
         {
             Level += 1;
-            var healthIncrease = random.Next(10, 13);
+            var healthIncrease = random.Next(5, 8);
             Health += healthIncrease;
             MaxHealth += healthIncrease;
             var manaIncrease = random.Next(3, 6);
             Mana += manaIncrease;
             MaxMana += manaIncrease;
-            PhysicalAttack += random.Next(5, 8);
-            PhysicalDefense += random.Next(3, 6);
-            MagicAttack += random.Next(5, 8);
-            MagicDefense += random.Next(4, 7);
+            PhysicalAttack += random.Next(1, 3);
+            PhysicalDefense += random.Next(1, 3);
+            MagicAttack += random.Next(4, 7);
+            MagicDefense += random.Next(3, 5);
             Speed += random.Next(2, 4);
         }
 

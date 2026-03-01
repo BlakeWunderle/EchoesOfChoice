@@ -58,7 +58,7 @@ namespace EchoesOfChoice.CharacterClasses.Scholar
                     }
                 case UpgradeItemEnum.Hammer:
                     {
-                        var upgradedUnit = new Thaumaturge();
+                        var upgradedUnit = new Bombardier();
                         upgradedUnit.KeepStatsOnUpgrade(this);
                         return upgradedUnit;
                     }

@@ -19,7 +19,7 @@ namespace EchoesOfChoice.CharacterClasses.Mage
             Speed = random.Next(13, 17);
             Abilities = new List<Ability>() { new ArcaneBolt() };
             CharacterType = "Mage";
-            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.BlueStone, UpgradeItemEnum.RedStone, UpgradeItemEnum.WhiteStone, UpgradeItemEnum.YellowStone };
+            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.RedStone, UpgradeItemEnum.WhiteStone };
             Mana = random.Next(10, 16);
             MaxMana = Mana;
             CritChance = 1;
@@ -54,21 +54,9 @@ namespace EchoesOfChoice.CharacterClasses.Mage
         {
             switch (upgradeItem)
             {
-                case UpgradeItemEnum.BlueStone:
-                    {
-                        var upgradedUnit = new Mistweaver();
-                        upgradedUnit.KeepStatsOnUpgrade(this);
-                        return upgradedUnit;
-                    }
                 case UpgradeItemEnum.RedStone:
                     {
-                        var upgradedUnit = new Firebrand();
-                        upgradedUnit.KeepStatsOnUpgrade(this);
-                        return upgradedUnit;
-                    }
-                case UpgradeItemEnum.YellowStone:
-                    {
-                        var upgradedUnit = new Stormcaller();
+                        var upgradedUnit = new Invoker();
                         upgradedUnit.KeepStatsOnUpgrade(this);
                         return upgradedUnit;
                     }

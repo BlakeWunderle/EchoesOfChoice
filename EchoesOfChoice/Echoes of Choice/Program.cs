@@ -249,7 +249,7 @@ namespace EchoesOfChoice
             Console.WriteLine("  1. Squire      - A sturdy warrior who fights with steel and shield.");
             Console.WriteLine("  2. Mage        - A wielder of arcane forces and elemental magic.");
             Console.WriteLine("  3. Entertainer  - A charismatic performer who inspires allies.");
-            Console.WriteLine("  4. Scholar     - A brilliant mind who turns knowledge into power.");
+            Console.WriteLine("  4. Tinker      - A brilliant mind who turns knowledge into power.");
 
             while (true)
             {

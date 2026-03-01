@@ -18,8 +18,8 @@ namespace EchoesOfChoice.CharacterClasses.Scholar
             MagicDefense = random.Next(15, 20);
             Speed = random.Next(10, 15);
             Abilities = new List<Ability>() { new Proof(), new EnergyBlast() };
-            CharacterType = "Scholar";
-            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.Abacus, UpgradeItemEnum.Textbook, UpgradeItemEnum.Crystal, UpgradeItemEnum.Blueprint };
+            CharacterType = "Tinker";
+            UpgradeItems = new List<UpgradeItemEnum>() { UpgradeItemEnum.Crystal, UpgradeItemEnum.Textbook, UpgradeItemEnum.Abacus };
             Mana = random.Next(10, 17);
             MaxMana = Mana;
             CritChance = 1;
@@ -57,12 +57,6 @@ namespace EchoesOfChoice.CharacterClasses.Scholar
                 case UpgradeItemEnum.Crystal:
                     {
                         var upgradedUnit = new Artificer();
-                        upgradedUnit.KeepStatsOnUpgrade(this);
-                        return upgradedUnit;
-                    }
-                case UpgradeItemEnum.Blueprint:
-                    {
-                        var upgradedUnit = new Tinker();
                         upgradedUnit.KeepStatsOnUpgrade(this);
                         return upgradedUnit;
                     }

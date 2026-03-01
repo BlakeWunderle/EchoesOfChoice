@@ -16,18 +16,15 @@ namespace EchoesOfChoice.CharacterClasses.Common
             { "Squire", () => new Squire() },
             { "Mage", () => new Mage.Mage() },
             { "Entertainer", () => new Entertainer.Entertainer() },
-            { "Scholar", () => new Scholar.Scholar() },
+            { "Tinker", () => new Scholar.Scholar() },
 
             // Fighter tier 1
             { "Duelist", () => new Duelist() },
-            { "Warden", () => new Warden() },
             { "Ranger", () => new Ranger() },
             { "MartialArtist", () => new MartialArtist() },
 
             // Fighter tier 2
-            { "Knight", () => new Knight() },
             { "Cavalry", () => new Cavalry() },
-            { "Bastion", () => new Bastion() },
             { "Hunter", () => new Hunter() },
             { "Ninja", () => new Ninja() },
             { "Monk", () => new Monk() },
@@ -35,50 +32,40 @@ namespace EchoesOfChoice.CharacterClasses.Common
             { "Dragoon", () => new Dragoon() },
 
             // Mage tier 1
-            { "Mistweaver", () => new Mistweaver() },
-            { "Firebrand", () => new Firebrand() },
+            { "Invoker", () => new Invoker() },
             { "Acolyte", () => new Acolyte() },
-            { "Stormcaller", () => new Stormcaller() },
 
             // Mage tier 2
+            { "Infernalist", () => new Infernalist() },
+            { "Tidecaller", () => new Tidecaller() },
             { "Tempest", () => new Tempest() },
-            { "Pyromancer", () => new Pyromancer() },
-            { "Hydromancer", () => new Hydromancer() },
-            { "Cryomancer", () => new Cryomancer() },
-            { "Electromancer", () => new Electromancer() },
-            { "Geomancer", () => new Geomancer() },
             { "Paladin", () => new Paladin() },
             { "Priest", () => new Priest() },
+            { "Warlock", () => new Mage.Warlock() },
 
             // Entertainer tier 1
             { "Bard", () => new Bard() },
             { "Dervish", () => new Dervish() },
             { "Orator", () => new Orator() },
-            { "Chorister", () => new Chorister() },
 
             // Entertainer tier 2
-            { "Herald", () => new Herald() },
             { "Laureate", () => new Laureate() },
             { "Mime", () => new Mime() },
             { "Minstrel", () => new Minstrel() },
-            { "Muse", () => new Muse() },
             { "Warcrier", () => new Warcrier() },
             { "Elegist", () => new Elegist() },
             { "Illusionist", () => new Illusionist() },
 
-            // Scholar tier 1
+            // Tinker tier 1
             { "Artificer", () => new Artificer() },
-            { "Cosmologist", () => new Cosmologist() },
-            { "Tinker", () => new Tinker() },
+            { "Philosopher", () => new Cosmologist() },
             { "Arithmancer", () => new Arithmancer() },
 
-            // Scholar tier 2
+            // Tinker tier 2
             { "Astronomer", () => new Astronomer() },
-            { "Siegemaster", () => new Siegemaster() },
             { "Alchemist", () => new Alchemist() },
-            { "Thaumaturge", () => new Thaumaturge() },
-            { "Automaton", () => new Automaton() },
             { "Bombardier", () => new Bombardier() },
+            { "Automaton", () => new Automaton() },
             { "Technomancer", () => new Technomancer() },
             { "Chronomancer", () => new Chronomancer() },
 
@@ -89,8 +76,7 @@ namespace EchoesOfChoice.CharacterClasses.Common
             { "Necromancer", () => new Necromancer() },
             { "Psion", () => new Psion() },
             { "Runewright", () => new Runewright() },
-            { "Shaman", () => new Shaman() },
-            { "Warlock", () => new Warlock() },
+            { "Shaman", () => new Enemies.Shaman() },
         };
 
         public static BaseFighter CreateFighter(FighterSaveData data)

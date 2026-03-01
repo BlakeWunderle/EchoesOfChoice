@@ -10,7 +10,7 @@ namespace EchoesOfChoice.CharacterClasses.Scholar
         public Cosmologist()
         {
             Abilities = new List<Ability>() { new TimeWarp(), new BlackHole(), new Gravity() };
-            CharacterType = "Cosmologist";
+            CharacterType = "Philosopher";
             CritChance = 1;
             CritDamage = 1;
             DodgeChance = 1;
