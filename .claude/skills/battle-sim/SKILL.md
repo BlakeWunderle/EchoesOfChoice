@@ -56,6 +56,45 @@ AFTER all progressions locked:
 
 ---
 
+## Enemy Stat Mechanics
+
+Enemy stats work differently from player stats. Understanding this is critical for effective tuning.
+
+### How Enemy Stats Are Calculated
+
+Each enemy constructor uses `Stat(baseMin, baseMax, growthMin, growthMax, level)`:
+
+```csharp
+// Example: Raider at level 4
+Health = Stat(98, 113, 4, 7, 4);
+// Result: random(98, 113) + (4-1) * random(4, 7) = 98-113 + 12-21 = 110-134
+```
+
+- The **level parameter is hardcoded** in each Stat() call — it does NOT use the constructor's level argument
+- Doing `new Raider(6)` sets `Level = 6` but the Stat() calls still use their hardcoded level (4)
+- Growth is applied **once at construction time**, not per-turn
+
+### IncreaseLevel() Is Dead Code for Balance
+
+The `IncreaseLevel()` method on enemies is **never called during battles**. It exists for potential future use but has zero effect on the simulator. Do not waste time tuning enemy IncreaseLevel() growth rates — only the Stat() constructor values matter.
+
+### Tuning Levers (in order of impact)
+
+1. **Base stat ranges** (1st and 2nd params of Stat) — direct control over the stat floor/ceiling
+2. **Growth rates** (3rd and 4th params of Stat) — amplified by the hardcoded level; changing growth by +1 at level 4 adds +3 to the stat range
+3. **Hardcoded level** (5th param of Stat) — increasing from 4 to 5 adds one more growth roll to every stat
+4. **Enemy count** — adding/removing enemies from the battle file (see 3-Enemy Rule below)
+5. **Abilities** — changing which abilities the enemy has or their Modifiers
+6. **CritChance / DodgeChance** — percentage-based, small changes have noticeable effects
+
+### 3-Enemy Rule
+
+Every battle after WolfForestBattle (Prog 1) must have **at least 3 enemies**, unless it is a boss fight. Boss fights (StrangerTowerBattle, StrangerFinalBattle) and the special MirrorBattle are exempt.
+
+3v2 battles give players a 50% action economy advantage, making stat tuning extremely sensitive. If a battle has only 2 enemies, add a 3rd by duplicating an existing enemy type with a new character name before tuning stats.
+
+---
+
 ## Step 1: Enemy Tuning
 
 **Goal:** This stage's overall win rate falls within its target +/- 3%.
@@ -80,10 +119,10 @@ dotnet run --project EchoesOfChoice/BattleSimulator -- --sample 100 --sims 50 --
 ### Check each battle's STATUS line
 
 - **PASS** -> move to Step 2
-- **TOO HARD** -> weaken enemies (lower base stats in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`, reduce ability Modifiers, reduce growth rates)
-- **TOO EASY** -> strengthen enemies (raise base stats in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`, increase ability Modifiers, add abilities)
+- **TOO HARD** -> weaken enemies (lower Stat() ranges in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`, reduce ability Modifiers, lower CritChance/DodgeChance, remove an enemy from the battle)
+- **TOO EASY** -> strengthen enemies (raise Stat() ranges, increase ability Modifiers, raise CritChance/DodgeChance, add an enemy to the battle — see 3-Enemy Rule)
 
-All enemy stats are fully defined in their class files — battle files just instantiate enemies. Tune stats directly in `EchoesOfChoice/CharacterClasses/Enemies/`. Avoid touching player classes in this step.
+All enemy stats are set in their constructor's Stat() calls — battle files just instantiate enemies. Tune the Stat() base ranges and growth params directly. Do NOT waste time changing IncreaseLevel() — it is never called during battles. Avoid touching player classes in this step.
 
 ### Re-sim after each change until all battles at this stage show PASS
 
@@ -234,27 +273,27 @@ If any stage flips to TOO HARD / TOO EASY at full sample size, make small adjust
 | CityStreetBattle | 0 | Thug, Ruffian, Pickpocket | 3v3 |
 | WolfForestBattle | 1 | Wolf, Boar | 3v2 |
 | WaypointDefenseBattle | 2 | Bandit, Goblin, Hound | 3v3 |
-| HighlandBattle | 3 | Raider, Orc | 3v2 |
+| HighlandBattle | 3 | 2x Raider, Orc | 3v3 |
 | DeepForestBattle | 3 | Witch, Wisp, Sprite | 3v3 |
-| ShoreBattle | 3 | Siren, Merfolk | 3v2 |
-| MountainPassBattle | 4 | Troll, Harpy | 3v2 |
-| CaveBattle | 4 | FireWyrmling, FrostWyrmling | 3v2 |
+| ShoreBattle | 3 | Siren, 2x Merfolk | 3v3 |
+| MountainPassBattle | 4 | Troll, 2x Harpy | 3v3 |
+| CaveBattle | 4 | 2x FireWyrmling, FrostWyrmling | 3v3 |
 | BeachBattle | 4 | Captain, 2x Pirate | 3v3 |
 | CircusBattle | 5 | Harlequin, Chanteuse, Ringmaster | 3v3 |
 | LabBattle | 5 | Android, Machinist, Ironclad | 3v3 |
 | ArmyBattle | 5 | Commander, Draconian, Chaplain | 3v3 |
-| CemeteryBattle | 5 | Zombie, Ghoul | 3v2 |
-| OutpostDefenseBattle | 6 | Shade, Wraith | 3v2 |
+| CemeteryBattle | 5 | 2x Zombie, Ghoul | 3v3 |
+| OutpostDefenseBattle | 6 | 2x Shade, Wraith | 3v3 |
 | MirrorBattle | 7 | Shadow clones (98% stat copies of party) | 3vN |
 | ReturnToCityStreetBattle | 8 | RoyalGuard, GuardSergeant, GuardArcher | 3v3 |
-| StrangerTowerBattle | 9 | Stranger | 3v1 |
-| CorruptedCityBattle | 10 | Lich, Ghast | 3v2 |
-| CorruptedWildsBattle | 10 | Demon, CorruptedTreant | 3v2 |
-| TempleBattle | 11 | Hellion, Fiendling | 3v2 |
-| BlightBattle | 11 | Dragon, BlightedStag | 3v2 |
-| GateBattle | 12 | DarkKnight, FellHound | 3v2 |
-| DepthsBattle | 12 | Imp, CaveSpider | 3v2 |
-| StrangerFinalBattle | 13 | StrangerFinal | 3v1 |
+| StrangerTowerBattle | 9 | Stranger | 3v1 (boss) |
+| CorruptedCityBattle | 10 | Lich, 2x Ghast | 3v3 |
+| CorruptedWildsBattle | 10 | Demon, 2x CorruptedTreant | 3v3 |
+| TempleBattle | 11 | Hellion, 2x Fiendling | 3v3 |
+| BlightBattle | 11 | Dragon, 2x BlightedStag | 3v3 |
+| GateBattle | 12 | DarkKnight, 2x FellHound | 3v3 |
+| DepthsBattle | 12 | Imp, 2x CaveSpider | 3v3 |
+| StrangerFinalBattle | 13 | StrangerFinal | 3v1 (boss) |
 
 Enemy files are in `EchoesOfChoice/CharacterClasses/Enemies/`. When tuning a battle, check this table to know which enemy files to modify.
 

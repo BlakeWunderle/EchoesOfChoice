@@ -12,7 +12,8 @@ namespace EchoesOfChoice.Battles
             Enemies = new List<BaseFighter>()
             {
                 new Siren() { CharacterName = "Lorelei" },
-                new Merfolk() { CharacterName = "Thalassa" }
+                new Merfolk() { CharacterName = "Thalassa" },
+                new Merfolk() { CharacterName = "Nereus" }
             };
 
             IsFinalBattle = false;

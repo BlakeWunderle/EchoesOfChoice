@@ -11,6 +11,7 @@ namespace EchoesOfChoice.Battles
         {
             Enemies = new List<BaseFighter>();
             Enemies.Add(new Raider() { CharacterName = "Wulfric" });
+            Enemies.Add(new Raider() { CharacterName = "Bjorn" });
             Enemies.Add(new Orc() { CharacterName = "Grath" });
 
             IsFinalBattle = false;
