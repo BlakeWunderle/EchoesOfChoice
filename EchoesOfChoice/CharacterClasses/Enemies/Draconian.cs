@@ -9,20 +9,20 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Draconian(int level = 6)
         {
             Level = level;
-            Health = Stat(82, 92, 0, 0, 6);
+            Health = Stat(81, 91, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(33, 37, 0, 0, 6);
-            PhysicalDefense = Stat(19, 23, 0, 0, 6);
-            MagicAttack = Stat(33, 37, 0, 0, 6);
-            MagicDefense = Stat(22, 27, 0, 0, 6);
-            Speed = Stat(32, 37, 0, 0, 6);
+            PhysicalAttack = Stat(29, 33, 0, 0, 6);
+            PhysicalDefense = Stat(17, 21, 0, 0, 6);
+            MagicAttack = Stat(29, 33, 0, 0, 6);
+            MagicDefense = Stat(20, 25, 0, 0, 6);
+            Speed = Stat(30, 35, 0, 0, 6);
             Abilities = new List<Ability>() { new Skewer(), new DrakeStrike(), new ScaleGuard() };
             CharacterType = "Draconian";
             Mana = Stat(25, 29, 0, 0, 6);
             MaxMana = Mana;
             CritChance = 20;
             CritDamage = 2;
-            DodgeChance = 20;
+            DodgeChance = 16;
         }
 
         public Draconian(BaseFighter fighter) : base(fighter) { }

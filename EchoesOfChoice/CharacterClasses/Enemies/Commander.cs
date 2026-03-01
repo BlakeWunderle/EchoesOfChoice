@@ -10,13 +10,13 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Commander(int level = 6)
         {
             Level = level;
-            Health = Stat(102, 112, 0, 0, 6);
+            Health = Stat(98, 110, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(28, 32, 0, 0, 6);
-            PhysicalDefense = Stat(30, 34, 0, 0, 6);
-            MagicAttack = Stat(12, 16, 0, 0, 6);
-            MagicDefense = Stat(24, 29, 0, 0, 6);
-            Speed = Stat(30, 35, 0, 0, 6);
+            PhysicalAttack = Stat(25, 29, 0, 0, 6);
+            PhysicalDefense = Stat(26, 30, 0, 0, 6);
+            MagicAttack = Stat(11, 15, 0, 0, 6);
+            MagicDefense = Stat(22, 27, 0, 0, 6);
+            Speed = Stat(28, 33, 0, 0, 6);
             Abilities = new List<Ability>() { new ShieldWall(), new RallyStrike(), new WarWard() };
             CharacterType = "Commander";
             Mana = Stat(22, 26, 0, 0, 6);

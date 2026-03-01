@@ -10,20 +10,20 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Harlequin(int level = 6)
         {
             Level = level;
-            Health = Stat(109, 119, 0, 0, 6);
+            Health = Stat(104, 116, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(24, 28, 0, 0, 6);
-            PhysicalDefense = Stat(20, 24, 0, 0, 6);
-            MagicAttack = Stat(37, 42, 0, 0, 6);
-            MagicDefense = Stat(24, 28, 0, 0, 6);
-            Speed = Stat(33, 38, 0, 0, 6);
+            PhysicalAttack = Stat(22, 26, 0, 0, 6);
+            PhysicalDefense = Stat(19, 23, 0, 0, 6);
+            MagicAttack = Stat(35, 39, 0, 0, 6);
+            MagicDefense = Stat(22, 26, 0, 0, 6);
+            Speed = Stat(31, 36, 0, 0, 6);
             Abilities = new List<Ability>() { new PantomimeWall(), new PropDrop(), new MimeTrap() };
             CharacterType = "Harlequin";
             Mana = Stat(33, 37, 0, 0, 6);
             MaxMana = Mana;
             CritChance = 20;
             CritDamage = 2;
-            DodgeChance = 30;
+            DodgeChance = 28;
         }
 
         public Harlequin(BaseFighter fighter) : base(fighter) { }

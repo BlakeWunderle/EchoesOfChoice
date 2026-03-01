@@ -9,13 +9,13 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Machinist(int level = 6)
         {
             Level = level;
-            Health = Stat(105, 115, 0, 0, 6);
+            Health = Stat(100, 112, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(29, 33, 0, 0, 6);
-            PhysicalDefense = Stat(26, 31, 0, 0, 6);
-            MagicAttack = Stat(23, 27, 0, 0, 6);
-            MagicDefense = Stat(21, 26, 0, 0, 6);
-            Speed = Stat(32, 37, 0, 0, 6);
+            PhysicalAttack = Stat(26, 30, 0, 0, 6);
+            PhysicalDefense = Stat(23, 28, 0, 0, 6);
+            MagicAttack = Stat(20, 24, 0, 0, 6);
+            MagicDefense = Stat(20, 24, 0, 0, 6);
+            Speed = Stat(30, 35, 0, 0, 6);
             Abilities = new List<Ability>() { new SeismicCharge(), new Reinforce(), new Dismantle() };
             CharacterType = "Machinist";
             Mana = Stat(21, 26, 0, 0, 6);

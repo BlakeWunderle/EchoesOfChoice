@@ -9,20 +9,20 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Chanteuse(int level = 6)
         {
             Level = level;
-            Health = Stat(87, 97, 0, 0, 6);
+            Health = Stat(84, 94, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(16, 20, 0, 0, 6);
-            PhysicalDefense = Stat(24, 28, 0, 0, 6);
-            MagicAttack = Stat(36, 40, 0, 0, 6);
-            MagicDefense = Stat(20, 24, 0, 0, 6);
-            Speed = Stat(40, 45, 0, 0, 6);
+            PhysicalAttack = Stat(15, 19, 0, 0, 6);
+            PhysicalDefense = Stat(21, 25, 0, 0, 6);
+            MagicAttack = Stat(34, 38, 0, 0, 6);
+            MagicDefense = Stat(19, 23, 0, 0, 6);
+            Speed = Stat(36, 41, 0, 0, 6);
             Abilities = new List<Ability>() { new Aria(), new Crescendo(), new Cadence() };
             CharacterType = "Chanteuse";
             Mana = Stat(34, 38, 0, 0, 6);
             MaxMana = Mana;
             CritChance = 20;
             CritDamage = 2;
-            DodgeChance = 30;
+            DodgeChance = 28;
         }
 
         public Chanteuse(BaseFighter fighter) : base(fighter) { }

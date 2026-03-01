@@ -11,16 +11,16 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
             Level = level;
             Health = Stat(92, 105, 3, 6, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(20, 24, 1, 3, 6);
-            PhysicalDefense = Stat(12, 16, 1, 2, 6);
-            MagicAttack = Stat(8, 12, 0, 2, 6);
-            MagicDefense = Stat(10, 14, 1, 2, 6);
+            PhysicalAttack = Stat(22, 28, 2, 3, 6);
+            PhysicalDefense = Stat(13, 18, 1, 2, 6);
+            MagicAttack = Stat(10, 15, 1, 2, 6);
+            MagicDefense = Stat(12, 16, 1, 2, 6);
             Speed = Stat(26, 32, 2, 3, 6);
             Abilities = new List<Ability>() { new Claw(), new Paralyze(), new Devour() };
             CharacterType = "Ghoul";
             Mana = Stat(12, 16, 1, 3, 6);
             MaxMana = Mana;
-            CritChance = 15;
+            CritChance = 20;
             CritDamage = 2;
             DodgeChance = 15;
         }

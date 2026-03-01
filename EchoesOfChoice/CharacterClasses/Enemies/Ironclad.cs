@@ -9,13 +9,13 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Ironclad(int level = 6)
         {
             Level = level;
-            Health = Stat(89, 99, 0, 0, 6);
+            Health = Stat(87, 97, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(26, 30, 0, 0, 6);
-            PhysicalDefense = Stat(29, 33, 0, 0, 6);
-            MagicAttack = Stat(17, 21, 0, 0, 6);
-            MagicDefense = Stat(28, 32, 0, 0, 6);
-            Speed = Stat(25, 30, 0, 0, 6);
+            PhysicalAttack = Stat(23, 27, 0, 0, 6);
+            PhysicalDefense = Stat(26, 30, 0, 0, 6);
+            MagicAttack = Stat(15, 19, 0, 0, 6);
+            MagicDefense = Stat(25, 29, 0, 0, 6);
+            Speed = Stat(24, 29, 0, 0, 6);
             Abilities = new List<Ability>() { new HammerBlow(), new Temper(), new SteelPlating() };
             CharacterType = "Ironclad";
             Mana = Stat(21, 26, 0, 0, 6);

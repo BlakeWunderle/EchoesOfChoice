@@ -10,13 +10,13 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Android(int level = 6)
         {
             Level = level;
-            Health = Stat(106, 116, 0, 0, 6);
+            Health = Stat(100, 112, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(30, 34, 0, 0, 6);
-            PhysicalDefense = Stat(18, 22, 0, 0, 6);
-            MagicAttack = Stat(26, 30, 0, 0, 6);
-            MagicDefense = Stat(22, 27, 0, 0, 6);
-            Speed = Stat(35, 40, 0, 0, 6);
+            PhysicalAttack = Stat(26, 30, 0, 0, 6);
+            PhysicalDefense = Stat(17, 21, 0, 0, 6);
+            MagicAttack = Stat(23, 27, 0, 0, 6);
+            MagicDefense = Stat(20, 25, 0, 0, 6);
+            Speed = Stat(32, 37, 0, 0, 6);
             Abilities = new List<Ability>() { new CircuitBurst(), new Firewall(), new Overdrive() };
             CharacterType = "Android";
             Mana = Stat(28, 33, 0, 0, 6);

@@ -10,13 +10,13 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Ringmaster(int level = 6)
         {
             Level = level;
-            Health = Stat(96, 106, 0, 0, 6);
+            Health = Stat(93, 103, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(23, 27, 0, 0, 6);
-            PhysicalDefense = Stat(21, 25, 0, 0, 6);
-            MagicAttack = Stat(24, 28, 0, 0, 6);
-            MagicDefense = Stat(21, 25, 0, 0, 6);
-            Speed = Stat(35, 40, 0, 0, 6);
+            PhysicalAttack = Stat(22, 26, 0, 0, 6);
+            PhysicalDefense = Stat(20, 24, 0, 0, 6);
+            MagicAttack = Stat(23, 27, 0, 0, 6);
+            MagicDefense = Stat(20, 24, 0, 0, 6);
+            Speed = Stat(32, 37, 0, 0, 6);
             Abilities = new List<Ability>() { new WhipCrack(), new Showstopper(), new CenterRing() };
             CharacterType = "Ringmaster";
             Mana = Stat(28, 32, 0, 0, 6);

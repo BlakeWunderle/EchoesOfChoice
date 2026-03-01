@@ -9,13 +9,13 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Chaplain(int level = 6)
         {
             Level = level;
-            Health = Stat(81, 91, 0, 0, 6);
+            Health = Stat(80, 90, 0, 0, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(16, 20, 0, 0, 6);
-            PhysicalDefense = Stat(24, 28, 0, 0, 6);
-            MagicAttack = Stat(25, 29, 0, 0, 6);
-            MagicDefense = Stat(25, 29, 0, 0, 6);
-            Speed = Stat(28, 33, 0, 0, 6);
+            PhysicalAttack = Stat(15, 19, 0, 0, 6);
+            PhysicalDefense = Stat(22, 26, 0, 0, 6);
+            MagicAttack = Stat(24, 28, 0, 0, 6);
+            MagicDefense = Stat(24, 28, 0, 0, 6);
+            Speed = Stat(27, 32, 0, 0, 6);
             Abilities = new List<Ability>() { new Blessing(), new MaceStrike(), new Consecrate() };
             CharacterType = "Chaplain";
             Mana = Stat(32, 36, 0, 0, 6);

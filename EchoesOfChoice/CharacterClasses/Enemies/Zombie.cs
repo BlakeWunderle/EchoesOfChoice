@@ -9,18 +9,18 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Zombie(int level = 6)
         {
             Level = level;
-            Health = Stat(101, 127, 7, 12, 6);
+            Health = Stat(98, 124, 6, 11, 6);
             MaxHealth = Health;
-            PhysicalAttack = Stat(29, 40, 3, 5, 6);
-            PhysicalDefense = Stat(19, 29, 2, 4, 6);
-            MagicAttack = Stat(29, 40, 3, 5, 6);
-            MagicDefense = Stat(19, 29, 2, 4, 6);
-            Speed = Stat(25, 35, 1, 2, 6);
+            PhysicalAttack = Stat(29, 39, 3, 5, 6);
+            PhysicalDefense = Stat(18, 28, 2, 4, 6);
+            MagicAttack = Stat(29, 39, 3, 5, 6);
+            MagicDefense = Stat(18, 28, 2, 4, 6);
+            Speed = Stat(24, 34, 1, 2, 6);
             Abilities = new List<Ability>() { new Rend(), new Blight(), new Devour() };
             CharacterType = "Zombie";
             Mana = Stat(22, 35, 2, 5, 6);
             MaxMana = Mana;
-            CritChance = 30;
+            CritChance = 28;
             CritDamage = 3;
             DodgeChance = 10;
         }
