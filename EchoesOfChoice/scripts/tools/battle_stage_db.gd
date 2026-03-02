@@ -143,10 +143,10 @@ static func create_enemies(stage_name: String, party: Array = []) -> Array:
 				EnemyDB.create_fell_hound("Gloomjaw"),
 				EnemyDB.create_dark_knight("Ser Dravus")]
 		"DepthsBattle":
-			return [EnemyDB.create_imp("Skritch"),
-				EnemyDB.create_cave_spider("Silkfang"),
-				EnemyDB.create_cave_spider("Webweaver"),
-				EnemyDB.create_imp("Gnash")]
+			return [EnemyDB.create_sigil_wretch("Skritch"),
+				EnemyDB.create_tunnel_lurker("Silkfang"),
+				EnemyDB.create_tunnel_lurker("Webweaver"),
+				EnemyDB.create_sigil_wretch("Gnash")]
 		"StrangerFinalBattle":
 			return [EnemyDB.create_stranger_final("The Stranger")]
 		_:

@@ -648,8 +648,8 @@ static func create_fell_hound(n: String, lvl: int = 18) -> FighterData:
 	f.abilities = [EAB.shadow_bite(), EAB.howl_of_dread(), EAB.enemy_blight()]
 	return f
 
-static func create_imp(n: String, lvl: int = 18) -> FighterData:
-	var f := _base(n, "Imp", lvl)
+static func create_sigil_wretch(n: String, lvl: int = 18) -> FighterData:
+	var f := _base(n, "Sigil Wretch", lvl)
 	f.health = _es(250, 290, 7, 10, lvl, 18); f.max_health = f.health
 	f.mana = _es(40, 48, 3, 5, lvl, 18); f.max_mana = f.mana
 	f.physical_attack = _es(14, 18, 0, 2, lvl, 18)
@@ -661,8 +661,8 @@ static func create_imp(n: String, lvl: int = 18) -> FighterData:
 	f.abilities = [EAB.spark(), AbilityDB.ember(), EAB.enemy_hex()]
 	return f
 
-static func create_cave_spider(n: String, lvl: int = 18) -> FighterData:
-	var f := _base(n, "Cave Spider", lvl)
+static func create_tunnel_lurker(n: String, lvl: int = 18) -> FighterData:
+	var f := _base(n, "Tunnel Lurker", lvl)
 	f.health = _es(362, 402, 10, 14, lvl, 18); f.max_health = f.health
 	f.mana = _es(26, 32, 2, 4, lvl, 18); f.max_mana = f.mana
 	f.physical_attack = _es(70, 80, 5, 7, lvl, 18)

@@ -102,20 +102,21 @@ static func depths_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "DepthsBattle"
 	b.enemies = [
-		EnemyDB.create_imp("Skritch"),
-		EnemyDB.create_cave_spider("Silkfang"),
-		EnemyDB.create_cave_spider("Webweaver"),
-		EnemyDB.create_imp("Gnash"),
+		EnemyDB.create_sigil_wretch("Skritch"),
+		EnemyDB.create_tunnel_lurker("Silkfang"),
+		EnemyDB.create_tunnel_lurker("Webweaver"),
+		EnemyDB.create_sigil_wretch("Gnash"),
 	]
 	b.pre_battle_text = [
 		"A crack in the cobblestones near the old well leads to tunnels beneath the city. The party drops down one by one.",
 		"The walls are covered in webs thick as rope. The air is stale and carries the smell of old stone and something alive and waiting.",
 		"Deeper in, the stranger's sigils appear on the tunnel walls, carved with care. They pulse faintly, marking the path like lanterns. An invitation.",
-		"An imp drops from the ceiling with a cackle. A spider the size of a cart fills the passage ahead, its legs clicking on stone.",
+		"A sigil wretch peels itself from the tunnel wall with a screech — a twisted thing, all limbs and teeth, born from the stranger's carved marks.",
+		"A tunnel lurker fills the passage ahead, pale and eyeless, its clawed limbs clicking on stone.",
 		"The stranger knows they're coming.",
 	]
 	b.post_battle_text = [
-		"The imp shrieks and vanishes in a puff of sulfur. The spider curls and goes still.",
+		"The sigil wretch shrieks and dissolves back into the wall. The tunnel lurker curls and goes still.",
 		"The webs thin and the tunnel opens wider. Ahead, the passage ends at a massive gate set into the stone — old, heavy, and sealed.",
 		"The stranger's sigil covers every surface of it, glowing faintly. The same symbol from the abandoned house in the forest, from the tower walls. It's followed them since the beginning.",
 		"Something moves on the other side. The sound of metal on stone. A low growl.",
