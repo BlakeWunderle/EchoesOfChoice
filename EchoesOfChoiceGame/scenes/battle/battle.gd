@@ -51,6 +51,7 @@ var _party_vbox: VBoxContainer
 var _enemy_vbox: VBoxContainer
 var _bottom_panel: VBoxContainer
 var _turn_order_label: RichTextLabel
+var _turn_queue: Array = []  ## Predicted turn order, depleted as actors act
 
 
 func _ready() -> void:
@@ -146,7 +147,8 @@ func _start_battle() -> void:
 
 	_build_status_bars()
 	_combat_log.add_message("[color=gold]Battle begins![/color]")
-	_update_turn_order()
+	_compute_turn_order()
+	_display_turn_order()
 	_phase = Phase.TICKING_ATB
 	_tick_loop()
 
@@ -203,6 +205,11 @@ func _tick_loop() -> void:
 				continue
 
 			_current_actor = actor
+			# Pop this actor from the display queue
+			if not _turn_queue.is_empty() and _turn_queue[0] == actor:
+				_turn_queue.pop_front()
+			_display_turn_order()
+
 			_engine.reset_modified_stat(actor)
 			await _drain_messages()
 
@@ -243,9 +250,10 @@ func _tick_loop() -> void:
 				return
 
 			_phase = Phase.TICKING_ATB
-			_update_turn_order()
 
 		_engine.reset_turns()
+		_compute_turn_order()
+		_display_turn_order()
 
 
 # =============================================================================
@@ -504,8 +512,10 @@ func _rebuild_bars_if_needed() -> void:
 			_enemy_bars[i].update_display(_engine.enemies[i])
 
 
-func _update_turn_order() -> void:
+func _compute_turn_order() -> void:
 	## Predict the next several turns by simulating ATB ticks forward.
+	_turn_queue.clear()
+
 	var all_fighters: Array = []
 	for f: FighterData in _engine.units:
 		all_fighters.append(f)
@@ -513,7 +523,6 @@ func _update_turn_order() -> void:
 		all_fighters.append(f)
 
 	if all_fighters.is_empty():
-		_turn_order_label.text = ""
 		return
 
 	# Snapshot current ATB values
@@ -521,10 +530,9 @@ func _update_turn_order() -> void:
 	for f: FighterData in all_fighters:
 		atb[f] = f.turn_calculation
 
-	var order: Array = []
 	var show_count: int = mini(8, all_fighters.size() * 2)
 
-	while order.size() < show_count:
+	while _turn_queue.size() < show_count:
 		# Tick until someone reaches 100
 		var ready: Array = []
 		for _i: int in 200:  # safety limit
@@ -546,14 +554,23 @@ func _update_turn_order() -> void:
 
 		for f: FighterData in ready:
 			atb[f] -= 100
-			order.append(f)
+			_turn_queue.append(f)
 
-	# Build display string
+
+func _display_turn_order() -> void:
+	## Render the turn queue — current actor in green, allies cyan, enemies salmon.
 	var parts: Array[String] = []
-	for f: FighterData in order:
-		var is_player: bool = _engine.units.has(f)
-		var color: String = "cyan" if is_player else "salmon"
-		parts.append("[color=%s]%s[/color]" % [color, f.character_name])
+
+	# Current actor first (green)
+	if _current_actor != null:
+		parts.append("[color=lime]%s[/color]" % _current_actor.character_name)
+
+	# Remaining queue
+	for f: FighterData in _turn_queue:
+		if _engine.units.has(f):
+			parts.append("[color=cyan]%s[/color]" % f.character_name)
+		else:
+			parts.append("[color=salmon]%s[/color]" % f.character_name)
 
 	_turn_order_label.clear()
 	_turn_order_label.append_text(
