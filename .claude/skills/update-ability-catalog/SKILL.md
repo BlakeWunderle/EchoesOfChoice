@@ -1,16 +1,16 @@
 ---
 name: update-ability-catalog
-description: Sync the ability catalog memory file with the C# source code. Use after adding, changing, or removing abilities in the C# codebase, or after class roster changes.
+description: Sync the ability catalog memory file with the GDScript ability database files. Use after adding, changing, or removing abilities in the GDScript codebase, or after class roster changes.
 ---
 
 # Update Ability Catalog
 
-Keep `C:\Users\blake\.claude\projects\c--Projects-EchoesOfChoice\memory\abilities.md` in sync with the C# source at `EchoesOfChoice/CharacterClasses/`.
+Keep `C:\Users\blake\.claude\projects\c--Projects-EchoesOfChoice\memory\abilities.md` in sync with the GDScript ability databases in `EchoesOfChoice/scripts/data/`.
 
 ## When to Run
 
-- After adding new ability .cs files
-- After changing ability properties (Modifier, ManaCost, etc.)
+- After adding new ability functions to the ability DB files
+- After changing ability properties (modifier, mana_cost, etc.)
 - After adding/removing abilities from a class's ability list
 - After adding new classes or enemies
 - Periodically to verify catalog accuracy
@@ -19,44 +19,60 @@ Keep `C:\Users\blake\.claude\projects\c--Projects-EchoesOfChoice\memory\abilitie
 
 ### Step 1: Scan class ability assignments
 
-For each class tree directory, find which abilities each class uses:
+For each class tier, find which abilities each class uses:
 
 ```bash
-grep -rn "new.*Ability\b\|Abilities\s*=" EchoesOfChoice/CharacterClasses/Fighter/ --include="*.cs"
-grep -rn "new.*Ability\b\|Abilities\s*=" EchoesOfChoice/CharacterClasses/Mage/ --include="*.cs"
-grep -rn "new.*Ability\b\|Abilities\s*=" EchoesOfChoice/CharacterClasses/Entertainer/ --include="*.cs"
-grep -rn "new.*Ability\b\|Abilities\s*=" EchoesOfChoice/CharacterClasses/Scholar/ --include="*.cs"
-grep -rn "new.*Ability\b\|Abilities\s*=" EchoesOfChoice/CharacterClasses/Wildling/ --include="*.cs"
-grep -rn "new.*Ability\b\|Abilities\s*=" EchoesOfChoice/CharacterClasses/Enemies/ --include="*.cs"
+# Base classes (T0)
+grep -n "abilities\s*=" EchoesOfChoice/scripts/data/fighter_db.gd
+
+# Tier 1 classes
+grep -n "abilities\s*=" EchoesOfChoice/scripts/data/fighter_db_t1.gd
+
+# Tier 2 classes
+grep -n "abilities\s*=" EchoesOfChoice/scripts/data/fighter_db_t2.gd
+grep -n "abilities\s*=" EchoesOfChoice/scripts/data/fighter_db_t2b.gd
+
+# Enemies
+grep -n "abilities\s*=" EchoesOfChoice/scripts/data/enemy_db.gd
 ```
 
 ### Step 2: Read ability definitions
 
-For each ability .cs file, extract: Name, ModifiedStat, Modifier, impactedTurns, UseOnEnemy, ManaCost, TargetAll, DamagePerTurn, LifeStealPercent, FlavorText.
+For each ability function, extract: ability_name, modified_stat, modifier, impacted_turns, use_on_enemy, mana_cost, target_all, damage_per_turn, life_steal_percent, flavor_text.
 
-Ability files are in:
-- `EchoesOfChoice/CharacterClasses/Abilities/` — player abilities
-- `EchoesOfChoice/CharacterClasses/Abilities/Enemy/` — enemy-only abilities
+Ability functions are in:
+- `EchoesOfChoice/scripts/data/ability_db.gd` -- base/shared player abilities (T0 classes + shared)
+- `EchoesOfChoice/scripts/data/ability_db_player.gd` -- T1 and T2 player abilities
+- `EchoesOfChoice/scripts/data/enemy_ability_db.gd` -- enemy-specific abilities
+
+Each ability is a static function returning an AbilityData via the `_make()` helper:
+```gdscript
+static func slash() -> AbilityData:
+    return _make("Slash", "Swing your weapon...",
+        Enums.StatType.PHYSICAL_ATTACK, 4, 0, true, 2)
+```
+
+The `_make()` params are: `(name, flavor, stat, mod, turns, on_enemy, cost, all=false, dot=0, steal=0.0)`
 
 ### Step 3: Classify each ability
 
 Apply these rules in order (first match wins):
-- **LSTEAL**: LifeStealPercent > 0
-- **DOT**: DamagePerTurn > 0
-- **TAUNT**: ModifiedStat = Taunt
-- **HEAL**: ModifiedStat = Health AND UseOnEnemy = false
-- **BUFF**: UseOnEnemy = false AND impactedTurns > 0
-- **DEBUFF**: UseOnEnemy = true AND impactedTurns > 0
-- **DMG**: everything else (UseOnEnemy = true, instant)
+- **LSTEAL**: life_steal_percent > 0
+- **DOT**: damage_per_turn > 0
+- **TAUNT**: modified_stat = TAUNT
+- **HEAL**: modified_stat = HEALTH AND use_on_enemy = false
+- **BUFF**: use_on_enemy = false AND impacted_turns > 0
+- **DEBUFF**: use_on_enemy = true AND impacted_turns > 0
+- **DMG**: everything else (use_on_enemy = true, instant)
 
 ### Step 4: Compare against catalog
 
 Read `abilities.md` and diff against scanned data:
-- **New**: ability .cs exists but no row in catalog
-- **Removed**: row in catalog but .cs deleted or class no longer uses it
-- **Changed**: property values differ between .cs and catalog
-- **New class**: class .cs with abilities not in catalog
-- **Removed class**: class in catalog but .cs removed
+- **New**: ability function exists but no row in catalog
+- **Removed**: row in catalog but function deleted or class no longer uses it
+- **Changed**: property values differ between GDScript and catalog
+- **New class**: class factory with abilities not in catalog
+- **Removed class**: class in catalog but factory removed
 
 ### Step 5: Update catalog
 
@@ -75,7 +91,7 @@ ABILITY CATALOG SYNC
 
   Added: [list]
   Removed: [list]
-  Modified: [list with old→new]
+  Modified: [list with old->new]
 
   RESULT: UP TO DATE / UPDATED (N changes)
 ```
@@ -94,15 +110,18 @@ ABILITY CATALOG SYNC
 
 ## Key Files
 
-- Player classes: `EchoesOfChoice/CharacterClasses/{Fighter,Mage,Entertainer,Scholar,Wildling}/`
-- Enemy classes: `EchoesOfChoice/CharacterClasses/Enemies/`
-- Player abilities: `EchoesOfChoice/CharacterClasses/Abilities/*.cs`
-- Enemy abilities: `EchoesOfChoice/CharacterClasses/Abilities/Enemy/*.cs`
-- Ability base: `EchoesOfChoice/CharacterClasses/Common/Ability.cs`
-- StatEnum: `EchoesOfChoice/CharacterClasses/Common/StatEnum.cs`
+- Base/shared abilities: `EchoesOfChoice/scripts/data/ability_db.gd`
+- T1/T2 player abilities: `EchoesOfChoice/scripts/data/ability_db_player.gd`
+- Enemy abilities: `EchoesOfChoice/scripts/data/enemy_ability_db.gd`
+- Ability data model: `EchoesOfChoice/scripts/data/ability_data.gd`
+- Stat enums: `EchoesOfChoice/scripts/data/enums.gd`
+- Base player classes: `EchoesOfChoice/scripts/data/fighter_db.gd`
+- T1 player classes: `EchoesOfChoice/scripts/data/fighter_db_t1.gd`
+- T2 player classes: `EchoesOfChoice/scripts/data/fighter_db_t2.gd`, `fighter_db_t2b.gd`
+- Enemy factories: `EchoesOfChoice/scripts/data/enemy_db.gd`
 - Catalog: `C:\Users\blake\.claude\projects\c--Projects-EchoesOfChoice\memory\abilities.md`
 
 ## Related
 
-- `.claude/rules/class-trees.md` — class upgrade tree structure
-- `.claude/rules/game-design.md` — combat formulas and design reference
+- `.claude/rules/class-trees.md` -- class upgrade tree structure
+- `.claude/rules/game-design.md` -- combat formulas and design reference

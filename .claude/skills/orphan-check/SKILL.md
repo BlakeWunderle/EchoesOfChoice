@@ -5,13 +5,13 @@ description: Detect and clean up orphaned .tres resources and .tscn scenes that 
 
 # Orphan Resource & Scene Detection
 
-Detects `.tres` resources and `.tscn` scenes in `EchoesOfChoiceGame/` that have zero external references — meaning no script, resource, or scene file loads or references them.
+Detects `.tres` resources and `.tscn` scenes in `EchoesOfChoice/` that have zero external references — meaning no script, resource, or scene file loads or references them.
 
 ## Running the Tool
 
 ```bash
 # Default: show only orphans
-"C:/Users/blake/AppData/Local/Microsoft/WinGet/Packages/GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe/Godot_v4.6.1-stable_win64_console.exe" --path EchoesOfChoiceGame --headless --script res://tools/orphan_check.gd
+"C:/Users/blake/AppData/Local/Microsoft/WinGet/Packages/GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe/Godot_v4.6.1-stable_win64_console.exe" --path EchoesOfChoice --headless --script res://tools/orphan_check.gd
 
 # Show all files with reference counts
 ... -- --all
@@ -46,7 +46,7 @@ The tool excludes `res://tools/` from the search corpus — references only in t
 1. **Run the tool** to identify orphans
 2. **Review each orphan** — confirm it's truly unused (check if it was recently added and not yet wired up)
 3. **Delete orphaned files** including any `.import` sidecar files
-4. **Build** to verify no breakage: `--path EchoesOfChoiceGame --headless --quit`
+4. **Build** to verify no breakage: `--path EchoesOfChoice --headless --quit`
 5. **Re-run the tool** to confirm 0 orphans
 6. **Commit** the deletions
 

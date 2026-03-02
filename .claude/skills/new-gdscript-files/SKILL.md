@@ -1,6 +1,6 @@
 ---
 name: new-gdscript-files
-description: Checklist for adding new GDScript files with class_name to EchoesOfChoiceGame. Prevents "Could not find type" errors from Godot 4's class_name resolution. Use whenever creating a new .gd file that will be referenced by other scripts.
+description: Checklist for adding new GDScript files with class_name to EchoesOfChoice. Prevents "Could not find type" errors from Godot 4's class_name resolution. Use whenever creating a new .gd file that will be referenced by other scripts.
 ---
 
 # New GDScript File Checklist

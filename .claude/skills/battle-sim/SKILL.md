@@ -5,13 +5,13 @@ description: Full balance feedback loop for Echoes of Choice. Iterates enemy tun
 
 # Balance Feedback Loop
 
-All paths are relative to the workspace root. The C# project lives at `EchoesOfChoice/`.
+All paths are relative to the workspace root. The Godot project lives at `EchoesOfChoice/`.
 
 Iterative balancing process for all 14 progression stages. Each cycle has three phases that must all pass before the game is considered balanced.
 
 ## The Loop
 
-**Work one progression at a time, lowest to highest.** Each progression completes all three phases before moving on. Player class changes cascade forward — adjusting a Tier 1 growth rate at Prog 3 affects every stage from Prog 3 onward but leaves Prog 0-2 untouched.
+**Work one progression at a time, lowest to highest.** Each progression completes all three phases before moving on. Player class changes cascade forward -- adjusting a Tier 1 growth rate at Prog 3 affects every stage from Prog 3 onward but leaves Prog 0-2 untouched.
 
 ```
 FOR each progression 0 -> 13, in order:
@@ -39,7 +39,7 @@ AFTER all progressions locked:
 
 ### Why This Order Matters
 
-- **Enemy-only changes** (Step 1) don't affect other stages — safe to iterate freely.
+- **Enemy-only changes** (Step 1) don't affect other stages -- safe to iterate freely.
 - **Player-side changes** (Steps 2-3) cascade forward through every later stage because growth rates compound with level-ups. A Tier 1 buff applies at Prog 3+ and a base stat change applies everywhere.
 - By locking stages low-to-high, earlier work is preserved. A player change at Prog 8 only requires re-validating Prog 8-13, not restarting from Prog 0.
 
@@ -47,7 +47,7 @@ AFTER all progressions locked:
 
 | Change Type | Affects | Restart From |
 |-------------|---------|-------------|
-| Enemy class base stats | The battle using that enemy | Re-sim that battle |
+| Enemy stat ranges in `enemy_db.gd` | The battle using that enemy | Re-sim that battle |
 | Enemy ability Modifier | All battles with enemies using that ability | Earliest battle using that ability |
 | Player base stats (Squire/Mage/Entertainer/Tinker/Wildling) | ALL stages | Prog 0 |
 | Player Tier 1 growth rates | Prog 3+ (Tier 1 and later) | Prog 3 |
@@ -58,34 +58,26 @@ AFTER all progressions locked:
 
 ## Enemy Stat Mechanics
 
-Enemy stats work differently from player stats. Understanding this is critical for effective tuning.
+Enemy stats are defined in `scripts/data/enemy_db.gd`. Each factory function uses `_es(base_min, base_max, gmin, gmax, level, base_level)`:
 
-### How Enemy Stats Are Calculated
-
-Each enemy constructor uses `Stat(baseMin, baseMax, growthMin, growthMax, level)`:
-
-```csharp
-// Example: Raider at level 4
-Health = Stat(98, 113, 4, 7, 4);
-// Result: random(98, 113) + (4-1) * random(4, 7) = 98-113 + 12-21 = 110-134
+```gdscript
+# Example: create_raider at level 4
+f.health = _es(98, 113, 4, 7, 4, 1)
+# Result: range from base_min + (lvl-base_level)*gmin to base_max + (lvl-base_level)*(gmax-1)
 ```
 
-- The **level parameter is hardcoded** in each Stat() call — it does NOT use the constructor's level argument
-- Doing `new Raider(6)` sets `Level = 6` but the Stat() calls still use their hardcoded level (4)
+- The **level parameter is passed to the factory** and used in `_es()` calls
 - Growth is applied **once at construction time**, not per-turn
-
-### IncreaseLevel() Is Dead Code for Balance
-
-The `IncreaseLevel()` method on enemies is **never called during battles**. It exists for potential future use but has zero effect on the simulator. Do not waste time tuning enemy IncreaseLevel() growth rates — only the Stat() constructor values matter.
+- `_es()` produces a random int within the computed range
 
 ### Tuning Levers (in order of impact)
 
-1. **Base stat ranges** (1st and 2nd params of Stat) — direct control over the stat floor/ceiling
-2. **Growth rates** (3rd and 4th params of Stat) — amplified by the hardcoded level; changing growth by +1 at level 4 adds +3 to the stat range
-3. **Hardcoded level** (5th param of Stat) — increasing from 4 to 5 adds one more growth roll to every stat
-4. **Enemy count** — adding/removing enemies from the battle file (see 3-Enemy Rule below)
-5. **Abilities** — changing which abilities the enemy has or their Modifiers
-6. **CritChance / DodgeChance** — percentage-based, small changes have noticeable effects
+1. **Base stat ranges** (1st and 2nd params of `_es()`) -- direct control over the stat floor/ceiling
+2. **Growth rates** (3rd and 4th params of `_es()`) -- amplified by level; changing growth by +1 at level 4 adds +3 to the stat range
+3. **Level parameter** -- increasing from 4 to 5 adds one more growth roll to every stat
+4. **Enemy count** -- adding/removing enemies from the battle config (see 3-Enemy Rule below)
+5. **Abilities** -- changing which abilities the enemy has or their Modifiers
+6. **CritChance / DodgeChance** -- percentage-based, small changes have noticeable effects
 
 ### 3-Enemy Rule
 
@@ -95,34 +87,43 @@ Every battle after WolfForestBattle (Prog 1) must have **at least 3 enemies**, u
 
 ---
 
+## Running the Simulator
+
+The Godot battle simulator is the CLI tool at `tools/battle_simulator.gd`:
+
+```bash
+GODOT="C:/Users/blake/AppData/Local/Microsoft/WinGet/Packages/GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe/Godot_v4.6.1-stable_win64_console.exe"
+NOISE='No loader\|Oswald\|game_theme\|custom project\|Unreferenced static string\|RID allocations.*leaked\|Pages in use exist at exit\|PagedAllocator\|ObjectDB instances leaked\|resources still in use at exit\|OpenGL API\|NVIDIA\|WASAPI\|Cleanup\|Main::'
+```
+
 ## Step 1: Enemy Tuning
 
 **Goal:** This stage's overall win rate falls within its target +/- 3%.
 
 ### Run sims for the current progression
 
-For Progressions 0-2 (Base classes, 20 combos):
+For Progressions 0-2 (Base classes, 35 combos):
 ```bash
-dotnet run --project EchoesOfChoice/BattleSimulator -- --sims 50 --progression <N>
+"$GODOT" --path EchoesOfChoice --headless --script res://tools/battle_simulator.gd -- --sims 50 --progression <N> 2>&1 | grep -v "$NOISE"
 ```
 
-For Progressions 3-7 (Tier 1 classes, 560 combos), use `--sample 100` for fast iteration:
+For Progressions 3-7 (Tier 1 classes, ~560 combos), use `--sample 100` for fast iteration:
 ```bash
-dotnet run --project EchoesOfChoice/BattleSimulator -- --sample 100 --sims 50 --progression <N>
+"$GODOT" --path EchoesOfChoice --headless --script res://tools/battle_simulator.gd -- --sample 100 --sims 50 --progression <N> 2>&1 | grep -v "$NOISE"
 ```
 
-For Progressions 8-13 (Tier 2 classes, 4960 combos), use `--sample 100` for fast iteration:
+For Progressions 8-13 (Tier 2 classes, ~4960 combos), use `--sample 100` for fast iteration:
 ```bash
-dotnet run --project EchoesOfChoice/BattleSimulator -- --sample 100 --sims 50 --progression <N>
+"$GODOT" --path EchoesOfChoice --headless --script res://tools/battle_simulator.gd -- --sample 100 --sims 50 --progression <N> 2>&1 | grep -v "$NOISE"
 ```
 
 ### Check each battle's STATUS line
 
 - **PASS** -> move to Step 2
-- **TOO HARD** -> weaken enemies (lower Stat() ranges in `EchoesOfChoice/CharacterClasses/Enemies/<EnemyName>.cs`, reduce ability Modifiers, lower CritChance/DodgeChance, remove an enemy from the battle)
-- **TOO EASY** -> strengthen enemies (raise Stat() ranges, increase ability Modifiers, raise CritChance/DodgeChance, add an enemy to the battle — see 3-Enemy Rule)
+- **TOO HARD** -> weaken enemies (lower `_es()` ranges in `scripts/data/enemy_db.gd`, reduce ability Modifiers in `scripts/data/enemy_ability_db.gd`, lower CritChance/DodgeChance, remove an enemy from the battle config)
+- **TOO EASY** -> strengthen enemies (raise `_es()` ranges, increase ability Modifiers, raise CritChance/DodgeChance, add an enemy to the battle config -- see 3-Enemy Rule)
 
-All enemy stats are set in their constructor's Stat() calls — battle files just instantiate enemies. Tune the Stat() base ranges and growth params directly. Do NOT waste time changing IncreaseLevel() — it is never called during battles. Avoid touching player classes in this step.
+All enemy stats are set in `scripts/data/enemy_db.gd` factory functions. Battle compositions are defined in `scripts/data/battle_db.gd` (and `battle_db_act2.gd`, `battle_db_act3.gd`, `battle_db_act45.gd`). Tune the `_es()` base ranges and growth params directly. Avoid touching player classes in this step.
 
 ### Re-sim after each change until all battles at this stage show PASS
 
@@ -151,7 +152,7 @@ Use `--sample 100 --sims 50` for quick iteration. Drop `--sample` for Steps 2-3 
 
 ## Step 2: Power Curve Check
 
-**Goal:** The archetype ranking at this stage roughly follows the expected power curve. This is a guideline, not a hard rule — individual battles will naturally favor certain archetypes based on enemy composition. The concern is persistent, stage-wide deviations, not per-battle variation.
+**Goal:** The archetype ranking at this stage roughly follows the expected power curve. This is a guideline, not a hard rule -- individual battles will naturally favor certain archetypes based on enemy composition. The concern is persistent, stage-wide deviations, not per-battle variation.
 
 ### Expected Power Curve (5 Archetypes)
 
@@ -163,7 +164,7 @@ Use `--sample 100 --sims 50` for quick iteration. Drop `--sample` for Steps 2-3 
 | **Tinker (Scholar tree)** | Prog 8-13 (late) | Weakest early but highest growth rates catch up. Utility and tech abilities pay off in complex late fights. Top performer by endgame. |
 | **Wildling** | Prog 2-8 (mid-wide) | Nature-based utility and beast synergies. Competitive across mid-game, shouldn't be dominant at early or late extremes. |
 
-Classes that bridge archetypes (e.g., Paladin from Mage tree, Monk from Squire tree) can deviate — they intentionally live between power spikes.
+Classes that bridge archetypes (e.g., Paladin from Mage tree, Monk from Squire tree) can deviate -- they intentionally live between power spikes.
 
 ### How to Check
 
@@ -180,13 +181,13 @@ If the ranking is roughly correct (or deviations are explained by matchup) -> mo
 
 | Problem | Fix | Where | Cascade |
 |---------|-----|-------|---------|
-| Squire too weak early | Buff Squire base stats | `CharacterClasses/Fighter/Squire.cs` | Restart from Prog 0 |
-| Squire too strong late | Reduce Squire T2 growth | T2 Squire class files | Restart from Prog 8 |
-| Mage doesn't spike mid | Buff T1 Mage growth | T1 Mage class files (Invoker, Acolyte) | Restart from Prog 3 |
-| Entertainer flagged WEAK | Buff Entertainer base or growth | Entertainer class files (Bard, Dervish, Orator) | Restart from affected prog |
-| Tinker still weak late | Buff T2 Tinker growth | T2 Tinker class files | Restart from Prog 8 |
-| Wildling too weak mid | Buff T1 Wildling growth | T1 Wildling class files (Herbalist, Shaman, Beastcaller) | Restart from Prog 3 |
-| Wildling too strong early | Reduce Wildling base stats | `CharacterClasses/Wildling/Wildling.cs` | Restart from Prog 0 |
+| Squire too weak early | Buff Squire base stats | `fighter_db.gd` (Squire factory) | Restart from Prog 0 |
+| Squire too strong late | Reduce Squire T2 growth | `fighter_db_t2.gd` / `fighter_db_t2b.gd` | Restart from Prog 8 |
+| Mage doesn't spike mid | Buff T1 Mage growth | `fighter_db_t1.gd` (Invoker, Acolyte) | Restart from Prog 3 |
+| Entertainer flagged WEAK | Buff Entertainer base or growth | `fighter_db.gd` / `fighter_db_t1.gd` (Bard, Dervish, Orator) | Restart from affected prog |
+| Tinker still weak late | Buff T2 Tinker growth | `fighter_db_t2.gd` / `fighter_db_t2b.gd` | Restart from Prog 8 |
+| Wildling too weak mid | Buff T1 Wildling growth | `fighter_db_t1.gd` (Herbalist, Shaman, Beastcaller) | Restart from Prog 3 |
+| Wildling too strong early | Reduce Wildling base stats | `fighter_db.gd` (Wildling factory) | Restart from Prog 0 |
 
 **After any player-side change, restart from the earliest affected progression** (see Cascade Scope table).
 
@@ -194,7 +195,7 @@ If the ranking is roughly correct (or deviations are explained by matchup) -> mo
 
 ## Step 3: Class Win Rate Band
 
-**Goal:** Every individual class's win rate (from CLASS BREAKDOWN) at this stage falls within `target ± 15%`.
+**Goal:** Every individual class's win rate (from CLASS BREAKDOWN) at this stage falls within `target +/- 15%`.
 
 ### Class Band Formula
 
@@ -226,8 +227,8 @@ No class should feel unwinnable or trivially easy relative to the stage difficul
 
 From this stage's CLASS BREAKDOWN output:
 
-1. **Flag any class below `target - 15%`** — this class makes parties feel hopeless when drafted.
-2. **Flag any class above `target + 15%`** — this class trivializes the content.
+1. **Flag any class below `target - 15%`** -- this class makes parties feel hopeless when drafted.
+2. **Flag any class above `target + 15%`** -- this class trivializes the content.
 3. Classes flagged `** WEAK **` by the simulator (below `TargetWinRate * 0.60`) are most urgent.
 
 If all classes are within band -> **LOCK this progression** and move to the next.
@@ -236,10 +237,10 @@ If all classes are within band -> **LOCK this progression** and move to the next
 
 **Class below 57% (underpowered):**
 
-1. Check if this is expected for the power curve (e.g., Tinker at Prog 0 being 65% is fine — below Squire but above 57%).
+1. Check if this is expected for the power curve (e.g., Tinker at Prog 0 being 65% is fine -- below Squire but above 57%).
 2. Check the class's sibling (same Tier 1 parent). If both siblings are weak, the problem is likely the Tier 1 parent's growth rates, not the individual Tier 2 class.
 3. If it violates the curve OR is below 57%: buff the class.
-   - Offensive class: increase primary attack stat growth in `IncreaseLevel()`
+   - Offensive class: increase primary attack stat growth in `increase_level()` in the fighter_db files
    - Support class: ensure it has at least one damage ability alongside buffs
    - Check if it has dead abilities (e.g., MagDef debuff vs physical-only enemies)
 
@@ -257,7 +258,7 @@ If all classes are within band -> **LOCK this progression** and move to the next
 After all progressions are locked at `--sims 50`, run a full validation pass:
 
 ```bash
-dotnet run --project EchoesOfChoice/BattleSimulator -- --auto --all
+"$GODOT" --path EchoesOfChoice --headless --script res://tools/battle_simulator.gd -- --auto --all 2>&1 | grep -v "$NOISE"
 ```
 
 This takes 2-5 minutes. Use a 600000ms timeout.
@@ -295,7 +296,7 @@ If any stage flips to TOO HARD / TOO EASY at full sample size, make small adjust
 | DepthsBattle | 12 | Imp, 2x CaveSpider | 3v3 |
 | StrangerFinalBattle | 13 | StrangerFinal | 3v1 (boss) |
 
-Enemy files are in `EchoesOfChoice/CharacterClasses/Enemies/`. When tuning a battle, check this table to know which enemy files to modify.
+Enemy factories are in `scripts/data/enemy_db.gd`. Battle compositions are in `scripts/data/battle_db.gd` (and act-specific files). When tuning a battle, check this table to know which enemy factories to modify.
 
 ---
 
@@ -307,85 +308,85 @@ Copy and track progress. Each progression is locked only after all three steps p
 PROGRESSION 0 (CityStreetBattle, target 87-93%):
 - [ ] Step 1: Enemy tuning PASS
 - [ ] Step 2: Squire leads class breakdown
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 1 (WolfForestBattle, target 85-91%):
 - [ ] Step 1: Enemy tuning PASS
 - [ ] Step 2: Squire leads class breakdown
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 2 (WaypointDefenseBattle, target 82-88%):
 - [ ] Step 1: Enemy tuning PASS
 - [ ] Step 2: Squire leads (transitioning)
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 3 (Highland/DeepForest/Shore, target 80-86%):
 - [ ] Step 1: All 3 battles PASS
 - [ ] Step 2: Mage leads (or close)
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 4 (MountainPass/Cave/Beach, target 78-84%):
 - [ ] Step 1: All 3 battles PASS
 - [ ] Step 2: Mage leads (or close)
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 5 (Circus/Lab/Army/Cemetery, target 76-82%):
 - [ ] Step 1: All 4 battles PASS
 - [ ] Step 2: Mage leads (or close)
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 6 (OutpostDefenseBattle, target 74-80%):
 - [ ] Step 1: Enemy tuning PASS
 - [ ] Step 2: Mage leads
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 7 (MirrorBattle, target 72-78%):
 - [ ] Step 1: Enemy tuning PASS
 - [ ] Step 2: Power curve check
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 8 (ReturnToCityStreetBattle, target 77-83%):
 - [ ] Step 1: Enemy tuning PASS
 - [ ] Step 2: Tinker leads (or close)
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 9 (StrangerTowerBattle, target 75-81%):
 - [ ] Step 1: Enemy tuning PASS
 - [ ] Step 2: Tinker leads
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 10 (CorruptedCity/CorruptedWilds, target 72-78%):
 - [ ] Step 1: Both battles PASS
 - [ ] Step 2: Tinker leads
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 11 (Temple/Blight, target 69-75%):
 - [ ] Step 1: Both battles PASS
 - [ ] Step 2: Tinker leads
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 12 (Gate/Depths, target 66-72%):
 - [ ] Step 1: Both battles PASS
 - [ ] Step 2: Tinker leads
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 PROGRESSION 13 (StrangerFinalBattle, target 62-68%):
 - [ ] Step 1: Enemy tuning PASS
 - [ ] Step 2: Power curve check
-- [ ] Step 3: All classes within target ± 15%
+- [ ] Step 3: All classes within target +/- 15%
 - [ ] LOCKED
 
 FINAL VALIDATION:
@@ -405,20 +406,25 @@ The loop converges when:
 2. The archetype power curve roughly follows the expected peaks (per-battle variation is fine)
 3. Every class sits within or near the 57-93% band at every stage (borderline 55-57% is acceptable variance)
 
-**Perfection is not the goal.** If a class is at 58% in one stage and 92% in another, that's fine — it's within band. Borderline cases (55-57%) are acceptable variance in individual battles, especially when the class recovers to healthy rates in other battles at the same stage. Focus effort on classes that are clearly outside the band or violating the power curve, not on chasing every decimal.
+**Perfection is not the goal.** If a class is at 58% in one stage and 92% in another, that's fine -- it's within band. Borderline cases (55-57%) are acceptable variance in individual battles, especially when the class recovers to healthy rates in other battles at the same stage. Focus effort on classes that are clearly outside the band or violating the power curve, not on chasing every decimal.
 
 ## Key Files
 
 | File | Purpose |
 |------|---------|
-| `EchoesOfChoice/CharacterClasses/Enemies/*.cs` | Primary tuning lever for Step 1 — all enemy stats live here |
-| `EchoesOfChoice/Battles/*.cs` | Enemy composition (which enemies appear); no stat adjustments |
-| `EchoesOfChoice/CharacterClasses/Fighter/Squire.cs` | Squire base stats |
-| `EchoesOfChoice/CharacterClasses/Mage/Mage.cs` | Mage base stats |
-| `EchoesOfChoice/CharacterClasses/Entertainer/Entertainer.cs` | Entertainer base stats |
-| `EchoesOfChoice/CharacterClasses/Scholar/Tinker.cs` | Tinker base stats |
-| `EchoesOfChoice/CharacterClasses/Wildling/Wildling.cs` | Wildling base stats |
-| `EchoesOfChoice/CharacterClasses/<Archetype>/<Class>.cs` | Tier 1/2 growth rates (IncreaseLevel) |
-| `EchoesOfChoice/BattleSimulator/SimulationRunner.cs` | CLASS BREAKDOWN output, WEAK flags |
-| `EchoesOfChoice/BattleSimulator/BattleStage.cs` | Target win rates per stage |
-| `EchoesOfChoice/BattleSimulator/PartyComposer.cs` | All valid party compositions |
+| `EchoesOfChoice/scripts/data/enemy_db.gd` | Primary tuning lever for Step 1 -- all enemy stat factories live here |
+| `EchoesOfChoice/scripts/data/enemy_ability_db.gd` | Enemy-specific abilities and their Modifiers |
+| `EchoesOfChoice/scripts/data/battle_db.gd` | Enemy composition (which enemies appear in each battle) |
+| `EchoesOfChoice/scripts/data/battle_db_act2.gd` | Act 2 battle compositions |
+| `EchoesOfChoice/scripts/data/battle_db_act3.gd` | Act 3 battle compositions |
+| `EchoesOfChoice/scripts/data/battle_db_act45.gd` | Act 4-5 battle compositions |
+| `EchoesOfChoice/scripts/data/fighter_db.gd` | Base (T0) player class factories and stats |
+| `EchoesOfChoice/scripts/data/fighter_db_t1.gd` | Tier 1 player class factories and growth |
+| `EchoesOfChoice/scripts/data/fighter_db_t2.gd` | Tier 2 player class factories and growth (part 1) |
+| `EchoesOfChoice/scripts/data/fighter_db_t2b.gd` | Tier 2 player class factories and growth (part 2) |
+| `EchoesOfChoice/scripts/data/ability_db.gd` | Base player ability definitions (T0 + shared) |
+| `EchoesOfChoice/scripts/data/ability_db_player.gd` | T1/T2 player ability definitions |
+| `EchoesOfChoice/scripts/tools/simulation_runner.gd` | CLASS BREAKDOWN output, WEAK flags |
+| `EchoesOfChoice/scripts/tools/battle_stage_db.gd` | Target win rates per stage |
+| `EchoesOfChoice/scripts/tools/party_composer.gd` | All valid party compositions |
+| `EchoesOfChoice/tools/battle_simulator.gd` | CLI entry point for the simulator |

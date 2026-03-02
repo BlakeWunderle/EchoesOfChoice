@@ -16,13 +16,13 @@ Search all `.gd` files for audio path references:
 ```bash
 cd c:/Projects/EchoesOfChoice
 # Music paths in code (play_music calls + music_track assignments)
-grep -roh 'res://assets/audio/music/[^"]*' EchoesOfChoiceGame/scripts/ EchoesOfChoiceGame/scenes/ | sort -u
+grep -roh 'res://assets/audio/music/[^"]*' EchoesOfChoice/scripts/ EchoesOfChoice/scenes/ | sort -u
 ```
 
 ### Step 2: Collect all music files on disk
 
 ```bash
-find EchoesOfChoiceGame/assets/audio/music/ -type f \( -name "*.wav" -o -name "*.ogg" -o -name "*.mp3" \) | sort
+find EchoesOfChoice/assets/audio/music/ -type f \( -name "*.wav" -o -name "*.ogg" -o -name "*.mp3" \) | sort
 ```
 
 ### Step 3: Cross-reference music
@@ -64,7 +64,7 @@ RESULT: PASS / FAIL (N issues)
 
 ## Fix Actions
 
-- **Orphan music**: `rm "EchoesOfChoiceGame/assets/audio/music/<path>"` and its `.import` file
+- **Orphan music**: `rm "EchoesOfChoice/assets/audio/music/<path>"` and its `.import` file
 - **Missing music**: Copy from `assets_library/music/` or fix the code reference
 - **Unmapped SFX folder**: Delete the folder or add it to `CATEGORY_FOLDERS`
 - **Unused SFX category**: Remove from the `Category` enum and `CATEGORY_FOLDERS`

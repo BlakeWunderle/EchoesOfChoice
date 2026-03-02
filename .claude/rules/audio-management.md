@@ -2,7 +2,7 @@
 
 ## Principle: No Orphans, No Missing References
 
-Every audio file in `EchoesOfChoiceGame/assets/audio/` must be explicitly referenced by game code. Every audio path in game code must point to an existing file. No random fallback — every scene and battle gets a specific, named track.
+Every audio file in `EchoesOfChoice/assets/audio/` must be explicitly referenced by game code. Every audio path in game code must point to an existing file. No random fallback — every scene and battle gets a specific, named track.
 
 ## Music Rules
 

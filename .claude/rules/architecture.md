@@ -1,10 +1,10 @@
 # Project Architecture
 
-Godot 4 project using GDScript at `EchoesOfChoiceGame/`. Building a visual RPG based on the C# console RPG at `EchoesOfChoice/`.
+Godot 4 project using GDScript at `EchoesOfChoice/`.
 
 ## File Map
 
-All paths below are relative to `EchoesOfChoiceGame/`.
+All paths below are relative to `EchoesOfChoice/`.
 
 ### Core Data (`scripts/data/`)
 - `ability_data.gd` -- Ability model (name, type, modifier, targets, flavor text)
@@ -48,13 +48,3 @@ All paths below are relative to `EchoesOfChoiceGame/`.
 - `audio/music/` -- ~90 music tracks across contexts (menu, battle, boss, exploration, town, cutscene, game_over, victory)
 - `audio/sfx/` -- ~600 sound effects in 28 categories + 8 voice packs
 - `fonts/` -- Oswald-Bold.ttf for game theme
-
-## Reference Codebase
-
-The C# console RPG at `EchoesOfChoice/` is the source of truth for game content:
-- `EchoesOfChoice/CharacterClasses/Common/BaseFighter.cs` -- stat model
-- `EchoesOfChoice/CharacterClasses/Common/Ability.cs` -- ability model
-- `EchoesOfChoice/Battles/Battle.cs` -- damage formulas, ATB system, AI
-- `EchoesOfChoice/CharacterClasses/Fighter/`, `Mage/`, `Entertainer/`, `Scholar/`, `Wildling/` -- all 53 classes
-- `EchoesOfChoice/CharacterClasses/Enemies/` -- all enemy types
-- `EchoesOfChoice/Echoes of Choice/Program.cs` -- story flow, party creation

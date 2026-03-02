@@ -5,7 +5,7 @@ description: Update the architecture document after adding new files, scenes, sy
 
 # Update Architecture Document
 
-Keep `.claude/rules/architecture.md` in sync with the actual project state. Run this after any session that adds, removes, or renames files in `EchoesOfChoiceGame/`.
+Keep `.claude/rules/architecture.md` in sync with the actual project state. Run this after any session that adds, removes, or renames files in `EchoesOfChoice/`.
 
 ## When to Update
 
@@ -52,7 +52,7 @@ Walk through each section of `architecture.md` and verify it matches reality:
 - Use `--` (double dash) as separator between filename and description
 - Keep descriptions to one line
 - Group related files under the same subsection header
-- Paths are relative to `EchoesOfChoiceGame/`
+- Paths are relative to `EchoesOfChoice/`
 - Resource counts use approximate format for large sets (e.g., "170+")
 
 ## Quick Verify Command
@@ -60,7 +60,7 @@ Walk through each section of `architecture.md` and verify it matches reality:
 Run this to list all `.gd` files and compare against the doc:
 
 ```bash
-find EchoesOfChoiceGame/scripts -name "*.gd" | sort
-find EchoesOfChoiceGame/scenes -name "*.gd" | sort
-find EchoesOfChoiceGame/tools -name "*.gd" | sort
+find EchoesOfChoice/scripts -name "*.gd" | sort
+find EchoesOfChoice/scenes -name "*.gd" | sort
+find EchoesOfChoice/tools -name "*.gd" | sort
 ```
