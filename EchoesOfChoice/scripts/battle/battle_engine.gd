@@ -96,6 +96,11 @@ func physical_attack(attacker: FighterData, defender: FighterData) -> void:
 
 func use_ability_on_enemy(attacker: FighterData, defender: FighterData,
 		ability: AbilityData) -> void:
+	if _check_for_ability_dodge(defender):
+		combat_message.emit("%s dodged %s's ability!" % [
+			defender.character_name, attacker.character_name])
+		return
+
 	if ability.impacted_turns == 0:
 		# Instant damage
 		var damage: int = _calc_ability_damage(attacker, defender, ability)
@@ -279,6 +284,10 @@ func _check_for_critical(fighter: FighterData) -> bool:
 
 func _check_for_dodge(fighter: FighterData) -> bool:
 	return randi_range(1, 100) <= fighter.dodge_chance
+
+
+func _check_for_ability_dodge(fighter: FighterData) -> bool:
+	return randi_range(1, 100) <= fighter.dodge_chance / 2
 
 
 # =============================================================================

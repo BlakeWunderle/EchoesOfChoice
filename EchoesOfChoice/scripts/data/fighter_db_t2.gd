@@ -32,6 +32,8 @@ static func _lu_cavalry(f: FighterData) -> void:
 	f.physical_attack += randi_range(5, 7); f.physical_defense += randi_range(2, 4)
 	f.magic_attack += randi_range(1, 2); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 3)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(1, 2)
 
 static func _lu_dragoon(f: FighterData) -> void:
 	f.level += 1
@@ -40,6 +42,8 @@ static func _lu_dragoon(f: FighterData) -> void:
 	f.physical_attack += randi_range(4, 6); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(4, 6); f.magic_defense += randi_range(4, 6)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================
@@ -57,7 +61,7 @@ static func upgrade_to_mercenary(f: FighterData) -> void:
 static func upgrade_to_hunter(f: FighterData) -> void:
 	f.class_id = "Hunter"; f.character_type = "Hunter"
 	f.health += 3; f.max_health += 3; f.physical_attack += 2; f.speed += 4
-	f.crit_chance = 30; f.crit_damage = 3; f.dodge_chance = 40
+	f.crit_chance = 30; f.crit_damage = 3; f.dodge_chance = 25
 	f.abilities = [PAB.triple_arrow(), PAB.snare(), PAB.hunters_mark()]
 	f.upgrade_items = []
 
@@ -68,6 +72,7 @@ static func _lu_mercenary(f: FighterData) -> void:
 	f.physical_attack += randi_range(5, 7); f.physical_defense += randi_range(3, 4)
 	f.magic_attack += randi_range(2, 4); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(2, 2)
+	f.crit_chance += randi_range(1, 3)
 
 static func _lu_hunter(f: FighterData) -> void:
 	f.level += 1
@@ -76,6 +81,8 @@ static func _lu_hunter(f: FighterData) -> void:
 	f.physical_attack += randi_range(4, 6); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(1, 2); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(1, 2)
 
 
 # =============================================================================
@@ -92,7 +99,7 @@ static func upgrade_to_ninja(f: FighterData) -> void:
 static func upgrade_to_monk(f: FighterData) -> void:
 	f.class_id = "Monk"; f.character_type = "Monk"
 	f.health += 5; f.max_health += 5; f.physical_attack += 3; f.magic_attack += 5
-	f.crit_chance = 30; f.crit_damage = 3; f.dodge_chance = 30
+	f.crit_chance = 30; f.crit_damage = 3; f.dodge_chance = 20
 	f.abilities = [PAB.spirit_attack(), PAB.precise_strike(), PAB.meditate()]
 	f.upgrade_items = []
 
@@ -103,6 +110,8 @@ static func _lu_ninja(f: FighterData) -> void:
 	f.physical_attack += randi_range(4, 6); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(2, 3); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 3)
+	f.dodge_chance += randi_range(1, 3)
+	f.crit_chance += randi_range(1, 2)
 
 static func _lu_monk(f: FighterData) -> void:
 	f.level += 1
@@ -111,6 +120,8 @@ static func _lu_monk(f: FighterData) -> void:
 	f.physical_attack += randi_range(4, 6); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(4, 6); f.magic_defense += randi_range(5, 7)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================
@@ -120,7 +131,7 @@ static func _lu_monk(f: FighterData) -> void:
 static func upgrade_to_infernalist(f: FighterData) -> void:
 	f.class_id = "Infernalist"; f.character_type = "Infernalist"
 	f.magic_attack += 5; f.speed += 4
-	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 30
+	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 20
 	f.abilities = [PAB.fire_ball(), PAB.burning_brand(), PAB.enrage()]
 	f.upgrade_items = []
 
@@ -134,7 +145,7 @@ static func upgrade_to_tidecaller(f: FighterData) -> void:
 static func upgrade_to_tempest(f: FighterData) -> void:
 	f.class_id = "Tempest"; f.character_type = "Tempest"
 	f.magic_attack += 5; f.magic_defense += 3; f.speed += 7
-	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 40
+	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 25
 	f.abilities = [PAB.hurricane(), PAB.tornado(), PAB.knockdown()]
 	f.upgrade_items = []
 
@@ -145,6 +156,8 @@ static func _lu_infernalist(f: FighterData) -> void:
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 static func _lu_tidecaller(f: FighterData) -> void:
 	f.level += 1
@@ -153,6 +166,7 @@ static func _lu_tidecaller(f: FighterData) -> void:
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(4, 6); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(1, 1)
+	f.crit_chance += randi_range(0, 1)
 
 static func _lu_tempest(f: FighterData) -> void:
 	f.level += 1
@@ -161,6 +175,8 @@ static func _lu_tempest(f: FighterData) -> void:
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================
@@ -214,6 +230,8 @@ static func _lu_warlock(f: FighterData) -> void:
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================

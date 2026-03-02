@@ -42,6 +42,8 @@ static func _lu_duelist(f: FighterData) -> void:
 	f.physical_attack += randi_range(3, 5); f.physical_defense += randi_range(2, 4)
 	f.magic_attack += randi_range(1, 2); f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(1, 2)
 
 static func _lu_ranger(f: FighterData) -> void:
 	f.level += 1
@@ -50,6 +52,8 @@ static func _lu_ranger(f: FighterData) -> void:
 	f.physical_attack += randi_range(2, 4); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(3, 4); f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(1, 2)
 
 static func _lu_martial_artist(f: FighterData) -> void:
 	f.level += 1
@@ -58,6 +62,8 @@ static func _lu_martial_artist(f: FighterData) -> void:
 	f.physical_attack += randi_range(3, 5); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(3, 4); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================
@@ -85,6 +91,8 @@ static func _lu_invoker(f: FighterData) -> void:
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(3, 5); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(1, 1)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 static func _lu_acolyte(f: FighterData) -> void:
 	f.level += 1
@@ -109,7 +117,7 @@ static func upgrade_to_bard(f: FighterData) -> void:
 static func upgrade_to_dervish(f: FighterData) -> void:
 	f.class_id = "Dervish"; f.character_type = "Dervish"
 	f.physical_attack += 2; f.speed += 6
-	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 30
+	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 25
 	f.abilities = [PAB.seduce(), PAB.dance()]
 	f.upgrade_items = ["Light", "Paint"]
 
@@ -127,6 +135,7 @@ static func _lu_bard(f: FighterData) -> void:
 	f.physical_attack += randi_range(3, 5); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(3, 5); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
 
 static func _lu_dervish(f: FighterData) -> void:
 	f.level += 1
@@ -135,6 +144,8 @@ static func _lu_dervish(f: FighterData) -> void:
 	f.physical_attack += randi_range(3, 4); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(3, 5); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(2, 3)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(0, 1)
 
 static func _lu_orator(f: FighterData) -> void:
 	f.level += 1
@@ -235,6 +246,7 @@ static func _lu_shaman(f: FighterData) -> void:
 	f.physical_attack += randi_range(2, 3); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(2, 3); f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
 
 static func _lu_beastcaller(f: FighterData) -> void:
 	f.level += 1
@@ -243,6 +255,8 @@ static func _lu_beastcaller(f: FighterData) -> void:
 	f.physical_attack += randi_range(3, 4); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(1, 2); f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================

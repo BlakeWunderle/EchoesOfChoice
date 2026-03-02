@@ -152,6 +152,8 @@ static func _level_up_squire(f: FighterData) -> void:
 	f.magic_attack += randi_range(1, 2)
 	f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 
 static func _level_up_mage(f: FighterData) -> void:
@@ -174,6 +176,7 @@ static func _level_up_entertainer(f: FighterData) -> void:
 	f.magic_attack += randi_range(2, 3)
 	f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(1, 1)
+	f.dodge_chance += randi_range(0, 1)
 
 
 static func _level_up_scholar(f: FighterData) -> void:
@@ -196,6 +199,8 @@ static func _level_up_wildling(f: FighterData) -> void:
 	f.magic_attack += randi_range(2, 3)
 	f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 
 static func _level_up_generic(f: FighterData) -> void:
@@ -207,6 +212,8 @@ static func _level_up_generic(f: FighterData) -> void:
 	f.magic_attack += randi_range(1, 2)
 	f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(1, 1)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================

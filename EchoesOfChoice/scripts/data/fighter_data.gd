@@ -104,7 +104,8 @@ func _clamp_stats() -> void:
 	magic_attack = maxi(0, magic_attack)
 	magic_defense = maxi(0, magic_defense)
 	speed = maxi(1, speed)
-	dodge_chance = maxi(0, dodge_chance)
+	dodge_chance = clampi(dodge_chance, 0, 50)
+	crit_chance = clampi(crit_chance, 0, 50)
 
 
 func to_save_data() -> Dictionary:

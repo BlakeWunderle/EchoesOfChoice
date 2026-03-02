@@ -32,6 +32,8 @@ static func _lu_warcrier(f: FighterData) -> void:
 	f.physical_attack += randi_range(4, 6); f.physical_defense += randi_range(3, 4)
 	f.magic_attack += randi_range(2, 4); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(1, 2)
 
 static func _lu_minstrel(f: FighterData) -> void:
 	f.level += 1
@@ -49,14 +51,14 @@ static func _lu_minstrel(f: FighterData) -> void:
 static func upgrade_to_illusionist(f: FighterData) -> void:
 	f.class_id = "Illusionist"; f.character_type = "Illusionist"
 	f.health += 5; f.max_health += 5; f.magic_attack += 7; f.speed += 7
-	f.crit_chance = 30; f.crit_damage = 2; f.dodge_chance = 40
+	f.crit_chance = 30; f.crit_damage = 2; f.dodge_chance = 25
 	f.abilities = [AbilityDB.shadow_attack(), PAB.mirage(), PAB.bewilderment()]
 	f.upgrade_items = []
 
 static func upgrade_to_mime(f: FighterData) -> void:
 	f.class_id = "Mime"; f.character_type = "Mime"
 	f.magic_attack += 5; f.magic_defense += 5; f.mana += 5; f.max_mana += 5
-	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 30
+	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 20
 	f.abilities = [PAB.invisible_wall(), PAB.anvil(), PAB.invisible_box()]
 	f.upgrade_items = []
 
@@ -67,6 +69,8 @@ static func _lu_illusionist(f: FighterData) -> void:
 	f.physical_attack += randi_range(3, 4); f.physical_defense += randi_range(3, 5)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 3)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(1, 2)
 
 static func _lu_mime(f: FighterData) -> void:
 	f.level += 1
@@ -75,6 +79,8 @@ static func _lu_mime(f: FighterData) -> void:
 	f.physical_attack += randi_range(3, 4); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(5, 7)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================
@@ -111,6 +117,8 @@ static func _lu_elegist(f: FighterData) -> void:
 	f.physical_attack += randi_range(2, 3); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(6, 8); f.magic_defense += randi_range(7, 9)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================
@@ -147,6 +155,7 @@ static func _lu_bombardier(f: FighterData) -> void:
 	f.physical_attack += randi_range(6, 8); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(3, 5); f.magic_defense += randi_range(4, 6)
 	f.speed += randi_range(1, 1)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================
@@ -174,6 +183,7 @@ static func _lu_chronomancer(f: FighterData) -> void:
 	f.physical_attack += randi_range(2, 3); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(5, 7)
 	f.speed += randi_range(1, 2)
+	f.dodge_chance += randi_range(0, 1)
 
 static func _lu_astronomer(f: FighterData) -> void:
 	f.level += 1
@@ -209,6 +219,7 @@ static func _lu_automaton(f: FighterData) -> void:
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(4, 6)
 	f.magic_attack += randi_range(6, 8); f.magic_defense += randi_range(4, 6)
 	f.speed += randi_range(1, 1)
+	f.crit_chance += randi_range(1, 2)
 
 static func _lu_technomancer(f: FighterData) -> void:
 	f.level += 1
@@ -245,6 +256,8 @@ static func _lu_blighter(f: FighterData) -> void:
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 static func _lu_grove_keeper(f: FighterData) -> void:
 	f.level += 1
@@ -281,6 +294,8 @@ static func _lu_witch_doctor(f: FighterData) -> void:
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(2, 2)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(0, 1)
 
 static func _lu_spiritwalker(f: FighterData) -> void:
 	f.level += 1
@@ -318,6 +333,8 @@ static func _lu_falconer(f: FighterData) -> void:
 	f.physical_attack += randi_range(5, 7); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(1, 2); f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(2, 3)
+	f.dodge_chance += randi_range(0, 1)
+	f.crit_chance += randi_range(1, 2)
 
 static func _lu_shapeshifter(f: FighterData) -> void:
 	f.level += 1
@@ -326,6 +343,8 @@ static func _lu_shapeshifter(f: FighterData) -> void:
 	f.physical_attack += randi_range(8, 10); f.physical_defense += randi_range(4, 5)
 	f.magic_attack += randi_range(1, 2); f.magic_defense += randi_range(1, 2)
 	f.speed += randi_range(2, 3)
+	f.dodge_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(1, 2)
 
 
 # =============================================================================
