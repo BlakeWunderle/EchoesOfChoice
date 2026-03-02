@@ -313,12 +313,37 @@ func _show_target_menu(fighters: Array) -> void:
 	for f: FighterData in fighters:
 		options.append({"label": "%s the %s (HP: %d/%d)" % [
 			f.character_name, f.character_type, f.health, f.max_health]})
+	options.append({"label": "Back"})
 	_action_menu.show_choices(options)
 	_action_menu.choice_selected.disconnect(_on_action_selected)
 	_action_menu.choice_selected.connect(_on_target_selected)
 
 
 func _on_target_selected(index: int) -> void:
+	# Check for Back option
+	var fighter_count: int
+	match _phase:
+		Phase.PLAYER_TARGET_ATTACK, Phase.PLAYER_ABILITY_TARGET_ENEMY:
+			fighter_count = _engine.enemies.size()
+		Phase.PLAYER_ABILITY_TARGET_ALLY:
+			fighter_count = _engine.units.size()
+		_:
+			fighter_count = 0
+
+	if index >= fighter_count:
+		# Back — return to appropriate menu
+		_action_menu.choice_selected.disconnect(_on_target_selected)
+		_action_menu.choice_selected.connect(_on_action_selected)
+		_action_menu.hide_menu()
+		if _phase == Phase.PLAYER_TARGET_ATTACK:
+			_phase = Phase.PLAYER_ACTION
+			_show_action_menu(_current_actor)
+		else:
+			# Ability target — go back to ability list
+			_phase = Phase.PLAYER_ABILITY_SELECT
+			_show_ability_menu()
+		return
+
 	_action_menu.choice_selected.disconnect(_on_target_selected)
 	_action_menu.choice_selected.connect(_on_action_selected)
 	_action_menu.hide_menu()
@@ -362,6 +387,7 @@ func _show_ability_menu() -> void:
 	for a: AbilityData in affordable:
 		options.append({"label": "%s (Mana: %d)" % [a.ability_name, a.mana_cost],
 			"description": a.get_description()})
+	options.append({"label": "Back"})
 
 	_action_menu.show_choices(options)
 	_action_menu.choice_selected.disconnect(_on_action_selected)
@@ -369,14 +395,23 @@ func _show_ability_menu() -> void:
 
 
 func _on_ability_selected(index: int) -> void:
-	_action_menu.choice_selected.disconnect(_on_ability_selected)
-	_action_menu.choice_selected.connect(_on_action_selected)
-	_action_menu.hide_menu()
-
 	var affordable: Array[AbilityData] = []
 	for a: AbilityData in _current_actor.abilities:
 		if a.mana_cost <= _current_actor.mana:
 			affordable.append(a)
+
+	# Back option
+	if index >= affordable.size():
+		_action_menu.choice_selected.disconnect(_on_ability_selected)
+		_action_menu.choice_selected.connect(_on_action_selected)
+		_action_menu.hide_menu()
+		_phase = Phase.PLAYER_ACTION
+		_show_action_menu(_current_actor)
+		return
+
+	_action_menu.choice_selected.disconnect(_on_ability_selected)
+	_action_menu.choice_selected.connect(_on_action_selected)
+	_action_menu.hide_menu()
 
 	_selected_ability = affordable[index]
 
