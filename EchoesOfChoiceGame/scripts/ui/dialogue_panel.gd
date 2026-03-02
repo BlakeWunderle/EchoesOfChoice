@@ -11,6 +11,7 @@ var _lines: Array = []
 var _current_line: int = 0
 var _typing: bool = false
 var _full_text: String = ""
+var _accepting_input: bool = false  ## Guard against stray clicks from scene transitions
 
 var _label: RichTextLabel
 var _continue_label: Label
@@ -59,7 +60,15 @@ func show_text(lines: Array) -> void:
 	_label.clear()
 	_continue_label.modulate.a = 0.0
 	visible = true
+	_accepting_input = false
+	_start_input_guard()
 	_type_next_line()
+
+
+func _start_input_guard() -> void:
+	## Brief delay before accepting input to prevent scene-transition clicks
+	await get_tree().create_timer(0.3).timeout
+	_accepting_input = true
 
 
 func _type_next_line() -> void:
@@ -72,7 +81,6 @@ func _type_next_line() -> void:
 
 	_full_text = _lines[_current_line]
 	_typing = true
-	_label.append_text("")
 
 	var chars_added: int = 0
 	for ch: String in _full_text:
@@ -91,18 +99,18 @@ func _type_next_line() -> void:
 
 
 func _show_continue() -> void:
-	_continue_label.modulate.a = 0.6
+	_continue_label.modulate.a = 1.0
 	_start_pulse()
 
 
 func _start_pulse() -> void:
 	var tween := create_tween().set_loops()
-	tween.tween_property(_continue_label, "modulate:a", 0.3, 0.8)
-	tween.tween_property(_continue_label, "modulate:a", 0.6, 0.8)
+	tween.tween_property(_continue_label, "modulate:a", 0.5, 0.8)
+	tween.tween_property(_continue_label, "modulate:a", 1.0, 0.8)
 
 
 func _input(event: InputEvent) -> void:
-	if not visible:
+	if not visible or not _accepting_input:
 		return
 
 	var pressed: bool = false
