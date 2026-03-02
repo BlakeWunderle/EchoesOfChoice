@@ -3,12 +3,14 @@ class_name FighterBar extends HBoxContainer
 ## Health/mana bar for a single fighter in the battle HUD.
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
+const Enums := preload("res://scripts/data/enums.gd")
 
 var _name_label: Label
 var _hp_bar: ProgressBar
 var _hp_label: Label
 var _mp_bar: ProgressBar
 var _mp_label: Label
+var _status_label: RichTextLabel
 var _is_enemy: bool = false
 
 
@@ -58,6 +60,14 @@ func _build_ui() -> void:
 
 	_mp_bar.get_parent().visible = false
 
+	_status_label = RichTextLabel.new()
+	_status_label.bbcode_enabled = true
+	_status_label.fit_content = true
+	_status_label.scroll_active = false
+	_status_label.add_theme_font_size_override("normal_font_size", 11)
+	_status_label.custom_minimum_size = Vector2(200, 0)
+	add_child(_status_label)
+
 
 func setup(fighter: FighterData, is_enemy: bool = false) -> void:
 	_is_enemy = is_enemy
@@ -86,3 +96,52 @@ func update_display(fighter: FighterData) -> void:
 		_mp_bar.value = maxi(0, fighter.mana)
 		_mp_label.text = "%d/%d" % [maxi(0, fighter.mana), fighter.max_mana]
 		_mp_bar.modulate = Color(0.3, 0.5, 0.9)  # Blue
+
+	_update_status(fighter)
+
+
+func _update_status(fighter: FighterData) -> void:
+	_status_label.clear()
+	if fighter.modified_stats.is_empty():
+		return
+
+	var parts: Array[String] = []
+	for mod: Dictionary in fighter.modified_stats:
+		var stat: Enums.StatType = mod["stat"]
+		var turns: int = mod["turns"]
+		var is_negative: bool = mod["is_negative"]
+		var dpt: int = mod.get("damage_per_turn", 0)
+
+		var tag: String
+		if dpt > 0:
+			tag = "DOT %d" % dpt
+		elif stat == Enums.StatType.TAUNT:
+			tag = "TAUNT"
+		else:
+			tag = _stat_abbrev(stat)
+
+		var color: String
+		if stat == Enums.StatType.TAUNT:
+			color = "yellow"
+		elif is_negative:
+			color = "salmon"
+		else:
+			color = "lime"
+
+		parts.append("[color=%s]%s(%dt)[/color]" % [color, tag, turns])
+
+	_status_label.append_text(" ".join(parts))
+
+
+static func _stat_abbrev(stat: Enums.StatType) -> String:
+	match stat:
+		Enums.StatType.PHYSICAL_ATTACK: return "P.ATK"
+		Enums.StatType.PHYSICAL_DEFENSE: return "P.DEF"
+		Enums.StatType.MAGIC_ATTACK: return "M.ATK"
+		Enums.StatType.MAGIC_DEFENSE: return "M.DEF"
+		Enums.StatType.ATTACK: return "ATK"
+		Enums.StatType.DEFENSE: return "DEF"
+		Enums.StatType.SPEED: return "SPD"
+		Enums.StatType.HEALTH: return "HP"
+		Enums.StatType.DODGE_CHANCE: return "DODGE"
+		_: return "BUFF"
