@@ -119,6 +119,10 @@ func _start_battle() -> void:
 	_engine.battle_lost.connect(_on_battle_lost)
 
 	var battle: BattleData = GameState.current_battle
+	if not battle.music_track.is_empty():
+		MusicManager.play_music(battle.music_track)
+	else:
+		push_warning("Battle '%s' has no music_track set" % battle.battle_id)
 	_engine.start_battle(GameState.party, battle.enemies)
 
 	_build_status_bars()

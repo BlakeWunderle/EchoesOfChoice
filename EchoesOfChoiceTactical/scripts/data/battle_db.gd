@@ -33,4 +33,5 @@ static func city_street_battle() -> BattleData:
 	]
 	b.is_final_battle = false
 	b.next_battle_id = "WolfForestBattle"
+	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Weeping Walls.ogg"
 	return b

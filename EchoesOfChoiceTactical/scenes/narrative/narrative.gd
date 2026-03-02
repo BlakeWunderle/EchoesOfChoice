@@ -29,6 +29,7 @@ func _build_ui() -> void:
 func _show_narrative() -> void:
 	match GameState.game_phase:
 		GameState.GamePhase.NARRATIVE:
+			MusicManager.play_context(MusicManager.MusicContext.CUTSCENE)
 			if GameState.narrative_mode == GameState.NarrativeMode.PRE_BATTLE:
 				_dialogue.show_text(GameState.current_battle.pre_battle_text)
 			else:
@@ -38,6 +39,10 @@ func _show_narrative() -> void:
 
 
 func _show_ending() -> void:
+	if GameState.game_won:
+		MusicManager.play_music("res://assets/audio/music/victory/SHORT Action #5 LOOP.wav")
+	else:
+		MusicManager.play_music("res://assets/audio/music/game_over/Sad Despair 03.wav")
 	var lines: Array[String]
 	if GameState.game_won:
 		lines = [
