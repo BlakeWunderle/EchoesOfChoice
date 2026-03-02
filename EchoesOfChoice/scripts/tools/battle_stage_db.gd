@@ -1,6 +1,6 @@
 class_name BattleStageDB
 
-## All 24 battle stages with enemy compositions and balance targets.
+## All 22 battle stages with enemy compositions and balance targets.
 ## Port of C# EchoesOfChoice/BattleSimulator/BattleStage.cs.
 
 const EnemyDB := preload("res://scripts/data/enemy_db.gd")
@@ -39,12 +39,10 @@ static func get_all_stages() -> Array:
 		# Prog 10: Tier 2, 12 total level ups
 		_s("CorruptedCityBattle", 12, "tier2", 0.75, 10),
 		_s("CorruptedWildsBattle", 12, "tier2", 0.75, 10),
-		# Prog 11: Tier 2, 13 total level ups
-		_s("TempleBattle", 13, "tier2", 0.72, 11),
-		_s("BlightBattle", 13, "tier2", 0.72, 11),
-		# Prog 12: Tier 2, 14 total level ups
+		# Prog 11: Tier 2, 13 total level ups (underground pursuit)
+		_s("DepthsBattle", 13, "tier2", 0.72, 11),
+		# Prog 12: Tier 2, 14 total level ups (last guardian)
 		_s("GateBattle", 14, "tier2", 0.69, 12),
-		_s("DepthsBattle", 14, "tier2", 0.69, 12),
 		# Prog 13: Tier 2, 15 total level ups (final boss)
 		_s("StrangerFinalBattle", 15, "tier2", 0.65, 13),
 	]
@@ -139,16 +137,6 @@ static func create_enemies(stage_name: String, party: Array = []) -> Array:
 				EnemyDB.create_corrupted_treant("Rothollow"),
 				EnemyDB.create_corrupted_treant("Blightsnarl"),
 				EnemyDB.create_demon("Moloch")]
-		"TempleBattle":
-			return [EnemyDB.create_hellion("Ashara"),
-				EnemyDB.create_fiendling("Cinder"),
-				EnemyDB.create_fiendling("Ember"),
-				EnemyDB.create_hellion("Pyrath")]
-		"BlightBattle":
-			return [EnemyDB.create_dragon("Vexaris"),
-				EnemyDB.create_blighted_stag("Withered Crown"),
-				EnemyDB.create_blighted_stag("Rotted Tine"),
-				EnemyDB.create_dragon("Malachar")]
 		"GateBattle":
 			return [EnemyDB.create_dark_knight("Ser Malachar"),
 				EnemyDB.create_fell_hound("Duskfang"),
