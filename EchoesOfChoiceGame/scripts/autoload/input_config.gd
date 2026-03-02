@@ -41,6 +41,7 @@ func _setup_actions() -> void:
 		_joy_button(JOY_BUTTON_Y),
 	])
 	_add_action("pause", [
+		_key(KEY_ESCAPE),
 		_joy_button(JOY_BUTTON_START),
 	])
 

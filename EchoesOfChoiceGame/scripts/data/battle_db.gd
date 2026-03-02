@@ -72,6 +72,7 @@ static func city_street_battle() -> BattleData:
 		"They push through the city gate and the tree line swallows the road ahead.",
 	]
 	b.next_battle_id = "WolfForestBattle"
+	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Weeping Walls.ogg"
 	return b
 
 

@@ -72,11 +72,11 @@ static func create_entertainer(fighter_name: String) -> FighterData:
 	f.physical_defense = randi_range(10, 14)
 	f.magic_attack = randi_range(12, 19)
 	f.magic_defense = randi_range(15, 19)
-	f.speed = randi_range(25, 29)
+	f.speed = randi_range(16, 20)
 	f.crit_chance = 10
 	f.crit_damage = 1
-	f.dodge_chance = 10
-	f.abilities = [AbilityDB.sing(), AbilityDB.demoralize()]
+	f.dodge_chance = 5
+	f.abilities = [AbilityDB.mockery(), AbilityDB.demoralize()]
 	f.upgrade_items = ["Lyre", "Slippers", "Scroll"]
 	return f
 
@@ -116,10 +116,10 @@ static func create_wildling(fighter_name: String) -> FighterData:
 	f.physical_defense = randi_range(10, 13)
 	f.magic_attack = randi_range(12, 15)
 	f.magic_defense = randi_range(12, 15)
-	f.speed = randi_range(15, 19)
+	f.speed = randi_range(22, 26)
 	f.crit_chance = 10
 	f.crit_damage = 1
-	f.dodge_chance = 10
+	f.dodge_chance = 15
 	f.abilities = [AbilityDB.thorn_whip(), AbilityDB.bark_skin()]
 	f.upgrade_items = ["Herbs", "Totem", "BeastClaw"]
 	return f
@@ -173,7 +173,7 @@ static func _level_up_entertainer(f: FighterData) -> void:
 	f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(2, 3)
 	f.magic_defense += randi_range(1, 2)
-	f.speed += randi_range(1, 2)
+	f.speed += randi_range(1, 1)
 
 
 static func _level_up_scholar(f: FighterData) -> void:
@@ -195,7 +195,7 @@ static func _level_up_wildling(f: FighterData) -> void:
 	f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(2, 3)
 	f.magic_defense += randi_range(1, 2)
-	f.speed += randi_range(1, 1)
+	f.speed += randi_range(1, 2)
 
 
 static func _level_up_generic(f: FighterData) -> void:
@@ -286,3 +286,140 @@ static func upgrade_class(fighter: FighterData, item: String) -> bool:
 			push_error("Unknown upgrade: %s" % key)
 			return false
 	return true
+
+
+# =============================================================================
+# Save/load helpers
+# =============================================================================
+
+static func get_display_name(class_id: String) -> String:
+	match class_id:
+		# T0
+		"Squire": return "Squire"
+		"Mage": return "Mage"
+		"Entertainer": return "Entertainer"
+		"Tinker": return "Tinker"
+		"Wildling": return "Wildling"
+		# T1 — Squire
+		"Duelist": return "Duelist"
+		"Ranger": return "Ranger"
+		"MartialArtist": return "Martial Artist"
+		# T1 — Mage
+		"Invoker": return "Invoker"
+		"Acolyte": return "Acolyte"
+		# T1 — Entertainer
+		"Bard": return "Bard"
+		"Dervish": return "Dervish"
+		"Orator": return "Orator"
+		# T1 — Tinker
+		"Artificer": return "Artificer"
+		"Cosmologist": return "Philosopher"
+		"Arithmancer": return "Arithmancer"
+		# T1 — Wildling
+		"Herbalist": return "Herbalist"
+		"Shaman": return "Shaman"
+		"Beastcaller": return "Beastcaller"
+		# T2 — Squire
+		"Cavalry": return "Cavalry"
+		"Dragoon": return "Dragoon"
+		"Mercenary": return "Mercenary"
+		"Hunter": return "Hunter"
+		"Ninja": return "Ninja"
+		"Monk": return "Monk"
+		# T2 — Mage
+		"Infernalist": return "Infernalist"
+		"Tidecaller": return "Tidecaller"
+		"Tempest": return "Tempest"
+		"Paladin": return "Paladin"
+		"Priest": return "Priest"
+		"Warlock": return "Warlock"
+		# T2 — Entertainer
+		"Warcrier": return "Warcrier"
+		"Minstrel": return "Minstrel"
+		"Illusionist": return "Illusionist"
+		"Mime": return "Mime"
+		"Laureate": return "Laureate"
+		"Elegist": return "Elegist"
+		# T2 — Tinker
+		"Alchemist": return "Alchemist"
+		"Bombardier": return "Bombardier"
+		"Chronomancer": return "Chronomancer"
+		"Astronomer": return "Astronomer"
+		"Automaton": return "Automaton"
+		"Technomancer": return "Technomancer"
+		# T2 — Wildling
+		"Blighter": return "Blighter"
+		"GroveKeeper": return "Grove Keeper"
+		"WitchDoctor": return "Witch Doctor"
+		"Spiritwalker": return "Spiritwalker"
+		"Falconer": return "Falconer"
+		"Shapeshifter": return "Shapeshifter"
+		_: return class_id
+
+
+static func get_abilities_for_class(class_id: String) -> Array:
+	var PAB := preload("res://scripts/data/ability_db_player.gd")
+	match class_id:
+		# T0
+		"Squire": return [AbilityDB.slash(), AbilityDB.guard()]
+		"Mage": return [AbilityDB.arcane_bolt()]
+		"Entertainer": return [AbilityDB.mockery(), AbilityDB.demoralize()]
+		"Tinker": return [AbilityDB.proof(), AbilityDB.energy_blast()]
+		"Wildling": return [AbilityDB.thorn_whip(), AbilityDB.bark_skin()]
+		# T1 — Squire
+		"Duelist": return [AbilityDB.slash(), PAB.feint()]
+		"Ranger": return [PAB.pierce(), PAB.double_arrow()]
+		"MartialArtist": return [PAB.punch(), PAB.topple()]
+		# T1 — Mage
+		"Invoker": return [AbilityDB.arcane_bolt(), PAB.elemental_surge()]
+		"Acolyte": return [PAB.cure(), PAB.protect(), PAB.radiance()]
+		# T1 — Entertainer
+		"Bard": return [PAB.seduce(), PAB.melody(), PAB.encourage()]
+		"Dervish": return [PAB.seduce(), PAB.dance()]
+		"Orator": return [PAB.oration(), PAB.encourage()]
+		# T1 — Tinker
+		"Artificer": return [AbilityDB.energy_blast(), PAB.magical_tinkering()]
+		"Cosmologist": return [PAB.time_warp(), PAB.black_hole(), PAB.gravity()]
+		"Arithmancer": return [PAB.recite(), PAB.calculate()]
+		# T1 — Wildling
+		"Herbalist": return [PAB.mending_herbs(), PAB.sapping_vine()]
+		"Shaman": return [PAB.spectral_lance(), PAB.player_hex()]
+		"Beastcaller": return [PAB.feral_strike(), PAB.pack_howl()]
+		# T2 — Squire
+		"Cavalry": return [PAB.lance(), PAB.trample(), AbilityDB.rally()]
+		"Dragoon": return [PAB.jump(), PAB.wyvern_strike(), PAB.dragon_ward()]
+		"Mercenary": return [PAB.gun_shot(), PAB.called_shot(), PAB.quick_draw()]
+		"Hunter": return [PAB.triple_arrow(), PAB.snare(), PAB.hunters_mark()]
+		"Ninja": return [PAB.sweeping_slash(), PAB.dash(), PAB.smoke_bomb()]
+		"Monk": return [PAB.spirit_attack(), PAB.precise_strike(), PAB.meditate()]
+		# T2 — Mage
+		"Infernalist": return [PAB.fire_ball(), PAB.burning_brand(), PAB.enrage()]
+		"Tidecaller": return [PAB.purify(), PAB.tsunami(), PAB.undertow()]
+		"Tempest": return [PAB.hurricane(), PAB.tornado(), PAB.knockdown()]
+		"Paladin": return [PAB.cure(), AbilityDB.smash(), PAB.smite()]
+		"Priest": return [PAB.restoration(), PAB.heavenly_body(), PAB.holy()]
+		"Warlock": return [PAB.shadow_bolt(), PAB.curse(), PAB.drain_life()]
+		# T2 — Entertainer
+		"Warcrier": return [PAB.battle_cry(), AbilityDB.smash(), PAB.encore()]
+		"Minstrel": return [PAB.ballad(), AbilityDB.frustrate(), PAB.serenade()]
+		"Illusionist": return [AbilityDB.shadow_attack(), PAB.mirage(), PAB.bewilderment()]
+		"Mime": return [PAB.invisible_wall(), PAB.anvil(), PAB.invisible_box()]
+		"Laureate": return [PAB.ovation(), PAB.recite(), PAB.eulogy()]
+		"Elegist": return [PAB.nightfall(), PAB.inspire(), PAB.dirge()]
+		# T2 — Tinker
+		"Alchemist": return [PAB.transmute(), PAB.corrosive_acid(), PAB.elixir()]
+		"Bombardier": return [PAB.shrapnel(), PAB.explosion(), PAB.detonate()]
+		"Chronomancer": return [PAB.warp_speed(), PAB.time_bomb(), PAB.time_freeze()]
+		"Astronomer": return [PAB.starfall(), PAB.meteor_shower(), PAB.eclipse()]
+		"Automaton": return [PAB.servo_strike(), PAB.program_defense(), PAB.overclock()]
+		"Technomancer": return [PAB.random_attack(), PAB.program_defense(), PAB.program_offense()]
+		# T2 — Wildling
+		"Blighter": return [PAB.blight(), PAB.life_siphon(), PAB.poison_sting()]
+		"GroveKeeper": return [PAB.vine_wall(), PAB.root_trap(), PAB.overgrowth()]
+		"WitchDoctor": return [PAB.voodoo_bolt(), PAB.dark_hex(), PAB.creeping_rot()]
+		"Spiritwalker": return [PAB.spirit_shield(), PAB.ancestral_blessing(), PAB.spirit_mend()]
+		"Falconer": return [PAB.falcon_strike(), PAB.sky_dive(), PAB.raptors_mark()]
+		"Shapeshifter": return [PAB.savage_maul(), PAB.frenzy(), PAB.primal_roar()]
+		_:
+			push_error("Unknown class_id for abilities: %s" % class_id)
+			return []

@@ -37,6 +37,7 @@ var _vbox: VBoxContainer
 
 
 func _ready() -> void:
+	MusicManager.play_music("res://assets/audio/music/town/Medieval Tavern 03.wav")
 	_build_ui()
 	_set_state(State.INTRO)
 

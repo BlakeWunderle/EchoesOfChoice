@@ -147,6 +147,10 @@ func _start_battle() -> void:
 	var battle: BattleData = GameState.current_battle
 	_escape_hp_pct = battle.escape_hp_pct
 	_boss_escaped = false
+	if not battle.music_track.is_empty():
+		MusicManager.play_music(battle.music_track)
+	else:
+		MusicManager.play_context(MusicManager.MusicContext.BATTLE)
 	_engine.start_battle(GameState.party, battle.enemies)
 
 	_build_status_bars()
