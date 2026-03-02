@@ -16,7 +16,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
             PhysicalDefense = Stat(11, 19, 1, 3, 4);
             MagicAttack = Stat(25, 36, 3, 7, 4);
             MagicDefense = Stat(17, 28, 2, 5, 4);
-            Speed = Stat(20, 28, 1, 2, 3);
+            Speed = Stat(22, 30, 1, 2, 3);
             Abilities = new List<Ability>() { new SirenSong(), new Torrent() };
             CharacterType = "Siren";
             Mana = Stat(19, 33, 2, 5, 3);

@@ -24,15 +24,17 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
 
         protected override void ApplyUpgradeBonuses()
         {
-            MagicAttack += 4;
-            Health += 3;
-            MaxHealth += 3;
+            MagicAttack += 7;
+            Health += 8;
+            MaxHealth += 8;
+            MagicDefense += 3;
+            Speed += 3;
         }
 
         public override void IncreaseLevel()
         {
             Level += 1;
-            var healthIncrease = random.Next(5, 8);
+            var healthIncrease = random.Next(7, 11);
             Health += healthIncrease;
             MaxHealth += healthIncrease;
             var manaIncrease = random.Next(2, 4);
@@ -40,9 +42,9 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
             MaxMana += manaIncrease;
             PhysicalAttack += random.Next(1, 3);
             PhysicalDefense += random.Next(1, 3);
-            MagicAttack += random.Next(4, 7);
-            MagicDefense += random.Next(2, 4);
-            Speed += random.Next(1, 2);
+            MagicAttack += random.Next(5, 8);
+            MagicDefense += random.Next(3, 5);
+            Speed += random.Next(2, 3);
         }
 
         public override BaseFighter UpgradeClass(UpgradeItemEnum upgradeItem)

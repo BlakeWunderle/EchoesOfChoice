@@ -9,9 +9,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public CaveSpider(int level = 18)
         {
             Level = level;
-            Health = Stat(350, 390, 10, 14, 18);
+            Health = Stat(362, 402, 10, 14, 18);
             MaxHealth = Health;
-            PhysicalAttack = Stat(68, 78, 5, 7, 18);
+            PhysicalAttack = Stat(70, 80, 5, 7, 18);
             PhysicalDefense = Stat(30, 36, 2, 4, 18);
             MagicAttack = Stat(16, 22, 1, 2, 18);
             MagicDefense = Stat(26, 32, 2, 3, 18);

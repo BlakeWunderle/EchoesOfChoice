@@ -26,10 +26,10 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
 
         protected override void ApplyUpgradeBonuses()
         {
-            Health += 3;
-            MaxHealth += 3;
-            MagicAttack += 2;
-            PhysicalAttack += 2;
+            Health += 6;
+            MaxHealth += 6;
+            MagicAttack += 4;
+            PhysicalAttack += 3;
         }
 
         public override void IncreaseLevel()
@@ -45,7 +45,7 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
             PhysicalDefense += random.Next(1, 3);
             MagicAttack += random.Next(2, 4);
             MagicDefense += random.Next(1, 3);
-            Speed += random.Next(1, 2);
+            Speed += random.Next(1, 3);
         }
 
         public override BaseFighter UpgradeClass(UpgradeItemEnum upgradeItem)

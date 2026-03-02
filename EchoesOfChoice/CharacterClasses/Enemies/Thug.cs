@@ -12,7 +12,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
             Level = level;
             Health = Stat(48, 58, 3, 7);
             MaxHealth = Health;
-            PhysicalAttack = Stat(14, 18, 1, 3);
+            PhysicalAttack = Stat(15, 19, 1, 3);
             PhysicalDefense = Stat(8, 12, 1, 2);
             MagicAttack = Stat(3, 6, 0, 2);
             MagicDefense = Stat(8, 12, 1, 2);

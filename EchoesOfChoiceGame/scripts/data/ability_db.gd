@@ -47,6 +47,12 @@ static func sing() -> AbilityData:
 		Enums.StatType.MAGIC_DEFENSE, 3, 2, true, 1)
 
 
+static func mockery() -> AbilityData:
+	return _make("Mockery",
+		"A cruel, humiliating taunt that cuts deeper than any blade.",
+		Enums.StatType.MIXED_ATTACK, 2, 0, true, 1)
+
+
 static func demoralize() -> AbilityData:
 	return _make("Demoralize",
 		"A mocking performance that saps the enemy's fighting spirit. Reduces attacks.",

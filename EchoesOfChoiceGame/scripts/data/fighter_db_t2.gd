@@ -48,7 +48,8 @@ static func _lu_dragoon(f: FighterData) -> void:
 
 static func upgrade_to_mercenary(f: FighterData) -> void:
 	f.class_id = "Mercenary"; f.character_type = "Mercenary"
-	f.physical_attack += 5; f.speed += 4
+	f.physical_attack += 7; f.speed += 5
+	f.health += 5; f.max_health += 5
 	f.crit_chance = 40; f.crit_damage = 7; f.dodge_chance = 10
 	f.abilities = [PAB.gun_shot(), PAB.called_shot(), PAB.quick_draw()]
 	f.upgrade_items = []
@@ -184,7 +185,8 @@ static func upgrade_to_priest(f: FighterData) -> void:
 
 static func upgrade_to_warlock(f: FighterData) -> void:
 	f.class_id = "Warlock"; f.character_type = "Warlock"
-	f.magic_attack += 5; f.magic_defense += 3; f.speed += 3
+	f.magic_attack += 8; f.magic_defense += 4; f.speed += 4
+	f.health += 5; f.max_health += 5
 	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 20
 	f.abilities = [PAB.shadow_bolt(), PAB.curse(), PAB.drain_life()]
 	f.upgrade_items = []
@@ -207,11 +209,11 @@ static func _lu_priest(f: FighterData) -> void:
 
 static func _lu_warlock(f: FighterData) -> void:
 	f.level += 1
-	var hp := randi_range(5, 7); f.health += hp; f.max_health += hp
+	var hp := randi_range(7, 9); f.health += hp; f.max_health += hp
 	var mp := randi_range(3, 5); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
-	f.magic_attack += randi_range(4, 6); f.magic_defense += randi_range(3, 4)
-	f.speed += randi_range(1, 1)
+	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(3, 4)
+	f.speed += randi_range(2, 2)
 
 
 # =============================================================================

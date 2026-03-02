@@ -9,9 +9,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public GuardArcher(int level = 12)
         {
             Level = level;
-            Health = Stat(170, 200, 6, 10, 12);
+            Health = Stat(178, 208, 6, 10, 12);
             MaxHealth = Health;
-            PhysicalAttack = Stat(42, 50, 3, 5, 12);
+            PhysicalAttack = Stat(43, 51, 3, 5, 12);
             PhysicalDefense = Stat(18, 24, 1, 3, 12);
             MagicAttack = Stat(6, 10, 0, 2, 12);
             MagicDefense = Stat(18, 24, 1, 3, 12);

@@ -24,15 +24,17 @@ namespace EchoesOfChoice.CharacterClasses.Mage
 
         protected override void ApplyUpgradeBonuses()
         {
-            MagicAttack += 5;
-            MagicDefense += 3;
-            Speed += 3;
+            MagicAttack += 8;
+            MagicDefense += 4;
+            Speed += 4;
+            Health += 5;
+            MaxHealth += 5;
         }
 
         public override void IncreaseLevel()
         {
             Level += 1;
-            var healthIncrease = random.Next(5, 8);
+            var healthIncrease = random.Next(7, 10);
             Health += healthIncrease;
             MaxHealth += healthIncrease;
             var manaIncrease = random.Next(3, 6);
@@ -40,9 +42,9 @@ namespace EchoesOfChoice.CharacterClasses.Mage
             MaxMana += manaIncrease;
             PhysicalAttack += random.Next(1, 3);
             PhysicalDefense += random.Next(1, 3);
-            MagicAttack += random.Next(4, 7);
+            MagicAttack += random.Next(5, 8);
             MagicDefense += random.Next(3, 5);
-            Speed += random.Next(1, 2);
+            Speed += random.Next(2, 3);
         }
 
         public override BaseFighter UpgradeClass(UpgradeItemEnum upgradeItem)

@@ -24,8 +24,10 @@ namespace EchoesOfChoice.CharacterClasses.Fighter
 
         protected override void ApplyUpgradeBonuses()
         {
-            PhysicalAttack += 5;
-            Speed += 4;
+            PhysicalAttack += 7;
+            Speed += 5;
+            Health += 5;
+            MaxHealth += 5;
         }
 
         public override void IncreaseLevel()

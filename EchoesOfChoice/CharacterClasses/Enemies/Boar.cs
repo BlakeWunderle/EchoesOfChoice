@@ -9,9 +9,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Boar(int level = 2)
         {
             Level = level;
-            Health = Stat(64, 74, 5, 8, 2);
+            Health = Stat(66, 76, 5, 8, 2);
             MaxHealth = Health;
-            PhysicalAttack = Stat(20, 24, 2, 4, 2);
+            PhysicalAttack = Stat(21, 25, 2, 4, 2);
             PhysicalDefense = Stat(12, 16, 1, 3, 2);
             MagicAttack = Stat(2, 4, 0, 1, 2);
             MagicDefense = Stat(8, 12, 1, 2, 2);

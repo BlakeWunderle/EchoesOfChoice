@@ -9,11 +9,11 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public FellHound(int level = 18)
         {
             Level = level;
-            Health = Stat(272, 312, 7, 10, 18);
+            Health = Stat(284, 324, 7, 10, 18);
             MaxHealth = Health;
             PhysicalAttack = Stat(24, 30, 1, 3, 18);
             PhysicalDefense = Stat(26, 32, 2, 3, 18);
-            MagicAttack = Stat(53, 61, 3, 5, 18);
+            MagicAttack = Stat(55, 63, 3, 5, 18);
             MagicDefense = Stat(32, 38, 2, 4, 18);
             Speed = Stat(40, 46, 3, 5, 18);
             Abilities = new List<Ability>() { new ShadowBite(), new HowlOfDread(), new Blight() };

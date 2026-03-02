@@ -10,9 +10,9 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
         {
             Abilities = new List<Ability>() { new SavageMaul(), new Frenzy(), new PrimalRoar() };
             CharacterType = "Shapeshifter";
-            CritChance = 10;
+            CritChance = 20;
             CritDamage = 3;
-            DodgeChance = 10;
+            DodgeChance = 20;
         }
 
         public Shapeshifter(BaseFighter fighter) : base(fighter) { }
@@ -24,25 +24,27 @@ namespace EchoesOfChoice.CharacterClasses.Wildling
 
         protected override void ApplyUpgradeBonuses()
         {
-            PhysicalAttack += 5;
-            Health += 4;
-            MaxHealth += 4;
+            PhysicalAttack += 14;
+            Health += 16;
+            MaxHealth += 16;
+            PhysicalDefense += 5;
+            Speed += 6;
         }
 
         public override void IncreaseLevel()
         {
             Level += 1;
-            var healthIncrease = random.Next(8, 11);
+            var healthIncrease = random.Next(12, 16);
             Health += healthIncrease;
             MaxHealth += healthIncrease;
             var manaIncrease = random.Next(1, 3);
             Mana += manaIncrease;
             MaxMana += manaIncrease;
-            PhysicalAttack += random.Next(4, 7);
-            PhysicalDefense += random.Next(2, 4);
+            PhysicalAttack += random.Next(8, 11);
+            PhysicalDefense += random.Next(4, 6);
             MagicAttack += random.Next(1, 3);
             MagicDefense += random.Next(1, 3);
-            Speed += random.Next(1, 3);
+            Speed += random.Next(2, 4);
         }
 
         public override BaseFighter UpgradeClass(UpgradeItemEnum upgradeItem)

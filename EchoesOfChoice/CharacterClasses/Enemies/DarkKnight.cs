@@ -9,9 +9,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public DarkKnight(int level = 18)
         {
             Level = level;
-            Health = Stat(345, 385, 8, 12, 18);
+            Health = Stat(358, 398, 8, 12, 18);
             MaxHealth = Health;
-            PhysicalAttack = Stat(62, 70, 4, 6, 18);
+            PhysicalAttack = Stat(64, 72, 4, 6, 18);
             PhysicalDefense = Stat(40, 48, 3, 5, 18);
             MagicAttack = Stat(34, 42, 2, 4, 18);
             MagicDefense = Stat(34, 42, 2, 4, 18);

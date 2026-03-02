@@ -9,11 +9,11 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Hellion(int level = 17)
         {
             Level = level;
-            Health = Stat(260, 300, 8, 12, 17);
+            Health = Stat(265, 305, 8, 12, 17);
             MaxHealth = Health;
-            PhysicalAttack = Stat(59, 67, 4, 6, 17);
+            PhysicalAttack = Stat(61, 69, 4, 6, 17);
             PhysicalDefense = Stat(30, 36, 2, 4, 17);
-            MagicAttack = Stat(50, 58, 3, 5, 17);
+            MagicAttack = Stat(52, 60, 3, 5, 17);
             MagicDefense = Stat(28, 34, 2, 4, 17);
             Speed = Stat(36, 42, 3, 5, 17);
             Abilities = new List<Ability>() { new InfernalStrike(), new ShadowStrike(), new Hex() };

@@ -10,9 +10,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public RoyalGuard(int level = 12)
         {
             Level = level;
-            Health = Stat(200, 230, 8, 12, 12);
+            Health = Stat(208, 238, 8, 12, 12);
             MaxHealth = Health;
-            PhysicalAttack = Stat(40, 48, 3, 5, 12);
+            PhysicalAttack = Stat(41, 49, 3, 5, 12);
             PhysicalDefense = Stat(34, 40, 3, 4, 12);
             MagicAttack = Stat(6, 10, 0, 2, 12);
             MagicDefense = Stat(24, 30, 2, 3, 12);

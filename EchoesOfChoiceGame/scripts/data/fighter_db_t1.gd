@@ -208,7 +208,7 @@ static func upgrade_to_herbalist(f: FighterData) -> void:
 
 static func upgrade_to_shaman(f: FighterData) -> void:
 	f.class_id = "Shaman"; f.character_type = "Shaman"
-	f.health += 3; f.max_health += 3; f.physical_attack += 2; f.magic_attack += 2
+	f.health += 6; f.max_health += 6; f.physical_attack += 3; f.magic_attack += 4
 	f.crit_chance = 10; f.crit_damage = 1; f.dodge_chance = 10
 	f.abilities = [PAB.spectral_lance(), PAB.player_hex()]
 	f.upgrade_items = ["Shrunkenhead", "SpiritOrb"]
@@ -234,7 +234,7 @@ static func _lu_shaman(f: FighterData) -> void:
 	var mp := randi_range(2, 3); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(2, 3); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(2, 3); f.magic_defense += randi_range(1, 2)
-	f.speed += randi_range(1, 1)
+	f.speed += randi_range(1, 2)
 
 static func _lu_beastcaller(f: FighterData) -> void:
 	f.level += 1

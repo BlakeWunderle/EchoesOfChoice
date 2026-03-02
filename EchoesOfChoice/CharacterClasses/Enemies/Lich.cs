@@ -9,12 +9,12 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Lich(int level = 16)
         {
             Level = level;
-            Health = Stat(280, 320, 8, 12, 16);
+            Health = Stat(290, 330, 8, 12, 16);
             MaxHealth = Health;
             PhysicalAttack = Stat(14, 18, 0, 2, 16);
             PhysicalDefense = Stat(24, 30, 2, 3, 16);
-            MagicAttack = Stat(55, 63, 4, 6, 16);
-            MagicDefense = Stat(40, 48, 3, 5, 16);
+            MagicAttack = Stat(57, 65, 4, 6, 16);
+            MagicDefense = Stat(42, 50, 3, 5, 16);
             Speed = Stat(34, 40, 2, 4, 16);
             Abilities = new List<Ability>() { new DeathBolt(), new RaiseDead(), new SoulCage() };
             CharacterType = "Lich";

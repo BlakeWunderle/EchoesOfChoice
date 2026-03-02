@@ -9,9 +9,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public BlightedStag(int level = 17)
         {
             Level = level;
-            Health = Stat(260, 300, 7, 10, 17);
+            Health = Stat(270, 310, 7, 10, 17);
             MaxHealth = Health;
-            PhysicalAttack = Stat(54, 62, 3, 5, 17);
+            PhysicalAttack = Stat(56, 64, 3, 5, 17);
             PhysicalDefense = Stat(26, 32, 2, 4, 17);
             MagicAttack = Stat(24, 30, 2, 3, 17);
             MagicDefense = Stat(24, 30, 2, 3, 17);

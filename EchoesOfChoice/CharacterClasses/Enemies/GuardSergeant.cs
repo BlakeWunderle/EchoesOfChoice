@@ -10,9 +10,9 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public GuardSergeant(int level = 12)
         {
             Level = level;
-            Health = Stat(210, 240, 8, 12, 12);
+            Health = Stat(218, 248, 8, 12, 12);
             MaxHealth = Health;
-            PhysicalAttack = Stat(44, 52, 3, 5, 12);
+            PhysicalAttack = Stat(45, 53, 3, 5, 12);
             PhysicalDefense = Stat(24, 30, 2, 3, 12);
             MagicAttack = Stat(8, 12, 0, 2, 12);
             MagicDefense = Stat(20, 24, 1, 2, 12);

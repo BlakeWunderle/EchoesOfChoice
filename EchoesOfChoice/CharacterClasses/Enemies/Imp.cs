@@ -10,11 +10,11 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Imp(int level = 18)
         {
             Level = level;
-            Health = Stat(240, 280, 7, 10, 18);
+            Health = Stat(250, 290, 7, 10, 18);
             MaxHealth = Health;
             PhysicalAttack = Stat(14, 18, 0, 2, 18);
             PhysicalDefense = Stat(18, 24, 1, 3, 18);
-            MagicAttack = Stat(66, 76, 5, 7, 18);
+            MagicAttack = Stat(68, 78, 5, 7, 18);
             MagicDefense = Stat(28, 34, 2, 4, 18);
             Speed = Stat(44, 50, 3, 5, 18);
             Abilities = new List<Ability>() { new Spark(), new Ember(), new Abilities.Enemy.Hex() };

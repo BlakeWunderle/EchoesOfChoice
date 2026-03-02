@@ -22,7 +22,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
             MaxMana = Mana;
             CritChance = 20;
             CritDamage = 2;
-            DodgeChance = 28;
+            DodgeChance = 23;
         }
 
         public Chanteuse(BaseFighter fighter) : base(fighter) { }

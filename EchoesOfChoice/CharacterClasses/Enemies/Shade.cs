@@ -14,7 +14,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
             MaxHealth = Health;
             PhysicalAttack = Stat(16, 22, 1, 3, 7);
             PhysicalDefense = Stat(15, 20, 1, 3, 7);
-            MagicAttack = Stat(35, 43, 3, 5, 7);
+            MagicAttack = Stat(36, 44, 3, 5, 7);
             MagicDefense = Stat(18, 24, 2, 4, 7);
             Speed = Stat(33, 39, 2, 4, 7);
             Abilities = new List<Ability>() { new ShadowAttack(), new Abilities.Enemy.Blight(), new Frustrate() };
@@ -23,7 +23,7 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
             MaxMana = Mana;
             CritChance = 23;
             CritDamage = 2;
-            DodgeChance = 31;
+            DodgeChance = 33;
         }
 
         public Shade(BaseFighter fighter) : base(fighter) { }

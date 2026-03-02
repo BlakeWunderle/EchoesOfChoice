@@ -10,11 +10,11 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Dragon(int level = 17)
         {
             Level = level;
-            Health = Stat(390, 430, 10, 14, 17);
+            Health = Stat(402, 442, 10, 14, 17);
             MaxHealth = Health;
-            PhysicalAttack = Stat(38, 46, 3, 5, 17);
+            PhysicalAttack = Stat(40, 48, 3, 5, 17);
             PhysicalDefense = Stat(36, 42, 3, 5, 17);
-            MagicAttack = Stat(59, 67, 4, 6, 17);
+            MagicAttack = Stat(61, 69, 4, 6, 17);
             MagicDefense = Stat(32, 38, 2, 4, 17);
             Speed = Stat(34, 40, 2, 4, 17);
             Abilities = new List<Ability>() { new DragonBreath(), new TailStrike(), new Roar() };

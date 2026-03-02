@@ -9,10 +9,10 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Ghast(int level = 16)
         {
             Level = level;
-            Health = Stat(240, 280, 7, 10, 16);
+            Health = Stat(250, 290, 7, 10, 16);
             MaxHealth = Health;
-            PhysicalAttack = Stat(49, 57, 3, 5, 16);
-            PhysicalDefense = Stat(30, 36, 2, 4, 16);
+            PhysicalAttack = Stat(51, 59, 3, 5, 16);
+            PhysicalDefense = Stat(32, 38, 2, 4, 16);
             MagicAttack = Stat(18, 24, 1, 2, 16);
             MagicDefense = Stat(22, 28, 1, 3, 16);
             Speed = Stat(28, 34, 2, 3, 16);

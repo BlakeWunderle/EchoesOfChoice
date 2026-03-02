@@ -9,12 +9,12 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Stranger(int level = 16)
         {
             Level = level;
-            Health = Stat(565, 635, 16, 22, 16);
+            Health = Stat(582, 652, 16, 22, 16);
             MaxHealth = Health;
-            PhysicalAttack = Stat(58, 66, 4, 6, 16);
+            PhysicalAttack = Stat(60, 68, 4, 6, 16);
             PhysicalDefense = Stat(34, 40, 2, 4, 16);
-            MagicAttack = Stat(64, 74, 4, 7, 16);
-            MagicDefense = Stat(34, 40, 2, 4, 16);
+            MagicAttack = Stat(66, 76, 4, 7, 16);
+            MagicDefense = Stat(36, 42, 2, 4, 16);
             Speed = Stat(38, 44, 2, 4, 16);
             Abilities = new List<Ability>() { new ShadowStrike(), new DarkPulse(), new VoidShield(), new Drain() };
             CharacterType = "Stranger";

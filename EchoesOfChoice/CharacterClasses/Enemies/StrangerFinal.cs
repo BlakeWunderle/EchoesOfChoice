@@ -10,12 +10,12 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public StrangerFinal(int level = 20)
         {
             Level = level;
-            Health = Stat(860, 960, 18, 24, 20);
+            Health = Stat(890, 990, 18, 24, 20);
             MaxHealth = Health;
-            PhysicalAttack = Stat(73, 83, 4, 6, 20);
-            PhysicalDefense = Stat(49, 57, 3, 5, 20);
-            MagicAttack = Stat(80, 90, 5, 7, 20);
-            MagicDefense = Stat(49, 57, 3, 5, 20);
+            PhysicalAttack = Stat(76, 86, 4, 6, 20);
+            PhysicalDefense = Stat(52, 60, 3, 5, 20);
+            MagicAttack = Stat(83, 93, 5, 7, 20);
+            MagicDefense = Stat(52, 60, 3, 5, 20);
             Speed = Stat(49, 55, 3, 5, 20);
             Abilities = new List<Ability>() { new ShadowBlast(), new Siphon(), new DarkVeil(), new Unmake(), new Corruption() };
             CharacterType = "Stranger";

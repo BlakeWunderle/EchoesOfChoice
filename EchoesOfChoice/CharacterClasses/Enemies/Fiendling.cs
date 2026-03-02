@@ -9,11 +9,11 @@ namespace EchoesOfChoice.CharacterClasses.Enemies
         public Fiendling(int level = 17)
         {
             Level = level;
-            Health = Stat(230, 270, 7, 10, 17);
+            Health = Stat(240, 280, 7, 10, 17);
             MaxHealth = Health;
             PhysicalAttack = Stat(20, 26, 1, 3, 17);
             PhysicalDefense = Stat(24, 30, 2, 3, 17);
-            MagicAttack = Stat(66, 76, 5, 7, 17);
+            MagicAttack = Stat(68, 78, 5, 7, 17);
             MagicDefense = Stat(32, 38, 2, 4, 17);
             Speed = Stat(38, 44, 3, 5, 17);
             Abilities = new List<Ability>() { new Brimstone(), new Dread(), new Hex() };
