@@ -87,6 +87,7 @@ func to_save_data() -> Dictionary:
 	return {
 		"class_id": class_id,
 		"character_name": character_name,
+		"character_type": character_type,
 		"is_user_controlled": is_user_controlled,
 		"level": level,
 		"max_health": max_health,
@@ -103,7 +104,9 @@ func to_save_data() -> Dictionary:
 
 
 func apply_save_data(data: Dictionary) -> void:
+	class_id = data["class_id"]
 	character_name = data["character_name"]
+	character_type = data.get("character_type", "")
 	is_user_controlled = data["is_user_controlled"]
 	level = data["level"]
 	max_health = data["max_health"]

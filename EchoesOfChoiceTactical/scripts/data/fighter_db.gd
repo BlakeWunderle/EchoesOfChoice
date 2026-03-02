@@ -292,3 +292,29 @@ static func create_player(class_id: String, fighter_name: String) -> FighterData
 		_:
 			push_error("Unknown player class: %s" % class_id)
 			return create_squire(fighter_name)
+
+
+## Returns the display name for a class_id (used when restoring from save).
+static func get_display_name(class_id: String) -> String:
+	match class_id:
+		"Squire": return "Squire"
+		"Mage": return "Mage"
+		"Entertainer": return "Entertainer"
+		"Tinker": return "Tinker"
+		"Wildling": return "Wildling"
+		_:
+			push_error("Unknown class_id for display name: %s" % class_id)
+			return class_id
+
+
+## Returns the ability set for a class_id (used when restoring from save).
+static func get_abilities_for_class(class_id: String) -> Array[AbilityData]:
+	match class_id:
+		"Squire": return [AbilityDB.slash(), AbilityDB.guard()]
+		"Mage": return [AbilityDB.arcane_bolt()]
+		"Entertainer": return [AbilityDB.sing(), AbilityDB.demoralize()]
+		"Tinker": return [AbilityDB.proof(), AbilityDB.energy_blast()]
+		"Wildling": return [AbilityDB.thorn_whip(), AbilityDB.bark_skin()]
+		_:
+			push_error("Unknown class_id for abilities: %s" % class_id)
+			return []
