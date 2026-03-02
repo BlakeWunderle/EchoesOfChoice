@@ -229,6 +229,7 @@ static func circus_battle() -> BattleData:
 		"The performers crumple and the black walls shatter like glass, dissolving into nothing.",
 		"Where the ringmaster fell a mirror lies face-up on the ground, perfectly clean among the dirt and debris.",
 		"It catches the light in a way that shouldn't be possible. Something about it demands attention.",
+		"No one knows what to make of it. They take it.",
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
 	return b
@@ -253,6 +254,7 @@ static func lab_battle() -> BattleData:
 		"The machines power down one by one, sparks fading to nothing. The building hums its last and goes dark.",
 		"In the silence a reflection catches the party's eye. A mirror sits on the lab table, its surface impossibly clear.",
 		"It doesn't reflect the room. It reflects something else entirely.",
+		"No one touches it. Not yet. But no one suggests leaving it either.",
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
 	return b
@@ -276,6 +278,7 @@ static func army_battle() -> BattleData:
 		"Among the scattered supplies and overturned crates the party spots something that doesn't belong.",
 		"A mirror, sitting upright in the dirt, untouched by the chaos around it. Its surface gleams like it's brand new.",
 		"Someone put it here on purpose. Someone who knew they'd be passing through.",
+		"No one can explain it. They wrap it in cloth and carry it.",
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
 	return b
@@ -303,6 +306,7 @@ static func cemetery_battle() -> BattleData:
 		"The zombies collapse back into the earth and the cemetery goes quiet. Even the wind stops.",
 		"The fog begins to lift and among the tombstones something catches the light.",
 		"A mirror, propped against a weathered headstone, perfectly clean as if someone placed it there on purpose.",
+		"No one wants to carry it. No one wants to leave it behind either.",
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
 	return b
@@ -329,9 +333,8 @@ static func outpost_defense_battle() -> BattleData:
 	]
 	b.post_battle_text = [
 		"The shadows dissolve into wisps of dark smoke, but the unnatural cold lingers in the air.",
-		"The outpost scouts return from the perimeter. They found something while the party fought — a mirror, propped against a tree at the edge of camp.",
-		"Clean, polished, completely out of place. Its surface reflects the firelight but nothing else. No faces, no trees, no sky.",
-		"Someone put it there. Someone who knew the party would come this way.",
+		"No one sleeps well. The mirror from before sits wrapped in a pack, but everyone is aware of it.",
+		"In the firelight, someone swears the cloth over it is glowing. No one checks.",
 	]
 	b.next_battle_id = "MirrorBattle"
 	return b
@@ -358,7 +361,7 @@ static func mirror_battle() -> BattleData:
 	elif not GameState.party.is_empty():
 		observer_name = GameState.party[0].character_name
 	b.pre_battle_text = [
-		"Picking up the mirror everyone looks into it. For a moment the reflections stare back a little too long.",
+		"Someone finally unwraps the mirror. Everyone looks into it. For a moment the reflections stare back a little too long.",
 		"%s notices dark clouds forming behind them and spins around." % observer_name,
 		"The clouds twist and solidify, taking the exact shape of the party. Same faces, same weapons, same stance.",
 		"Fighting yourself. That's a new one.",
@@ -368,7 +371,7 @@ static func mirror_battle() -> BattleData:
 		"The surface ripples and cloudy letters slowly form across the glass: 'Return to the city.'",
 		"The letters pulse with urgency. Something is wrong back home and whoever left this message knew it.",
 		"The adventurers exchange a look. No more detours. Time to head back.",
-		"Where is the stranger? They haven't been seen since before the mirror appeared. Come to think of it, every mirror they've found was placed too perfectly — as if someone knew exactly where they'd be.",
+		"Where is the stranger? They haven't been seen since before the mirror appeared. Come to think of it, the mirror was placed too perfectly — as if someone knew exactly where they'd be.",
 		"The stranger said the source of the darkness was beyond the forest. They went looking and found only chaos spreading from somewhere else.",
 		"And now a mirror is pointing them home.",
 		"The thought lands slowly, uncomfortably: maybe the source was never out here. Maybe it was always at the city.",
