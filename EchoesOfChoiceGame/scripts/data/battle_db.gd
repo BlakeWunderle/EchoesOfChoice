@@ -4,7 +4,7 @@ class_name BattleDB
 ## Narrative text copied from C# battle classes.
 
 const BattleData := preload("res://scripts/data/battle_data.gd")
-const FighterDB := preload("res://scripts/data/fighter_db.gd")
+const EnemyDB := preload("res://scripts/data/enemy_db.gd")
 
 
 static func create_battle(battle_id: String) -> BattleData:
@@ -19,9 +19,9 @@ static func city_street_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CityStreetBattle"
 	b.enemies = [
-		FighterDB.create_thug("Alexander"),
-		FighterDB.create_ruffian("Jenna"),
-		FighterDB.create_pickpocket("Ella"),
+		EnemyDB.create_thug("Alexander"),
+		EnemyDB.create_ruffian("Jenna"),
+		EnemyDB.create_pickpocket("Ella"),
 	]
 	b.pre_battle_text = [
 		"Our newly formed party leaves the tavern happy and full of drink and food, ready to set out on an adventure.",

@@ -6,6 +6,9 @@ class_name FighterDB
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityDB := preload("res://scripts/data/ability_db.gd")
+const T1 := preload("res://scripts/data/fighter_db_t1.gd")
+const T2 := preload("res://scripts/data/fighter_db_t2.gd")
+const T2B := preload("res://scripts/data/fighter_db_t2b.gd")
 
 
 # =============================================================================
@@ -123,86 +126,7 @@ static func create_wildling(fighter_name: String) -> FighterData:
 
 
 # =============================================================================
-# Enemies
-# =============================================================================
-
-## C# Stat(baseMin, baseMax, growthMin, growthMax) with baseLevel=1:
-## result = random.Next(baseMin + lvl*growthMin, baseMax + lvl*(growthMax-1))
-## where lvl = level - 1. At level 1, lvl=0 so it's just random.Next(baseMin, baseMax).
-
-static func _enemy_stat(base_min: int, base_max: int, growth_min: int,
-		growth_max: int, level: int) -> int:
-	var lvl: int = level - 1
-	var lo: int = base_min + lvl * growth_min
-	var hi: int = base_max + lvl * (growth_max - 1)
-	return randi_range(lo, hi - 1)  # C# Next exclusive upper
-
-
-static func create_thug(fighter_name: String, level: int = 1) -> FighterData:
-	var f := FighterData.new()
-	f.character_name = fighter_name
-	f.character_type = "Thug"
-	f.class_id = "Thug"
-	f.is_user_controlled = false
-	f.level = level
-	f.health = _enemy_stat(48, 58, 3, 7, level); f.max_health = f.health
-	f.mana = _enemy_stat(4, 8, 1, 3, level); f.max_mana = f.mana
-	f.physical_attack = _enemy_stat(14, 18, 1, 3, level)
-	f.physical_defense = _enemy_stat(8, 12, 1, 2, level)
-	f.magic_attack = _enemy_stat(3, 6, 0, 2, level)
-	f.magic_defense = _enemy_stat(8, 12, 1, 2, level)
-	f.speed = _enemy_stat(18, 24, 1, 2, level)
-	f.crit_chance = 10
-	f.crit_damage = 1
-	f.dodge_chance = 10
-	f.abilities = [AbilityDB.haymaker()]
-	return f
-
-
-static func create_ruffian(fighter_name: String, level: int = 1) -> FighterData:
-	var f := FighterData.new()
-	f.character_name = fighter_name
-	f.character_type = "Ruffian"
-	f.class_id = "Ruffian"
-	f.is_user_controlled = false
-	f.level = level
-	f.health = _enemy_stat(44, 54, 3, 6, level); f.max_health = f.health
-	f.mana = _enemy_stat(4, 8, 1, 3, level); f.max_mana = f.mana
-	f.physical_attack = _enemy_stat(16, 20, 1, 3, level)
-	f.physical_defense = _enemy_stat(7, 11, 1, 2, level)
-	f.magic_attack = _enemy_stat(2, 5, 0, 1, level)
-	f.magic_defense = _enemy_stat(6, 10, 1, 2, level)
-	f.speed = _enemy_stat(16, 22, 1, 2, level)
-	f.crit_chance = 10
-	f.crit_damage = 1
-	f.dodge_chance = 5
-	f.abilities = [AbilityDB.haymaker(), AbilityDB.intimidate()]
-	return f
-
-
-static func create_pickpocket(fighter_name: String, level: int = 1) -> FighterData:
-	var f := FighterData.new()
-	f.character_name = fighter_name
-	f.character_type = "Pickpocket"
-	f.class_id = "Pickpocket"
-	f.is_user_controlled = false
-	f.level = level
-	f.health = _enemy_stat(32, 41, 2, 5, level); f.max_health = f.health
-	f.mana = _enemy_stat(5, 9, 1, 3, level); f.max_mana = f.mana
-	f.physical_attack = _enemy_stat(12, 16, 1, 3, level)
-	f.physical_defense = _enemy_stat(5, 8, 0, 2, level)
-	f.magic_attack = _enemy_stat(2, 4, 0, 1, level)
-	f.magic_defense = _enemy_stat(5, 9, 0, 2, level)
-	f.speed = _enemy_stat(22, 28, 2, 3, level)
-	f.crit_chance = 15
-	f.crit_damage = 1
-	f.dodge_chance = 20
-	f.abilities = [AbilityDB.quick_stab(), AbilityDB.pilfer()]
-	return f
-
-
-# =============================================================================
-# Level up — per-class growth rates matching C# IncreaseLevel()
+# Level up — chains through T0 → T1 → T2/T2B
 # =============================================================================
 
 static func level_up(fighter: FighterData) -> void:
@@ -212,7 +136,11 @@ static func level_up(fighter: FighterData) -> void:
 		"Entertainer": _level_up_entertainer(fighter)
 		"Tinker": _level_up_scholar(fighter)
 		"Wildling": _level_up_wildling(fighter)
-		_: _level_up_generic(fighter)
+		_:
+			if T1.level_up(fighter): return
+			if T2.level_up(fighter): return
+			if T2B.level_up(fighter): return
+			_level_up_generic(fighter)
 
 
 static func _level_up_squire(f: FighterData) -> void:
@@ -295,3 +223,66 @@ static func create_player(class_id: String, fighter_name: String) -> FighterData
 		_:
 			push_error("Unknown player class: %s" % class_id)
 			return create_squire(fighter_name)
+
+
+# =============================================================================
+# Class upgrade — item determines new class, keeps accumulated stats
+# =============================================================================
+
+static func upgrade_class(fighter: FighterData, item: String) -> bool:
+	var key := fighter.class_id + ":" + item
+	match key:
+		# T0 → T1
+		"Squire:Sword": T1.upgrade_to_duelist(fighter)
+		"Squire:Bow": T1.upgrade_to_ranger(fighter)
+		"Squire:Headband": T1.upgrade_to_martial_artist(fighter)
+		"Mage:RedStone": T1.upgrade_to_invoker(fighter)
+		"Mage:WhiteStone": T1.upgrade_to_acolyte(fighter)
+		"Entertainer:Guitar": T1.upgrade_to_bard(fighter)
+		"Entertainer:Slippers": T1.upgrade_to_dervish(fighter)
+		"Entertainer:Scroll": T1.upgrade_to_orator(fighter)
+		"Tinker:Crystal": T1.upgrade_to_artificer(fighter)
+		"Tinker:Textbook": T1.upgrade_to_cosmologist(fighter)
+		"Tinker:Abacus": T1.upgrade_to_arithmancer(fighter)
+		"Wildling:Herbs": T1.upgrade_to_herbalist(fighter)
+		"Wildling:Totem": T1.upgrade_to_shaman(fighter)
+		"Wildling:BeastClaw": T1.upgrade_to_beastcaller(fighter)
+		# T1 → T2 (Squire tree)
+		"Duelist:Horse": T2.upgrade_to_cavalry(fighter)
+		"Duelist:Spear": T2.upgrade_to_dragoon(fighter)
+		"Ranger:Gun": T2.upgrade_to_mercenary(fighter)
+		"Ranger:Trap": T2.upgrade_to_hunter(fighter)
+		"MartialArtist:Sword": T2.upgrade_to_ninja(fighter)
+		"MartialArtist:Staff": T2.upgrade_to_monk(fighter)
+		# T1 → T2 (Mage tree)
+		"Invoker:FireStone": T2.upgrade_to_infernalist(fighter)
+		"Invoker:WaterStone": T2.upgrade_to_tidecaller(fighter)
+		"Invoker:LightningStone": T2.upgrade_to_tempest(fighter)
+		"Acolyte:Hammer": T2.upgrade_to_paladin(fighter)
+		"Acolyte:HolyBook": T2.upgrade_to_priest(fighter)
+		"Acolyte:DarkOrb": T2.upgrade_to_warlock(fighter)
+		# T1 → T2 (Entertainer tree)
+		"Bard:WarHorn": T2B.upgrade_to_warcrier(fighter)
+		"Bard:Hat": T2B.upgrade_to_minstrel(fighter)
+		"Dervish:Light": T2B.upgrade_to_illusionist(fighter)
+		"Dervish:Paint": T2B.upgrade_to_mime(fighter)
+		"Orator:Medal": T2B.upgrade_to_laureate(fighter)
+		"Orator:Pen": T2B.upgrade_to_elegist(fighter)
+		# T1 → T2 (Tinker tree)
+		"Artificer:Potion": T2B.upgrade_to_alchemist(fighter)
+		"Artificer:Hammer": T2B.upgrade_to_bombardier(fighter)
+		"Cosmologist:TimeMachine": T2B.upgrade_to_chronomancer(fighter)
+		"Cosmologist:Telescope": T2B.upgrade_to_astronomer(fighter)
+		"Arithmancer:ClockworkCore": T2B.upgrade_to_automaton(fighter)
+		"Arithmancer:Computer": T2B.upgrade_to_technomancer(fighter)
+		# T1 → T2 (Wildling tree)
+		"Herbalist:Venom": T2B.upgrade_to_blighter(fighter)
+		"Herbalist:Seedling": T2B.upgrade_to_grove_keeper(fighter)
+		"Shaman:Shrunkenhead": T2B.upgrade_to_witch_doctor(fighter)
+		"Shaman:SpiritOrb": T2B.upgrade_to_spiritwalker(fighter)
+		"Beastcaller:Feather": T2B.upgrade_to_falconer(fighter)
+		"Beastcaller:Pelt": T2B.upgrade_to_shapeshifter(fighter)
+		_:
+			push_error("Unknown upgrade: %s" % key)
+			return false
+	return true
