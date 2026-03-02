@@ -47,7 +47,7 @@ func _build_ui() -> void:
 	vbox.add_child(_label)
 
 	_continue_label = Label.new()
-	_continue_label.text = "Press Space or click to continue..."
+	_continue_label.text = "Continue..."
 	_continue_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_continue_label.add_theme_font_size_override("font_size", 14)
 	_continue_label.modulate.a = 0.0
@@ -114,9 +114,8 @@ func _input(event: InputEvent) -> void:
 		return
 
 	var pressed: bool = false
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_SPACE or event.keycode == KEY_ENTER:
-			pressed = true
+	if event.is_action_pressed("confirm"):
+		pressed = true
 	elif event is InputEventMouseButton and event.pressed:
 		pressed = true
 
