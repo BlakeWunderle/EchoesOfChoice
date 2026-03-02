@@ -7,7 +7,7 @@ const DialoguePanel := preload("res://scripts/ui/dialogue_panel.gd")
 const ChoiceMenu := preload("res://scripts/ui/choice_menu.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 
-enum TownPhase { INTRO_TEXT, UPGRADING, OUTRO_TEXT, BRANCH_CHOICE }
+enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, OUTRO_TEXT, BRANCH_CHOICE }
 
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
@@ -64,6 +64,10 @@ func _on_text_finished() -> void:
 	match _phase:
 		TownPhase.INTRO_TEXT:
 			_begin_upgrades()
+		TownPhase.UPGRADE_REVEAL:
+			_dialogue.visible = false
+			_upgrade_index += 1
+			_show_next_upgrade()
 		TownPhase.OUTRO_TEXT:
 			_check_branch_or_advance()
 
@@ -87,69 +91,15 @@ func _show_next_upgrade() -> void:
 		_show_next_upgrade()
 		return
 
+	_phase = TownPhase.UPGRADING
 	_upgrade_label.text = "%s the %s — Choose an upgrade:" % [
 		fighter.character_name, fighter.character_type]
 	_upgrade_label.visible = true
 
 	var options: Array[Dictionary] = []
 	for item: String in fighter.upgrade_items:
-		# Preview what the item upgrades to
-		var preview: String = _get_upgrade_preview(fighter.class_id, item)
-		options.append({"label": item, "description": preview})
+		options.append({"label": item})
 	_choice_menu.show_choices(options)
-
-
-func _get_upgrade_preview(class_id: String, item: String) -> String:
-	## Returns the target class name for a given upgrade item.
-	var key := class_id + ":" + item
-	match key:
-		# T0 → T1
-		"Squire:Sword": return "Become a Duelist"
-		"Squire:Bow": return "Become a Ranger"
-		"Squire:Headband": return "Become a Martial Artist"
-		"Mage:RedStone": return "Become an Invoker"
-		"Mage:WhiteStone": return "Become an Acolyte"
-		"Entertainer:Lyre": return "Become a Bard"
-		"Entertainer:Slippers": return "Become a Dervish"
-		"Entertainer:Scroll": return "Become an Orator"
-		"Tinker:Crystal": return "Become an Artificer"
-		"Tinker:Textbook": return "Become a Cosmologist"
-		"Tinker:Abacus": return "Become an Arithmancer"
-		"Wildling:Herbs": return "Become a Herbalist"
-		"Wildling:Totem": return "Become a Shaman"
-		"Wildling:BeastClaw": return "Become a Beastcaller"
-		# T1 → T2
-		"Duelist:Horse": return "Become a Cavalry"
-		"Duelist:Spear": return "Become a Dragoon"
-		"Ranger:Gun": return "Become a Mercenary"
-		"Ranger:Trap": return "Become a Hunter"
-		"MartialArtist:Sword": return "Become a Ninja"
-		"MartialArtist:Staff": return "Become a Monk"
-		"Invoker:FireStone": return "Become an Infernalist"
-		"Invoker:WaterStone": return "Become a Tidecaller"
-		"Invoker:LightningStone": return "Become a Tempest"
-		"Acolyte:Hammer": return "Become a Paladin"
-		"Acolyte:HolyBook": return "Become a Priest"
-		"Acolyte:DarkOrb": return "Become a Warlock"
-		"Bard:WarHorn": return "Become a Warcrier"
-		"Bard:Hat": return "Become a Minstrel"
-		"Dervish:Light": return "Become an Illusionist"
-		"Dervish:Paint": return "Become a Mime"
-		"Orator:Medal": return "Become a Laureate"
-		"Orator:Pen": return "Become an Elegist"
-		"Artificer:Potion": return "Become an Alchemist"
-		"Artificer:Hammer": return "Become a Bombardier"
-		"Cosmologist:TimeMachine": return "Become a Chronomancer"
-		"Cosmologist:Telescope": return "Become an Astronomer"
-		"Arithmancer:ClockworkCore": return "Become an Automaton"
-		"Arithmancer:Computer": return "Become a Technomancer"
-		"Herbalist:Venom": return "Become a Blighter"
-		"Herbalist:Seedling": return "Become a Grove Keeper"
-		"Shaman:Shrunkenhead": return "Become a Witch Doctor"
-		"Shaman:SpiritOrb": return "Become a Spiritwalker"
-		"Beastcaller:Feather": return "Become a Falconer"
-		"Beastcaller:Pelt": return "Become a Shapeshifter"
-		_: return ""
 
 
 func _on_choice_selected(index: int) -> void:
@@ -163,11 +113,18 @@ func _on_choice_selected(index: int) -> void:
 func _on_upgrade_selected(index: int) -> void:
 	var fighter: FighterData = GameState.party[_upgrade_index]
 	var item: String = fighter.upgrade_items[index]
+	var old_name: String = fighter.character_name
 	GameState.upgrade_party_member(fighter, item)
+	var new_class: String = fighter.character_type
+
 	_choice_menu.hide_menu()
 	_upgrade_label.visible = false
-	_upgrade_index += 1
-	_show_next_upgrade()
+	_phase = TownPhase.UPGRADE_REVEAL
+	_dialogue.visible = true
+	_dialogue.show_text([
+		"%s takes the %s..." % [old_name, item],
+		"%s is now a %s!" % [old_name, new_class],
+	])
 
 
 func _finish_upgrades() -> void:
