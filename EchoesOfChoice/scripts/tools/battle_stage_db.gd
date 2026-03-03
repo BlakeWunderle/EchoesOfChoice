@@ -145,8 +145,7 @@ static func create_enemies(stage_name: String, party: Array = []) -> Array:
 		"DepthsBattle":
 			return [EnemyDB.create_sigil_wretch("Skritch"),
 				EnemyDB.create_tunnel_lurker("Silkfang"),
-				EnemyDB.create_tunnel_lurker("Webweaver"),
-				EnemyDB.create_sigil_wretch("Gnash")]
+				EnemyDB.create_tunnel_lurker("Webweaver")]
 		"StrangerFinalBattle":
 			return [EnemyDB.create_stranger_final("The Stranger")]
 		_:

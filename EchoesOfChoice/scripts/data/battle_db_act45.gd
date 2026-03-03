@@ -105,7 +105,6 @@ static func depths_battle() -> BattleData:
 		EnemyDB.create_sigil_wretch("Skritch"),
 		EnemyDB.create_tunnel_lurker("Silkfang"),
 		EnemyDB.create_tunnel_lurker("Webweaver"),
-		EnemyDB.create_sigil_wretch("Gnash"),
 	]
 	b.pre_battle_text = [
 		"A crack in the cobblestones near the old well leads to tunnels beneath the city. The party drops down one by one.",
