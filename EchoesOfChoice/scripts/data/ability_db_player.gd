@@ -25,7 +25,7 @@ static func feint() -> AbilityData:
 # Ranger
 static func pierce() -> AbilityData:
 	return _make("Pierce", "A precise arrow that finds the gap.",
-		Enums.StatType.PHYSICAL_ATTACK, 3, 0, true, 2, false, 0, 0.0, 1)
+		Enums.StatType.PHYSICAL_ATTACK, 3, 0, true, 2, false, 0, 0.0, 2)
 
 static func double_arrow() -> AbilityData:
 	return _make("Double Arrow", "Two arrows fly in rapid succession.",
@@ -34,7 +34,7 @@ static func double_arrow() -> AbilityData:
 # Martial Artist
 static func punch() -> AbilityData:
 	return _make("Punch", "A powerful unarmed strike.",
-		Enums.StatType.PHYSICAL_ATTACK, 4, 0, true, 2, false, 0, 0.0, 1)
+		Enums.StatType.PHYSICAL_ATTACK, 4, 0, true, 2, false, 0, 0.0, 2)
 
 static func topple() -> AbilityData:
 	return _make("Topple", "Sweep the enemy off their feet.",
@@ -69,7 +69,7 @@ static func dragon_ward() -> AbilityData:
 # Mercenary
 static func gun_shot() -> AbilityData:
 	return _make("Gun Shot", "A reliable shot from a flintlock.",
-		Enums.StatType.PHYSICAL_ATTACK, 5, 0, true, 3, false, 0, 0.0, 1)
+		Enums.StatType.PHYSICAL_ATTACK, 5, 0, true, 3, false, 0, 0.0, 2)
 
 static func called_shot() -> AbilityData:
 	return _make("Called Shot", "Take careful aim for a devastating hit.",
@@ -77,7 +77,7 @@ static func called_shot() -> AbilityData:
 
 static func quick_draw() -> AbilityData:
 	return _make("Quick Draw", "Lightning-fast reflexes boost speed.",
-		Enums.StatType.SPEED, 5, 2, false, 2, false, 0, 0.0, 1)
+		Enums.StatType.SPEED, 5, 2, false, 2, false, 0, 0.0, 2)
 
 # Hunter
 static func triple_arrow() -> AbilityData:
@@ -99,7 +99,7 @@ static func sweeping_slash() -> AbilityData:
 
 static func dash() -> AbilityData:
 	return _make("Dash", "Blur across the battlefield.",
-		Enums.StatType.SPEED, 3, 2, false, 1, false, 0, 0.0, 1)
+		Enums.StatType.SPEED, 3, 2, false, 1, false, 0, 0.0, 2)
 
 static func smoke_bomb() -> AbilityData:
 	return _make("Smoke Bomb", "Vanish in a cloud of smoke.",
@@ -135,7 +135,7 @@ static func cure() -> AbilityData:
 
 static func protect() -> AbilityData:
 	return _make("Protect", "A ward of light shields an ally.",
-		Enums.StatType.DEFENSE, 2, 2, false, 2, false, 0, 0.0, 1)
+		Enums.StatType.DEFENSE, 2, 2, false, 2, false, 0, 0.0, 2)
 
 static func radiance() -> AbilityData:
 	return _make("Radiance", "A flash of searing light.",
@@ -148,7 +148,7 @@ static func radiance() -> AbilityData:
 # Infernalist
 static func fire_ball() -> AbilityData:
 	return _make("Fire Ball", "A massive sphere of flame.",
-		Enums.StatType.MAGIC_ATTACK, 10, 0, true, 6, false, 0, 0.0, 3)
+		Enums.StatType.MAGIC_ATTACK, 10, 0, true, 6, false, 0, 0.0, 2)
 
 static func burning_brand() -> AbilityData:
 	return _make("Burning Brand", "Sear the enemy with lasting flames.",
@@ -156,16 +156,16 @@ static func burning_brand() -> AbilityData:
 
 static func cauterize() -> AbilityData:
 	return _make("Cauterize", "Sear your wounds shut with inner flame.",
-		Enums.StatType.HEALTH, 12, 0, false, 5, false, 0, 0.0, 3)
+		Enums.StatType.HEALTH, 12, 0, false, 5, false, 0, 0.0, 2)
 
 # Tidecaller
 static func purify() -> AbilityData:
 	return _make("Purify", "Cleansing waters restore vitality.",
-		Enums.StatType.HEALTH, 20, 0, false, 7, false, 0, 0.0, 3)
+		Enums.StatType.HEALTH, 20, 0, false, 5, false, 0, 0.0, 2)
 
 static func tsunami() -> AbilityData:
 	return _make("Tsunami", "A towering wave crashes down.",
-		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 6, false, 0, 0.0, 3)
+		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 6, false, 0, 0.0, 2)
 
 static func undertow() -> AbilityData:
 	return _make("Undertow", "Drag the enemy into slow currents.",
@@ -174,11 +174,11 @@ static func undertow() -> AbilityData:
 # Tempest
 static func hurricane() -> AbilityData:
 	return _make("Hurricane", "A storm that strikes all enemies.",
-		Enums.StatType.MAGIC_ATTACK, 4, 0, true, 5, true, 0, 0.0, 3)
+		Enums.StatType.MAGIC_ATTACK, 4, 0, true, 5, true, 0, 0.0, 2)
 
 static func tornado() -> AbilityData:
 	return _make("Tornado", "A focused vortex of destruction.",
-		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 6, false, 0, 0.0, 3)
+		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 6, false, 0, 0.0, 2)
 
 static func eye_of_the_storm() -> AbilityData:
 	return _make("Eye of the Storm", "Surround an ally with a barrier of raging winds.",
@@ -192,11 +192,11 @@ static func smite() -> AbilityData:
 # Priest
 static func restoration() -> AbilityData:
 	return _make("Restoration", "A powerful prayer of healing.",
-		Enums.StatType.HEALTH, 30, 0, false, 9, false, 0, 0.0, 4)
+		Enums.StatType.HEALTH, 30, 0, false, 7, false, 0, 0.0, 3)
 
 static func heavenly_body() -> AbilityData:
 	return _make("Heavenly Body", "Divine protection for all allies.",
-		Enums.StatType.DEFENSE, 4, 2, false, 5, true, 0, 0.0, 3)
+		Enums.StatType.DEFENSE, 4, 2, false, 5, true, 0, 0.0, 2)
 
 static func holy() -> AbilityData:
 	return _make("Holy", "A ray of pure divine energy.",
@@ -205,7 +205,7 @@ static func holy() -> AbilityData:
 # Warlock
 static func shadow_bolt() -> AbilityData:
 	return _make("Shadow Bolt", "A bolt of concentrated darkness.",
-		Enums.StatType.MAGIC_ATTACK, 9, 0, true, 6, false, 0, 0.0, 3)
+		Enums.StatType.MAGIC_ATTACK, 9, 0, true, 6, false, 0, 0.0, 2)
 
 static func curse() -> AbilityData:
 	return _make("Curse", "Dark magic that weakens magical resistance.",
@@ -231,7 +231,7 @@ static func melody() -> AbilityData:
 
 static func encourage() -> AbilityData:
 	return _make("Encourage", "Inspiring words that bolster attack.",
-		Enums.StatType.ATTACK, 5, 2, false, 2, false, 0, 0.0, 1)
+		Enums.StatType.ATTACK, 5, 2, false, 2, false, 0, 0.0, 2)
 
 # Dervish
 static func dance() -> AbilityData:
@@ -254,7 +254,7 @@ static func battle_cry() -> AbilityData:
 
 static func encore() -> AbilityData:
 	return _make("Encore", "Demand a repeat performance -- boost attack.",
-		Enums.StatType.ATTACK, 5, 2, false, 2, false, 0, 0.0, 1)
+		Enums.StatType.ATTACK, 5, 2, false, 2, false, 0, 0.0, 2)
 
 static func rally_cry() -> AbilityData:
 	return _make("Rally Cry", "A thunderous shout that steels an ally's resolve.",
@@ -307,7 +307,7 @@ static func eulogy() -> AbilityData:
 # Elegist
 static func nightfall() -> AbilityData:
 	return _make("Nightfall", "Darkness descends on the enemy.",
-		Enums.StatType.MAGIC_ATTACK, 7, 0, true, 6, false, 0, 0.0, 3)
+		Enums.StatType.MAGIC_ATTACK, 7, 0, true, 6, false, 0, 0.0, 2)
 
 static func inspire() -> AbilityData:
 	return _make("Inspire", "Lift the spirits of an ally.",
@@ -325,12 +325,12 @@ static func dirge() -> AbilityData:
 # Artificer
 static func magical_tinkering() -> AbilityData:
 	return _make("Magical Tinkering", "Enhance an ally's magical potency.",
-		Enums.StatType.MAGIC_ATTACK, 5, 2, false, 2, false, 0, 0.0, 1)
+		Enums.StatType.MAGIC_ATTACK, 5, 2, false, 2, false, 0, 0.0, 2)
 
 # Cosmologist (Philosopher)
 static func time_warp() -> AbilityData:
 	return _make("Time Warp", "Bend time to hasten an ally.",
-		Enums.StatType.SPEED, 5, 2, false, 2, false, 0, 0.0, 1)
+		Enums.StatType.SPEED, 5, 2, false, 2, false, 0, 0.0, 2)
 
 static func black_hole() -> AbilityData:
 	return _make("Black Hole", "Crush the enemy with gravity.",
@@ -391,11 +391,11 @@ static func time_freeze() -> AbilityData:
 # Astronomer
 static func starfall() -> AbilityData:
 	return _make("Starfall", "Call down celestial fire.",
-		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 6, false, 0, 0.0, 3)
+		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 6, false, 0, 0.0, 2)
 
 static func meteor_shower() -> AbilityData:
 	return _make("Meteor Shower", "A rain of cosmic debris.",
-		Enums.StatType.MAGIC_ATTACK, 4, 0, true, 6, true, 0, 0.0, 4)
+		Enums.StatType.MAGIC_ATTACK, 4, 0, true, 5, true, 0, 0.0, 3)
 
 static func eclipse() -> AbilityData:
 	return _make("Eclipse", "Blot out the enemy's magical senses.",
@@ -455,7 +455,7 @@ static func player_hex() -> AbilityData:
 # Beastcaller
 static func feral_strike() -> AbilityData:
 	return _make("Feral Strike", "Call a beast to strike the enemy.",
-		Enums.StatType.PHYSICAL_ATTACK, 5, 0, true, 2, false, 0, 0.0, 1)
+		Enums.StatType.PHYSICAL_ATTACK, 5, 0, true, 2, false, 0, 0.0, 2)
 
 static func pack_howl() -> AbilityData:
 	return _make("Pack Howl", "Rally the pack for greater power.",
@@ -472,7 +472,7 @@ static func blight() -> AbilityData:
 
 static func life_siphon() -> AbilityData:
 	return _make("Life Siphon", "Drain the enemy's essence.",
-		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 5, false, 0, 0.5, 3)
+		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 5, false, 0, 0.5, 2)
 
 static func poison_sting() -> AbilityData:
 	return _make("Poison Sting", "A venomous barb that festers.",
@@ -485,7 +485,7 @@ static func vine_wall() -> AbilityData:
 
 static func root_trap() -> AbilityData:
 	return _make("Root Trap", "Roots that entangle all enemies.",
-		Enums.StatType.SPEED, 4, 2, true, 5, true, 0, 0.0, 3)
+		Enums.StatType.SPEED, 4, 2, true, 5, true, 0, 0.0, 2)
 
 static func thorn_burst() -> AbilityData:
 	return _make("Thorn Burst", "A violent eruption of razor-sharp thorns.",
@@ -541,7 +541,7 @@ static func savage_maul() -> AbilityData:
 
 static func frenzy() -> AbilityData:
 	return _make("Frenzy", "Enter a bestial rage.",
-		Enums.StatType.ATTACK, 5, 2, false, 2, false, 0, 0.0, 1)
+		Enums.StatType.ATTACK, 5, 2, false, 2, false, 0, 0.0, 2)
 
 static func primal_roar() -> AbilityData:
 	return _make("Primal Roar", "A roar that shakes all enemies.",

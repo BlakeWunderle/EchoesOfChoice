@@ -113,7 +113,7 @@ static func _lu_laureate(f: FighterData) -> void:
 static func _lu_elegist(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(10, 12); f.health += hp; f.max_health += hp
-	var mp := randi_range(2, 4); f.mana += mp; f.max_mana += mp
+	var mp := randi_range(3, 5); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(2, 3); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(6, 8); f.magic_defense += randi_range(7, 9)
 	f.speed += randi_range(2, 2)
@@ -188,7 +188,7 @@ static func _lu_chronomancer(f: FighterData) -> void:
 static func _lu_astronomer(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(5, 7); f.health += hp; f.max_health += hp
-	var mp := randi_range(2, 4); f.mana += mp; f.max_mana += mp
+	var mp := randi_range(4, 6); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(2, 3); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(7, 9); f.magic_defense += randi_range(5, 7)
 	f.speed += randi_range(1, 1)
@@ -253,7 +253,7 @@ static func upgrade_to_grove_keeper(f: FighterData) -> void:
 static func _lu_blighter(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(7, 10); f.health += hp; f.max_health += hp
-	var mp := randi_range(2, 3); f.mana += mp; f.max_mana += mp
+	var mp := randi_range(3, 5); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 2)
@@ -263,7 +263,7 @@ static func _lu_blighter(f: FighterData) -> void:
 static func _lu_grove_keeper(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(10, 12); f.health += hp; f.max_health += hp
-	var mp := randi_range(3, 4); f.mana += mp; f.max_mana += mp
+	var mp := randi_range(4, 6); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(3, 4)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(1, 2)
@@ -292,7 +292,7 @@ static func upgrade_to_spiritwalker(f: FighterData) -> void:
 static func _lu_witch_doctor(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(8, 11); f.health += hp; f.max_health += hp
-	var mp := randi_range(3, 4); f.mana += mp; f.max_mana += mp
+	var mp := randi_range(4, 6); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(1, 2)
 	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(2, 2)
