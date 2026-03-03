@@ -48,7 +48,6 @@ var _turn_label: Label
 var _stats_panel: StatsPanel
 var _scene_image: TextureRect
 var _scene_image_panel: PanelContainer
-var _scene_location_label: Label
 
 # Layout containers
 var _top_panel: HBoxContainer
@@ -130,16 +129,7 @@ func _build_ui() -> void:
 	_scene_image.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	_scene_image_panel.add_child(_scene_image)
 
-	_scene_location_label = Label.new()
-	_scene_location_label.add_theme_font_size_override("font_size", 14)
-	_scene_location_label.add_theme_color_override("font_color", Color(0.9, 0.78, 0.4))
-	_scene_location_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_scene_location_label.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_scene_location_label.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	_scene_location_label.offset_top = -28
-	_scene_location_label.offset_bottom = -4
-	_scene_location_label.visible = false
-	_scene_image_panel.add_child(_scene_location_label)
+
 
 	# Turn indicator
 	_turn_label = Label.new()
@@ -183,9 +173,6 @@ func _start_battle() -> void:
 	_boss_escaped = false
 	if not battle.scene_image.is_empty() and ResourceLoader.exists(battle.scene_image):
 		_scene_image.texture = load(battle.scene_image)
-	if not battle.location_name.is_empty():
-		_scene_location_label.text = battle.location_name
-		_scene_location_label.visible = true
 	if not battle.music_track.is_empty():
 		MusicManager.play_music(battle.music_track)
 	else:
