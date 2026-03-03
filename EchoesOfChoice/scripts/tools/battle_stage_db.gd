@@ -162,6 +162,6 @@ static func _mirror_enemies(party: Array) -> Array:
 		c.health = int(c.health * 0.99); c.max_health = c.health
 		c.physical_attack = int(c.physical_attack * 0.99)
 		c.magic_attack = int(c.magic_attack * 0.99)
-		c.speed = int(c.speed * 0.96)
+		c.speed = int(c.speed * 0.97)
 		enemies.append(c)
 	return enemies

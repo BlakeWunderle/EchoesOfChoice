@@ -375,9 +375,9 @@ static func mirror_battle() -> BattleData:
 		var shadow: FighterData = fighter.clone()
 		shadow.character_name = "Shadow " + fighter.character_name
 		shadow.is_user_controlled = false
-		shadow.max_health = int(shadow.max_health * 0.94); shadow.health = shadow.max_health
-		shadow.physical_attack = int(shadow.physical_attack * 0.98)
-		shadow.magic_attack = int(shadow.magic_attack * 0.98)
+		shadow.max_health = int(shadow.max_health * 0.99); shadow.health = shadow.max_health
+		shadow.physical_attack = int(shadow.physical_attack * 0.99)
+		shadow.magic_attack = int(shadow.magic_attack * 0.99)
 		shadow.speed = int(shadow.speed * 0.97)
 		clones.append(shadow)
 	b.enemies = clones
