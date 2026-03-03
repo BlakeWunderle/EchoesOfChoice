@@ -1,6 +1,6 @@
 extends Control
 
-## Battle scene — connects BattleEngine to visual UI.
+## Battle scene. Connects BattleEngine to visual UI.
 
 const BattleEngine := preload("res://scripts/battle/battle_engine.gd")
 const CombatLog := preload("res://scripts/ui/combat_log.gd")
@@ -54,6 +54,7 @@ var _enemy_vbox: VBoxContainer
 var _bottom_panel: VBoxContainer
 var _turn_order_label: RichTextLabel
 var _turn_queue: Array = []  ## Predicted turn order, depleted as actors act
+var _location_panel: PanelContainer
 
 
 func _ready() -> void:
@@ -251,7 +252,7 @@ func _tick_loop() -> void:
 			await _drain_messages()
 			_refresh_bars()
 
-			# Check boss escape before death — escape triggers at HP threshold
+			# Check boss escape before death, escape triggers at HP threshold
 			if _check_boss_escape():
 				_end_battle()
 				return
@@ -370,7 +371,7 @@ func _on_target_selected(index: int) -> void:
 			fighter_count = 0
 
 	if index >= fighter_count:
-		# Back — return to appropriate menu
+		# Back: return to appropriate menu
 		_action_menu.choice_selected.disconnect(_on_target_selected)
 		_action_menu.choice_selected.connect(_on_action_selected)
 		_action_menu.hide_menu()
@@ -378,7 +379,7 @@ func _on_target_selected(index: int) -> void:
 			_phase = Phase.PLAYER_ACTION
 			_show_action_menu(_current_actor)
 		else:
-			# Ability target — go back to ability list
+			# Ability target, go back to ability list
 			_phase = Phase.PLAYER_ABILITY_SELECT
 			_show_ability_menu()
 		return
@@ -459,7 +460,7 @@ func _on_ability_selected(index: int) -> void:
 	_selected_ability = available[index]
 
 	if _selected_ability.target_all:
-		# AoE — no target selection needed
+		# AoE, no target selection needed
 		_current_actor.mana -= _selected_ability.mana_cost
 		_set_cooldown(_current_actor, _selected_ability)
 		if _selected_ability.use_on_enemy:
@@ -652,7 +653,7 @@ func _compute_turn_order() -> void:
 
 
 func _display_turn_order() -> void:
-	## Render the turn queue — current actor in green, allies cyan, enemies salmon.
+	## Render the turn queue. Current actor in green, allies cyan, enemies salmon.
 	var parts: Array[String] = []
 
 	# Current actor first (green)

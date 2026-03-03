@@ -1,6 +1,6 @@
 class_name BattleEngine extends RefCounted
 
-## Port of C# Battle.cs — pure combat logic, no UI.
+## Port of C# Battle.cs. Pure combat logic, no UI.
 ## Emits signals for the battle scene to visualize.
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
@@ -319,7 +319,7 @@ func _has_modifier(fighter: FighterData, stat: Enums.StatType,
 
 
 # =============================================================================
-# AI — port of C# ExecuteAITurn
+# AI: port of C# ExecuteAITurn
 # =============================================================================
 
 func execute_ai_turn(unit: FighterData, targets: Array,

@@ -8,7 +8,7 @@ const PAB := preload("res://scripts/data/ability_db_player.gd")
 
 
 # =============================================================================
-# Squire tree — Duelist branch
+# Squire tree:Duelist branch
 # =============================================================================
 
 static func upgrade_to_cavalry(f: FighterData) -> void:
@@ -47,7 +47,7 @@ static func _lu_dragoon(f: FighterData) -> void:
 
 
 # =============================================================================
-# Squire tree — Ranger branch
+# Squire tree:Ranger branch
 # =============================================================================
 
 static func upgrade_to_mercenary(f: FighterData) -> void:
@@ -86,7 +86,7 @@ static func _lu_hunter(f: FighterData) -> void:
 
 
 # =============================================================================
-# Squire tree — Martial Artist branch
+# Squire tree:Martial Artist branch
 # =============================================================================
 
 static func upgrade_to_ninja(f: FighterData) -> void:
@@ -125,7 +125,7 @@ static func _lu_monk(f: FighterData) -> void:
 
 
 # =============================================================================
-# Mage tree — Invoker branch
+# Mage tree:Invoker branch
 # =============================================================================
 
 static func upgrade_to_infernalist(f: FighterData) -> void:
@@ -180,7 +180,7 @@ static func _lu_tempest(f: FighterData) -> void:
 
 
 # =============================================================================
-# Mage tree — Acolyte branch
+# Mage tree:Acolyte branch
 # =============================================================================
 
 static func upgrade_to_paladin(f: FighterData) -> void:

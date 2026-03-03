@@ -81,7 +81,7 @@ func _on_text_finished() -> void:
 		GameState.GamePhase.NARRATIVE:
 			if GameState.narrative_mode == GameState.NarrativeMode.PRE_BATTLE:
 				if GameState.current_battle.enemies.is_empty():
-					# No enemies — skip battle, go straight to post-battle text
+					# No enemies, skip battle, go straight to post-battle text
 					GameState.narrative_mode = GameState.NarrativeMode.POST_BATTLE
 					_show_narrative()
 				else:

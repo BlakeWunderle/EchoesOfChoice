@@ -1,6 +1,6 @@
 class_name FighterData extends RefCounted
 
-## Mirrors C# BaseFighter — a live fighter instance with mutable combat state.
+## Mirrors C# BaseFighter. A live fighter instance with mutable combat state.
 
 const Enums := preload("res://scripts/data/enums.gd")
 

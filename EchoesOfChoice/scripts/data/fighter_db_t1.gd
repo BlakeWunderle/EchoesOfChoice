@@ -2,7 +2,7 @@ class_name FighterDBT1
 
 ## Tier 1 class upgrades and level-up growth rates.
 ## Upgrade functions apply bonuses from C# ApplyUpgradeBonuses().
-## Growth rates from C# IncreaseLevel() — random.Next(min, max) → randi_range(min, max-1).
+## Growth rates from C# IncreaseLevel(). random.Next(min, max) → randi_range(min, max-1).
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityDB := preload("res://scripts/data/ability_db.gd")

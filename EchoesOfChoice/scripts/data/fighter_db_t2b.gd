@@ -8,7 +8,7 @@ const PAB := preload("res://scripts/data/ability_db_player.gd")
 
 
 # =============================================================================
-# Entertainer tree — Bard branch
+# Entertainer tree:Bard branch
 # =============================================================================
 
 static func upgrade_to_warcrier(f: FighterData) -> void:
@@ -45,7 +45,7 @@ static func _lu_minstrel(f: FighterData) -> void:
 
 
 # =============================================================================
-# Entertainer tree — Dervish branch
+# Entertainer tree:Dervish branch
 # =============================================================================
 
 static func upgrade_to_illusionist(f: FighterData) -> void:
@@ -84,7 +84,7 @@ static func _lu_mime(f: FighterData) -> void:
 
 
 # =============================================================================
-# Entertainer tree — Orator branch
+# Entertainer tree:Orator branch
 # =============================================================================
 
 static func upgrade_to_laureate(f: FighterData) -> void:
@@ -122,7 +122,7 @@ static func _lu_elegist(f: FighterData) -> void:
 
 
 # =============================================================================
-# Tinker tree — Artificer branch
+# Tinker tree:Artificer branch
 # =============================================================================
 
 static func upgrade_to_alchemist(f: FighterData) -> void:
@@ -159,7 +159,7 @@ static func _lu_bombardier(f: FighterData) -> void:
 
 
 # =============================================================================
-# Tinker tree — Cosmologist branch
+# Tinker tree:Cosmologist branch
 # =============================================================================
 
 static func upgrade_to_chronomancer(f: FighterData) -> void:
@@ -195,7 +195,7 @@ static func _lu_astronomer(f: FighterData) -> void:
 
 
 # =============================================================================
-# Tinker tree — Arithmancer branch
+# Tinker tree:Arithmancer branch
 # =============================================================================
 
 static func upgrade_to_automaton(f: FighterData) -> void:
@@ -231,7 +231,7 @@ static func _lu_technomancer(f: FighterData) -> void:
 
 
 # =============================================================================
-# Wildling tree — Herbalist branch
+# Wildling tree:Herbalist branch
 # =============================================================================
 
 static func upgrade_to_blighter(f: FighterData) -> void:
@@ -271,7 +271,7 @@ static func _lu_grove_keeper(f: FighterData) -> void:
 
 
 # =============================================================================
-# Wildling tree — Shaman branch
+# Wildling tree:Shaman branch
 # =============================================================================
 
 static func upgrade_to_witch_doctor(f: FighterData) -> void:
@@ -310,7 +310,7 @@ static func _lu_spiritwalker(f: FighterData) -> void:
 
 
 # =============================================================================
-# Wildling tree — Beastcaller branch
+# Wildling tree:Beastcaller branch
 # =============================================================================
 
 static func upgrade_to_falconer(f: FighterData) -> void:

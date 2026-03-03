@@ -1,6 +1,6 @@
 extends Control
 
-## Party creation scene — tavern introduction + 3 character creation loops.
+## Party creation scene. Tavern introduction + 3 character creation loops.
 ## Text and flow from C# Program.cs CreateParty().
 
 const DialoguePanel := preload("res://scripts/ui/dialogue_panel.gd")

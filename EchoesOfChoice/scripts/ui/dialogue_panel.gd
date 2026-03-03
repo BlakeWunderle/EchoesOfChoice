@@ -87,7 +87,7 @@ func _type_next_line() -> void:
 		_label.append_text(ch)
 		chars_added += 1
 		if not _typing:
-			# Player pressed advance — show rest instantly
+			# Player pressed advance, show rest instantly
 			var remaining: String = _full_text.substr(chars_added)
 			_label.append_text(remaining)
 			break
@@ -125,7 +125,7 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 	if _typing:
-		# Skip typewriter — show the rest of the current line immediately
+		# Skip typewriter, show the rest of the current line immediately
 		_typing = false
 	elif _current_line >= _lines.size():
 		# All lines shown and player pressed continue

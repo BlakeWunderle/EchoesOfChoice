@@ -4,19 +4,19 @@ const AudioLoader = preload("res://scripts/autoload/audio_loader.gd")
 const Enums = preload("res://scripts/data/enums.gd")
 
 enum Category {
-	# Combat — melee/physical
+	# Combat:melee/physical
 	STRIKE,
 	IMPACT,
 	SLASH,
 	WHOOSH,
-	# Combat — magic/spell
+	# Combat:magic/spell
 	SPELL,
 	FIRE,
 	LIGHTNING,
 	BEAM,
 	CHARGED,
 	VORTEX,
-	# Combat — misc
+	# Combat:misc
 	BODY_HIT,
 	EARTH,
 	SHIMMER,

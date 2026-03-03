@@ -1,6 +1,6 @@
 class_name AbilityData extends Resource
 
-## Mirrors C# Ability.cs — defines a single ability's properties.
+## Mirrors C# Ability.cs. Defines a single ability's properties.
 
 const Enums := preload("res://scripts/data/enums.gd")
 

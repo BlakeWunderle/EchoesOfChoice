@@ -111,7 +111,7 @@ func _handle_main_choice(index: int) -> void:
 	var offset: int = 1 if _has_saves else 0
 
 	if _has_saves and index == 0:
-		# Continue — load last-used slot, or autosave, or first available
+		# Continue: load last-used slot, or autosave, or first available
 		var slot: int = _find_best_continue_slot()
 		if slot >= 0 and SaveManager.load_from_slot(slot):
 			SceneManager.change_scene("res://scenes/narrative/narrative.tscn")

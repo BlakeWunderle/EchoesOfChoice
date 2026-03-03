@@ -57,7 +57,7 @@ static func _s(n: String, lu: int, tier: String, target: float,
 
 
 # =============================================================================
-# Enemy factories — one per stage
+# Enemy factories, one per stage
 # =============================================================================
 
 static func create_enemies(stage_name: String, party: Array = []) -> Array:

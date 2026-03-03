@@ -17,7 +17,7 @@ func _ready() -> void:
 
 ## Show a list of choices. Each option dict has:
 ##   "label": String (required)
-##   "description": String (optional — shown as smaller text below label)
+##   "description": String (optional, shown as smaller text below label)
 ##   "disabled": bool (optional)
 func show_choices(options: Array) -> void:
 	_clear_buttons()

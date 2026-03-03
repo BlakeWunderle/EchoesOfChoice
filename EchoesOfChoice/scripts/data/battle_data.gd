@@ -12,3 +12,4 @@ var next_battle_id: String = ""
 var choices: Array[Dictionary] = []  ## [{label: String, battle_id: String}] for branching
 var escape_hp_pct: float = 0.0  ## >0 means boss escapes at this HP%, counts as victory
 var music_track: String = ""  ## Explicit music path for this battle
+var location_name: String = ""  ## Display name for the battle location

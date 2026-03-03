@@ -111,7 +111,7 @@ func _wire_focus() -> void:
 			if down_idx < _char_buttons.size():
 				btn.focus_neighbor_bottom = _char_buttons[down_idx].get_path()
 			else:
-				# Partial last row — go to bottom buttons
+				# Partial last row, go to bottom buttons
 				if col < COLUMNS / 2:
 					btn.focus_neighbor_bottom = _backspace_btn.get_path()
 				else:

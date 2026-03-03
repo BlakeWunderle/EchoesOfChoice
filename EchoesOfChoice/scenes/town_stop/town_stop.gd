@@ -1,6 +1,6 @@
 extends Control
 
-## Town stop scene — shows narrative, per-character class upgrades, branch choices.
+## Town stop scene. Shows narrative, per-character class upgrades, branch choices.
 ## Flow: pre_battle_text → per-character upgrade picks → post_battle_text → branch/advance.
 
 const DialoguePanel := preload("res://scripts/ui/dialogue_panel.gd")
@@ -87,13 +87,13 @@ func _show_next_upgrade() -> void:
 
 	var fighter: FighterData = GameState.party[_upgrade_index]
 	if fighter.upgrade_items.is_empty():
-		# No upgrades available — skip
+		# No upgrades available, skip
 		_upgrade_index += 1
 		_show_next_upgrade()
 		return
 
 	_phase = TownPhase.UPGRADING
-	_upgrade_label.text = "%s the %s — Choose an upgrade:" % [
+	_upgrade_label.text = "%s the %s. Choose an upgrade:" % [
 		fighter.character_name, fighter.character_type]
 	_upgrade_label.visible = true
 

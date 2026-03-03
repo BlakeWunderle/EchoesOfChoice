@@ -1,6 +1,6 @@
 class_name BattleDBACT2
 
-## Act II battle configurations — The Wilds (Battles 4-8).
+## Act II battle configurations. The Wilds (Battles 4-8).
 
 const BattleData := preload("res://scripts/data/battle_data.gd")
 const EnemyDB := preload("res://scripts/data/enemy_db.gd")
@@ -14,6 +14,7 @@ const FighterData := preload("res://scripts/data/fighter_data.gd")
 static func highland_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "HighlandBattle"
+	b.location_name = "The Highlands"
 	b.enemies = [
 		EnemyDB.create_raider("Wulfric"),
 		EnemyDB.create_raider("Bjorn"),
@@ -36,13 +37,14 @@ static func highland_battle() -> BattleData:
 static func deep_forest_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "DeepForestBattle"
+	b.location_name = "Old Growth Forest"
 	b.enemies = [
 		EnemyDB.create_witch("Morwen"),
 		EnemyDB.create_wisp("Flicker"),
 		EnemyDB.create_sprite("Briar"),
 	]
 	b.pre_battle_text = [
-		"Pushing north, the forest grows denser. The trees here are older — thick-rooted and close-set, their canopy blocking out most of the sky. The path narrows to barely a trail.",
+		"Pushing north, the forest grows denser. The trees here are older, thick-rooted and close-set, their canopy blocking out most of the sky. The path narrows to barely a trail.",
 		"Everyone walks up on a circle of sticks, stones, and mud. Everything around them begins to shake and levitate.",
 		"The sticks catch fire and a strike of lightning flashes across the sky.",
 		"A cackle and two screeches fill the air as the adventurers prepare for battle.",
@@ -60,6 +62,7 @@ static func deep_forest_battle() -> BattleData:
 static func shore_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "ShoreBattle"
+	b.location_name = "Rocky Shore"
 	b.enemies = [
 		EnemyDB.create_siren("Lorelei"),
 		EnemyDB.create_merfolk("Thalassa"),
@@ -85,6 +88,7 @@ static func shore_battle() -> BattleData:
 static func mountain_pass_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "MountainPassBattle"
+	b.location_name = "Mountain Pass"
 	b.enemies = [
 		EnemyDB.create_troll("Grendal"),
 		EnemyDB.create_harpy("Screecher"),
@@ -107,6 +111,7 @@ static func mountain_pass_battle() -> BattleData:
 static func cave_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CaveBattle"
+	b.location_name = "Dragon's Lair"
 	var leader_name: String = "the adventurer"
 	if not GameState.party.is_empty():
 		leader_name = GameState.party[0].character_name
@@ -122,7 +127,7 @@ static func cave_battle() -> BattleData:
 	]
 	b.post_battle_text = [
 		"The wyrmlings crash to the ground and the cave falls silent. Nothing but the sound of gold coins sliding off their scales.",
-		"Twin dragons, ancient and territorial. Not the source — but old creatures don't settle near nothing. Something stirred them. Something darker than treasure hunters.",
+		"Twin dragons, ancient and territorial. Not the source, but old creatures don't settle near nothing. Something stirred them. Something darker than treasure hunters.",
 	]
 	b.next_battle_id = "WildernessOutpost"
 	return b
@@ -131,6 +136,7 @@ static func cave_battle() -> BattleData:
 static func beach_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "BeachBattle"
+	b.location_name = "Shipwreck Beach"
 	b.enemies = [
 		EnemyDB.create_captain("Greybeard"),
 		EnemyDB.create_pirate("Flint"),
@@ -157,10 +163,11 @@ static func beach_battle() -> BattleData:
 static func wilderness_outpost() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "WildernessOutpost"
-	# No enemies — narrative scene will skip battle and go to post_battle_text
+	b.location_name = "Wilderness Outpost"
+	# No enemies, narrative scene will skip battle and go to post_battle_text
 	var prev: String = GameState.previous_battle_id
 	b.pre_battle_text = [
-		"Through a break in the trees the party spots a cluster of tents and wagons — people moving away from the city, not toward it.",
+		"Through a break in the trees the party spots a cluster of tents and wagons, people moving away from the city, not toward it.",
 		"A young scout sits apart from the others, watching the road. He waves them over.",
 		"'You came from deeper in? Good. You're still alive, that's something.'",
 		"'Three weeks ago things started getting strange back in the city. Market district went quiet overnight. Animals started fleeing.'",
@@ -169,31 +176,31 @@ static func wilderness_outpost() -> BattleData:
 	# Variant text based on which branch the player came from
 	match prev:
 		"MountainPassBattle":
-			b.pre_battle_text.append("'South of here there's a military encampment. Big one. They showed up right when the fog did. East, the fog is thickest — there's a path through the hills that smells of old earth and something worse.'")
+			b.pre_battle_text.append("'South of here there's a military encampment. Big one. They showed up right when the fog did. East, the fog is thickest. There's a path through the hills that smells of old earth and something worse.'")
 		"CaveBattle":
 			b.pre_battle_text.append("'East of here I keep hearing music and laughter through the trees. No one's set up any kind of camp out there. West, a building with lights that shouldn't be there. Neither one was here a month ago.'")
 		"BeachBattle":
-			b.pre_battle_text.append("'Inland to the north the music's been getting louder. Something drawing people in. South the fog is thickest — there's a path through the hills that smells like old earth and something worse.'")
+			b.pre_battle_text.append("'Inland to the north the music's been getting louder. Something drawing people in. South the fog is thickest. There's a path through the hills that smells like old earth and something worse.'")
 	b.post_battle_text = [
 		"He looks toward the city in the distance. 'Whatever's happening, it's not starting out here. It's starting there. You're all just catching the edges of it.'",
-		"'City's that way. Whatever you find out here — if you make it back, make it count.'",
+		"'City's that way. Whatever you find out here, if you make it back, make it count.'",
 	]
 	# Variant choices
 	match prev:
 		"MountainPassBattle":
 			b.choices = [
-				{"label": "Camp — Marching boots and a barking voice echo across the plain.", "battle_id": "ArmyBattle"},
-				{"label": "Fog — A fog-covered path winds into rolling hills.", "battle_id": "CemeteryBattle"},
+				{"label": "Camp: Marching boots and a barking voice echo across the plain.", "battle_id": "ArmyBattle"},
+				{"label": "Fog: A fog-covered path winds into rolling hills.", "battle_id": "CemeteryBattle"},
 			]
 		"CaveBattle":
 			b.choices = [
-				{"label": "Laughter — Music drifts through the trees.", "battle_id": "CircusBattle"},
-				{"label": "Static — An unnatural energy pulses in the dark.", "battle_id": "LabBattle"},
+				{"label": "Laughter: Music drifts through the trees.", "battle_id": "CircusBattle"},
+				{"label": "Static: An unnatural energy pulses in the dark.", "battle_id": "LabBattle"},
 			]
 		"BeachBattle":
 			b.choices = [
-				{"label": "Music — Laughter and music filter through the trees.", "battle_id": "CircusBattle"},
-				{"label": "Fog — A fog-covered path winds into rolling hills.", "battle_id": "CemeteryBattle"},
+				{"label": "Music: Laughter and music filter through the trees.", "battle_id": "CircusBattle"},
+				{"label": "Fog: A fog-covered path winds into rolling hills.", "battle_id": "CemeteryBattle"},
 			]
 	return b
 
@@ -205,6 +212,7 @@ static func wilderness_outpost() -> BattleData:
 static func circus_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CircusBattle"
+	b.location_name = "Wooded Hills"
 	b.enemies = [
 		EnemyDB.create_harlequin("Louis"),
 		EnemyDB.create_chanteuse("Erembour"),
@@ -216,9 +224,9 @@ static func circus_battle() -> BattleData:
 		"BeachBattle":
 			intro = "The trail leads north from the coast, winding through rolling hills with the sound of distant music growing louder. It seems peaceful enough until everyone suddenly hits something. An invisible wall."
 		"CaveBattle":
-			intro = "The path east from the cave threads through wooded hills. Quiet, unremarkable terrain — until everyone suddenly hits something. An invisible wall."
+			intro = "The path east from the cave threads through wooded hills. Quiet, unremarkable terrain, until everyone suddenly hits something. An invisible wall."
 		_:
-			intro = "Following the sound of music through the trees, the party pushes deeper into unfamiliar territory. The laughter grows louder — until everyone suddenly hits something. An invisible wall."
+			intro = "Following the sound of music through the trees, the party pushes deeper into unfamiliar territory. The laughter grows louder, until everyone suddenly hits something. An invisible wall."
 	b.pre_battle_text = [
 		intro,
 		"They turn left, then right, and finally turn back but they're boxed in. Something is trapping them and they can't see what.",
@@ -238,6 +246,7 @@ static func circus_battle() -> BattleData:
 static func lab_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "LabBattle"
+	b.location_name = "The Laboratory"
 	b.enemies = [
 		EnemyDB.create_android("Deus"),
 		EnemyDB.create_machinist("Ananiah"),
@@ -245,9 +254,9 @@ static func lab_battle() -> BattleData:
 	]
 	var direction: String = "west" if GameState.previous_battle_id == "CaveBattle" else "north-east"
 	b.pre_battle_text = [
-		"Heading %s, the air changes. There's a faint charge to it — a prickling on the skin and a taste like iron. Not magic. Something else." % direction,
+		"Heading %s, the air changes. There's a faint charge to it, a prickling on the skin and a taste like iron. Not magic. Something else." % direction,
 		"A large structure rises from the landscape, all clean angles and dark windows. No signs, no torches. Whatever it runs on, it isn't fire.",
-		"Inside, the hum is louder. Banks of machinery line the walls. On a central table, something large lies covered by a cloth — something roughly human-shaped.",
+		"Inside, the hum is louder. Banks of machinery line the walls. On a central table, something large lies covered by a cloth, something roughly human-shaped.",
 		"The cloth drops on its own. A laser beam punches through the air and the party dives clear.",
 	]
 	b.post_battle_text = [
@@ -263,6 +272,7 @@ static func lab_battle() -> BattleData:
 static func army_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "ArmyBattle"
+	b.location_name = "Military Encampment"
 	b.enemies = [
 		EnemyDB.create_commander("Varro"),
 		EnemyDB.create_draconian("Theron"),
@@ -270,7 +280,7 @@ static func army_battle() -> BattleData:
 	]
 	b.pre_battle_text = [
 		"Heading south, the landscape opens up into a wide plain. It should be empty. It isn't.",
-		"Rows of canvas tents stretch out ahead, fires burning in careful formation. A booming voice cuts through the air, barking orders. This is no bandit camp — it's a regiment, moving with discipline.",
+		"Rows of canvas tents stretch out ahead, fires burning in careful formation. A booming voice cuts through the air, barking orders. This is no bandit camp. It's a regiment, moving with discipline.",
 		"The scouts spot the party before they can pull back. A commander's voice rings out and the regiment wheels toward them.",
 	]
 	b.post_battle_text = [
@@ -287,6 +297,7 @@ static func army_battle() -> BattleData:
 static func cemetery_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CemeteryBattle"
+	b.location_name = "Fog-covered Cemetery"
 	var leader_name: String = "the adventurer"
 	if not GameState.party.is_empty():
 		leader_name = GameState.party[0].character_name
@@ -319,6 +330,7 @@ static func cemetery_battle() -> BattleData:
 static func outpost_defense_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "OutpostDefenseBattle"
+	b.location_name = "Wilderness Outpost"
 	b.enemies = [
 		EnemyDB.create_shade("Umbra"),
 		EnemyDB.create_wraith("Revenant"),
@@ -343,6 +355,7 @@ static func outpost_defense_battle() -> BattleData:
 static func mirror_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "MirrorBattle"
+	b.location_name = "Wilderness Outpost"
 	# Clone the player's party as shadow enemies at reduced stats
 	var clones: Array = []
 	for fighter: FighterData in GameState.party:
@@ -371,7 +384,7 @@ static func mirror_battle() -> BattleData:
 		"The surface ripples and cloudy letters slowly form across the glass: 'Return to the city.'",
 		"The letters pulse with urgency. Something is wrong back home and whoever left this message knew it.",
 		"The adventurers exchange a look. No more detours. Time to head back.",
-		"Where is the stranger? They haven't been seen since before the mirror appeared. Come to think of it, the mirror was placed too perfectly — as if someone knew exactly where they'd be.",
+		"Where is the stranger? They haven't been seen since before the mirror appeared. Come to think of it, the mirror was placed too perfectly, as if someone knew exactly where they'd be.",
 		"The stranger said the source of the darkness was beyond the forest. They went looking and found only chaos spreading from somewhere else.",
 		"And now a mirror is pointing them home.",
 		"The thought lands slowly, uncomfortably: maybe the source was never out here. Maybe it was always at the city.",
