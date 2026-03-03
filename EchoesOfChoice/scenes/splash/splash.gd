@@ -11,7 +11,10 @@ const _LOGO_FADE_IN: float = 1.0
 const _TEXT_FADE_IN: float = 0.5
 const _HOLD_DURATION: float = 1.5
 
+var _logo: TextureRect
+var _studio_label: Label
 var _transitioning: bool = false
+var _skip_enabled: bool = false
 
 
 func _ready() -> void:
@@ -32,45 +35,43 @@ func _build_ui() -> void:
 
 	# Elf logo image
 	if ResourceLoader.exists(_LOGO_PATH):
-		var logo := TextureRect.new()
-		logo.texture = load(_LOGO_PATH)
-		logo.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		logo.custom_minimum_size = Vector2(400, 400)
-		logo.modulate.a = 0.0
-		logo.name = "Logo"
-		vbox.add_child(logo)
+		_logo = TextureRect.new()
+		_logo.texture = load(_LOGO_PATH)
+		_logo.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+		_logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		_logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		_logo.custom_minimum_size = Vector2(400, 400)
+		_logo.modulate.a = 0.0
+		vbox.add_child(_logo)
 
 	# Studio name text
-	var studio_label := Label.new()
-	studio_label.text = "WUNDERELF STUDIOS"
-	studio_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	studio_label.add_theme_font_size_override("font_size", 42)
-	studio_label.add_theme_color_override("font_color", Color(0.92, 0.82, 0.55, 1.0))
-	studio_label.modulate.a = 0.0
-	studio_label.name = "StudioName"
-	vbox.add_child(studio_label)
+	_studio_label = Label.new()
+	_studio_label.text = "WUNDERELF STUDIOS"
+	_studio_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_studio_label.add_theme_font_size_override("font_size", 42)
+	_studio_label.add_theme_color_override("font_color", Color(0.92, 0.82, 0.55, 1.0))
+	_studio_label.modulate.a = 0.0
+	vbox.add_child(_studio_label)
 
 
 func _play_sequence() -> void:
 	await get_tree().create_timer(_INITIAL_DELAY).timeout
 	if _transitioning:
 		return
+	_skip_enabled = true
 
 	# Fade in logo
-	var logo: TextureRect = find_child("Logo") as TextureRect
-	if logo:
+	if _logo:
 		var tween := create_tween()
-		tween.tween_property(logo, "modulate:a", 1.0, _LOGO_FADE_IN)
+		tween.tween_property(_logo, "modulate:a", 1.0, _LOGO_FADE_IN)
 		await tween.finished
 		if _transitioning:
 			return
 
 	# Fade in studio name
-	var studio: Label = find_child("StudioName") as Label
-	if studio:
+	if _studio_label:
 		var t_text := create_tween()
-		t_text.tween_property(studio, "modulate:a", 1.0, _TEXT_FADE_IN)
+		t_text.tween_property(_studio_label, "modulate:a", 1.0, _TEXT_FADE_IN)
 		await t_text.finished
 		if _transitioning:
 			return
@@ -84,7 +85,7 @@ func _play_sequence() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _transitioning:
+	if _transitioning or not _skip_enabled:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		_go_to_title()
