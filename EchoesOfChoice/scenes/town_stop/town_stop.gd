@@ -52,6 +52,7 @@ func _build_ui() -> void:
 
 
 func _start_town() -> void:
+	MusicManager.play_context(MusicManager.MusicContext.TOWN)
 	_phase = TownPhase.INTRO_TEXT
 	var battle = GameState.current_battle
 	if not battle.pre_battle_text.is_empty():

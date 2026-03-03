@@ -76,9 +76,11 @@ func play_music(path: String, fade_duration: float = 0.5) -> void:
 	_player = AudioStreamPlayer.new()
 	add_child(_player)
 	_player.stream = stream
-	_player.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
+	_player.volume_db = -40.0
 	_player.finished.connect(_player.play)
 	_player.play()
+	var tween := _player.create_tween()
+	tween.tween_property(_player, "volume_db", linear_to_db(maxf(0.0001, _music_volume_linear)), fade_duration)
 
 
 func stop_music(fade_duration: float = 0.5) -> void:
