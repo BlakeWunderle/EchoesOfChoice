@@ -116,7 +116,6 @@ Each base class branches into Tier 1 specializations, and each Tier 1 class bran
 - **Basic attacks** cost no mana and deal damage based on Physical Attack minus the target's Physical Defense. They can be dodged and can land critical hits.
 - **Abilities** cost mana and cannot be dodged. Damage scales with the relevant attack stat minus the target's matching defense. They can still land critical hits. Some abilities target all enemies or all allies.
 - **Buffs and debuffs** are temporary stat changes that wear off after a set number of turns.
-- **Taunt** forces all enemies to attack the taunting character for one turn, protecting fragile allies.
 - **Mana** does not regenerate during battle. Every ability spent is mana you won't have later in the fight.
 - **Knockouts** -- When a character's health reaches zero, they are knocked out for the rest of that battle. If the party wins, all knocked-out allies are revived and rejoin at full health. If all three fall, the journey ends.
 
@@ -297,7 +296,7 @@ These abilities weaken enemies for a limited time.
 - You create three warriors at the start. Consider covering different roles rather than tripling up on one class.
 - **Damage dealers** end fights faster but need someone to keep them alive.
 - **Healers** are invaluable in long fights, but they can't carry a battle alone.
-- **Tanks** with Taunt can draw enemy attacks and shield fragile allies.
+- **Tanks** with high defense and buff abilities can absorb hits and protect fragile allies.
 - **Support** characters who buff allies or debuff enemies can turn the tide in tough encounters.
 - Mana does not regenerate during battle, so balance ability use with basic attacks to avoid running dry.
 - Abilities cannot be dodged, making them reliable against evasive enemies.
