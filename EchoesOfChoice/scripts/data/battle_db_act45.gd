@@ -15,6 +15,7 @@ static func copper_mug_stop() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CopperMugStop"
 	b.location_name = "The Copper Mug"
+	b.scene_image = "res://assets/art/battles/copper_mug.png"
 	b.is_town_stop = true
 	b.pre_battle_text = [
 		"The tower is silent behind them. The stranger is gone but the damage is done. The sky is ash, the air cold, and the city is breaking apart.",
@@ -45,6 +46,7 @@ static func corrupted_city_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CorruptedCityBattle"
 	b.location_name = "Corrupted Market Square"
+	b.scene_image = "res://assets/art/battles/corrupted_market.png"
 	b.enemies = [
 		EnemyDB.create_lich("Mortuus"),
 		EnemyDB.create_ghast("Putrefax"),
@@ -73,6 +75,7 @@ static func corrupted_wilds_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CorruptedWildsBattle"
 	b.location_name = "Corrupted Wilderness"
+	b.scene_image = "res://assets/art/battles/corrupted_wilds.png"
 	b.enemies = [
 		EnemyDB.create_demon("Bael"),
 		EnemyDB.create_corrupted_treant("Rothollow"),
@@ -105,6 +108,7 @@ static func depths_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "DepthsBattle"
 	b.location_name = "Tunnels Beneath the City"
+	b.scene_image = "res://assets/art/battles/tunnels.png"
 	b.enemies = [
 		EnemyDB.create_sigil_wretch("Skritch"),
 		EnemyDB.create_tunnel_lurker("Silkfang"),
@@ -137,6 +141,7 @@ static func gate_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "GateBattle"
 	b.location_name = "The Sealed Gate"
+	b.scene_image = "res://assets/art/battles/sealed_gate.png"
 	b.enemies = [
 		EnemyDB.create_dark_knight("Ser Malachar"),
 		EnemyDB.create_fell_hound("Duskfang"),
@@ -167,6 +172,7 @@ static func stranger_final_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "StrangerFinalBattle"
 	b.location_name = "The Void Cavern"
+	b.scene_image = "res://assets/art/battles/void_cavern.png"
 	b.is_final_battle = true
 	b.enemies = [
 		EnemyDB.create_stranger_final("The Stranger"),

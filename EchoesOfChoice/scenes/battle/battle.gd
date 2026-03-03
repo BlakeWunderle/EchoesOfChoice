@@ -46,6 +46,9 @@ var _combat_log: CombatLog
 var _action_menu: ChoiceMenu
 var _turn_label: Label
 var _stats_panel: StatsPanel
+var _scene_image: TextureRect
+var _scene_image_panel: PanelContainer
+var _scene_location_label: Label
 
 # Layout containers
 var _top_panel: HBoxContainer
@@ -54,7 +57,6 @@ var _enemy_vbox: VBoxContainer
 var _bottom_panel: VBoxContainer
 var _turn_order_label: RichTextLabel
 var _turn_queue: Array = []  ## Predicted turn order, depleted as actors act
-var _location_panel: PanelContainer
 
 
 func _ready() -> void:
@@ -103,11 +105,41 @@ func _build_ui() -> void:
 	_turn_order_label.custom_minimum_size = Vector2(0, 20)
 	root.add_child(_turn_order_label)
 
-	# Middle: combat log
+	# Middle: combat log (left) + scene image (right)
+	var middle_panel := HBoxContainer.new()
+	middle_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	middle_panel.custom_minimum_size = Vector2(0, 200)
+	middle_panel.add_theme_constant_override("separation", 8)
+	root.add_child(middle_panel)
+
 	_combat_log = CombatLog.new()
+	_combat_log.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_combat_log.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_combat_log.custom_minimum_size = Vector2(0, 200)
-	root.add_child(_combat_log)
+	middle_panel.add_child(_combat_log)
+
+	_scene_image_panel = PanelContainer.new()
+	_scene_image_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scene_image_panel.custom_minimum_size = Vector2(360, 0)
+	middle_panel.add_child(_scene_image_panel)
+
+	_scene_image = TextureRect.new()
+	_scene_image.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	_scene_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_scene_image.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_scene_image.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_scene_image.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	_scene_image_panel.add_child(_scene_image)
+
+	_scene_location_label = Label.new()
+	_scene_location_label.add_theme_font_size_override("font_size", 14)
+	_scene_location_label.add_theme_color_override("font_color", Color(0.9, 0.78, 0.4))
+	_scene_location_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_scene_location_label.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_scene_location_label.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_scene_location_label.offset_top = -28
+	_scene_location_label.offset_bottom = -4
+	_scene_location_label.visible = false
+	_scene_image_panel.add_child(_scene_location_label)
 
 	# Turn indicator
 	_turn_label = Label.new()
@@ -138,6 +170,7 @@ func _build_ui() -> void:
 	add_child(_stats_panel)
 
 
+
 func _start_battle() -> void:
 	_engine = BattleEngine.new()
 	_engine.combat_message.connect(_on_combat_message)
@@ -148,6 +181,11 @@ func _start_battle() -> void:
 	var battle: BattleData = GameState.current_battle
 	_escape_hp_pct = battle.escape_hp_pct
 	_boss_escaped = false
+	if not battle.scene_image.is_empty() and ResourceLoader.exists(battle.scene_image):
+		_scene_image.texture = load(battle.scene_image)
+	if not battle.location_name.is_empty():
+		_scene_location_label.text = battle.location_name
+		_scene_location_label.visible = true
 	if not battle.music_track.is_empty():
 		MusicManager.play_music(battle.music_track)
 	else:

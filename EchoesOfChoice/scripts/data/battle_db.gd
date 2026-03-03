@@ -55,6 +55,7 @@ static func city_street_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CityStreetBattle"
 	b.location_name = "City Streets"
+	b.scene_image = "res://assets/art/battles/city_streets.png"
 	b.enemies = [
 		EnemyDB.create_thug("Alexander"),
 		EnemyDB.create_ruffian("Jenna"),
@@ -80,6 +81,7 @@ static func wolf_forest_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "WolfForestBattle"
 	b.location_name = "Dark Forest"
+	b.scene_image = "res://assets/art/battles/dark_forest.png"
 	b.enemies = [
 		EnemyDB.create_wolf("Greyfang"),
 		EnemyDB.create_boar("Tusker"),
@@ -106,6 +108,7 @@ static func waypoint_defense_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "WaypointDefenseBattle"
 	b.location_name = "Wanderer's Rest"
+	b.scene_image = "res://assets/art/battles/wanderers_rest.png"
 	b.enemies = [
 		EnemyDB.create_bandit("Riggs"),
 		EnemyDB.create_goblin("Snitch"),
@@ -132,6 +135,7 @@ static func forest_waypoint() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "ForestWaypoint"
 	b.location_name = "Forest Waypoint"
+	b.scene_image = "res://assets/art/battles/forest_waypoint.png"
 	b.is_town_stop = true
 	b.pre_battle_text = [
 		"The innkeeper unlocks a heavy door behind the bar and pulls it open. The storeroom is larger than it looks from outside.",
