@@ -39,3 +39,7 @@ savegame.json
 *.key
 credentials.json
 *cookies*.txt
+
+# Build output
+build/
+*.zip
