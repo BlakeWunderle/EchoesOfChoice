@@ -8,6 +8,7 @@ const _LOGO_PATH: String = "res://assets/art/ui/wunderelf_logo.png"
 
 const _INITIAL_DELAY: float = 0.5
 const _LOGO_FADE_IN: float = 1.0
+const _TEXT_FADE_IN: float = 0.5
 const _HOLD_DURATION: float = 1.5
 
 var _transitioning: bool = false
@@ -29,16 +30,26 @@ func _build_ui() -> void:
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	center.add_child(vbox)
 
-	# Logo image
+	# Elf logo image
 	if ResourceLoader.exists(_LOGO_PATH):
 		var logo := TextureRect.new()
 		logo.texture = load(_LOGO_PATH)
 		logo.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		logo.custom_minimum_size = Vector2(500, 500)
+		logo.custom_minimum_size = Vector2(400, 400)
 		logo.modulate.a = 0.0
 		logo.name = "Logo"
 		vbox.add_child(logo)
+
+	# Studio name text
+	var studio_label := Label.new()
+	studio_label.text = "WUNDERELF STUDIOS"
+	studio_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	studio_label.add_theme_font_size_override("font_size", 42)
+	studio_label.add_theme_color_override("font_color", Color(0.92, 0.82, 0.55, 1.0))
+	studio_label.modulate.a = 0.0
+	studio_label.name = "StudioName"
+	vbox.add_child(studio_label)
 
 
 func _play_sequence() -> void:
@@ -52,6 +63,15 @@ func _play_sequence() -> void:
 		var tween := create_tween()
 		tween.tween_property(logo, "modulate:a", 1.0, _LOGO_FADE_IN)
 		await tween.finished
+		if _transitioning:
+			return
+
+	# Fade in studio name
+	var studio: Label = find_child("StudioName") as Label
+	if studio:
+		var t_text := create_tween()
+		t_text.tween_property(studio, "modulate:a", 1.0, _TEXT_FADE_IN)
+		await t_text.finished
 		if _transitioning:
 			return
 
