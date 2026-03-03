@@ -278,6 +278,16 @@ func finish_battle() -> void:
 # Cooldown
 # =============================================================================
 
+func tick_cooldowns(fighter: FighterData) -> void:
+	var expired: Array[String] = []
+	for ability_name: String in fighter.ability_cooldowns:
+		fighter.ability_cooldowns[ability_name] -= 1
+		if fighter.ability_cooldowns[ability_name] <= 0:
+			expired.append(ability_name)
+	for ability_name: String in expired:
+		fighter.ability_cooldowns.erase(ability_name)
+
+
 func _set_cooldown(fighter: FighterData, ability: AbilityData) -> void:
 	if ability.cooldown > 0:
 		fighter.ability_cooldowns[ability.ability_name] = ability.cooldown

@@ -245,7 +245,7 @@ func _tick_loop() -> void:
 			_display_turn_order()
 
 			_engine.reset_modified_stat(actor)
-			_tick_cooldowns(actor)
+			_engine.tick_cooldowns(actor)
 			await _drain_messages()
 
 			if _engine.is_battle_over():
@@ -300,16 +300,6 @@ func _tick_loop() -> void:
 # =============================================================================
 # Cooldown management
 # =============================================================================
-
-func _tick_cooldowns(fighter: FighterData) -> void:
-	var expired: Array[String] = []
-	for ability_name: String in fighter.ability_cooldowns:
-		fighter.ability_cooldowns[ability_name] -= 1
-		if fighter.ability_cooldowns[ability_name] <= 0:
-			expired.append(ability_name)
-	for ability_name: String in expired:
-		fighter.ability_cooldowns.erase(ability_name)
-
 
 func _set_cooldown(fighter: FighterData, ability: AbilityData) -> void:
 	if ability.cooldown > 0:
