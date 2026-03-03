@@ -90,7 +90,7 @@ static func create_scholar(fighter_name: String) -> FighterData:
 	f.level = 1
 	f.health = randi_range(40, 46); f.max_health = f.health
 	f.mana = randi_range(8, 12); f.max_mana = f.mana
-	f.physical_attack = randi_range(7, 9)
+	f.physical_attack = randi_range(9, 12)
 	f.physical_defense = randi_range(10, 12)
 	f.magic_attack = randi_range(15, 19)
 	f.magic_defense = randi_range(15, 19)
@@ -419,13 +419,13 @@ static func get_abilities_for_class(class_id: String) -> Array:
 		"Chronomancer": return [PAB.warp_speed(), PAB.time_bomb(), PAB.time_freeze()]
 		"Astronomer": return [PAB.starfall(), PAB.meteor_shower(), PAB.eclipse()]
 		"Automaton": return [PAB.servo_strike(), PAB.program_defense(), PAB.overclock()]
-		"Technomancer": return [PAB.circuit_blast(), PAB.arcane_shield(), PAB.siphon_charge()]
+		"Technomancer": return [PAB.circuit_blast(), PAB.arcane_shield(), PAB.emp_pulse()]
 		# T2:Wildling
 		"Blighter": return [PAB.blight(), PAB.life_siphon(), PAB.poison_sting()]
 		"GroveKeeper": return [PAB.thorn_burst(), PAB.root_trap(), PAB.draining_vines()]
 		"WitchDoctor": return [PAB.voodoo_bolt(), PAB.dark_hex(), PAB.creeping_rot()]
 		"Spiritwalker": return [PAB.spirit_shield(), PAB.ancestral_blessing(), PAB.spirit_mend()]
-		"Falconer": return [PAB.falcon_strike(), PAB.sky_dive(), PAB.raptor_mend()]
+		"Falconer": return [PAB.falcon_strike(), PAB.talon_rend(), PAB.raptor_mend()]
 		"Shapeshifter": return [PAB.savage_maul(), PAB.frenzy(), PAB.primal_roar()]
 		_:
 			push_error("Unknown class_id for abilities: %s" % class_id)

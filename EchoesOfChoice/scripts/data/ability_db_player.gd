@@ -51,12 +51,12 @@ static func lance() -> AbilityData:
 
 static func trample() -> AbilityData:
 	return _make("Trample", "Charge through the enemy lines.",
-		Enums.StatType.PHYSICAL_ATTACK, 5, 0, true, 3, false, 0, 0.0, 2)
+		Enums.StatType.PHYSICAL_ATTACK, 4, 0, true, 4, true, 0, 0.0, 2)
 
 # Dragoon
 static func jump() -> AbilityData:
 	return _make("Jump", "Leap high and crash down with crushing force.",
-		Enums.StatType.PHYSICAL_ATTACK, 8, 0, true, 5, false, 0, 0.0, 3)
+		Enums.StatType.PHYSICAL_ATTACK, 10, 0, true, 5, false, 0, 0.0, 3)
 
 static func wyvern_strike() -> AbilityData:
 	return _make("Wyvern Strike", "A strike infused with draconic power.",
@@ -73,7 +73,7 @@ static func gun_shot() -> AbilityData:
 
 static func called_shot() -> AbilityData:
 	return _make("Called Shot", "Take careful aim for a devastating hit.",
-		Enums.StatType.PHYSICAL_ATTACK, 8, 0, true, 6, false, 0, 0.0, 3)
+		Enums.StatType.PHYSICAL_ATTACK, 11, 0, true, 6, false, 0, 0.0, 3)
 
 static func quick_draw() -> AbilityData:
 	return _make("Quick Draw", "Lightning-fast reflexes boost speed.",
@@ -425,9 +425,9 @@ static func arcane_shield() -> AbilityData:
 	return _make("Arcane Shield", "Project a shimmering energy field around an ally.",
 		Enums.StatType.DEFENSE, 4, 2, false, 3, false, 0, 0.0, 2)
 
-static func siphon_charge() -> AbilityData:
-	return _make("Siphon Charge", "Extract magical energy from the target.",
-		Enums.StatType.MAGIC_ATTACK, 5, 0, true, 3, false, 0, 0.5, 2)
+static func emp_pulse() -> AbilityData:
+	return _make("EMP Pulse", "An electromagnetic burst disrupts the target's reactions.",
+		Enums.StatType.SPEED, 5, 2, true, 3, false, 0, 0.0, 2)
 
 
 # =============================================================================
@@ -468,7 +468,7 @@ static func pack_howl() -> AbilityData:
 # Blighter
 static func blight() -> AbilityData:
 	return _make("Blight", "Dark natural magic that corrupts.",
-		Enums.StatType.MAGIC_ATTACK, 6, 0, true, 5, false, 0, 0.0, 2)
+		Enums.StatType.MAGIC_ATTACK, 9, 0, true, 5, false, 0, 0.0, 2)
 
 static func life_siphon() -> AbilityData:
 	return _make("Life Siphon", "Drain the enemy's essence.",
@@ -489,7 +489,7 @@ static func root_trap() -> AbilityData:
 
 static func thorn_burst() -> AbilityData:
 	return _make("Thorn Burst", "A violent eruption of razor-sharp thorns.",
-		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 4, false, 0, 0.0, 2)
+		Enums.StatType.MAGIC_ATTACK, 9, 0, true, 5, false, 0, 0.0, 2)
 
 static func draining_vines() -> AbilityData:
 	return _make("Draining Vines", "Thorned vines that drain the life from a foe.",
@@ -526,9 +526,9 @@ static func falcon_strike() -> AbilityData:
 	return _make("Falcon Strike", "A raptor dives from above.",
 		Enums.StatType.PHYSICAL_ATTACK, 7, 0, true, 4, false, 0, 0.0, 2)
 
-static func sky_dive() -> AbilityData:
-	return _make("Sky Dive", "A devastating aerial assault.",
-		Enums.StatType.PHYSICAL_ATTACK, 8, 0, true, 5, false, 0, 0.0, 3)
+static func talon_rend() -> AbilityData:
+	return _make("Talon Rend", "The falcon shreds the enemy's armor with razor talons.",
+		Enums.StatType.DEFENSE, 4, 2, true, 3, false, 0, 0.0, 2)
 
 static func raptor_mend() -> AbilityData:
 	return _make("Raptor Mend", "The falcon brings healing herbs from the wilds.",

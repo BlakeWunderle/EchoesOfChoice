@@ -209,7 +209,7 @@ static func upgrade_to_technomancer(f: FighterData) -> void:
 	f.class_id = "Technomancer"; f.character_type = "Technomancer"
 	f.magic_attack += 8; f.mana += 5; f.max_mana += 5
 	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 10
-	f.abilities = [PAB.circuit_blast(), PAB.arcane_shield(), PAB.siphon_charge()]
+	f.abilities = [PAB.circuit_blast(), PAB.arcane_shield(), PAB.emp_pulse()]
 	f.upgrade_items = []
 
 static func _lu_automaton(f: FighterData) -> void:
@@ -318,7 +318,7 @@ static func upgrade_to_falconer(f: FighterData) -> void:
 	f.physical_attack += 7; f.speed += 5
 	f.health += 5; f.max_health += 5
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 10
-	f.abilities = [PAB.falcon_strike(), PAB.sky_dive(), PAB.raptor_mend()]
+	f.abilities = [PAB.falcon_strike(), PAB.talon_rend(), PAB.raptor_mend()]
 	f.upgrade_items = []
 
 static func upgrade_to_shapeshifter(f: FighterData) -> void:
