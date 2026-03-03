@@ -168,7 +168,7 @@ func _get_intro_text() -> Array[String]:
 	return [
 		"The Copper Mug. Your regular haunt. You know every crack in the floorboards, every stain on the bar.",
 		"But tonight something is different. The fire burns low without anyone stoking it. The other regulars have gone quiet.",
-		"A shrouded stranger sits in the corner booth \u2014 a booth that was empty a moment ago.",
+		"A shrouded stranger sits in the corner booth, one that was empty just a moment ago.",
 		"The air feels heavy. Wrong. Like the room itself is holding its breath.",
 		"The stranger catches your eye and waves you over.",
 	]
@@ -192,7 +192,7 @@ func _get_outro_text() -> Array[String]:
 	return [
 		"The stranger leans in close, voice barely above a whisper.",
 		"'Something evil has taken root beyond the forest. The city needs heroes whether it knows it or not.'",
-		"'Find the source. End it. I'll be watching \u2014 and I'll find you when the time is right.'",
-		"The stranger raises a glass but doesn't drink \u2014 just holds it, watching the liquid catch the firelight.",
+		"'Find the source. End it. I'll be watching, and I'll find you when the time is right.'",
+		"The stranger raises a glass but doesn't drink. Just holds it, watching the liquid catch the firelight.",
 		"Then they set it down, untouched, and disappear into the crowd. The coin left on the table is gold. Blank on one side.",
 	]
