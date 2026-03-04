@@ -33,6 +33,7 @@ static func highland_battle() -> BattleData:
 	]
 	b.next_battle_id = "MountainPassBattle"
 	b.music_track = "res://assets/audio/music/battle/Against The Winds LOOP.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#5.wav"
 	return b
 
 
@@ -60,6 +61,7 @@ static func deep_forest_battle() -> BattleData:
 	]
 	b.next_battle_id = "CaveBattle"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Dark Fables.ogg"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#7.wav"
 	return b
 
 
@@ -84,6 +86,7 @@ static func shore_battle() -> BattleData:
 	]
 	b.next_battle_id = "BeachBattle"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Circle of the Serpent.ogg"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#6.wav"
 	return b
 
 
@@ -113,6 +116,7 @@ static func mountain_pass_battle() -> BattleData:
 	]
 	b.next_battle_id = "WildernessOutpost"
 	b.music_track = "res://assets/audio/music/battle/Defending The Kingdom LOOP.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#9.wav"
 	return b
 
 
@@ -140,6 +144,7 @@ static func cave_battle() -> BattleData:
 	]
 	b.next_battle_id = "WildernessOutpost"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Fire Water.ogg"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#12 Cave Horn.wav"
 	return b
 
 
@@ -165,6 +170,7 @@ static func beach_battle() -> BattleData:
 	]
 	b.next_battle_id = "WildernessOutpost"
 	b.music_track = "res://assets/audio/music/battle/Battle Theme 07(L).wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#6.wav"
 	return b
 
 
@@ -198,6 +204,7 @@ static func wilderness_outpost() -> BattleData:
 		"He looks toward the city in the distance. 'Whatever's happening, it's not starting out here. It's starting there. You're all just catching the edges of it.'",
 		"'City's that way. Whatever you find out here, if you make it back, make it count.'",
 	]
+	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 01.wav"
 	# Variant choices
 	match prev:
 		"MountainPassBattle":
@@ -255,6 +262,7 @@ static func circus_battle() -> BattleData:
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Bloody Night.ogg"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#10.wav"
 	return b
 
 
@@ -283,6 +291,7 @@ static func lab_battle() -> BattleData:
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
 	b.music_track = "res://assets/audio/music/battle_scifi/Cantina - Smooth Talk LOOP.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#11.wav"
 	return b
 
 
@@ -310,6 +319,7 @@ static func army_battle() -> BattleData:
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Storming the Citadel.ogg"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#5.wav"
 	return b
 
 
@@ -341,6 +351,7 @@ static func cemetery_battle() -> BattleData:
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
 	b.music_track = "res://assets/audio/music/battle_dark/08_Rotten_Memories.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 10.wav"
 	return b
 
 
@@ -372,6 +383,7 @@ static func outpost_defense_battle() -> BattleData:
 	]
 	b.next_battle_id = "MirrorBattle"
 	b.music_track = "res://assets/audio/music/battle_dark/04_Eyes_in_the_Woods.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 02.wav"
 	return b
 
 
@@ -418,4 +430,5 @@ static func mirror_battle() -> BattleData:
 	]
 	b.next_battle_id = "CityOutskirtsStop"
 	b.music_track = "res://assets/audio/music/battle_dark/01_Static_Presence.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#14.wav"
 	return b

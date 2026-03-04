@@ -59,6 +59,7 @@ static func return_to_city_street_battle() -> BattleData:
 	]
 	b.next_battle_id = "StrangerTowerBattle"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Arcane Thrones.ogg"
+	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 04.wav"
 	return b
 
 
@@ -93,4 +94,5 @@ static func stranger_tower_battle() -> BattleData:
 	]
 	b.next_battle_id = "CopperMugStop"
 	b.music_track = "res://assets/audio/music/boss/Impending Terror_FULL.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#13a Horn Call.wav"
 	return b

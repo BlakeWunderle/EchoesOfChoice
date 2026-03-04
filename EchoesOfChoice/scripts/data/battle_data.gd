@@ -12,5 +12,6 @@ var next_battle_id: String = ""
 var choices: Array[Dictionary] = []  ## [{label: String, battle_id: String}] for branching
 var escape_hp_pct: float = 0.0  ## >0 means boss escapes at this HP%, counts as victory
 var music_track: String = ""  ## Explicit music path for this battle
+var cutscene_track: String = ""  ## Explicit music for pre/post narrative scenes
 var location_name: String = ""  ## Display name for the battle location
 var scene_image: String = ""  ## res://assets/art/battles/... scene-setting image

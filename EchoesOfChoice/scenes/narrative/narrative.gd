@@ -43,7 +43,10 @@ func _build_ui() -> void:
 func _show_narrative() -> void:
 	match GameState.game_phase:
 		GameState.GamePhase.NARRATIVE:
-			MusicManager.play_context(MusicManager.MusicContext.CUTSCENE)
+			if not GameState.current_battle.cutscene_track.is_empty():
+				MusicManager.play_music(GameState.current_battle.cutscene_track)
+			else:
+				MusicManager.play_context(MusicManager.MusicContext.CUTSCENE)
 			if GameState.narrative_mode == GameState.NarrativeMode.PRE_BATTLE:
 				_dialogue.show_text(GameState.current_battle.pre_battle_text)
 			else:

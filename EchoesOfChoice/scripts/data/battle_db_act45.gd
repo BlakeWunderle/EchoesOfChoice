@@ -70,6 +70,7 @@ static func corrupted_city_battle() -> BattleData:
 	]
 	b.next_battle_id = "DepthsBattle"
 	b.music_track = "res://assets/audio/music/battle_dark/MUSC_Black_Moon_52BPM_Eminor_1644_Full_Loop.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 06.wav"
 	return b
 
 
@@ -100,6 +101,7 @@ static func corrupted_wilds_battle() -> BattleData:
 	]
 	b.next_battle_id = "DepthsBattle"
 	b.music_track = "res://assets/audio/music/battle/Demon's Lair LOOP.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 08.wav"
 	return b
 
 
@@ -134,6 +136,7 @@ static func depths_battle() -> BattleData:
 	]
 	b.next_battle_id = "GateBattle"
 	b.music_track = "res://assets/audio/music/battle_dark/MUSC_Secret_Garden_76BPM_Eminor_1644_Full_Loop.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#12 Cave Horn.wav"
 	return b
 
 
@@ -166,6 +169,7 @@ static func gate_battle() -> BattleData:
 	]
 	b.next_battle_id = "StrangerFinalBattle"
 	b.music_track = "res://assets/audio/music/boss/Awakening of the Juggernaut_FULL.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#15 Dark Strings Swell.wav"
 	return b
 
 
@@ -204,4 +208,5 @@ static func stranger_final_battle() -> BattleData:
 		"Whatever comes next, they'll face it together.",
 	]
 	b.music_track = "res://assets/audio/music/boss/The Battle of Ages_FULL.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#1 Alt 2.wav"
 	return b

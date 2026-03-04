@@ -74,6 +74,7 @@ static func city_street_battle() -> BattleData:
 	]
 	b.next_battle_id = "WolfForestBattle"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Weeping Walls.ogg"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#2.wav"
 	return b
 
 
@@ -102,6 +103,7 @@ static func wolf_forest_battle() -> BattleData:
 	]
 	b.next_battle_id = "WaypointDefenseBattle"
 	b.music_track = "res://assets/audio/music/battle/Duel Drums Only LOOP.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#3.wav"
 	return b
 
 
@@ -130,6 +132,7 @@ static func waypoint_defense_battle() -> BattleData:
 	]
 	b.next_battle_id = "ForestWaypoint"
 	b.music_track = "res://assets/audio/music/battle/Pillage LOOP.wav"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#4.wav"
 	return b
 
 
