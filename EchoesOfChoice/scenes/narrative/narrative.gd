@@ -50,6 +50,9 @@ func _show_narrative() -> void:
 				_dialogue.show_text(GameState.current_battle.post_battle_text)
 		GameState.GamePhase.ENDING:
 			_show_ending()
+		_:
+			push_error("Narrative: unexpected game_phase %s" % GameState.game_phase)
+			_dialogue.show_text(["Something went wrong. Press continue to return to title."])
 
 
 func _show_ending() -> void:
@@ -98,6 +101,8 @@ func _on_text_finished() -> void:
 					_advance_after_battle()
 		GameState.GamePhase.ENDING:
 			# Return to title
+			SceneManager.change_scene("res://scenes/title/title.tscn")
+		_:
 			SceneManager.change_scene("res://scenes/title/title.tscn")
 
 
