@@ -1,7 +1,7 @@
 extends Control
 
-## Party creation scene. Tavern introduction + 3 character creation loops.
-## Text and flow from C# Program.cs CreateParty().
+## Party creation scene. Story-aware: tavern intro (S1) or cave amnesia (S2).
+## 3 character creation loops with story-specific narrative text.
 
 const DialoguePanel := preload("res://scripts/ui/dialogue_panel.gd")
 const NameInput := preload("res://scripts/ui/name_input.gd")
@@ -38,8 +38,15 @@ var _choice_menu: ChoiceMenu
 var _vbox: VBoxContainer
 
 
+func _is_s2() -> bool:
+	return GameState.current_story_id == "story_2"
+
+
 func _ready() -> void:
-	MusicManager.play_music("res://assets/audio/music/town/Medieval Tavern 03.wav")
+	if _is_s2():
+		MusicManager.play_music("res://assets/audio/music/cutscene/#12 Cave Horn.wav")
+	else:
+		MusicManager.play_music("res://assets/audio/music/town/Medieval Tavern 03.wav")
 	_class_options = BASE_CLASS_OPTIONS.duplicate()
 	_class_ids = BASE_CLASS_IDS.duplicate()
 	if UnlockManager.is_unlocked("story_1_complete"):
@@ -90,13 +97,25 @@ func _set_state(new_state: State) -> void:
 		State.INTRO:
 			_show_dialogue(_get_intro_text())
 		State.NAME_1:
-			_name_input.show_prompt("'What is your name, young warrior?'")
+			if _is_s2():
+				_name_input.show_prompt("A leather bracelet on this one's wrist. Letters are stamped into it...")
+			else:
+				_name_input.show_prompt("'What is your name, young warrior?'")
 		State.NAME_2:
-			_name_input.show_prompt("'And what is your name?'")
+			if _is_s2():
+				_name_input.show_prompt("Scratched into the back of a belt buckle, barely legible...")
+			else:
+				_name_input.show_prompt("'And what is your name?'")
 		State.NAME_3:
-			_name_input.show_prompt("'And you? What is your name?'")
+			if _is_s2():
+				_name_input.show_prompt("Stitched into the collar of a torn cloak...")
+			else:
+				_name_input.show_prompt("'And you? What is your name?'")
 		State.CLASS_1, State.CLASS_2, State.CLASS_3:
-			_show_dialogue(["What is your calling?"])
+			if _is_s2():
+				_show_dialogue(["Something stirs. A reflex. A memory buried in muscle and bone. What comes naturally?"])
+			else:
+				_show_dialogue(["What is your calling?"])
 		State.CONFIRM_1, State.CONFIRM_2, State.CONFIRM_3:
 			var fighter: FighterData = _party.back()
 			_show_dialogue(["%s the %s joins the party!" % [
@@ -142,13 +161,22 @@ func _on_name_entered(player_name: String) -> void:
 
 	match _state:
 		State.NAME_1:
-			_show_dialogue(["'Greetings, %s. You look like someone who can handle themselves.'" % player_name])
+			if _is_s2():
+				_show_dialogue(["'%s.' The name feels right. But nothing else does." % player_name])
+			else:
+				_show_dialogue(["'Greetings, %s. You look like someone who can handle themselves.'" % player_name])
 			_state = State.CLASS_1
 		State.NAME_2:
-			_show_dialogue(["'Greetings, %s. Good, we'll need the help.'" % player_name])
+			if _is_s2():
+				_show_dialogue(["'%s.' Another name reclaimed from the dark." % player_name])
+			else:
+				_show_dialogue(["'Greetings, %s. Good, we'll need the help.'" % player_name])
 			_state = State.CLASS_2
 		State.NAME_3:
-			_show_dialogue(["'Greetings, %s. That makes three. That should be enough.'" % player_name])
+			if _is_s2():
+				_show_dialogue(["'%s.' Three names. Three strangers. It's a start." % player_name])
+			else:
+				_show_dialogue(["'Greetings, %s. That makes three. That should be enough.'" % player_name])
 			_state = State.CLASS_3
 
 
@@ -172,9 +200,11 @@ func _finish() -> void:
 	SceneManager.change_scene("res://scenes/narrative/narrative.tscn")
 
 
-# --- Narrative text from C# Program.cs ---
+# --- Story 1: Tavern narrative ---
 
 func _get_intro_text() -> Array[String]:
+	if _is_s2():
+		return _get_intro_text_s2()
 	return [
 		"The Copper Mug. Your regular haunt. You know every crack in the floorboards, every stain on the bar.",
 		"But tonight something is different. The fire burns low without anyone stoking it. The other regulars have gone quiet.",
@@ -185,6 +215,8 @@ func _get_intro_text() -> Array[String]:
 
 
 func _get_bridge_1_text() -> Array[String]:
+	if _is_s2():
+		return _get_bridge_1_text_s2()
 	return [
 		"Shortly after, another warrior overhears the conversation and slides into the booth.",
 		"The stranger looks them over and asks the same question.",
@@ -192,6 +224,8 @@ func _get_bridge_1_text() -> Array[String]:
 
 
 func _get_bridge_2_text() -> Array[String]:
+	if _is_s2():
+		return _get_bridge_2_text_s2()
 	return [
 		"One last warrior takes a seat at the now crowded table.",
 		"The stranger doesn't even hesitate.",
@@ -199,10 +233,47 @@ func _get_bridge_2_text() -> Array[String]:
 
 
 func _get_outro_text() -> Array[String]:
+	if _is_s2():
+		return _get_outro_text_s2()
 	return [
 		"The stranger leans in close, voice barely above a whisper.",
 		"'Something evil has taken root beyond the forest. The city needs heroes whether it knows it or not.'",
 		"'Find the source. End it. I'll be watching, and I'll find you when the time is right.'",
 		"The stranger raises a glass but doesn't drink. Just holds it, watching the liquid catch the firelight.",
 		"Then they set it down, untouched, and disappear into the crowd. The coin left on the table is gold. Blank on one side.",
+	]
+
+
+# --- Story 2: Cave amnesia narrative ---
+
+func _get_intro_text_s2() -> Array[String]:
+	return [
+		"Darkness. Complete, suffocating darkness.",
+		"A sound. Dripping water. The echo of breathing that isn't yours.",
+		"Your eyes adjust. Stone walls. A low ceiling. A cave.",
+		"You don't know where you are. You don't know how you got here.",
+		"You don't know who you are.",
+		"But you're not alone. Two other figures stir in the darkness nearby.",
+	]
+
+
+func _get_bridge_1_text_s2() -> Array[String]:
+	return [
+		"A groan from deeper in the cave. Someone else is here.",
+		"They stumble into the faint light, clutching their head. Same confusion. Same emptiness.",
+	]
+
+
+func _get_bridge_2_text_s2() -> Array[String]:
+	return [
+		"A third figure pulls themselves up from the stone floor, blinking against the dim glow.",
+		"No recognition. No memory. Just another stranger in the dark.",
+	]
+
+
+func _get_outro_text_s2() -> Array[String]:
+	return [
+		"Three strangers. No memories. A cave that hums with a light that shouldn't exist.",
+		"The crystal veins in the walls pulse faintly, pointing deeper into the dark.",
+		"Whatever answers exist, they're not here. The only way out is forward.",
 	]
