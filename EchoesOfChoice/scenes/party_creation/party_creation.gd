@@ -16,7 +16,7 @@ enum State {
 	OUTRO, DONE,
 }
 
-const CLASS_OPTIONS: Array[Dictionary] = [
+const BASE_CLASS_OPTIONS: Array[Dictionary] = [
 	{"label": "Squire", "description": "A sturdy warrior who fights with steel and shield."},
 	{"label": "Mage", "description": "A wielder of arcane forces and elemental magic."},
 	{"label": "Entertainer", "description": "A charismatic performer who inspires allies."},
@@ -24,11 +24,13 @@ const CLASS_OPTIONS: Array[Dictionary] = [
 	{"label": "Wildling", "description": "A primal soul who communes with nature and beasts."},
 ]
 
-const CLASS_IDS: Array[String] = ["Squire", "Mage", "Entertainer", "Tinker", "Wildling"]
+const BASE_CLASS_IDS: Array[String] = ["Squire", "Mage", "Entertainer", "Tinker", "Wildling"]
 
 var _state: State = State.INTRO
 var _current_name: String = ""
 var _party: Array[FighterData] = []
+var _class_options: Array[Dictionary] = []
+var _class_ids: Array[String] = []
 
 var _dialogue: DialoguePanel
 var _name_input: NameInput
@@ -38,6 +40,12 @@ var _vbox: VBoxContainer
 
 func _ready() -> void:
 	MusicManager.play_music("res://assets/audio/music/town/Medieval Tavern 03.wav")
+	_class_options = BASE_CLASS_OPTIONS.duplicate()
+	_class_ids = BASE_CLASS_IDS.duplicate()
+	if UnlockManager.is_unlocked("story_1_complete"):
+		_class_options.append({"label": "Wanderer",
+			"description": "A wilderness-raised fighter who learned to endure the land's magic."})
+		_class_ids.append("Wanderer")
 	_build_ui()
 	_set_state(State.INTRO)
 
@@ -113,7 +121,7 @@ func _on_text_finished() -> void:
 			_set_state(State.NAME_1)
 		State.CLASS_1, State.CLASS_2, State.CLASS_3:
 			_dialogue.visible = false
-			_choice_menu.show_choices(CLASS_OPTIONS)
+			_choice_menu.show_choices(_class_options)
 		State.CONFIRM_1:
 			_set_state(State.BRIDGE_1)
 		State.CONFIRM_2:
@@ -146,7 +154,7 @@ func _on_name_entered(player_name: String) -> void:
 
 func _on_class_selected(index: int) -> void:
 	_choice_menu.hide_menu()
-	var class_id: String = CLASS_IDS[index]
+	var class_id: String = _class_ids[index]
 	var fighter: FighterData = FighterDB.create_player(class_id, _current_name)
 	_party.append(fighter)
 
