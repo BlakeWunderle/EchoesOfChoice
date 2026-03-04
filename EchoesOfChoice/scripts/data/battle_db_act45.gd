@@ -35,6 +35,7 @@ static func copper_mug_stop() -> BattleData:
 		{"label": "City: The market square pulses with necrotic energy.", "battle_id": "CorruptedCityBattle"},
 		{"label": "Wilds: The stranger's mark is carved into every tree.", "battle_id": "CorruptedWildsBattle"},
 	]
+	b.music_track = "res://assets/audio/music/town/Medieval Tavern 03.wav"
 	return b
 
 
@@ -68,6 +69,7 @@ static func corrupted_city_battle() -> BattleData:
 		"Whatever the stranger is building, it's underground.",
 	]
 	b.next_battle_id = "DepthsBattle"
+	b.music_track = "res://assets/audio/music/battle_dark/MUSC_Black_Moon_52BPM_Eminor_1644_Full_Loop.wav"
 	return b
 
 
@@ -97,6 +99,7 @@ static func corrupted_wilds_battle() -> BattleData:
 		"The tunnels under the city. That's where the stranger went.",
 	]
 	b.next_battle_id = "DepthsBattle"
+	b.music_track = "res://assets/audio/music/battle/Demon's Lair LOOP.wav"
 	return b
 
 
@@ -130,6 +133,7 @@ static func depths_battle() -> BattleData:
 		"The gate is guarded.",
 	]
 	b.next_battle_id = "GateBattle"
+	b.music_track = "res://assets/audio/music/battle_dark/MUSC_Secret_Garden_76BPM_Eminor_1644_Full_Loop.wav"
 	return b
 
 
@@ -161,6 +165,7 @@ static func gate_battle() -> BattleData:
 		"The party descends.",
 	]
 	b.next_battle_id = "StrangerFinalBattle"
+	b.music_track = "res://assets/audio/music/boss/Awakening of the Juggernaut_FULL.wav"
 	return b
 
 
@@ -198,4 +203,5 @@ static func stranger_final_battle() -> BattleData:
 		"The stranger is gone. The shadow is gone. The world will heal, slowly, with scars, but it will heal.",
 		"Whatever comes next, they'll face it together.",
 	]
+	b.music_track = "res://assets/audio/music/boss/The Battle of Ages_FULL.wav"
 	return b

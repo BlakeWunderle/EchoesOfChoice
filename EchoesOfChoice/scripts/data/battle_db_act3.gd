@@ -26,6 +26,7 @@ static func city_outskirts_stop() -> BattleData:
 		"The city skyline looks wrong. Dark shapes move on the walls. Whatever happened here, it happened fast.",
 	]
 	b.next_battle_id = "ReturnToCityStreetBattle"
+	b.music_track = "res://assets/audio/music/town/Town Village 05(L).wav"
 	return b
 
 
@@ -57,6 +58,7 @@ static func return_to_city_street_battle() -> BattleData:
 		"The tower looms ahead, its peak lost in a sky that shouldn't be that dark this time of day.",
 	]
 	b.next_battle_id = "StrangerTowerBattle"
+	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Arcane Thrones.ogg"
 	return b
 
 
@@ -90,4 +92,5 @@ static func stranger_tower_battle() -> BattleData:
 		"The world is breaking.",
 	]
 	b.next_battle_id = "CopperMugStop"
+	b.music_track = "res://assets/audio/music/boss/Impending Terror_FULL.wav"
 	return b

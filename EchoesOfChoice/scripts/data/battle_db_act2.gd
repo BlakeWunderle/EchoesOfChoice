@@ -32,6 +32,7 @@ static func highland_battle() -> BattleData:
 		"The highlands open ahead into a narrow pass, the wind howling through the gap between sheer rock walls.",
 	]
 	b.next_battle_id = "MountainPassBattle"
+	b.music_track = "res://assets/audio/music/battle/Against The Winds LOOP.wav"
 	return b
 
 
@@ -58,6 +59,7 @@ static func deep_forest_battle() -> BattleData:
 		"The party ducks inside for cover, hoping the storm passes before the cave's occupant returns.",
 	]
 	b.next_battle_id = "CaveBattle"
+	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Dark Fables.ogg"
 	return b
 
 
@@ -81,6 +83,7 @@ static func shore_battle() -> BattleData:
 		"A sandy beach stretches out ahead, and in the distance the wreck of a ship juts from the shallows.",
 	]
 	b.next_battle_id = "BeachBattle"
+	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Circle of the Serpent.ogg"
 	return b
 
 
@@ -109,6 +112,7 @@ static func mountain_pass_battle() -> BattleData:
 		"Beyond the pass the land drops into a wide valley. Smoke from cooking fires marks an outpost ahead.",
 	]
 	b.next_battle_id = "WildernessOutpost"
+	b.music_track = "res://assets/audio/music/battle/Defending The Kingdom LOOP.wav"
 	return b
 
 
@@ -135,6 +139,7 @@ static func cave_battle() -> BattleData:
 		"Twin dragons, ancient and territorial. Not the source, but old creatures don't settle near nothing. Something stirred them. Something darker than treasure hunters.",
 	]
 	b.next_battle_id = "WildernessOutpost"
+	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Fire Water.ogg"
 	return b
 
 
@@ -159,6 +164,7 @@ static func beach_battle() -> BattleData:
 		"Among the crates and barrels they find supplies worth taking. Not treasure, but enough to keep going.",
 	]
 	b.next_battle_id = "WildernessOutpost"
+	b.music_track = "res://assets/audio/music/battle/Battle Theme 07(L).wav"
 	return b
 
 
@@ -248,6 +254,7 @@ static func circus_battle() -> BattleData:
 		"No one knows what to make of it. They take it.",
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
+	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Bloody Night.ogg"
 	return b
 
 
@@ -275,6 +282,7 @@ static func lab_battle() -> BattleData:
 		"No one touches it. Not yet. But no one suggests leaving it either.",
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
+	b.music_track = "res://assets/audio/music/battle_scifi/Cantina - Smooth Talk LOOP.wav"
 	return b
 
 
@@ -301,6 +309,7 @@ static func army_battle() -> BattleData:
 		"No one can explain it. They wrap it in cloth and carry it.",
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
+	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Storming the Citadel.ogg"
 	return b
 
 
@@ -331,6 +340,7 @@ static func cemetery_battle() -> BattleData:
 		"No one wants to carry it. No one wants to leave it behind either.",
 	]
 	b.next_battle_id = "OutpostDefenseBattle"
+	b.music_track = "res://assets/audio/music/battle_dark/08_Rotten_Memories.wav"
 	return b
 
 
@@ -361,6 +371,7 @@ static func outpost_defense_battle() -> BattleData:
 		"In the firelight, someone swears the cloth over it is glowing. No one checks.",
 	]
 	b.next_battle_id = "MirrorBattle"
+	b.music_track = "res://assets/audio/music/battle_dark/04_Eyes_in_the_Woods.wav"
 	return b
 
 
@@ -406,4 +417,5 @@ static func mirror_battle() -> BattleData:
 		"They run.",
 	]
 	b.next_battle_id = "CityOutskirtsStop"
+	b.music_track = "res://assets/audio/music/battle_dark/01_Static_Presence.wav"
 	return b

@@ -101,6 +101,7 @@ static func wolf_forest_battle() -> BattleData:
 		"The road continues north. According to the stranger, a waypoint inn lies not far ahead.",
 	]
 	b.next_battle_id = "WaypointDefenseBattle"
+	b.music_track = "res://assets/audio/music/battle/Duel Drums Only LOOP.wav"
 	return b
 
 
@@ -128,6 +129,7 @@ static func waypoint_defense_battle() -> BattleData:
 		"The stranger mentions quietly that they've been here before. They don't elaborate.",
 	]
 	b.next_battle_id = "ForestWaypoint"
+	b.music_track = "res://assets/audio/music/battle/Pillage LOOP.wav"
 	return b
 
 
@@ -154,4 +156,5 @@ static func forest_waypoint() -> BattleData:
 		{"label": "North: The trees grow older and darker.", "battle_id": "DeepForestBattle"},
 		{"label": "East: Salt in the air and the sound of surf.", "battle_id": "ShoreBattle"},
 	]
+	b.music_track = "res://assets/audio/music/town/Medieval Celtic 01(L).wav"
 	return b

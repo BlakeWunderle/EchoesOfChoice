@@ -48,14 +48,15 @@ func play_context(context: int, fade: float = 1.0) -> void:
 		return
 	if context == _current_context:
 		return
-	_current_context = context
 	var folder: String = CONTEXT_FOLDERS.get(context, "")
 	if folder.is_empty():
 		stop_music(fade)
 		return
 	var tracks: Array[String] = _list_tracks(folder)
 	if tracks.is_empty():
+		push_warning("MusicManager: No tracks found for context %d in %s" % [context, folder])
 		return
+	_current_context = context
 	var path: String = tracks[randi() % tracks.size()]
 	play_music(path, fade)
 
@@ -112,7 +113,7 @@ func set_music_volume(linear: float) -> void:
 	_music_volume_linear = clampf(linear, 0.0, 1.0)
 	if _headless:
 		return
-	if _player.playing:
+	if _player != null and _player.playing:
 		_player.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
 
 
