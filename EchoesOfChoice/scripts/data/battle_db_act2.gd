@@ -14,7 +14,6 @@ const FighterData := preload("res://scripts/data/fighter_data.gd")
 static func highland_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "HighlandBattle"
-	b.location_name = "The Highlands"
 	b.scene_image = "res://assets/art/battles/highlands.png"
 	b.enemies = [
 		EnemyDB.create_raider("Wulfric"),
@@ -40,7 +39,6 @@ static func highland_battle() -> BattleData:
 static func deep_forest_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "DeepForestBattle"
-	b.location_name = "Old Growth Forest"
 	b.scene_image = "res://assets/art/battles/old_growth_forest.png"
 	b.enemies = [
 		EnemyDB.create_witch("Morwen"),
@@ -68,7 +66,6 @@ static func deep_forest_battle() -> BattleData:
 static func shore_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "ShoreBattle"
-	b.location_name = "Rocky Shore"
 	b.scene_image = "res://assets/art/battles/rocky_shore.png"
 	b.enemies = [
 		EnemyDB.create_siren("Lorelei"),
@@ -97,7 +94,6 @@ static func shore_battle() -> BattleData:
 static func mountain_pass_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "MountainPassBattle"
-	b.location_name = "Mountain Pass"
 	b.scene_image = "res://assets/art/battles/mountain_pass.png"
 	b.enemies = [
 		EnemyDB.create_troll("Grendal"),
@@ -123,7 +119,6 @@ static func mountain_pass_battle() -> BattleData:
 static func cave_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CaveBattle"
-	b.location_name = "Dragon's Lair"
 	b.scene_image = "res://assets/art/battles/dragons_lair.png"
 	var leader_name: String = "the adventurer"
 	if not GameState.party.is_empty():
@@ -151,7 +146,6 @@ static func cave_battle() -> BattleData:
 static func beach_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "BeachBattle"
-	b.location_name = "Shipwreck Beach"
 	b.scene_image = "res://assets/art/battles/shipwreck_beach.png"
 	b.enemies = [
 		EnemyDB.create_captain("Greybeard"),
@@ -181,7 +175,6 @@ static func beach_battle() -> BattleData:
 static func wilderness_outpost() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "WildernessOutpost"
-	b.location_name = "Wilderness Outpost"
 	b.scene_image = "res://assets/art/battles/wilderness_outpost.png"
 	# No enemies, narrative scene will skip battle and go to post_battle_text
 	var prev: String = GameState.previous_battle_id
@@ -204,6 +197,7 @@ static func wilderness_outpost() -> BattleData:
 		"He looks toward the city in the distance. 'Whatever's happening, it's not starting out here. It's starting there. You're all just catching the edges of it.'",
 		"'City's that way. Whatever you find out here, if you make it back, make it count.'",
 	]
+	b.music_track = "res://assets/audio/music/town/Medieval Celtic 07(L).wav"
 	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 01.wav"
 	# Variant choices
 	match prev:
@@ -232,7 +226,6 @@ static func wilderness_outpost() -> BattleData:
 static func circus_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CircusBattle"
-	b.location_name = "Wooded Hills"
 	b.scene_image = "res://assets/art/battles/wooded_hills.png"
 	b.enemies = [
 		EnemyDB.create_harlequin("Louis"),
@@ -269,7 +262,6 @@ static func circus_battle() -> BattleData:
 static func lab_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "LabBattle"
-	b.location_name = "The Laboratory"
 	b.scene_image = "res://assets/art/battles/laboratory.png"
 	b.enemies = [
 		EnemyDB.create_android("Deus"),
@@ -298,7 +290,6 @@ static func lab_battle() -> BattleData:
 static func army_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "ArmyBattle"
-	b.location_name = "Military Encampment"
 	b.scene_image = "res://assets/art/battles/military_encampment.png"
 	b.enemies = [
 		EnemyDB.create_commander("Varro"),
@@ -326,7 +317,6 @@ static func army_battle() -> BattleData:
 static func cemetery_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CemeteryBattle"
-	b.location_name = "Fog-covered Cemetery"
 	b.scene_image = "res://assets/art/battles/cemetery.png"
 	var leader_name: String = "the adventurer"
 	if not GameState.party.is_empty():
@@ -362,7 +352,6 @@ static func cemetery_battle() -> BattleData:
 static func outpost_defense_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "OutpostDefenseBattle"
-	b.location_name = "Wilderness Outpost"
 	b.scene_image = "res://assets/art/battles/outpost_night.png"
 	b.enemies = [
 		EnemyDB.create_shade("Umbra"),
@@ -390,7 +379,6 @@ static func outpost_defense_battle() -> BattleData:
 static func mirror_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "MirrorBattle"
-	b.location_name = "Wilderness Outpost"
 	b.scene_image = "res://assets/art/battles/mirror_battle.png"
 	# Clone the player's party as shadow enemies at reduced stats
 	var clones: Array = []

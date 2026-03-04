@@ -17,7 +17,6 @@ static func create_battle(battle_id: String) -> BattleData:
 static func s2_opening_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_OpeningBattle"
-	b.location_name = "Placeholder"
 	b.enemies = [
 		EnemyDB.create_thug("Test Enemy"),
 	]

@@ -1,7 +1,5 @@
 extends CanvasLayer
 
-signal transition_finished
-
 var _fader: ColorRect
 var _preload_requests: Dictionary = {}
 var _transitioning: bool = false
@@ -23,14 +21,6 @@ func preload_scene(path: String) -> void:
 	ResourceLoader.load_threaded_request(path, "", false, ResourceLoader.CACHE_MODE_REUSE)
 	_preload_requests[path] = true
 
-
-func preload_resources(paths: Array) -> void:
-	for path in paths:
-		if path.is_empty() or _preload_requests.has(path):
-			continue
-		if ResourceLoader.exists(path):
-			ResourceLoader.load_threaded_request(path, "", false, ResourceLoader.CACHE_MODE_REUSE)
-			_preload_requests[path] = true
 
 
 func change_scene(path: String, fade_duration: float = 0.4) -> void:
@@ -76,7 +66,6 @@ func change_scene(path: String, fade_duration: float = 0.4) -> void:
 	await tween_out.finished
 	_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_transitioning = false
-	transition_finished.emit()
 
 
 func _await_threaded_load(path: String) -> PackedScene:

@@ -57,7 +57,6 @@ static func create_battle(battle_id: String) -> BattleData:
 static func city_street_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CityStreetBattle"
-	b.location_name = "City Streets"
 	b.scene_image = "res://assets/art/battles/city_streets.png"
 	b.enemies = [
 		EnemyDB.create_thug("Alexander"),
@@ -84,7 +83,6 @@ static func city_street_battle() -> BattleData:
 static func wolf_forest_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "WolfForestBattle"
-	b.location_name = "Dark Forest"
 	b.scene_image = "res://assets/art/battles/dark_forest.png"
 	b.enemies = [
 		EnemyDB.create_wolf("Greyfang"),
@@ -113,7 +111,6 @@ static func wolf_forest_battle() -> BattleData:
 static func waypoint_defense_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "WaypointDefenseBattle"
-	b.location_name = "Wanderer's Rest"
 	b.scene_image = "res://assets/art/battles/wanderers_rest.png"
 	b.enemies = [
 		EnemyDB.create_bandit("Riggs"),
@@ -142,7 +139,6 @@ static func waypoint_defense_battle() -> BattleData:
 static func forest_waypoint() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "ForestWaypoint"
-	b.location_name = "Forest Waypoint"
 	b.scene_image = "res://assets/art/battles/forest_waypoint.png"
 	b.is_town_stop = true
 	b.pre_battle_text = [

@@ -13,7 +13,6 @@ const EnemyDB := preload("res://scripts/data/enemy_db.gd")
 static func city_outskirts_stop() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CityOutskirtsStop"
-	b.location_name = "City Outskirts"
 	b.scene_image = "res://assets/art/battles/city_outskirts.png"
 	b.is_town_stop = true
 	b.pre_battle_text = [
@@ -37,7 +36,6 @@ static func city_outskirts_stop() -> BattleData:
 static func return_to_city_street_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "ReturnToCityStreetBattle"
-	b.location_name = "Ravaged City Streets"
 	b.scene_image = "res://assets/art/battles/ravaged_streets.png"
 	b.enemies = [
 		EnemyDB.create_royal_guard("Aldric"),
@@ -70,7 +68,6 @@ static func return_to_city_street_battle() -> BattleData:
 static func stranger_tower_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "StrangerTowerBattle"
-	b.location_name = "The Stranger's Tower"
 	b.scene_image = "res://assets/art/battles/stranger_tower.png"
 	b.escape_hp_pct = 0.3
 	b.enemies = [

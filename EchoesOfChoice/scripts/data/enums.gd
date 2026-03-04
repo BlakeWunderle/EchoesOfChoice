@@ -14,8 +14,3 @@ enum StatType {
 	TAUNT,
 	DODGE_CHANCE,
 }
-
-enum Team {
-	PLAYER,
-	ENEMY,
-}

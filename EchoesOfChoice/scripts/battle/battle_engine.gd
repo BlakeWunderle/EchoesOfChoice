@@ -8,8 +8,6 @@ const AbilityData := preload("res://scripts/data/ability_data.gd")
 const Enums := preload("res://scripts/data/enums.gd")
 
 signal combat_message(text: String)
-signal turn_started(fighter: FighterData)
-signal action_needed(fighter: FighterData)
 signal fighter_died(fighter: FighterData)
 signal battle_won
 signal battle_lost

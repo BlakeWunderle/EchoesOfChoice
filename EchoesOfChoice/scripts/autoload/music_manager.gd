@@ -6,9 +6,7 @@ enum MusicContext {
 	MENU,
 	BATTLE,
 	BATTLE_BOSS,
-	BATTLE_SCIFI,
 	BATTLE_DARK,
-	EXPLORATION,
 	TOWN,
 	CUTSCENE,
 	GAME_OVER,
@@ -107,18 +105,6 @@ func _fade_out_player(duration: float) -> void:
 	tween.tween_property(dying, "volume_db", -40.0, duration)
 	tween.tween_callback(dying.stop)
 	tween.tween_callback(dying.queue_free)
-
-
-func set_music_volume(linear: float) -> void:
-	_music_volume_linear = clampf(linear, 0.0, 1.0)
-	if _headless:
-		return
-	if _player != null and _player.playing:
-		_player.volume_db = linear_to_db(maxf(0.0001, _music_volume_linear))
-
-
-func clear_context() -> void:
-	_current_context = -1
 
 
 

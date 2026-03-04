@@ -37,7 +37,3 @@ func add_message(text: String) -> void:
 
 func add_separator() -> void:
 	_label.append_text("\n[color=gray]───────────────────[/color]")
-
-
-func clear_log() -> void:
-	_label.clear()
