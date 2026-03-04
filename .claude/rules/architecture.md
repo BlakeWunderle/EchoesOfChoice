@@ -29,6 +29,7 @@ All paths below are relative to `EchoesOfChoice/`.
 - `game_state.gd` -- Game state: party, battle progression, phase tracking
 
 ### Scenes (`scenes/`)
+- `splash/splash.gd/.tscn` -- Wunderelf Studios splash screen, auto-advances to title
 - `title/title.gd/.tscn` -- Title screen with Continue/Load Game/New Game/Quit
 - `party_creation/party_creation.gd/.tscn` -- Tavern intro + 3 character creation loops
 - `narrative/narrative.gd/.tscn` -- Pre/post-battle narrative text, branch choices, endings
@@ -47,4 +48,6 @@ All paths below are relative to `EchoesOfChoice/`.
 ### Assets (`assets/`)
 - `audio/music/` -- ~90 music tracks across contexts (menu, battle, boss, exploration, town, cutscene, game_over, victory)
 - `audio/sfx/` -- ~600 sound effects in 28 categories + 8 voice packs
+- `art/ui/` -- Title background, Wunderelf Studios logo
+- `art/battles/` -- 26 battle scene background images
 - `fonts/` -- Oswald-Bold.ttf for game theme
