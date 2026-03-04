@@ -165,7 +165,12 @@ func _quit_to_title() -> void:
 
 
 func _copy_logs() -> void:
-	Logger.copy_to_clipboard()
+	var context: Array[String] = [
+		"Phase: %s" % _phase_name(),
+		"Battle: %s" % GameState.current_battle_id,
+		"Party: %s" % _party_summary(),
+	]
+	Logger.copy_to_clipboard(context)
 	_feedback_label.text = "Copied to clipboard!"
 	_feedback_label.visible = true
 	await get_tree().create_timer(1.5).timeout
@@ -241,3 +246,24 @@ func _back_to_main() -> void:
 	_save_vbox.visible = false
 	_main_vbox.visible = true
 	_resume_btn.grab_focus()
+
+
+func _phase_name() -> String:
+	match GameState.game_phase:
+		GameState.GamePhase.TITLE: return "Title"
+		GameState.GamePhase.PARTY_CREATION: return "Party Creation"
+		GameState.GamePhase.NARRATIVE: return "Narrative"
+		GameState.GamePhase.BATTLE: return "Battle"
+		GameState.GamePhase.TOWN_STOP: return "Town Stop"
+		GameState.GamePhase.ENDING: return "Ending"
+		_: return "Unknown"
+
+
+func _party_summary() -> String:
+	if GameState.party.is_empty():
+		return "(none)"
+	var parts: Array[String] = []
+	for fighter: RefCounted in GameState.party:
+		parts.append("%s the %s (Lv%d)" % [
+			fighter.character_name, fighter.character_type, fighter.level])
+	return ", ".join(parts)
