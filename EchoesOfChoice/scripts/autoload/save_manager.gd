@@ -24,7 +24,7 @@ func _save_path(slot: int) -> String:
 # =============================================================================
 
 func save_to_slot(slot: int) -> void:
-	Logger.info("Saved slot %d" % slot)
+	GameLog.info("Saved slot %d" % slot)
 	var save_data: Dictionary = _build_save_data()
 	var file := FileAccess.open(_save_path(slot), FileAccess.WRITE)
 	if file:
@@ -55,10 +55,10 @@ func _build_save_data() -> Dictionary:
 # =============================================================================
 
 func load_from_slot(slot: int) -> bool:
-	Logger.info("Loading slot %d" % slot)
+	GameLog.info("Loading slot %d" % slot)
 	var data: Dictionary = _read_save(slot)
 	if data.is_empty():
-		Logger.warn("Load failed: slot %d empty or corrupt" % slot)
+		GameLog.warn("Load failed: slot %d empty or corrupt" % slot)
 		return false
 
 	# Reconstruct party

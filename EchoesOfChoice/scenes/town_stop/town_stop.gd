@@ -120,7 +120,7 @@ func _on_upgrade_selected(index: int) -> void:
 	var old_name: String = fighter.character_name
 	GameState.upgrade_party_member(fighter, item)
 	var new_class: String = fighter.character_type
-	Logger.info("Upgrade: %s -> %s" % [old_name, new_class])
+	GameLog.info("Upgrade: %s -> %s" % [old_name, new_class])
 
 	_choice_menu.hide_menu()
 	_upgrade_label.visible = false

@@ -18,7 +18,7 @@ var game_won: bool = false
 
 
 func start_new_game() -> void:
-	Logger.info("New game started")
+	GameLog.info("New game started")
 	party.clear()
 	current_battle_id = ""
 	current_battle = null
@@ -33,7 +33,7 @@ func set_party(fighters: Array) -> void:
 
 
 func advance_to_battle(battle_id: String) -> void:
-	Logger.info("Battle: %s" % battle_id)
+	GameLog.info("Battle: %s" % battle_id)
 	previous_battle_id = current_battle_id
 	current_battle_id = battle_id
 	current_battle = _BattleDB.create_battle(battle_id)
@@ -70,6 +70,6 @@ func advance_with_choice(battle_id: String) -> void:
 
 
 func go_to_ending(won: bool) -> void:
-	Logger.info("Ending: %s" % ("victory" if won else "defeat"))
+	GameLog.info("Ending: %s" % ("victory" if won else "defeat"))
 	game_won = won
 	game_phase = GamePhase.ENDING

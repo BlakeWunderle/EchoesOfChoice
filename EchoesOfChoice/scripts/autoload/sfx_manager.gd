@@ -129,7 +129,7 @@ func play_voice(pack_id: String, action: String, volume: float = 1.0) -> void:
 	if _headless:
 		return
 	if action not in VOICE_ACTIONS:
-		Logger.warn("SFXManager: Unknown voice action: " + action)
+		GameLog.warn("SFXManager: Unknown voice action: " + action)
 		return
 	var key: String = "voice:%s:%s" % [pack_id, action]
 	if not _check_cooldown(key, VOICE_COOLDOWN_MS):
@@ -140,7 +140,7 @@ func play_voice(pack_id: String, action: String, volume: float = 1.0) -> void:
 		_track_cache[cache_key] = _list_tracks(folder)
 	var tracks: Array[String] = _track_cache[cache_key]
 	if tracks.is_empty():
-		Logger.warn("SFXManager: No voice tracks at: " + folder)
+		GameLog.warn("SFXManager: No voice tracks at: " + folder)
 		return
 	var path: String = _pick_random(tracks, key)
 	var player := _get_available_player()
@@ -284,7 +284,7 @@ func _get_tracks_for_category(category: int) -> Array[String]:
 		all_tracks = filtered
 	_track_cache[category] = all_tracks
 	if all_tracks.is_empty():
-		Logger.warn("SFXManager: No tracks found for category %d" % category)
+		GameLog.warn("SFXManager: No tracks found for category %d" % category)
 	return all_tracks
 
 

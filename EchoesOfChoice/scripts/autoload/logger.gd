@@ -1,8 +1,8 @@
 extends Node
 
 ## Playtester log system. Stores recent game events in an in-memory ring buffer.
-## Use Logger.info() / Logger.warn() / Logger.error() to record events.
-## Use Logger.copy_to_clipboard() from the pause menu to share logs.
+## Use GameLog.info() / GameLog.warn() / GameLog.error() to record events.
+## Use GameLog.copy_to_clipboard() from the pause menu to share logs.
 
 enum Level { INFO, WARN, ERROR }
 

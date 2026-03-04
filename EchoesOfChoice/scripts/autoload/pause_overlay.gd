@@ -170,7 +170,7 @@ func _copy_logs() -> void:
 		"Battle: %s" % GameState.current_battle_id,
 		"Party: %s" % _party_summary(),
 	]
-	Logger.copy_to_clipboard(context)
+	GameLog.copy_to_clipboard(context)
 	_feedback_label.text = "Copied to clipboard!"
 	_feedback_label.visible = true
 	await get_tree().create_timer(1.5).timeout
