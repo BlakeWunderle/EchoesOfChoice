@@ -482,7 +482,7 @@ Wanderer's magic-defense focus means it should perform especially well against m
 
 ## Story 2 Difficulty Gradient
 
-Story 2 is harder than Story 1. Starts at 85% (vs 90%) and drops to 55% (vs 65%). Same tier transitions and T2 bump structure.
+Story 2 is harder than Story 1. Starts at 85% (vs 90%) and drops to 60% (vs 65%). Same tier transitions and T2 bump structure.
 
 | Prog | Target | Range | Tier | Battles |
 |------|--------|-------|------|---------|
@@ -495,11 +495,11 @@ Story 2 is harder than Story 1. Starts at 85% (vs 90%) and drops to 55% (vs 65%)
 | 6 | 71% | 68-74% | T1 | [TBD] |
 | 7 | 68% | 65-71% | T1 | [TBD] |
 | 8 | 73% | 70-76% | T2 | [TBD] |
-| 9 | 70% | 67-73% | T2 | [TBD] |
-| 10 | 67% | 64-70% | T2 | [TBD] |
-| 11 | 64% | 61-67% | T2 | [TBD] |
-| 12 | 60% | 57-63% | T2 | [TBD] |
-| 13 | 55% | 52-58% | T2 | [TBD] |
+| 9 | 71% | 68-74% | T2 | [TBD] |
+| 10 | 68% | 65-71% | T2 | [TBD] |
+| 11 | 66% | 63-69% | T2 | [TBD] |
+| 12 | 63% | 60-66% | T2 | [TBD] |
+| 13 | 60% | 57-63% | T2 | [TBD] |
 
 ### Story 2 Class Band Formula
 
@@ -516,11 +516,11 @@ Same `target +/- 15%` rule, but the lower targets mean tighter absolute bands at
 | 6 | 71% | 56% | 86% |
 | 7 | 68% | 53% | 83% |
 | 8 | 73% | 58% | 88% |
-| 9 | 70% | 55% | 85% |
-| 10 | 67% | 52% | 82% |
-| 11 | 64% | 49% | 79% |
-| 12 | 60% | 45% | 75% |
-| 13 | 55% | 40% | 70% |
+| 9 | 71% | 56% | 86% |
+| 10 | 68% | 53% | 83% |
+| 11 | 66% | 51% | 81% |
+| 12 | 63% | 48% | 78% |
+| 13 | 60% | 45% | 75% |
 
 ---
 
