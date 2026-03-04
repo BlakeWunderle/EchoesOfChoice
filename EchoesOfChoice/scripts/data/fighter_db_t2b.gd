@@ -89,6 +89,7 @@ static func _lu_mime(f: FighterData) -> void:
 
 static func upgrade_to_laureate(f: FighterData) -> void:
 	f.class_id = "Laureate"; f.character_type = "Laureate"
+	f.health += 5; f.max_health += 5
 	f.magic_attack += 8; f.magic_defense += 5
 	f.crit_chance = 10; f.crit_damage = 1; f.dodge_chance = 10
 	f.abilities = [PAB.ovation(), PAB.recite(), PAB.eulogy()]
@@ -107,7 +108,7 @@ static func _lu_laureate(f: FighterData) -> void:
 	var hp := randi_range(7, 9); f.health += hp; f.max_health += hp
 	var mp := randi_range(5, 7); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(2, 3); f.physical_defense += randi_range(2, 3)
-	f.magic_attack += randi_range(7, 9); f.magic_defense += randi_range(3, 5)
+	f.magic_attack += randi_range(7, 9); f.magic_defense += randi_range(4, 6)
 	f.speed += randi_range(1, 2)
 
 static func _lu_elegist(f: FighterData) -> void:
@@ -207,6 +208,7 @@ static func upgrade_to_automaton(f: FighterData) -> void:
 
 static func upgrade_to_technomancer(f: FighterData) -> void:
 	f.class_id = "Technomancer"; f.character_type = "Technomancer"
+	f.health += 5; f.max_health += 5
 	f.magic_attack += 8; f.mana += 5; f.max_mana += 5
 	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 10
 	f.abilities = [PAB.circuit_blast(), PAB.arcane_shield(), PAB.emp_pulse()]
@@ -226,7 +228,7 @@ static func _lu_technomancer(f: FighterData) -> void:
 	var hp := randi_range(10, 12); f.health += hp; f.max_health += hp
 	var mp := randi_range(4, 6); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(2, 3); f.physical_defense += randi_range(3, 4)
-	f.magic_attack += randi_range(7, 9); f.magic_defense += randi_range(2, 3)
+	f.magic_attack += randi_range(7, 9); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(1, 2)
 
 
@@ -315,7 +317,7 @@ static func _lu_spiritwalker(f: FighterData) -> void:
 
 static func upgrade_to_falconer(f: FighterData) -> void:
 	f.class_id = "Falconer"; f.character_type = "Falconer"
-	f.physical_attack += 7; f.speed += 5
+	f.physical_attack += 7; f.physical_defense += 3; f.speed += 5
 	f.health += 5; f.max_health += 5
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [PAB.falcon_strike(), PAB.talon_rend(), PAB.raptor_mend()]
@@ -333,7 +335,7 @@ static func _lu_falconer(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(11, 13); f.health += hp; f.max_health += hp
 	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
-	f.physical_attack += randi_range(5, 7); f.physical_defense += randi_range(2, 3)
+	f.physical_attack += randi_range(6, 8); f.physical_defense += randi_range(3, 4)
 	f.magic_attack += randi_range(1, 2); f.magic_defense += randi_range(2, 3)
 	f.speed += randi_range(2, 3)
 	f.dodge_chance += randi_range(0, 1)
