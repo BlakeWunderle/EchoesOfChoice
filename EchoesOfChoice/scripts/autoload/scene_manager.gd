@@ -4,6 +4,7 @@ signal transition_finished
 
 var _fader: ColorRect
 var _preload_requests: Dictionary = {}
+var _transitioning: bool = false
 
 
 func _ready() -> void:
@@ -33,6 +34,9 @@ func preload_resources(paths: Array) -> void:
 
 
 func change_scene(path: String, fade_duration: float = 0.4) -> void:
+	if _transitioning:
+		return
+	_transitioning = true
 	Logger.info("Scene: %s" % path)
 	_fader.mouse_filter = Control.MOUSE_FILTER_STOP
 	MusicManager.stop_music(fade_duration)
@@ -50,6 +54,14 @@ func change_scene(path: String, fade_duration: float = 0.4) -> void:
 	var scene: PackedScene = await _await_threaded_load(path)
 	_preload_requests.erase(path)
 
+	if scene == null:
+		Logger.error("SceneManager: Failed to load scene '%s', aborting transition" % path)
+		var recover := create_tween()
+		recover.tween_property(_fader, "modulate:a", 0.0, fade_duration)
+		await recover.finished
+		_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		return
+
 	# Swap scenes manually
 	var old_scene := get_tree().current_scene
 	if old_scene:
@@ -63,6 +75,7 @@ func change_scene(path: String, fade_duration: float = 0.4) -> void:
 	tween_out.tween_property(_fader, "modulate:a", 0.0, fade_duration)
 	await tween_out.finished
 	_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_transitioning = false
 	transition_finished.emit()
 
 

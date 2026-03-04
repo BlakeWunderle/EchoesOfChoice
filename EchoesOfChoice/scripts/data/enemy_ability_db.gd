@@ -341,6 +341,6 @@ static func bark_shield() -> AbilityData:
 	return _make("Bark Shield", "Living bark hardens into armor.", Enums.StatType.DEFENSE, 6, 2, false, 4, false, 0, 0.0, 2)
 
 static func firewall() -> AbilityData:
-	var mod: int = randi_range(-5, 9)
+	var mod: int = randi_range(0, 9)
 	var cost: int = randi_range(3, 6)
 	return _make("Firewall", "A digital barrier. Results vary.", Enums.StatType.DEFENSE, mod, 2, false, cost, false, 0, 0.0, 2)

@@ -257,7 +257,7 @@ static func encore() -> AbilityData:
 		Enums.StatType.ATTACK, 5, 2, false, 2, false, 0, 0.0, 2)
 
 static func rally_cry() -> AbilityData:
-	return _make("Rally Cry", "A thunderous shout that steels an ally's resolve.",
+	return _make("Rally Cry", "A rallying shout that mends minor wounds.",
 		Enums.StatType.MIXED_ATTACK, 2, 0, false, 5, false, 0, 0.0, 3)
 
 # Minstrel
@@ -407,7 +407,7 @@ static func servo_strike() -> AbilityData:
 		Enums.StatType.MAGIC_ATTACK, 5, 0, true, 3, false, 0, 0.0, 2)
 
 static func program_defense() -> AbilityData:
-	var mod: int = randi_range(-5, 9)
+	var mod: int = randi_range(0, 9)
 	var cost: int = randi_range(3, 6)
 	return _make("Program Defense", "Run a defensive subroutine. Results vary.",
 		Enums.StatType.DEFENSE, mod, 2, false, cost, false, 0, 0.0, 2)

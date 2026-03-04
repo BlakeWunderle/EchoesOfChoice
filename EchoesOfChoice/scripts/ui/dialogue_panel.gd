@@ -12,6 +12,7 @@ var _current_line: int = 0
 var _typing: bool = false
 var _full_text: String = ""
 var _accepting_input: bool = false  ## Guard against stray clicks from scene transitions
+var _pulse_tween: Tween
 
 var _label: RichTextLabel
 var _continue_label: Label
@@ -104,9 +105,11 @@ func _show_continue() -> void:
 
 
 func _start_pulse() -> void:
-	var tween := create_tween().set_loops()
-	tween.tween_property(_continue_label, "modulate:a", 0.5, 0.8)
-	tween.tween_property(_continue_label, "modulate:a", 1.0, 0.8)
+	if _pulse_tween and _pulse_tween.is_valid():
+		_pulse_tween.kill()
+	_pulse_tween = create_tween().set_loops()
+	_pulse_tween.tween_property(_continue_label, "modulate:a", 0.5, 0.8)
+	_pulse_tween.tween_property(_continue_label, "modulate:a", 1.0, 0.8)
 
 
 func _input(event: InputEvent) -> void:

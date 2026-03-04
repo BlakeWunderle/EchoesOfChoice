@@ -115,6 +115,7 @@ func to_save_data() -> Dictionary:
 	return {
 		"class_id": class_id,
 		"character_name": character_name,
+		"character_type": character_type,
 		"is_user_controlled": is_user_controlled,
 		"level": level,
 		"max_health": max_health,
