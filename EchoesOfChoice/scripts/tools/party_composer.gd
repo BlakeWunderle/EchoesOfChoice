@@ -9,7 +9,8 @@ const FighterData := preload("res://scripts/data/fighter_data.gd")
 const LEVELS_AS_BASE := 3
 const LEVELS_AS_TIER1 := 5
 
-const BASE_TYPES: Array[String] = ["Squire", "Mage", "Entertainer", "Tinker", "Wildling"]
+const BASE_TYPES: Array[String] = [
+	"Squire", "Mage", "Entertainer", "Tinker", "Wildling", "Wanderer"]
 
 const T1_UPGRADES := {
 	"Squire": ["Sword", "Bow", "Headband"],
@@ -17,6 +18,7 @@ const T1_UPGRADES := {
 	"Entertainer": ["Lyre", "Slippers", "Scroll"],
 	"Tinker": ["Crystal", "Textbook", "Abacus"],
 	"Wildling": ["Herbs", "Totem", "BeastClaw"],
+	"Wanderer": ["Shield", "Compass"],
 }
 
 const T2_UPGRADES := {
@@ -34,6 +36,8 @@ const T2_UPGRADES := {
 	"Herbalist": ["Venom", "Seedling"],
 	"Shaman": ["Shrunkenhead", "SpiritOrb"],
 	"Beastcaller": ["Feather", "Pelt"],
+	"Sentinel": ["Fortress", "Mirror"],
+	"Pathfinder": ["Torch", "Waterskin"],
 }
 
 static var _class_name_cache := {}
@@ -105,9 +109,10 @@ static func create_party(party: Dictionary, level_ups: int) -> Array:
 
 static func get_base_parties() -> Array:
 	var parties := []
-	for i in 5:
-		for j in range(i, 5):
-			for k in range(j, 5):
+	var n: int = BASE_TYPES.size()
+	for i in n:
+		for j in range(i, n):
+			for k in range(j, n):
 				parties.append({
 					"base_types": [BASE_TYPES[i], BASE_TYPES[j], BASE_TYPES[k]],
 					"t1_items": ["", "", ""],
@@ -118,9 +123,10 @@ static func get_base_parties() -> Array:
 
 static func get_tier1_parties() -> Array:
 	var parties := []
-	for i in 5:
-		for j in range(i, 5):
-			for k in range(j, 5):
+	var n: int = BASE_TYPES.size()
+	for i in n:
+		for j in range(i, n):
+			for k in range(j, n):
 				var arch := [BASE_TYPES[i], BASE_TYPES[j], BASE_TYPES[k]]
 				var u_a: Array = T1_UPGRADES[arch[0]]
 				var u_b: Array = T1_UPGRADES[arch[1]]
@@ -155,9 +161,10 @@ static func get_tier2_parties() -> Array:
 					chains[bt].append([t1_item, t2_item])
 
 	var parties := []
-	for i in 5:
-		for j in range(i, 5):
-			for k in range(j, 5):
+	var n: int = BASE_TYPES.size()
+	for i in n:
+		for j in range(i, n):
+			for k in range(j, n):
 				var arch := [BASE_TYPES[i], BASE_TYPES[j], BASE_TYPES[k]]
 				var c_a: Array = chains[arch[0]]
 				var c_b: Array = chains[arch[1]]

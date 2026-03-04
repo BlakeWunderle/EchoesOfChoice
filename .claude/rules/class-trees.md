@@ -1,6 +1,6 @@
 # Class Upgrade Trees
 
-51 player classes: 5 base (Tier 0), 14 Tier 1, 30 Tier 2, 2 Royal.
+58 player classes: 6 base (Tier 0), 16 Tier 1, 34 Tier 2, 2 Royal.
 Each T0 has 2-3 T1 branches. Each T1 has 2-3 T2 upgrades.
 
 ## Squire Tree (physical fighters)
@@ -65,6 +65,19 @@ Wildling (T0)
 - Herbalist branch: plant magic → decay/poison specialist / terrain controller (vine walls, root traps)
 - Shaman branch: spirit communion → curse/hex debuffer / spiritual buff/protection
 - Beastcaller branch: animal bond → ranged aerial precision / melee beast transformation
+
+## Wanderer Tree (wilderness fighters, magic defense)
+
+Unlocked by completing Story 1.
+
+```
+Wanderer (T0)
+├── Sentinel (T1) ── Bulwark (T2), Aegis (T2)
+└── Pathfinder (T1) ── Trailblazer (T2), Survivalist (T2)
+```
+
+- Sentinel branch: stoic protector with wards/barriers → ultimate magic defense tank / counter-magic warrior
+- Pathfinder branch: adaptive battlefield reader → aggressive mixed attacker / self-sustaining endurance fighter
 
 ## Royal Classes (standalone)
 
