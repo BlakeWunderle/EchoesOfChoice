@@ -29,7 +29,7 @@ func _build_ui() -> void:
 	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	bg.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	var bg_path := "res://assets/art/ui/title_background.png"
+	var bg_path := _pick_title_background()
 	if ResourceLoader.exists(bg_path):
 		bg.texture = load(bg_path)
 	add_child(bg)
@@ -71,6 +71,14 @@ func _build_ui() -> void:
 	_menu.visible = false
 	_menu.choice_selected.connect(_on_menu_choice)
 	_vbox.add_child(_menu)
+
+
+func _pick_title_background() -> String:
+	var s1 := "res://assets/art/ui/title_background.png"
+	var s2 := "res://assets/art/ui/title_background_s2.png"
+	if UnlockManager.is_unlocked("story_1_complete") and randi() % 2 == 0:
+		return s2
+	return s1
 
 
 func _play_reveal() -> void:
