@@ -271,7 +271,7 @@ static func s2_lighthouse_storm() -> BattleData:
 		"The revenant's last whisper, barely audible: 'She will know you're coming. She always does. I think... I think she was afraid of you.'",
 		"A name surfaces at last. Not theirs. The person who took their memories. A face, a voice, and the sickening certainty that they once trusted this person completely.",
 	]
-	b.is_final_battle = true
+	b.next_battle_id = "S2_BeneathTheLighthouse"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - The Last Crusade.ogg"
 	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 15.wav"
 	return b

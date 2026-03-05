@@ -251,3 +251,94 @@ static func spectral_chill() -> AbilityData:
 
 static func memory_fog() -> AbilityData:
 	return _make("Memory Fog", "A mist that erodes the will to fight.", Enums.StatType.ATTACK, 5, 2, true, 5, true, 0, 0.0, 3)
+
+
+# =============================================================================
+# Act III: Memory sanctum abilities
+# =============================================================================
+
+# --- Memory Wisp ---
+
+static func recall_bolt() -> AbilityData:
+	return _make("Recall Bolt", "A shard of stolen memory strikes like lightning.", Enums.StatType.MAGIC_ATTACK, 7, 0, true, 3, false, 0, 0.0, 1)
+
+static func memory_drain() -> AbilityData:
+	return _make("Memory Drain", "The wisp pulls at the edges of thought.", Enums.StatType.MAGIC_DEFENSE, 4, 2, true, 3, false, 0, 0.0, 2)
+
+# --- Echo Sentinel ---
+
+static func crystal_strike() -> AbilityData:
+	return _make("Crystal Strike", "A crystalline fist crashes down with resonant force.", Enums.StatType.PHYSICAL_ATTACK, 7, 0, true, 3, false, 0, 0.0, 1)
+
+static func ward_of_echoes() -> AbilityData:
+	return _make("Ward of Echoes", "Layered reverberations harden into a shield.", Enums.StatType.DEFENSE, 5, 2, false, 3, false, 0, 0.0, 2)
+
+# --- Thought Eater ---
+
+static func mind_rend() -> AbilityData:
+	return _make("Mind Rend", "Psychic jaws tear through mental defenses.", Enums.StatType.MAGIC_ATTACK, 8, 0, true, 4, false, 0, 0.0, 2)
+
+static func psychic_leech() -> AbilityData:
+	return _make("Psychic Leech", "The eater feeds on consciousness itself.", Enums.StatType.MAGIC_ATTACK, 6, 0, true, 3, false, 0, 0.3, 2)
+
+# --- Grief Shade ---
+
+static func sorrows_touch() -> AbilityData:
+	return _make("Sorrow's Touch", "A caress of pure sadness numbs the body.", Enums.StatType.MAGIC_ATTACK, 6, 0, true, 3, false, 0, 0.0, 1)
+
+static func wail_of_loss() -> AbilityData:
+	return _make("Wail of Loss", "A cry that drains the will to fight from all who hear it.", Enums.StatType.ATTACK, 4, 2, true, 4, true, 0, 0.0, 3)
+
+# --- Hollow Watcher ---
+
+static func blind_strike() -> AbilityData:
+	return _make("Blind Strike", "Eyeless, it strikes with unerring precision.", Enums.StatType.PHYSICAL_ATTACK, 7, 0, true, 3, false, 0, 0.0, 1)
+
+static func sense_intent() -> AbilityData:
+	return _make("Sense Intent", "It reads your movements before you make them.", Enums.StatType.DEFENSE, 4, 2, true, 3, false, 0, 0.0, 2)
+
+# --- Mirror Self ---
+
+static func mirrored_slash() -> AbilityData:
+	return _make("Mirrored Slash", "Your own fighting style turned against you.", Enums.StatType.PHYSICAL_ATTACK, 9, 0, true, 4, false, 0, 0.0, 2)
+
+static func reflected_spell() -> AbilityData:
+	return _make("Reflected Spell", "A stolen incantation cast with hollow precision.", Enums.StatType.MAGIC_ATTACK, 9, 0, true, 4, false, 0, 0.0, 2)
+
+# --- Void Weaver ---
+
+static func void_bolt() -> AbilityData:
+	return _make("Void Bolt", "A lance of nothingness tears through everything.", Enums.StatType.MAGIC_ATTACK, 8, 0, true, 4, true, 0, 0.0, 3)
+
+static func unravel() -> AbilityData:
+	return _make("Unravel", "Reality frays at the seams, weakening all defenses.", Enums.StatType.MAGIC_DEFENSE, 5, 2, true, 4, false, 0, 0.0, 2)
+
+# --- Mnemonic Golem ---
+
+static func memory_slam() -> AbilityData:
+	return _make("Memory Slam", "A fist of crystallized memories crashes down.", Enums.StatType.PHYSICAL_ATTACK, 10, 0, true, 4, false, 0, 0.0, 2)
+
+static func crystallize() -> AbilityData:
+	return _make("Crystallize", "Memories harden into impenetrable armor.", Enums.StatType.DEFENSE, 6, 2, false, 4, false, 0, 0.0, 2)
+
+# --- The Warden (boss) ---
+
+static func sanctum_judgment() -> AbilityData:
+	return _make("Sanctum Judgment", "The sanctum itself passes sentence on intruders.", Enums.StatType.MAGIC_ATTACK, 12, 0, true, 5, true, 0, 0.0, 3)
+
+static func barrier_of_ages() -> AbilityData:
+	return _make("Barrier of Ages", "Centuries of accumulated memory form an unbreakable wall.", Enums.StatType.MAGIC_DEFENSE, 6, 2, false, 4, false, 0, 0.0, 2)
+
+static func purge_thought() -> AbilityData:
+	return _make("Purge Thought", "A targeted erasure that strips away magical strength.", Enums.StatType.MAGIC_ATTACK, 10, 0, true, 4, false, 0, 0.0, 2)
+
+# --- Fractured Protector (boss) ---
+
+static func desperate_strike() -> AbilityData:
+	return _make("Desperate Strike", "A blow struck not in anger but in fear.", Enums.StatType.PHYSICAL_ATTACK, 11, 0, true, 4, false, 0, 0.0, 2)
+
+static func memory_seal() -> AbilityData:
+	return _make("Memory Seal", "A pulse that clouds the mind and slows all thought.", Enums.StatType.SPEED, 5, 2, true, 5, true, 0, 0.0, 3)
+
+static func forgetting_touch() -> AbilityData:
+	return _make("Forgetting Touch", "One touch and something important slips away.", Enums.StatType.MAGIC_ATTACK, 9, 0, true, 4, false, 0, 0.3, 2)
