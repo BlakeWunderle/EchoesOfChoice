@@ -270,6 +270,40 @@ static func create_player(class_id: String, fighter_name: String) -> FighterData
 
 
 # =============================================================================
+# Default upgrade items by class_id (for save migration)
+# =============================================================================
+
+static func get_default_upgrade_items(class_id: String) -> Array[String]:
+	match class_id:
+		# T0
+		"Squire": return ["Sword", "Bow", "Headband"]
+		"Mage": return ["RedStone", "WhiteStone"]
+		"Entertainer": return ["Lyre", "Slippers", "Scroll"]
+		"Tinker": return ["Crystal", "Textbook", "Abacus"]
+		"Wildling": return ["Herbs", "Totem", "BeastClaw"]
+		"Wanderer": return ["Shield", "Compass"]
+		# T1
+		"Duelist": return ["Horse", "Spear"]
+		"Ranger": return ["Gun", "Trap"]
+		"MartialArtist": return ["Sword", "Staff"]
+		"Invoker": return ["FireStone", "WaterStone", "LightningStone"]
+		"Acolyte": return ["Hammer", "HolyBook", "DarkOrb"]
+		"Bard": return ["WarHorn", "Hat"]
+		"Dervish": return ["Light", "Paint"]
+		"Orator": return ["Medal", "Pen"]
+		"Artificer": return ["Potion", "Hammer"]
+		"Cosmologist": return ["TimeMachine", "Telescope"]
+		"Arithmancer": return ["ClockworkCore", "Computer"]
+		"Herbalist": return ["Venom", "Seedling"]
+		"Shaman": return ["Shrunkenhead", "SpiritOrb"]
+		"Beastcaller": return ["Feather", "Pelt"]
+		"Sentinel": return ["Fortress", "Mirror"]
+		"Pathfinder": return ["Torch", "Waterskin"]
+	# T2 and Royal classes have no upgrades
+	return []
+
+
+# =============================================================================
 # Class upgrade: item determines new class, keeps accumulated stats
 # =============================================================================
 
