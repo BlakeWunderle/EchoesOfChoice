@@ -31,7 +31,7 @@ static func create_battle(battle_id: String) -> BattleData:
 static func s2_coastal_descent() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_CoastalDescent"
-	b.scene_image = "res://assets/art/battles/rocky_shore.png"
+	b.scene_image = "res://assets/art/battles/coastal_descent.png"
 	b.enemies = [
 		EnemyDBS2Act2.create_blighted_gull("Blackwing"),
 		EnemyDBS2Act2.create_shore_crawler("Ironshell"),
@@ -67,7 +67,7 @@ static func s2_coastal_descent() -> BattleData:
 static func s2_fishing_village() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_FishingVillage"
-	b.scene_image = "res://assets/art/battles/wanderers_rest.png"
+	b.scene_image = "res://assets/art/battles/fishing_village.png"
 	b.enemies = [
 		EnemyDBS2Act2.create_driftwood_bandit("Scarhand"),
 		EnemyDBS2Act2.create_driftwood_bandit("Rust"),
@@ -99,7 +99,7 @@ static func s2_fishing_village() -> BattleData:
 static func s2_smugglers_bluff() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_SmugglersBluff"
-	b.scene_image = "res://assets/art/battles/shipwreck_beach.png"
+	b.scene_image = "res://assets/art/battles/smugglers_bluff.png"
 	b.enemies = [
 		EnemyDBS2Act2.create_saltrunner_smuggler("Duskrunner"),
 		EnemyDBS2Act2.create_tide_warden("Breakwater"),
@@ -130,7 +130,7 @@ static func s2_smugglers_bluff() -> BattleData:
 static func s2_harbor_town() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_HarborTown"
-	b.scene_image = "res://assets/art/battles/city_streets.png"
+	b.scene_image = "res://assets/art/battles/harbor_town.png"
 	b.is_town_stop = true
 	b.pre_battle_text = [
 		"The coastal road leads to a harbor town. Not large, but busy. Ships crowd the harbor, a market lines the waterfront, and the air smells of tar, fish, and spice.",
@@ -160,7 +160,7 @@ static func s2_harbor_town() -> BattleData:
 static func s2_wreckers_cove() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_WreckersCove"
-	b.scene_image = "res://assets/art/battles/shipwreck_beach.png"
+	b.scene_image = "res://assets/art/battles/wreckers_cove.png"
 	b.enemies = [
 		EnemyDBS2Act2.create_blackwater_captain("Captain Korr"),
 		EnemyDBS2Act2.create_corsair_hexer("Saltweave"),
@@ -191,7 +191,7 @@ static func s2_wreckers_cove() -> BattleData:
 static func s2_coastal_ruins() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_CoastalRuins"
-	b.scene_image = "res://assets/art/battles/highlands.png"
+	b.scene_image = "res://assets/art/battles/coastal_ruins.png"
 	b.enemies = [
 		EnemyDBS2Act2.create_abyssal_lurker("Depthcrawl"),
 		EnemyDBS2Act2.create_stormwrack_raptor("Voltwing"),
@@ -223,7 +223,7 @@ static func s2_coastal_ruins() -> BattleData:
 static func s2_blackwater_bay() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_BlackwaterBay"
-	b.scene_image = "res://assets/art/battles/rocky_shore.png"
+	b.scene_image = "res://assets/art/battles/blackwater_bay.png"
 	b.enemies = [
 		EnemyDBS2Act2.create_salt_phantom("The Drowned"),
 		EnemyDBS2Act2.create_salt_phantom("The Forgotten"),
@@ -253,7 +253,7 @@ static func s2_blackwater_bay() -> BattleData:
 static func s2_lighthouse_storm() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_LighthouseStorm"
-	b.scene_image = "res://assets/art/battles/stranger_tower.png"
+	b.scene_image = "res://assets/art/battles/lighthouse_storm.png"
 	b.enemies = [
 		EnemyDBS2Act2.create_tidecaller_revenant("The Keeper"),
 		EnemyDBS2Act2.create_salt_phantom("The Watcher"),
