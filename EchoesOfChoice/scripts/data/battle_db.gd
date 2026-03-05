@@ -9,6 +9,7 @@ const Act2 := preload("res://scripts/data/battle_db_act2.gd")
 const Act3 := preload("res://scripts/data/battle_db_act3.gd")
 const Act45 := preload("res://scripts/data/battle_db_act45.gd")
 const S2 := preload("res://scripts/data/battle_db_s2.gd")
+const S2Act2 := preload("res://scripts/data/battle_db_s2_act2.gd")
 
 
 static func create_battle(battle_id: String) -> BattleData:
@@ -48,6 +49,10 @@ static func create_battle(battle_id: String) -> BattleData:
 		"S2_TranquilPool", "S2_TorchChamber", "S2_CaveMerchant", \
 		"S2_CaveExit":
 			return S2.create_battle(battle_id)
+		"S2_CoastalDescent", "S2_FishingVillage", "S2_SmugglersBluff", \
+		"S2_HarborTown", "S2_WreckersCove", "S2_CoastalRuins", \
+		"S2_BlackwaterBay", "S2_LighthouseStorm":
+			return S2Act2.create_battle(battle_id)
 		_:
 			push_error("Unknown battle: %s" % battle_id)
 			return city_street_battle()

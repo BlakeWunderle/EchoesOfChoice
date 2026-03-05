@@ -247,7 +247,7 @@ static func s2_cave_exit() -> BattleData:
 		"No one remembers how they got here. No one knows where 'here' is.",
 		"But they're alive. And they have names, skills, and each other. That will have to be enough for now.",
 	]
-	b.is_final_battle = true
+	b.next_battle_id = "S2_CoastalDescent"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - Chamber of the Occult.ogg"
 	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 02.wav"
 	return b
