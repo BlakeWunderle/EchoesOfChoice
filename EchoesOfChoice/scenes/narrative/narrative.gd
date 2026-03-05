@@ -69,8 +69,16 @@ func _show_ending() -> void:
 	else:
 		MusicManager.play_music("res://assets/audio/music/game_over/Sad Despair 03.wav")
 	var lines: Array[String]
+	if GameState.current_story_id == "story_2":
+		lines = _ending_text_story_2()
+	else:
+		lines = _ending_text_story_1()
+	_dialogue.show_text(lines)
+
+
+func _ending_text_story_1() -> Array[String]:
 	if GameState.game_won:
-		lines = [
+		return [
 			"The stranger is gone and with them, the shadow that covered the land.",
 			"The sky clears. The city stirs. People emerge from hiding.",
 			"It will take time, but the world will heal.",
@@ -80,11 +88,31 @@ func _show_ending() -> void:
 			"Thank you for playing Echoes of Choice.",
 		]
 	else:
-		lines = [
+		return [
 			"Our heroes fall and the darkness grows a little stronger.",
 			"This journey may be over, but every great story deserves another telling.",
 		]
-	_dialogue.show_text(lines)
+
+
+func _ending_text_story_2() -> Array[String]:
+	if GameState.game_won:
+		return [
+			"The Eye closes for the last time. The crystallized memories shatter, and light rises from the depths like a thousand lanterns set free.",
+			"Across the coast, people stop mid-sentence. A name they forgot. A face they lost. A moment that was taken, returned without explanation.",
+			"The old woman in the fishing village remembers the dinner. The blacksmith remembers why the sword was urgent. The barkeep remembers the conversations.",
+			"Deep below, in the place where the Eye once watched, the party stands in silence. The machinery is dark. The crystals are empty.",
+			"A voice, faint as breath, echoes through the chamber. Sera's voice, carried on the last of the light.",
+			"'Thank you.'",
+			"They carry her memory with them. Not because they have to. Because they choose to.",
+			"",
+			"Thank you for playing Echoes of Choice.",
+		]
+	else:
+		return [
+			"The Eye remains open. The memories do not return.",
+			"In the darkness below the world, something watches. Something waits. Something remembers everything it has taken.",
+			"This journey may be over, but every great story deserves another telling.",
+		]
 
 
 func _on_text_finished() -> void:

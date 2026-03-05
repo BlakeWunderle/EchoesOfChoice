@@ -342,3 +342,62 @@ static func memory_seal() -> AbilityData:
 
 static func forgetting_touch() -> AbilityData:
 	return _make("Forgetting Touch", "One touch and something important slips away.", Enums.StatType.MAGIC_ATTACK, 9, 0, true, 4, false, 0, 0.3, 2)
+
+
+# =============================================================================
+# Act IV: The Eye's domain abilities
+# =============================================================================
+
+# --- Gaze Stalker ---
+
+static func piercing_gaze_strike() -> AbilityData:
+	return _make("Piercing Gaze", "Eyes that cut deeper than any blade.", Enums.StatType.PHYSICAL_ATTACK, 8, 0, true, 3, false, 0, 0.0, 1)
+
+static func focus_break() -> AbilityData:
+	return _make("Focus Break", "A psychic jab that shatters concentration.", Enums.StatType.MAGIC_DEFENSE, 5, 2, true, 3, false, 0, 0.0, 2)
+
+# --- Memory Harvester ---
+
+static func harvest_thought() -> AbilityData:
+	return _make("Harvest Thought", "It plucks a memory and feeds.", Enums.StatType.MAGIC_ATTACK, 10, 0, true, 4, false, 0, 0.35, 2)
+
+static func mass_extraction() -> AbilityData:
+	return _make("Mass Extraction", "A wave of hunger tears at every mind at once.", Enums.StatType.MAGIC_ATTACK, 7, 0, true, 5, true, 0, 0.0, 3)
+
+# --- Oblivion Shade ---
+
+static func wave_of_oblivion() -> AbilityData:
+	return _make("Wave of Oblivion", "A tide of nothing that drains the will to fight.", Enums.StatType.ATTACK, 5, 2, true, 5, true, 0, 0.0, 3)
+
+static func nihil_bolt() -> AbilityData:
+	return _make("Nihil Bolt", "A bolt of pure emptiness.", Enums.StatType.MAGIC_ATTACK, 9, 0, true, 4, false, 0, 0.0, 2)
+
+# --- Thoughtform Knight ---
+
+static func memory_blade() -> AbilityData:
+	return _make("Memory Blade", "A sword forged from ten thousand stolen recollections.", Enums.StatType.PHYSICAL_ATTACK, 10, 0, true, 3, false, 0, 0.0, 2)
+
+static func ironclad_will() -> AbilityData:
+	return _make("Ironclad Will", "Thought hardens into unbreakable armor.", Enums.StatType.DEFENSE, 6, 2, false, 3, false, 0, 0.0, 2)
+
+# --- The Iris (Phase 1 boss) ---
+
+static func prismatic_blast() -> AbilityData:
+	return _make("Prismatic Blast", "The Iris fractures light into a storm of burning color.", Enums.StatType.MAGIC_ATTACK, 12, 0, true, 6, true, 0, 0.0, 3)
+
+static func refraction_beam() -> AbilityData:
+	return _make("Refraction Beam", "A focused beam that burns through all defenses.", Enums.StatType.MAGIC_ATTACK, 14, 0, true, 5, false, 0, 0.0, 2)
+
+static func crystalline_ward() -> AbilityData:
+	return _make("Crystalline Ward", "The Iris wraps itself in layers of stolen light.", Enums.StatType.MAGIC_DEFENSE, 7, 2, false, 4, false, 0, 0.0, 2)
+
+# --- The Lidless Eye (Phase 2 final boss) ---
+
+static func gaze_of_forgetting() -> AbilityData:
+	return _make("Gaze of Forgetting", "Its stare peels away everything you are.", Enums.StatType.ATTACK, 6, 2, true, 6, true, 0, 0.0, 3)
+
+static func memory_devour() -> AbilityData:
+	return _make("Memory Devour", "It eats what makes you whole.", Enums.StatType.MAGIC_ATTACK, 12, 0, true, 5, false, 0, 0.35, 2)
+
+static func final_blink() -> AbilityData:
+	return _make("Final Blink", "The last thing it sees, it destroys.", Enums.StatType.MAGIC_ATTACK, 10, 0, true, 5, true, 0, 0.0, 3)
