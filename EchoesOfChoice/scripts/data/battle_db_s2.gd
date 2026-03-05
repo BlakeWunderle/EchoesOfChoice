@@ -59,7 +59,7 @@ static func s2_cave_awakening() -> BattleData:
 
 
 # =============================================================================
-# Prog 1: Branch A — Deep Cavern
+# Prog 1: Branch A - Deep Cavern
 # =============================================================================
 
 static func s2_deep_cavern() -> BattleData:
@@ -94,7 +94,7 @@ static func s2_deep_cavern() -> BattleData:
 
 
 # =============================================================================
-# Prog 1: Branch B — Fungal Hollow
+# Prog 1: Branch B - Fungal Hollow
 # =============================================================================
 
 static func s2_fungal_hollow() -> BattleData:
@@ -128,7 +128,7 @@ static func s2_fungal_hollow() -> BattleData:
 
 
 # =============================================================================
-# Prog 2: Branch A — Tranquil Pool
+# Prog 2: Branch A - Tranquil Pool
 # =============================================================================
 
 static func s2_tranquil_pool() -> BattleData:
@@ -160,7 +160,7 @@ static func s2_tranquil_pool() -> BattleData:
 
 
 # =============================================================================
-# Prog 2: Branch B — Torch Chamber
+# Prog 2: Branch B - Torch Chamber
 # =============================================================================
 
 static func s2_torch_chamber() -> BattleData:
