@@ -49,10 +49,14 @@ static func get_all_stages() -> Array:
 		# --- Story 2: Echoes in the Dark ---
 		# Prog 0: Base classes, no level ups
 		_s("S2_CaveAwakening", 0, "base", 0.85, 0, 2),
-		# Prog 1: Base classes, 1 level up
+		# Prog 1: Base classes, 1 level up (branch pair)
 		_s("S2_DeepCavern", 1, "base", 0.83, 1, 2),
-		# Prog 2: Base classes, 2 level ups
-		_s("S2_CaveExit", 2, "base", 0.80, 2, 2),
+		_s("S2_FungalHollow", 1, "base", 0.83, 1, 2),
+		# Prog 2: Base classes, 2 level ups (branch pair)
+		_s("S2_TranquilPool", 2, "base", 0.80, 2, 2),
+		_s("S2_TorchChamber", 2, "base", 0.80, 2, 2),
+		# Prog 3: Tier 1, 4 level ups (post-merchant upgrade)
+		_s("S2_CaveExit", 4, "tier1", 0.76, 3, 2),
 	]
 
 
@@ -171,10 +175,22 @@ static func create_enemies(stage_name: String, party: Array = []) -> Array:
 			return [EnemyDBS2.create_shade_crawler("Umbral"),
 				EnemyDBS2.create_shade_crawler("Murk"),
 				EnemyDBS2.create_echo_wisp("Resonance")]
+		"S2_FungalHollow":
+			return [EnemyDBS2.create_spore_stalker("Creeper"),
+				EnemyDBS2.create_fungal_hulk("Mossback"),
+				EnemyDBS2.create_cap_wisp("Drifter")]
+		"S2_TranquilPool":
+			return [EnemyDBS2.create_cave_eel("Voltfin"),
+				EnemyDBS2.create_blind_angler("The Lure"),
+				EnemyDBS2.create_pale_crayfish("Old Shell")]
+		"S2_TorchChamber":
+			return [EnemyDBS2.create_cave_dweller("Grimjaw"),
+				EnemyDBS2.create_tunnel_shaman("Ember Eye"),
+				EnemyDBS2.create_burrow_scout("Quickfoot")]
 		"S2_CaveExit":
-			return [EnemyDBS2.create_cave_maw("The Threshold"),
-				EnemyDBS2.create_vein_leech("Gnawer"),
-				EnemyDBS2.create_stone_moth("Dustwing")]
+			return [EnemyDBS2.create_cave_maw("The Threshold", 5),
+				EnemyDBS2.create_vein_leech("Gnawer", 5),
+				EnemyDBS2.create_stone_moth("Dustwing", 5)]
 		_:
 			push_error("Unknown stage: %s" % stage_name)
 			return []
