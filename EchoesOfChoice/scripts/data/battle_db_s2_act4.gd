@@ -26,7 +26,7 @@ static func create_battle(battle_id: String) -> BattleData:
 static func s2_depths_of_remembrance() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_DepthsOfRemembrance"
-	b.scene_image = "res://assets/art/battles/memory_vault.png"
+	b.scene_image = "res://assets/art/battles/memory_depths.png"
 	b.enemies = [
 		EnemyDBS2Act4.create_gaze_stalker("Lidwatch"),
 		EnemyDBS2Act4.create_gaze_stalker("Duskpupil"),
@@ -58,7 +58,7 @@ static func s2_depths_of_remembrance() -> BattleData:
 static func s2_maw_of_the_eye() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_MawOfTheEye"
-	b.scene_image = "res://assets/art/battles/memory_vault.png"
+	b.scene_image = "res://assets/art/battles/eye_approach.png"
 	b.enemies = [
 		EnemyDBS2Act4.create_thoughtform_knight("Oathbound"),
 		EnemyDBS2Act4.create_oblivion_shade("The Hollow"),
@@ -91,7 +91,7 @@ static func s2_maw_of_the_eye() -> BattleData:
 static func s2_eye_awakening() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_EyeAwakening"
-	b.scene_image = "res://assets/art/battles/sanctum_core.png"
+	b.scene_image = "res://assets/art/battles/the_eye.png"
 	b.enemies = [
 		EnemyDBS2Act4.create_the_iris("The Iris"),
 		EnemyDBS2Act4.create_oblivion_shade("Nullsight"),
@@ -131,7 +131,7 @@ static func s2_eye_awakening() -> BattleData:
 static func s2_eye_of_oblivion() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "S2_EyeOfOblivion"
-	b.scene_image = "res://assets/art/battles/sanctum_core.png"
+	b.scene_image = "res://assets/art/battles/the_eye.png"
 	b.enemies = [
 		EnemyDBS2Act4.create_the_lidless_eye("The Lidless Eye"),
 	]
