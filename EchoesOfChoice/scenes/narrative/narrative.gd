@@ -60,10 +60,12 @@ func _show_narrative() -> void:
 
 
 func _show_ending() -> void:
+	var is_first_completion: bool = false
 	if GameState.game_won:
 		var story: Dictionary = _StoryDB.get_story(GameState.current_story_id)
 		var completion_key: String = story.get("completion_unlock", "")
 		if not completion_key.is_empty():
+			is_first_completion = not UnlockManager.is_unlocked(completion_key)
 			UnlockManager.unlock(completion_key)
 		MusicManager.play_music("res://assets/audio/music/victory/SHORT Action #5 LOOP.wav")
 	else:
@@ -73,6 +75,8 @@ func _show_ending() -> void:
 		lines = _ending_text_story_2()
 	else:
 		lines = _ending_text_story_1()
+	if is_first_completion:
+		lines.append_array(_unlock_notification_lines())
 	_dialogue.show_text(lines)
 
 
@@ -113,6 +117,25 @@ func _ending_text_story_2() -> Array[String]:
 			"In the darkness below the world, something watches. Something waits. Something remembers everything it has taken.",
 			"This journey may be over, but every great story deserves another telling.",
 		]
+
+
+func _unlock_notification_lines() -> Array[String]:
+	match GameState.current_story_id:
+		"story_1":
+			return [
+				"",
+				"New content unlocked!",
+				"A new story awaits: \"Echoes in the Dark.\" Three strangers wake in a cave with no memory.",
+				"A new class has emerged: the Wanderer. A wilderness fighter who learned to endure the land's magic.",
+			]
+		"story_2":
+			return [
+				"",
+				"New content unlocked!",
+				"You have completed all available stories. More adventures may follow.",
+			]
+		_:
+			return []
 
 
 func _on_text_finished() -> void:
