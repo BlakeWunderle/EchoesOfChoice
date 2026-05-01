@@ -52,3 +52,19 @@ enum EnemyTier {
 	UNDERLING, ## Companion/add that appears alongside a boss
 	STANDARD,  ## Regular enemy (default)
 }
+
+## Item effect type for consumable items.
+enum ItemEffect {
+	HEAL_HP,     ## Restore HP (magnitude = flat amount)
+	HEAL_MP,     ## Restore MP
+	CURE_DEBUFF, ## Remove all negative stat modifications
+	BUFF,        ## Temporary stat boost (uses stat_type + magnitude + duration)
+	DAMAGE,      ## Deal flat damage (bypasses defense)
+}
+
+## Item rarity tier for loot and shop pricing.
+enum ItemRarity {
+	COMMON,
+	UNCOMMON,
+	RARE,
+}
