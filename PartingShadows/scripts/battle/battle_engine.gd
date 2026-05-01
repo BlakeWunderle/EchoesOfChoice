@@ -393,7 +393,8 @@ func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
 		Enums.ItemEffect.BUFF:
 			var targets: Array = [target]
 			if item.target_all:
-				targets = units.duplicate()
+				var user_allies: Array = units if user in units else enemies
+				targets = user_allies.duplicate()
 			for t: FighterData in targets:
 				var delta: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
 				t.modified_stats.append({
@@ -411,7 +412,8 @@ func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
 		Enums.ItemEffect.DAMAGE:
 			var targets: Array = [target]
 			if item.target_all:
-				targets = enemies.duplicate()
+				var user_opponents: Array = enemies if user in units else units
+				targets = user_opponents.duplicate()
 			for t: FighterData in targets:
 				t.health = maxi(0, t.health - item.magnitude)
 				if sim_mode:
@@ -583,6 +585,77 @@ func _has_modifier(fighter: FighterData, stat: Enums.StatType,
 
 
 # =============================================================================
+# AI: Enemy Item Usage
+# =============================================================================
+
+func _try_enemy_item(unit: FighterData, targets: Array,
+		allies: Array) -> bool:
+	## Try using a battle item. Returns true if an item was consumed.
+	if unit.battle_items.is_empty():
+		return false
+
+	var hp_pct: float = float(unit.health) / float(unit.max_health)
+	var mp_pct: float = float(unit.mana) / float(unit.max_mana) \
+		if unit.max_mana > 0 else 1.0
+
+	# Priority 1: Heal self when wounded
+	if hp_pct < 0.4:
+		var idx: int = _find_ally_item(unit, Enums.ItemEffect.HEAL_HP)
+		if idx >= 0:
+			return _consume_item(unit, unit, idx)
+
+	# Priority 2: Heal a critically wounded ally
+	for ally: FighterData in allies:
+		if ally == unit or ally.health <= 0:
+			continue
+		if float(ally.health) / float(ally.max_health) < 0.3:
+			var idx: int = _find_ally_item(unit, Enums.ItemEffect.HEAL_HP)
+			if idx >= 0:
+				return _consume_item(unit, ally, idx)
+			break
+
+	# Priority 3: Cure debuffs if debuffed
+	for mod: Dictionary in unit.modified_stats:
+		if mod["is_negative"]:
+			var idx: int = _find_ally_item(unit, Enums.ItemEffect.CURE_DEBUFF)
+			if idx >= 0:
+				return _consume_item(unit, unit, idx)
+			break
+
+	# Priority 4: Restore mana when low
+	if mp_pct < 0.25:
+		var idx: int = _find_ally_item(unit, Enums.ItemEffect.HEAL_MP)
+		if idx >= 0:
+			return _consume_item(unit, unit, idx)
+
+	# Priority 5: Buff self if unbuffed (35% chance per check)
+	if randf() < 0.35:
+		for i: int in unit.battle_items.size():
+			var item: ItemData = unit.battle_items[i]
+			if item.effect_type == Enums.ItemEffect.BUFF and item.target_ally \
+					and item.magnitude > 0 \
+					and not _has_modifier(unit, item.stat_type, false):
+				return _consume_item(unit, unit, i)
+
+	return false
+
+
+func _find_ally_item(unit: FighterData, effect: Enums.ItemEffect) -> int:
+	for i: int in unit.battle_items.size():
+		var item: ItemData = unit.battle_items[i]
+		if item.effect_type == effect and item.target_ally:
+			return i
+	return -1
+
+
+func _consume_item(unit: FighterData, target: FighterData, index: int) -> bool:
+	var item: ItemData = unit.battle_items[index]
+	unit.battle_items.remove_at(index)
+	use_item(unit, target, item)
+	return true
+
+
+# =============================================================================
 # AI: port of C# ExecuteAITurn
 # =============================================================================
 
@@ -648,6 +721,10 @@ func execute_ai_turn(unit: FighterData, targets: Array,
 			else:
 				use_ability_on_teammate(unit, wounded, heal)
 			return
+
+	# Priority 1.25: Battle items (heal > cure > mana > buff)
+	if _try_enemy_item(unit, targets, allies):
+		return
 
 	# Priority 1.5: Taunt if defensive unit
 	if taunt_ability != null and not _has_modifier(unit, Enums.StatType.TAUNT, false):
@@ -944,6 +1021,10 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 				else:
 					use_ability_on_teammate(unit, wounded, heal)
 				return
+
+	# -- Priority 1.25: Battle items (heal > cure > mana > buff) --
+	if _try_enemy_item(unit, targets, allies):
+		return
 
 	# -- Priority 1.5: Taunt if defensive unit --
 	if taunt_ability != null and not _has_modifier(unit, Enums.StatType.TAUNT, false):

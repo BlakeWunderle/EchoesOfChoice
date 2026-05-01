@@ -19,6 +19,7 @@ const ItemData := preload("res://scripts/data/item_data.gd")
 const BattleData := preload("res://scripts/data/battle_data.gd")
 const BattleMultiplayer_C := preload("res://scenes/battle/battle_multiplayer.gd")
 const LootRoller := preload("res://scripts/battle/loot_roller.gd")
+const EnemyItemDB := preload("res://scripts/data/enemy_item_db.gd")
 
 enum Phase {
 	STARTING,
@@ -156,6 +157,8 @@ func _start_battle() -> void:
 		MusicManager.play_music(battle.music_track)
 	else:
 		MusicManager.play_context(MusicManager.MusicContext.BATTLE)
+	for enemy: FighterData in battle.enemies:
+		EnemyItemDB.assign_items(enemy)
 	_engine.start_battle(GameState.party, battle.enemies)
 	for enemy: FighterData in battle.enemies:
 		CompendiumManager.record_enemy(enemy, GameState.current_story_id)

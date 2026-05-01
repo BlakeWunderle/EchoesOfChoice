@@ -147,6 +147,8 @@ func _init() -> void:
 						"hard": _difficulty_level = 2
 						_: _difficulty_level = 1
 					i += 1
+			"--items":
+				SR.enable_enemy_items = true
 			"--diagnostics":
 				_diagnostics = true
 			"--compact":
@@ -222,9 +224,13 @@ func _init() -> void:
 		SR._get_sim_engine().difficulty_level = _difficulty_level
 		if not _worker_mode:
 			var diff_names: Array[String] = ["Easy", "Normal", "Hard"]
-			print("  Difficulty: %s (override)\n" % diff_names[_difficulty_level])
+			print("  Difficulty: %s (override)" % diff_names[_difficulty_level])
 	elif not _worker_mode:
-		print("  Difficulty: auto (T0=easy, T1=normal, T2=hard)\n")
+		print("  Difficulty: auto (T0=easy, T1=normal, T2=hard)")
+	if SR.enable_enemy_items and not _worker_mode:
+		print("  Enemy items: ENABLED")
+	if not _worker_mode:
+		print()
 
 	if run_progressive:
 		SP.run(stages, sims_per_combo, auto_sims, sample_size,
@@ -485,6 +491,7 @@ func _print_help() -> void:
 	print("  --combo-worker <N/M> Combo-worker mode: run 1/M of party combos per stage (used by parallel coordinator)")
 	print("  --compact            Minimal output (1 line/PASS, details to file)")
 	print("  --difficulty <mode>   AI difficulty: easy, normal, hard (default: auto by tier)")
+	print("  --items              Enable enemy battle items (compare baseline vs items)")
 	print("  --diagnostics        Show detailed analysis of WEAK classes")
 	print("  --no-cache           Skip cache lookups, force re-simulation")
 	print("  --clear-cache        Delete cached results and exit")

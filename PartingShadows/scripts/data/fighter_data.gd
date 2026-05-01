@@ -31,6 +31,7 @@ var turn_calculation: int = 0  ## ATB accumulator
 var abilities: Array = []  ## Array of AbilityData
 var modified_stats: Array[Dictionary] = []  ## {stat, modifier, turns, is_negative, damage_per_turn}
 var upgrade_items: Array[String] = []       ## For class upgrade paths
+var battle_items: Array = []  ## Array of ItemData: consumables available during combat (enemies only)
 
 
 func clone() -> FighterData:
@@ -54,6 +55,7 @@ func clone() -> FighterData:
 	c.dodge_chance = dodge_chance
 	c.abilities = abilities.duplicate()
 	c.upgrade_items = upgrade_items.duplicate()
+	c.battle_items = battle_items.duplicate()
 	return c
 
 

@@ -7,6 +7,7 @@ const BattleEngine := preload("res://scripts/battle/battle_engine.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const PC := preload("res://scripts/tools/party_composer.gd")
 const BSDB := preload("res://scripts/tools/battle_stage_db.gd")
+const EnemyItemDB := preload("res://scripts/data/enemy_item_db.gd")
 
 const MIN_TOTAL_BATTLES := 200_000
 const MIN_SIMS_PER_COMBO := 40
@@ -23,6 +24,7 @@ const STALEMATE_HP_THRESHOLD := 0.03
 const STALEMATE_MAX_PERIODS := 3
 
 static var _sim_engine: BattleEngine = null
+static var enable_enemy_items: bool = false  ## Set via --items flag
 
 
 static func _get_sim_engine() -> BattleEngine:
@@ -169,6 +171,9 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			var party_fighters := PC.create_party(party_def, stage.level_ups)
 			party_size = party_fighters.size()  # capture before run_single_battle mutates via units ref
 			var enemies: Array = _clone_fighters(enemy_template)
+			if enable_enemy_items:
+				for e: FighterData in enemies:
+					EnemyItemDB.assign_items(e)
 			var br: Dictionary = run_single_battle(party_fighters, enemies, engine)
 			if br.won:
 				wins += 1
