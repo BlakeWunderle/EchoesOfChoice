@@ -12,8 +12,9 @@ const CompendiumPanelNew := preload("res://scripts/ui/compendium/compendium_pane
 const InputRemapPanel := preload("res://scripts/ui/input_remap_panel.gd")
 const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
 const PauseSaveSlots_C := preload("res://scripts/autoload/pause_save_slots.gd")
+const ItemData := preload("res://scripts/data/item_data.gd")
 
-enum Mode { HIDDEN, MAIN_MENU, SAVE_SLOTS, SETTINGS, COMPENDIUM, KEY_BINDINGS, MP_CHOICE, WAITING_MP, FIGHTER_PICK, LOCAL_ASSIGN }
+enum Mode { HIDDEN, MAIN_MENU, SAVE_SLOTS, SETTINGS, COMPENDIUM, INVENTORY, KEY_BINDINGS, MP_CHOICE, WAITING_MP, FIGHTER_PICK, LOCAL_ASSIGN }
 
 var _mode: Mode = Mode.HIDDEN
 var _panel: Control
@@ -42,6 +43,7 @@ var _local_assign_vbox: VBoxContainer
 var _local_device_labels: Array[Label] = []
 var _local_claimed: Array[int] = []  # device_id per slot (-2 = unclaimed)
 var _local_player_count: int = 2
+var _inventory_vbox: VBoxContainer
 var _waiting_mp_vbox: VBoxContainer
 
 
@@ -125,6 +127,10 @@ func _build_ui() -> void:
 	var compendium_btn := _make_button("Compendium")
 	compendium_btn.pressed.connect(_show_compendium)
 	_main_vbox.add_child(compendium_btn)
+
+	var inventory_btn := _make_button("Inventory")
+	inventory_btn.pressed.connect(_show_inventory)
+	_main_vbox.add_child(inventory_btn)
 
 	var logs_btn := _make_button("Copy Logs")
 	logs_btn.pressed.connect(_copy_logs)
@@ -223,6 +229,13 @@ func _build_ui() -> void:
 	_compendium_panel.close_requested.connect(_back_to_main)
 	root_vbox.add_child(_compendium_panel)
 
+	# Inventory panel (hidden by default)
+	_inventory_vbox = VBoxContainer.new()
+	_inventory_vbox.add_theme_constant_override("separation", 6)
+	_inventory_vbox.visible = false
+	_inventory_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_vbox.add_child(_inventory_vbox)
+
 	# Key bindings panel (hidden by default)
 	_remap_panel = InputRemapPanel.new()
 	_remap_panel.visible = false
@@ -275,6 +288,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			Mode.SETTINGS:
 				_back_to_main()
 			Mode.COMPENDIUM:
+				_back_to_main()
+			Mode.INVENTORY:
 				_back_to_main()
 			Mode.KEY_BINDINGS:
 				_back_to_main()
@@ -646,6 +661,54 @@ func _show_compendium() -> void:
 		"Click cards for detailed information and stats!")
 
 
+func _show_inventory() -> void:
+	_mode = Mode.INVENTORY
+	_main_vbox.visible = false
+	_pause_title.visible = false
+	_pause_sep.visible = false
+
+	# Rebuild inventory content each time
+	for child: Node in _inventory_vbox.get_children():
+		child.queue_free()
+
+	var title := Label.new()
+	title.text = "INVENTORY"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 22)
+	title.add_theme_color_override("font_color", Color(0.9, 0.8, 0.5))
+	_inventory_vbox.add_child(title)
+
+	var gold_lbl := Label.new()
+	gold_lbl.text = "Gold: %d" % GameState.inventory.gold
+	gold_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	gold_lbl.add_theme_font_size_override("font_size", SettingsManager.font_size)
+	gold_lbl.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+	_inventory_vbox.add_child(gold_lbl)
+
+	var sep := HSeparator.new()
+	_inventory_vbox.add_child(sep)
+
+	var items: Array = GameState.inventory.get_items()
+	for i: int in 6:
+		var line := Label.new()
+		line.add_theme_font_size_override("font_size", SettingsManager.font_size)
+		if i < items.size():
+			var item: ItemData = items[i]
+			line.text = "%s  -  %s" % [item.item_name, item.get_use_description()]
+			line.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
+		else:
+			line.text = "(empty)"
+			line.add_theme_color_override("font_color", Color(0.4, 0.4, 0.4))
+		_inventory_vbox.add_child(line)
+
+	var back_btn := _make_button("Back")
+	back_btn.pressed.connect(_back_to_main)
+	_inventory_vbox.add_child(back_btn)
+	back_btn.call_deferred("grab_focus")
+
+	_inventory_vbox.visible = true
+
+
 func _show_key_bindings() -> void:
 	_mode = Mode.KEY_BINDINGS
 	_main_vbox.visible = false
@@ -695,6 +758,7 @@ func _back_to_main() -> void:
 	_save_vbox.visible = false
 	_settings_panel.visible = false
 	_compendium_panel.visible = false
+	_inventory_vbox.visible = false
 	_remap_panel.visible = false
 	_mp_choice_vbox.visible = false
 	_local_assign_vbox.visible = false
