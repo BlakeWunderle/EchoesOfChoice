@@ -242,10 +242,17 @@ func handle_battle_ended(won: bool, stats_data: Array = []) -> void:
 		SFXManager.play(SFXManager.Category.UI_FANFARE)
 		await _battle.get_tree().create_timer(1.0).timeout
 		await _battle._show_battle_summary()
+		# Display loot drops received from host
+		if _battle._pending_loot_items.size() > 0 or _battle._pending_loot_gold > 0:
+			GameState.inventory.add_gold(_battle._pending_loot_gold)
+			await _battle._display.show_loot_drops(
+				_battle._pending_loot_items, _battle._pending_loot_gold)
+			_battle._pending_loot_items.clear()
+			_battle._pending_loot_gold = 0
 		GameState.advance_to_post_battle()
-		# Guest doesn't change scene — host sends change_scene_for_peers after
+		# Guest doesn't change scene - host sends change_scene_for_peers after
 		# its own summary gate resolves. Guest's ready signal was already sent
-		# inside _show_battle_summary() → _wait_summary_ready().
+		# inside _show_battle_summary() -> _wait_summary_ready().
 	else:
 		await _battle.get_tree().create_timer(2.0).timeout
 		GameState.go_to_ending(false)
@@ -263,6 +270,16 @@ func _apply_battle_stats(stats_data: Array) -> void:
 				"healing_done": entry.get("healing_done", 0),
 				"kills": entry.get("kills", 0),
 			}
+
+
+## Host -> All: Loot drops after battle.
+func handle_loot_dropped(item_ids: Array, gold: int) -> void:
+	_battle._pending_loot_gold = gold
+	_battle._pending_loot_items.clear()
+	for id: String in item_ids:
+		var item: ItemData = ItemData.from_save_id(id)
+		if item:
+			_battle._pending_loot_items.append(item)
 
 
 ## Host -> All: Combat log line (for real-time log display).

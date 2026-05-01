@@ -18,6 +18,7 @@ const AbilityData := preload("res://scripts/data/ability_data.gd")
 const ItemData := preload("res://scripts/data/item_data.gd")
 const BattleData := preload("res://scripts/data/battle_data.gd")
 const BattleMultiplayer_C := preload("res://scenes/battle/battle_multiplayer.gd")
+const LootRoller := preload("res://scripts/battle/loot_roller.gd")
 
 enum Phase {
 	STARTING,
@@ -52,8 +53,11 @@ var _battle_stats: Dictionary = {}  ## FighterData -> {damage_dealt, damage_take
 var _auto_battle: bool = false
 var _auto_battle_unlocked: bool = false
 var _summary_waiting: bool = false
+var _loot_waiting: bool = false
 var _summary_gate: ReadyGate = null  ## ReadyGate for multiplayer summary sync
 var _pending_summary_ready: Array[int] = []  ## Buffer for RPCs arriving before gate exists
+var _pending_loot_items: Array = []  ## Loot items from host (multiplayer guest)
+var _pending_loot_gold: int = 0  ## Loot gold from host (multiplayer guest)
 var _auto_button: Button
 var _display: BattleDisplay
 var _mp: BattleMultiplayer
@@ -393,6 +397,11 @@ func _input(event: InputEvent) -> void:
 	if _summary_waiting:
 		if event.is_action_pressed("confirm") or (event is InputEventMouseButton and event.pressed):
 			_summary_waiting = false
+			get_viewport().set_input_as_handled()
+			return
+	if _loot_waiting:
+		if event.is_action_pressed("confirm") or (event is InputEventMouseButton and event.pressed):
+			_loot_waiting = false
 			get_viewport().set_input_as_handled()
 			return
 	if _auto_battle and (event.is_action_pressed("confirm") or event.is_action_pressed("cancel")):
@@ -942,11 +951,24 @@ func _end_battle() -> void:
 
 	var won: bool = _boss_escaped or _engine.did_player_win()
 
+	# Roll loot drops (host / single-player only)
+	var loot_items: Array = []
+	var loot_gold: int = 0
+	if won:
+		var loot: Dictionary = LootRoller.roll_drops(_all_enemies, GameState.current_story_id)
+		loot_items = loot.items
+		loot_gold = loot.gold
+
 	# Broadcast battle end to guests
 	if NetManager.is_multiplayer_active and NetManager.is_host:
 		_broadcast_state_sync()
 		var stats_data: Array = _serialize_battle_stats()
 		_rpc_battle_ended.rpc(won, stats_data)
+		if won and (loot_items.size() > 0 or loot_gold > 0):
+			var item_ids: Array = []
+			for item: ItemData in loot_items:
+				item_ids.append(item.item_id)
+			_rpc_loot_dropped.rpc(item_ids, loot_gold)
 
 	if won:
 		GameLog.info("Battle won: %s" % GameState.current_battle_id)
@@ -958,6 +980,9 @@ func _end_battle() -> void:
 		_display.show_victory_flash()
 		await get_tree().create_timer(2.0, false).timeout
 		await _show_battle_summary()
+		if loot_items.size() > 0 or loot_gold > 0:
+			GameState.inventory.add_gold(loot_gold)
+			await _display.show_loot_drops(loot_items, loot_gold)
 		GameState.advance_to_post_battle()
 		if NetManager.is_multiplayer_active and NetManager.is_host:
 			NetManager.change_scene_for_peers("res://scenes/narrative/narrative.tscn")
@@ -1118,6 +1143,10 @@ func _serialize_battle_stats() -> Array:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_combat_log(text: String) -> void:
 	_mp.handle_combat_log(text)
+
+@rpc("authority", "call_remote", "reliable")
+func _rpc_loot_dropped(item_ids: Array, gold: int) -> void:
+	_mp.handle_loot_dropped(item_ids, gold)
 
 
 func _on_peer_left_mid_battle(peer_id: int, player_name: String) -> void:
