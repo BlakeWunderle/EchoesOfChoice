@@ -5,6 +5,7 @@ class_name BattleEngine extends RefCounted
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityData := preload("res://scripts/data/ability_data.gd")
+const ItemData := preload("res://scripts/data/item_data.gd")
 const Enums := preload("res://scripts/data/enums.gd")
 
 signal combat_message(text: String)
@@ -355,6 +356,71 @@ func perform_rest(unit: FighterData) -> void:
 	else:
 		combat_message.emit("[color=#80cc66]%s takes a moment to rest.[/color]" % unit.character_name)
 		combat_event.emit(unit, mp_restore, "rest")
+
+
+func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
+	match item.effect_type:
+		Enums.ItemEffect.HEAL_HP:
+			var healed: int = mini(item.magnitude, target.max_health - target.health)
+			target.health += healed
+			if sim_mode:
+				sim_stats[user].heals += healed
+			else:
+				combat_message.emit("[color=#4dff66]%s used %s on %s, restoring %d HP.[/color]" % [
+					user.character_name, item.item_name, target.character_name, healed])
+				combat_event.emit(target, healed, "heal")
+		Enums.ItemEffect.HEAL_MP:
+			var restored: int = mini(item.magnitude, target.max_mana - target.mana)
+			target.mana += restored
+			if not sim_mode:
+				combat_message.emit("[color=#66b3ff]%s used %s on %s, restoring %d MP.[/color]" % [
+					user.character_name, item.item_name, target.character_name, restored])
+				combat_event.emit(target, restored, "rest")
+		Enums.ItemEffect.CURE_DEBUFF:
+			var removed: int = 0
+			var to_remove: Array[int] = []
+			for i: int in target.modified_stats.size():
+				if target.modified_stats[i]["is_negative"]:
+					to_remove.append(i)
+			for i: int in range(to_remove.size() - 1, -1, -1):
+				target._revert_mod(target.modified_stats[to_remove[i]])
+				target.modified_stats.remove_at(to_remove[i])
+				removed += 1
+			if not sim_mode:
+				combat_message.emit("[color=#4dff66]%s used %s on %s, clearing %d debuff(s).[/color]" % [
+					user.character_name, item.item_name, target.character_name, removed])
+				combat_event.emit(target, removed, "cure")
+		Enums.ItemEffect.BUFF:
+			var targets: Array = [target]
+			if item.target_all:
+				targets = units.duplicate()
+			for t: FighterData in targets:
+				var delta: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
+				t.modified_stats.append({
+					"stat": item.stat_type,
+					"modifier": delta,
+					"turns": item.duration,
+					"is_negative": item.magnitude < 0,
+					"damage_per_turn": 0,
+				})
+				_modify_stats(t, item.stat_type, delta, item.magnitude < 0)
+			if not sim_mode:
+				combat_message.emit("[color=#66ccff]%s used %s![/color]" % [
+					user.character_name, item.item_name])
+				combat_event.emit(target, abs(item.magnitude), "buff")
+		Enums.ItemEffect.DAMAGE:
+			var targets: Array = [target]
+			if item.target_all:
+				targets = enemies.duplicate()
+			for t: FighterData in targets:
+				t.health = maxi(0, t.health - item.magnitude)
+				if sim_mode:
+					sim_stats[user].dmg_dealt += item.magnitude
+				else:
+					combat_event.emit(t, item.magnitude, "spell_damage")
+			if not sim_mode:
+				combat_message.emit("[color=#ff6666]%s used %s![/color]" % [
+					user.character_name, item.item_name])
 
 
 func _has_defense_buff(fighter: FighterData) -> bool:

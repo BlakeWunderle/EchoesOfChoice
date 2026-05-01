@@ -7,6 +7,7 @@ extends RefCounted
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityData := preload("res://scripts/data/ability_data.gd")
+const ItemData := preload("res://scripts/data/item_data.gd")
 
 var _battle: Control
 
@@ -73,6 +74,24 @@ func execute_remote_action(actor: FighterData, action: Dictionary) -> void:
 
 		"rest":
 			_battle._engine.perform_rest(actor)
+
+		"item":
+			var item_idx: int = action.get("item_index", 0)
+			var item: ItemData = GameState.inventory.use_item(item_idx)
+			if item == null:
+				return
+			var target: FighterData
+			if item.target_all or item.target_ally:
+				if target_index < _battle._engine.units.size():
+					target = _battle._engine.units[target_index]
+				else:
+					target = actor
+			else:
+				if target_index < _battle._engine.enemies.size():
+					target = _battle._engine.enemies[target_index]
+				else:
+					target = _battle._engine.enemies[0]
+			_battle._engine.use_item(actor, target, item)
 
 
 func find_ability(actor: FighterData, ability_name: String) -> AbilityData:

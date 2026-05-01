@@ -15,6 +15,7 @@ const ReadyGate := preload("res://scripts/ui/ready_gate.gd")
 const WaitingOverlay := preload("res://scripts/ui/waiting_overlay.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityData := preload("res://scripts/data/ability_data.gd")
+const ItemData := preload("res://scripts/data/item_data.gd")
 const BattleData := preload("res://scripts/data/battle_data.gd")
 const BattleMultiplayer_C := preload("res://scenes/battle/battle_multiplayer.gd")
 
@@ -29,6 +30,8 @@ enum Phase {
 	PLAYER_ABILITY_TARGET_ALLY,
 	SHOWING_STATS,
 	STATS_PICK,
+	PLAYER_ITEM_SELECT,
+	PLAYER_ITEM_TARGET,
 	AI_ACTING,
 	MESSAGE_DELAY,
 	BATTLE_END,
@@ -40,6 +43,7 @@ var _engine: BattleEngine
 var _phase: Phase = Phase.STARTING
 var _current_actor: FighterData
 var _selected_ability: AbilityData
+var _selected_item: ItemData
 var _message_queue: Array[String] = []
 var _processing_messages: bool = false
 var _escape_hp_pct: float = 0.0  ## Boss escape threshold from BattleData
@@ -452,6 +456,24 @@ func _handle_cancel() -> void:
 			_phase = Phase.PLAYER_ACTION
 			_show_action_menu(_current_actor)
 			get_viewport().set_input_as_handled()
+		Phase.PLAYER_ITEM_SELECT:
+			if _action_menu.choice_selected.is_connected(_on_item_selected):
+				_action_menu.choice_selected.disconnect(_on_item_selected)
+			if not _action_menu.choice_selected.is_connected(_on_action_selected):
+				_action_menu.choice_selected.connect(_on_action_selected)
+			_action_menu.hide_menu()
+			_phase = Phase.PLAYER_ACTION
+			_show_action_menu(_current_actor)
+			get_viewport().set_input_as_handled()
+		Phase.PLAYER_ITEM_TARGET:
+			if _action_menu.choice_selected.is_connected(_on_item_target_selected):
+				_action_menu.choice_selected.disconnect(_on_item_target_selected)
+			if not _action_menu.choice_selected.is_connected(_on_action_selected):
+				_action_menu.choice_selected.connect(_on_action_selected)
+			_action_menu.hide_menu()
+			_phase = Phase.PLAYER_ITEM_SELECT
+			_show_item_menu()
+			get_viewport().set_input_as_handled()
 		Phase.SHOWING_STATS:
 			_stats_panel.visible = false
 			_phase = Phase.STATS_PICK
@@ -473,6 +495,8 @@ func _show_action_menu(actor: FighterData) -> void:
 	var options: Array[Dictionary] = [{"label": "Actions"}]
 	if has_available:
 		options.append({"label": "Ability"})
+	if GameState.inventory.size() > 0:
+		options.append({"label": "Item"})
 	if _auto_battle_unlocked:
 		options.append({"label": "Auto"})
 	options.append({"label": "Stats"})
@@ -498,6 +522,8 @@ func _on_action_selected(index: int) -> void:
 	var labels: Array[String] = ["Actions"]
 	if has_available:
 		labels.append("Ability")
+	if GameState.inventory.size() > 0:
+		labels.append("Item")
 	if _auto_battle_unlocked:
 		labels.append("Auto")
 	labels.append("Stats")
@@ -511,6 +537,9 @@ func _on_action_selected(index: int) -> void:
 		"Ability":
 			_phase = Phase.PLAYER_ABILITY_SELECT
 			_show_ability_menu()
+		"Item":
+			_phase = Phase.PLAYER_ITEM_SELECT
+			_show_item_menu()
 		"Auto":
 			_auto_battle = true
 			_update_auto_button_style()
@@ -718,6 +747,102 @@ func _on_ability_selected(index: int) -> void:
 	else:
 		_phase = Phase.PLAYER_ABILITY_TARGET_ALLY
 		_show_target_menu(_engine.units)
+
+
+# =============================================================================
+# Item usage
+# =============================================================================
+
+func _show_item_menu() -> void:
+	var items: Array = GameState.inventory.get_items()
+	var options: Array[Dictionary] = []
+	for item: ItemData in items:
+		options.append({"label": item.item_name, "description": item.get_use_description()})
+	options.append({"label": "Back"})
+
+	_action_menu.show_choices(options, true)
+	_action_menu.choice_selected.disconnect(_on_action_selected)
+	_action_menu.choice_selected.connect(_on_item_selected)
+	_tip_overlay.show_tip_once("first_item_use",
+		"Items are consumable and don't cost MP. Using an item takes your turn.\n\n" +
+		"You can find items as loot after battles or buy them at town shops.")
+
+
+func _on_item_selected(index: int) -> void:
+	var items: Array = GameState.inventory.get_items()
+	if index >= items.size():
+		# Back
+		_action_menu.choice_selected.disconnect(_on_item_selected)
+		_action_menu.choice_selected.connect(_on_action_selected)
+		_action_menu.hide_menu()
+		_phase = Phase.PLAYER_ACTION
+		_show_action_menu(_current_actor)
+		return
+
+	_action_menu.choice_selected.disconnect(_on_item_selected)
+	_action_menu.choice_selected.connect(_on_action_selected)
+	_action_menu.hide_menu()
+
+	_selected_item = items[index]
+
+	if _selected_item.target_all:
+		# AoE item, no target selection needed
+		if _is_mp_guest():
+			_rpc_submit_action.rpc_id(1, {"type": "item", "item_index": index, "target_index": 0})
+			_player_turn_done.emit()
+			return
+		GameState.inventory.use_item(index)
+		_engine.use_item(_current_actor, _current_actor, _selected_item)
+		_engine.check_for_death()
+		_player_turn_done.emit()
+	elif _selected_item.target_ally:
+		_phase = Phase.PLAYER_ITEM_TARGET
+		_show_item_target_menu(_engine.units)
+	else:
+		_phase = Phase.PLAYER_ITEM_TARGET
+		_show_item_target_menu(_engine.enemies)
+
+
+func _show_item_target_menu(fighters: Array) -> void:
+	var options: Array[Dictionary] = []
+	for f: FighterData in fighters:
+		options.append({
+			"label": f.character_name,
+			"description": "%s  |  HP: %d/%d" % [f.character_type, f.health, f.max_health],
+		})
+	options.append({"label": "Back"})
+	_action_menu.show_choices(options, true)
+	if not _action_menu.choice_selected.is_connected(_on_item_target_selected):
+		_action_menu.choice_selected.connect(_on_item_target_selected)
+
+
+func _on_item_target_selected(index: int) -> void:
+	var fighters: Array = _engine.units if _selected_item.target_ally else _engine.enemies
+	if index >= fighters.size():
+		# Back to item list
+		_action_menu.choice_selected.disconnect(_on_item_target_selected)
+		_action_menu.choice_selected.connect(_on_action_selected)
+		_action_menu.hide_menu()
+		_phase = Phase.PLAYER_ITEM_SELECT
+		_show_item_menu()
+		return
+
+	_action_menu.choice_selected.disconnect(_on_item_target_selected)
+	_action_menu.choice_selected.connect(_on_action_selected)
+	_action_menu.hide_menu()
+
+	if _is_mp_guest():
+		var item_idx: int = GameState.inventory.get_items().find(_selected_item)
+		_rpc_submit_action.rpc_id(1, {"type": "item", "item_index": item_idx, "target_index": index})
+		_player_turn_done.emit()
+		return
+
+	var item_idx: int = GameState.inventory.get_items().find(_selected_item)
+	var target: FighterData = fighters[index]
+	GameState.inventory.use_item(item_idx)
+	_engine.use_item(_current_actor, target, _selected_item)
+	_engine.check_for_death()
+	_player_turn_done.emit()
 
 
 # =============================================================================

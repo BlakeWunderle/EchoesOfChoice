@@ -5,6 +5,7 @@ extends Node
 const _BattleDB := preload("res://scripts/data/battle_db.gd")
 const _FighterDB := preload("res://scripts/data/fighter_db.gd")
 const _StoryDB := preload("res://scripts/data/story_db.gd")
+const _Inventory := preload("res://scripts/data/inventory.gd")
 
 enum NarrativeMode { PRE_BATTLE, POST_BATTLE }
 enum GamePhase { TITLE, PARTY_CREATION, NARRATIVE, BATTLE, TOWN_STOP, ENDING }
@@ -19,6 +20,7 @@ var game_won: bool = false
 var battles_won: int = 0
 var play_seconds: float = 0.0
 var current_story_id: String = "story_1"
+var inventory: RefCounted = _Inventory.new()  ## Party-shared items + gold
 
 
 func start_new_game(story_id: String = "story_1") -> void:
@@ -33,6 +35,7 @@ func start_new_game(story_id: String = "story_1") -> void:
 	game_won = false
 	battles_won = 0
 	play_seconds = 0.0
+	inventory = _Inventory.new()
 	_update_presence()
 
 
