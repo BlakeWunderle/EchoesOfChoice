@@ -11,8 +11,11 @@ const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
 const WaitingOverlay := preload("res://scripts/ui/waiting_overlay.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const FighterDB := preload("res://scripts/data/fighter_db.gd")
+const ShopDB := preload("res://scripts/data/shop_db.gd")
+const ItemDB := preload("res://scripts/data/item_db.gd")
+const ItemData := preload("res://scripts/data/item_data.gd")
 
-enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, OUTRO_TEXT, BRANCH_CHOICE }
+enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, SHOPPING, OUTRO_TEXT, BRANCH_CHOICE }
 
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
@@ -26,6 +29,8 @@ var _scene_image: TextureRect
 var _player_indicator: Label
 var _phase: TownPhase = TownPhase.INTRO_TEXT
 var _upgrade_index: int = 0  ## Which party member is choosing
+var _shop_items: Array = []  ## Current shop inventory [{item_id, price}]
+var _gold_label: Label
 
 
 func _ready() -> void:
@@ -331,6 +336,8 @@ func _on_choice_selected(index: int) -> void:
 	match _phase:
 		TownPhase.UPGRADING:
 			_on_upgrade_selected(index)
+		TownPhase.SHOPPING:
+			_on_shop_selected(index)
 		TownPhase.BRANCH_CHOICE:
 			_on_branch_selected(index)
 
@@ -376,7 +383,17 @@ func _finish_upgrades() -> void:
 	# Level up party after upgrades
 	GameState.level_up_party()
 
-	# Show outro text if any
+	# Check for shop before outro
+	var battle = GameState.current_battle
+	_shop_items = ShopDB.get_shop_items(battle.battle_id)
+	if not _shop_items.is_empty() and GameState.inventory.gold > 0:
+		_start_shopping()
+		return
+
+	_show_outro_or_advance()
+
+
+func _show_outro_or_advance() -> void:
 	var battle = GameState.current_battle
 	if not battle.post_battle_text.is_empty():
 		_phase = TownPhase.OUTRO_TEXT
@@ -385,6 +402,87 @@ func _finish_upgrades() -> void:
 		_open_gate_early(_do_outro_advance)
 	else:
 		_check_branch_or_advance()
+
+
+func _start_shopping() -> void:
+	_phase = TownPhase.SHOPPING
+	_dialogue.visible = false
+	_upgrade_label.text = "Shop"
+	_upgrade_label.visible = true
+
+	_tip_overlay.show_tip_once("first_shop",
+		"Spend gold earned from battle to buy items. " +
+		"Items can be used during battle as a turn action.\n\n" +
+		"Your inventory holds up to 6 items.")
+
+	_show_shop_menu()
+
+
+func _show_shop_menu() -> void:
+	var options: Array[Dictionary] = []
+	for entry: Dictionary in _shop_items:
+		var item: ItemData = ItemDB.create_by_id(entry.item_id)
+		if item:
+			var affordable: String = "" if GameState.inventory.gold >= entry.price else " [not enough gold]"
+			options.append({
+				"label": "%s - %dg" % [item.item_name, entry.price],
+				"description": item.get_use_description() + affordable,
+			})
+		else:
+			options.append({"label": entry.item_id})
+	options.append({"label": "Done Shopping"})
+
+	# Update gold display
+	_upgrade_label.text = "Shop  |  Gold: %d  |  Items: %d/6" % [
+		GameState.inventory.gold, GameState.inventory.size()]
+	_upgrade_label.visible = true
+	_choice_menu.show_choices(options)
+
+
+func _on_shop_selected(index: int) -> void:
+	# "Done Shopping" is the last option
+	if index >= _shop_items.size():
+		_choice_menu.hide_menu()
+		_upgrade_label.visible = false
+		if _gold_label:
+			_gold_label.queue_free()
+			_gold_label = null
+		_show_outro_or_advance()
+		return
+
+	var entry: Dictionary = _shop_items[index]
+	var price: int = entry.price
+	if GameState.inventory.gold < price:
+		# Can't afford - just re-show the menu
+		_show_shop_menu()
+		return
+
+	if GameState.inventory.is_full():
+		_dialogue.visible = true
+		_dialogue.show_text(["Your inventory is full (6/6). Use or drop items in battle first."])
+		await get_tree().create_timer(1.5).timeout
+		_dialogue.visible = false
+		_show_shop_menu()
+		return
+
+	# Purchase the item
+	GameState.inventory.spend_gold(price)
+	var item: ItemData = ItemDB.create_by_id(entry.item_id)
+	GameState.inventory.add_item(item)
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
+	GameLog.info("Shop: bought %s for %dg" % [item.item_name, price])
+
+	# Broadcast to peers
+	if NetManager.is_multiplayer_active and NetManager.is_host:
+		_rpc_shop_purchase.rpc(entry.item_id, price)
+
+	# Re-show menu (player can buy more)
+	if GameState.inventory.gold <= 0:
+		_choice_menu.hide_menu()
+		_upgrade_label.visible = false
+		_show_outro_or_advance()
+		return
+	_show_shop_menu()
 
 
 func _check_branch_or_advance() -> void:
@@ -590,3 +688,12 @@ func _rpc_cast_vote(player_index: int, choice_index: int) -> void:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_vote_broadcast(player_index: int, choice_index: int) -> void:
 	_vote_panel.receive_vote(player_index, choice_index)
+
+
+## Host -> All: Broadcast a shop purchase so peers update inventory.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_shop_purchase(item_id: String, price: int) -> void:
+	GameState.inventory.spend_gold(price)
+	var item: ItemData = ItemDB.create_by_id(item_id)
+	if item:
+		GameState.inventory.add_item(item)

@@ -73,7 +73,7 @@ static func create_battle(battle_id: String) -> BattleData:
 		"S2_ForgottenArchive", "S2_TheReveal":
 			return S2Act3.create_battle(battle_id)
 		# Story 2 - Act IV
-		"S2_DepthsOfRemembrance", "S2_MawOfTheEye", \
+		"S2_CoastalCamp", "S2_DepthsOfRemembrance", "S2_MawOfTheEye", \
 		"S2_EyeAwakening", "S2_EyeOfOblivion":
 			return S2Act4.create_battle(battle_id)
 		# Story 2 - Path B (Save Sera)

@@ -10,6 +10,7 @@ const EnemyDBS2Act4 := preload("res://scripts/data/story2/enemy_db_s2_act4.gd")
 
 static func create_battle(battle_id: String) -> BattleData:
 	match battle_id:
+		"S2_CoastalCamp": return s2_coastal_camp()
 		"S2_DepthsOfRemembrance": return s2_depths_of_remembrance()
 		"S2_MawOfTheEye": return s2_maw_of_the_eye()
 		"S2_EyeAwakening": return s2_eye_awakening()
@@ -17,6 +18,31 @@ static func create_battle(battle_id: String) -> BattleData:
 		_:
 			push_error("Unknown Story 2 Act IV battle: %s" % battle_id)
 			return s2_depths_of_remembrance()
+
+
+# =============================================================================
+# Town Stop: Coastal Camp (post-T2, shop only)
+# =============================================================================
+
+static func s2_coastal_camp() -> BattleData:
+	var b := BattleData.new()
+	b.battle_id = "S2_CoastalCamp"
+	b.scene_image = "res://assets/art/battles/coastal_camp.png"
+	b.is_town_stop = true
+	b.pre_battle_text = [
+		"They emerge from the sanctum into salt air and grey light. A narrow strip of shore stretches between the cliffs and the churning sea.",
+		"Sera finds a sheltered alcove where the wind does not reach. Old fire rings and scattered supplies suggest others have camped here before.",
+		"'Rest while you can,' she says, arranging driftwood into a careful stack. 'What comes next will not wait for us to be ready.'",
+		"The fire catches. Warmth returns to numb fingers. For a brief hour, the weight of what lies ahead feels almost bearable.",
+	]
+	b.post_battle_text = [
+		"Sera stares into the embers. 'The Eye's roots go deeper than anything I mapped. The machinery down there is alive in ways I still don't understand.'",
+		"She stands, brushing sand from her knees. 'But I remember the way in. And this time, I remember why it has to end.'",
+		"The fire dies. The party gathers their things and follows Sera back toward the cliffs, toward the dark, toward the center of it all.",
+	]
+	b.next_battle_id = "S2_DepthsOfRemembrance"
+	b.music_track = "res://assets/audio/music/cutscene/Sad Despair 01.wav"
+	return b
 
 
 # =============================================================================
