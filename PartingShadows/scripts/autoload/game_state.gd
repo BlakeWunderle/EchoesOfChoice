@@ -6,6 +6,7 @@ const _BattleDB := preload("res://scripts/data/battle_db.gd")
 const _FighterDB := preload("res://scripts/data/fighter_db.gd")
 const _StoryDB := preload("res://scripts/data/story_db.gd")
 const _Inventory := preload("res://scripts/data/inventory.gd")
+const _ItemDB := preload("res://scripts/data/item_db.gd")
 
 enum NarrativeMode { PRE_BATTLE, POST_BATTLE }
 enum GamePhase { TITLE, PARTY_CREATION, NARRATIVE, BATTLE, TOWN_STOP, ENDING }
@@ -36,6 +37,7 @@ func start_new_game(story_id: String = "story_1") -> void:
 	battles_won = 0
 	play_seconds = 0.0
 	inventory = _Inventory.new()
+	inventory.add_item(_ItemDB.minor_salve())
 	_update_presence()
 
 

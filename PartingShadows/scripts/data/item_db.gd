@@ -14,7 +14,7 @@ static func minor_salve() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "minor_salve"; i.item_name = "Minor Salve"
 	i.description = "A simple herbal paste that soothes minor wounds."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 20
+	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 10
 	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 30
 	return i
 
@@ -22,7 +22,7 @@ static func healing_potion() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "healing_potion"; i.item_name = "Healing Potion"
 	i.description = "A glowing vial that mends flesh and bone."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 40
+	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 20
 	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 60
 	return i
 
@@ -30,7 +30,7 @@ static func greater_potion() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "greater_potion"; i.item_name = "Greater Potion"
 	i.description = "A potent elixir brewed from rare ingredients."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 70
+	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 35
 	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 100
 	return i
 
@@ -171,7 +171,7 @@ static func cave_moss_poultice() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "cave_moss_poultice"; i.item_name = "Cave Moss Poultice"
 	i.description = "Damp cave moss with remarkable healing properties."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 40
+	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 20
 	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 130
 	return i
 
