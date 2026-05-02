@@ -181,6 +181,13 @@ func _init() -> void:
 		print("  Wall clock time: %.1fs" % elapsed)
 		print("  Speedup: %.1fx" % [total_ms / 1000.0 / maxf(elapsed, 0.001)])
 
+		# Print per-stage equipment breakdown.
+		for s: Dictionary in all_stages:
+			var es: Dictionary = s.get("equip_stats", {})
+			if not es.is_empty():
+				print("\n--- %s (Equipment) ---" % s.stage_name)
+				SR.print_equipment_breakdown(s)
+
 		# Print class breakdown and weak-class diagnostics when --diagnostics requested.
 		if passthrough.has("--diagnostics"):
 			for s: Dictionary in all_stages:
@@ -572,6 +579,7 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 	var merged: Dictionary = (partials[0] as Dictionary).duplicate(true)
 	merged["combo_results"] = []
 	merged["class_diag"] = {}
+	merged["equip_stats"] = {}
 	merged["elapsed_ms"] = 0
 	for partial: Dictionary in partials:
 		merged.combo_results.append_array(partial.get("combo_results", []))
@@ -582,6 +590,12 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 			else:
 				for key: String in ["dmg_dealt", "dmg_taken", "heals", "deaths", "battles"]:
 					merged.class_diag[cls][key] += partial.class_diag[cls].get(key, 0)
+		for eid: String in partial.get("equip_stats", {}):
+			var ps: Dictionary = partial.equip_stats[eid]
+			if not merged.equip_stats.has(eid):
+				merged.equip_stats[eid] = {wins = 0, total = 0}
+			merged.equip_stats[eid].wins += ps.get("wins", 0)
+			merged.equip_stats[eid].total += ps.get("total", 0)
 	## Merge turn_stats from all partials.
 	var ts_all_sum := 0
 	var ts_player_sum := 0
