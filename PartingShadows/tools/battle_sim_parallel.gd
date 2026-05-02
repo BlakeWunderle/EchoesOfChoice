@@ -181,39 +181,31 @@ func _init() -> void:
 		print("  Wall clock time: %.1fs" % elapsed)
 		print("  Speedup: %.1fx" % [total_ms / 1000.0 / maxf(elapsed, 0.001)])
 
-		# Print per-stage equipment breakdown.
+		# Print per-stage class breakdown and equipment breakdown.
 		for s: Dictionary in all_stages:
-			var es: Dictionary = s.get("equip_stats", {})
-			if not es.is_empty():
-				print("\n--- %s (Equipment) ---" % s.stage_name)
-				SR.print_equipment_breakdown(s)
-
-		# Print class breakdown and weak-class diagnostics when --diagnostics requested.
-		if passthrough.has("--diagnostics"):
-			for s: Dictionary in all_stages:
-				print("\n--- %s ---" % s.stage_name)
-				# Use pre-computed class_breakdown (build_entry format) rather than
-				# SR.print_class_breakdown which requires combo_results.
-				var breakdown: Dictionary = s.get("class_breakdown", {})
-				if not breakdown.is_empty():
-					var entries := []
-					for cname: String in breakdown:
-						entries.append({
-							"class": cname,
-							"win_rate": breakdown[cname].get("win_rate", 0.0),
-							"count": breakdown[cname].get("combo_count", 0),
-						})
-					entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-						return a.win_rate > b.win_rate)
-					var warn_thr: float = s.get("target_win_rate", 0.0) * 0.60
-					print("\n  CLASS BREAKDOWN:")
-					print("    %-22s %10s %8s  %s" % ["Class", "Win Rate", "Combos", "Note"])
-					print("    " + "-".repeat(54))
-					for e: Dictionary in entries:
-						var note: String = "** WEAK **" if e.win_rate < warn_thr else ""
-						print("    %-22s %9.1f%% %8d  %s" % [
-							e["class"], e.win_rate * 100, e.count, note])
-				# build_entry pre-computes diagnostics — use it directly.
+			print("\n--- %s ---" % s.stage_name)
+			var breakdown: Dictionary = s.get("class_breakdown", {})
+			if not breakdown.is_empty():
+				var entries := []
+				for cname: String in breakdown:
+					entries.append({
+						"class": cname,
+						"win_rate": breakdown[cname].get("win_rate", 0.0),
+						"count": breakdown[cname].get("combo_count", 0),
+					})
+				entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+					return a.win_rate > b.win_rate)
+				var warn_thr: float = s.get("target_win_rate", 0.0) * 0.60
+				print("\n  CLASS BREAKDOWN:")
+				print("    %-22s %10s %8s  %s" % ["Class", "Win Rate", "Combos", "Note"])
+				print("    " + "-".repeat(54))
+				for e: Dictionary in entries:
+					var note: String = "** WEAK **" if e.win_rate < warn_thr else ""
+					print("    %-22s %9.1f%% %8d  %s" % [
+						e["class"], e.win_rate * 100, e.count, note])
+			SR.print_equipment_breakdown(s)
+			# Print detailed diagnostics when --diagnostics requested.
+			if passthrough.has("--diagnostics"):
 				SD.print_diagnostics(s.get("diagnostics", []), s.stage_name)
 
 	_write_outputs(all_stages)
