@@ -17,6 +17,7 @@ signal battle_lost
 var units: Array = []      ## Player party (alive)
 var enemies: Array = []    ## Enemy team (alive)
 var dead_units: Array = [] ## Dead party members (revived at end)
+var enemy_shared_items: Array = []  ## Shared enemy item pool (like player inventory)
 
 var sim_mode: bool = false  ## Skip signal emissions for headless simulation
 var difficulty_level: int = 1  ## 0=easy, 1=normal, 2=hard. Set by caller.
@@ -361,7 +362,8 @@ func perform_rest(unit: FighterData) -> void:
 func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
 	match item.effect_type:
 		Enums.ItemEffect.HEAL_HP:
-			var healed: int = mini(item.magnitude, target.max_health - target.health)
+			var heal_amount: int = int(target.max_health * item.magnitude / 100.0)
+			var healed: int = mini(heal_amount, target.max_health - target.health)
 			target.health += healed
 			if sim_mode:
 				sim_stats[user].heals += healed
@@ -378,10 +380,13 @@ func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
 				combat_event.emit(target, restored, "rest")
 		Enums.ItemEffect.CURE_DEBUFF:
 			var removed: int = 0
+			var max_remove: int = item.magnitude if item.magnitude > 0 else 999
 			var to_remove: Array[int] = []
 			for i: int in target.modified_stats.size():
 				if target.modified_stats[i]["is_negative"]:
 					to_remove.append(i)
+					if to_remove.size() >= max_remove:
+						break
 			for i: int in range(to_remove.size() - 1, -1, -1):
 				target._revert_mod(target.modified_stats[to_remove[i]])
 				target.modified_stats.remove_at(to_remove[i])
@@ -391,24 +396,36 @@ func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
 					user.character_name, item.item_name, target.character_name, removed])
 				combat_event.emit(target, removed, "cure")
 		Enums.ItemEffect.BUFF:
+			var is_debuff := not item.target_ally
 			var targets: Array = [target]
 			if item.target_all:
-				var user_allies: Array = units if user in units else enemies
-				targets = user_allies.duplicate()
+				if is_debuff:
+					var user_opponents: Array = enemies if user in units else units
+					targets = user_opponents.duplicate()
+				else:
+					var user_allies: Array = units if user in units else enemies
+					targets = user_allies.duplicate()
 			for t: FighterData in targets:
 				var delta: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
+				if is_debuff:
+					delta = -delta
 				t.modified_stats.append({
 					"stat": item.stat_type,
 					"modifier": delta,
 					"turns": item.duration,
-					"is_negative": item.magnitude < 0,
+					"is_negative": is_debuff,
 					"damage_per_turn": 0,
 				})
-				_modify_stats(t, item.stat_type, delta, item.magnitude < 0)
+				_modify_stats(t, item.stat_type, delta, is_debuff)
 			if not sim_mode:
-				combat_message.emit("[color=#66ccff]%s used %s![/color]" % [
-					user.character_name, item.item_name])
-				combat_event.emit(target, abs(item.magnitude), "buff")
+				if is_debuff:
+					combat_message.emit("[color=#cc4dcc]%s used %s![/color]" % [
+						user.character_name, item.item_name])
+					combat_event.emit(target, abs(item.magnitude), "debuff")
+				else:
+					combat_message.emit("[color=#66ccff]%s used %s![/color]" % [
+						user.character_name, item.item_name])
+					combat_event.emit(target, abs(item.magnitude), "buff")
 		Enums.ItemEffect.DAMAGE:
 			var targets: Array = [target]
 			if item.target_all:
@@ -440,7 +457,8 @@ func _has_defense_buff(fighter: FighterData) -> bool:
 ## DODGE_CHANCE and TAUNT stay flat -- their modifiers are already absolute values.
 func _compute_buff_delta(fighter: FighterData, stat: Enums.StatType,
 		percent: int) -> int:
-	if stat == Enums.StatType.DODGE_CHANCE or stat == Enums.StatType.TAUNT:
+	if stat == Enums.StatType.DODGE_CHANCE or stat == Enums.StatType.TAUNT \
+			or stat == Enums.StatType.CRIT_CHANCE:
 		return percent
 	var base_stat: int
 	match stat:
@@ -590,67 +608,108 @@ func _has_modifier(fighter: FighterData, stat: Enums.StatType,
 
 func _try_enemy_item(unit: FighterData, targets: Array,
 		allies: Array) -> bool:
-	## Try using a battle item. Returns true if an item was consumed.
-	if unit.battle_items.is_empty():
+	## Try using a shared enemy item. Returns true if an item was consumed.
+	## Only the lowest-offense enemy uses items (support role).
+	if enemy_shared_items.is_empty():
 		return false
-
-	var hp_pct: float = float(unit.health) / float(unit.max_health)
-	var mp_pct: float = float(unit.mana) / float(unit.max_mana) \
-		if unit.max_mana > 0 else 1.0
-
-	# Priority 1: Heal self when wounded
-	if hp_pct < 0.4:
-		var idx: int = _find_ally_item(unit, Enums.ItemEffect.HEAL_HP)
-		if idx >= 0:
-			return _consume_item(unit, unit, idx)
-
-	# Priority 2: Heal a critically wounded ally
+	var unit_offense := unit.physical_attack + unit.magic_attack
 	for ally: FighterData in allies:
-		if ally == unit or ally.health <= 0:
-			continue
-		if float(ally.health) / float(ally.max_health) < 0.3:
-			var idx: int = _find_ally_item(unit, Enums.ItemEffect.HEAL_HP)
+		if ally.health > 0 and (ally.physical_attack + ally.magic_attack) < unit_offense:
+			return false
+
+	# Priority 1: Cure debuffs if 2+ debuffs (25% chance)
+	if randf() < 0.25:
+		var debuff_count: int = 0
+		for mod: Dictionary in unit.modified_stats:
+			if mod["is_negative"]:
+				debuff_count += 1
+		if debuff_count >= 2:
+			var idx: int = _find_shared_item(Enums.ItemEffect.CURE_DEBUFF)
 			if idx >= 0:
-				return _consume_item(unit, ally, idx)
-			break
+				return _consume_shared_item(unit, unit, idx)
 
-	# Priority 3: Cure debuffs if debuffed
-	for mod: Dictionary in unit.modified_stats:
-		if mod["is_negative"]:
-			var idx: int = _find_ally_item(unit, Enums.ItemEffect.CURE_DEBUFF)
-			if idx >= 0:
-				return _consume_item(unit, unit, idx)
-			break
-
-	# Priority 4: Restore mana when low
-	if mp_pct < 0.25:
-		var idx: int = _find_ally_item(unit, Enums.ItemEffect.HEAL_MP)
-		if idx >= 0:
-			return _consume_item(unit, unit, idx)
-
-	# Priority 5: Buff self if unbuffed (35% chance per check)
-	if randf() < 0.35:
-		for i: int in unit.battle_items.size():
-			var item: ItemData = unit.battle_items[i]
+	# Priority 2: Buff best ally if unbuffed (25% chance)
+	if randf() < 0.25:
+		for i: int in enemy_shared_items.size():
+			var item: ItemData = enemy_shared_items[i]
 			if item.effect_type == Enums.ItemEffect.BUFF and item.target_ally \
-					and item.magnitude > 0 \
-					and not _has_modifier(unit, item.stat_type, false):
-				return _consume_item(unit, unit, i)
+					and item.magnitude > 0:
+				if item.target_all:
+					var any_unbuffed: bool = false
+					for ally: FighterData in allies:
+						if ally.health > 0 and not _has_modifier(ally, item.stat_type, false):
+							any_unbuffed = true
+							break
+					if any_unbuffed:
+						return _consume_shared_item(unit, unit, i)
+				else:
+					var best: FighterData = _best_item_buff_target(allies, item)
+					if best != null:
+						return _consume_shared_item(unit, best, i)
+
+	# Priority 3: Debuff strongest enemy (25% chance)
+	if randf() < 0.25:
+		for i: int in enemy_shared_items.size():
+			var item: ItemData = enemy_shared_items[i]
+			if item.effect_type == Enums.ItemEffect.BUFF and not item.target_ally:
+				var target_list: Array = units if unit in enemies else enemies
+				if not target_list.is_empty():
+					if item.target_all:
+						return _consume_shared_item(unit, target_list[0], i)
+					var best: FighterData = _best_debuff_item_target(target_list, item)
+					if best != null and not _has_modifier(best, item.stat_type, true):
+						return _consume_shared_item(unit, best, i)
+
+	# Priority 4: Use damage item on enemy (25% chance)
+	if randf() < 0.25:
+		for i: int in enemy_shared_items.size():
+			var item: ItemData = enemy_shared_items[i]
+			if item.effect_type == Enums.ItemEffect.DAMAGE and not item.target_ally:
+				var target_list: Array = units if unit in enemies else enemies
+				if not target_list.is_empty():
+					var target: FighterData = target_list[randi() % target_list.size()]
+					return _consume_shared_item(unit, target, i)
 
 	return false
 
 
-func _find_ally_item(unit: FighterData, effect: Enums.ItemEffect) -> int:
-	for i: int in unit.battle_items.size():
-		var item: ItemData = unit.battle_items[i]
-		if item.effect_type == effect and item.target_ally:
+func _best_item_buff_target(allies: Array, item: ItemData) -> FighterData:
+	var best: FighterData = null
+	var best_score := -1.0
+	for ally: FighterData in allies:
+		if ally.health <= 0 or _has_modifier(ally, item.stat_type, false):
+			continue
+		var score := _stat_relevance(ally, item.stat_type, true)
+		if score > best_score:
+			best_score = score
+			best = ally
+	return best
+
+
+func _best_debuff_item_target(targets: Array, item: ItemData) -> FighterData:
+	var best: FighterData = null
+	var best_score := -1.0
+	for t: FighterData in targets:
+		if t.health <= 0:
+			continue
+		var score := _stat_relevance(t, item.stat_type, false)
+		if score > best_score:
+			best_score = score
+			best = t
+	return best
+
+
+func _find_shared_item(effect: Enums.ItemEffect) -> int:
+	for i: int in enemy_shared_items.size():
+		var item: ItemData = enemy_shared_items[i]
+		if item.target_ally and item.effect_type == effect:
 			return i
 	return -1
 
 
-func _consume_item(unit: FighterData, target: FighterData, index: int) -> bool:
-	var item: ItemData = unit.battle_items[index]
-	unit.battle_items.remove_at(index)
+func _consume_shared_item(unit: FighterData, target: FighterData, index: int) -> bool:
+	var item: ItemData = enemy_shared_items[index]
+	enemy_shared_items.remove_at(index)
 	use_item(unit, target, item)
 	return true
 
@@ -722,10 +781,6 @@ func execute_ai_turn(unit: FighterData, targets: Array,
 				use_ability_on_teammate(unit, wounded, heal)
 			return
 
-	# Priority 1.25: Battle items (heal > cure > mana > buff)
-	if _try_enemy_item(unit, targets, allies):
-		return
-
 	# Priority 1.5: Taunt if defensive unit
 	if taunt_ability != null and not _has_modifier(unit, Enums.StatType.TAUNT, false):
 		var def_total: float = unit.physical_defense + unit.magic_defense
@@ -788,7 +843,11 @@ func execute_ai_turn(unit: FighterData, targets: Array,
 				perform_rest(unit)
 				return
 
-	# Priority 2.75: Prefer life steal when wounded
+	# Priority 2.75: Battle items (alongside block/rest)
+	if _try_enemy_item(unit, targets, allies):
+		return
+
+	# Priority 2.8: Prefer life steal when wounded
 	if hp_pct < 0.7 and not offensive_abilities.is_empty():
 		var steal_abilities: Array[AbilityData] = []
 		for a: AbilityData in offensive_abilities:
@@ -1022,10 +1081,6 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 					use_ability_on_teammate(unit, wounded, heal)
 				return
 
-	# -- Priority 1.25: Battle items (heal > cure > mana > buff) --
-	if _try_enemy_item(unit, targets, allies):
-		return
-
 	# -- Priority 1.5: Taunt if defensive unit --
 	if taunt_ability != null and not _has_modifier(unit, Enums.StatType.TAUNT, false):
 		var def_total: float = unit.physical_defense + unit.magic_defense
@@ -1119,6 +1174,10 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		if randf() < 0.25:
 			perform_rest(unit)
 			return
+
+	# -- Priority 4.5: Battle items (alongside block/rest) --
+	if _try_enemy_item(unit, targets, allies):
+		return
 
 	# -- Priority 5: Life steal when wounded --
 	if hp_pct < 0.7 and not offensive_abilities.is_empty():

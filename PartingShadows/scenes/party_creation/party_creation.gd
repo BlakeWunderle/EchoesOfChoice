@@ -10,6 +10,7 @@ const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
 const WaitingOverlay := preload("res://scripts/ui/waiting_overlay.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const FighterDB := preload("res://scripts/data/fighter_db.gd")
+const ClassInfoPanel := preload("res://scripts/ui/class_info_panel.gd")
 const PCText := preload("res://scenes/party_creation/party_creation_text.gd")
 
 enum State {
@@ -20,11 +21,11 @@ enum State {
 }
 
 const BASE_CLASS_OPTIONS: Array[Dictionary] = [
-	{"label": "Squire", "description": "A sturdy warrior who fights with steel and shield."},
-	{"label": "Mage", "description": "A wielder of arcane forces and elemental magic."},
-	{"label": "Entertainer", "description": "A charismatic performer who inspires allies."},
-	{"label": "Tinker", "description": "A brilliant mind who turns knowledge into power."},
-	{"label": "Wildling", "description": "A primal soul who communes with nature and beasts."},
+	{"label": "Squire"},
+	{"label": "Mage"},
+	{"label": "Entertainer"},
+	{"label": "Tinker"},
+	{"label": "Wildling"},
 ]
 
 const BASE_CLASS_IDS: Array[String] = ["Squire", "Mage", "Entertainer", "Tinker", "Wildling"]
@@ -50,6 +51,7 @@ var _portrait_btn_a: Button
 var _portrait_btn_b: Button
 var _portrait_back_btn: Button
 var _player_indicator: Label
+var _class_info_panel: ClassInfoPanel
 
 
 func _is_s2() -> bool:
@@ -68,8 +70,7 @@ func _ready() -> void:
 	_class_options = BASE_CLASS_OPTIONS.duplicate(true)
 	_class_ids = BASE_CLASS_IDS.duplicate()
 	if UnlockManager.is_unlocked("story_1_complete"):
-		_class_options.append({"label": "Wanderer",
-			"description": "A wilderness-raised fighter who learned to endure the land's magic."})
+		_class_options.append({"label": "Wanderer"})
 		_class_ids.append("Wanderer")
 	if _is_s2():
 		for i: int in range(_class_options.size()):
@@ -120,6 +121,7 @@ func _build_ui() -> void:
 	margin.anchor_top = 0.0
 	margin.anchor_right = 1.0
 	margin.anchor_bottom = 0.5
+	margin.clip_contents = true
 	margin.add_theme_constant_override("margin_left", 80)
 	margin.add_theme_constant_override("margin_right", 80)
 	margin.add_theme_constant_override("margin_top", 60)
@@ -143,6 +145,7 @@ func _build_ui() -> void:
 
 	_choice_menu = ChoiceMenu.new()
 	_choice_menu.choice_selected.connect(_on_class_selected)
+	_choice_menu.option_focused.connect(_on_class_option_focused)
 	_choice_menu.visible = false
 	_vbox.add_child(_choice_menu)
 
@@ -226,6 +229,22 @@ func _build_ui() -> void:
 	_portrait_back_btn.add_theme_stylebox_override("focus", _back_focus_sb)
 	_vbox.add_child(_portrait_back_btn)
 
+	# Class info panel (bottom half, shown during class selection)
+	var info_margin := MarginContainer.new()
+	info_margin.anchor_left = 0.0
+	info_margin.anchor_top = 0.5
+	info_margin.anchor_right = 1.0
+	info_margin.anchor_bottom = 1.0
+	info_margin.add_theme_constant_override("margin_left", 80)
+	info_margin.add_theme_constant_override("margin_right", 80)
+	info_margin.add_theme_constant_override("margin_top", 8)
+	info_margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(info_margin)
+
+	_class_info_panel = ClassInfoPanel.new()
+	_class_info_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	info_margin.add_child(_class_info_panel)
+
 	_tip_overlay = TipOverlay.new()
 	add_child(_tip_overlay)
 
@@ -273,6 +292,7 @@ func _set_state(new_state: State) -> void:
 	_choice_menu.visible = false
 	_portrait_container.visible = false
 	_portrait_back_btn.visible = false
+	_class_info_panel.visible = false
 	_waiting_overlay.hide_waiting()
 
 	var char_idx: int = _state_to_char_index(_state)
@@ -369,14 +389,13 @@ func _on_text_finished() -> void:
 			_mp_set_state(State.NAME_1)
 		State.CLASS_1, State.CLASS_2, State.CLASS_3:
 			_dialogue.visible = false
-			# Broadcast mirror to non-owning peers
-			if NetManager.is_multiplayer_active and NetManager.is_host:
-				var char_idx: int = _state_to_char_index(_state)
-				var owner_name: String = NetManager.get_fighter_owner_name(char_idx)
-				_rpc_show_class_mirror.rpc(char_idx, owner_name)
-			# If this is my character, show class choices locally
+			# If this is my character, show class choices and broadcast mirror
 			if _is_my_character_state():
 				_choice_menu.show_choices(_class_options)
+				if NetManager.is_multiplayer_active:
+					var char_idx: int = _state_to_char_index(_state)
+					var owner_name: String = NetManager.get_fighter_owner_name(char_idx)
+					_rpc_show_class_mirror.rpc(char_idx, owner_name)
 				if _state == State.CLASS_1:
 					_tip_overlay.show_tip_once("party_classes",
 						"Each class has unique abilities and a different combat role. " +
@@ -432,12 +451,25 @@ func _on_name_entered(player_name: String) -> void:
 
 func _on_class_selected(index: int) -> void:
 	_choice_menu.hide_menu()
+	_class_info_panel.visible = false
 	_current_class_id = _class_ids[index]
 
 	match _state:
 		State.CLASS_1: _set_state(State.PORTRAIT_1)
 		State.CLASS_2: _set_state(State.PORTRAIT_2)
 		State.CLASS_3: _set_state(State.PORTRAIT_3)
+
+
+func _on_class_option_focused(index: int) -> void:
+	if _state not in [State.CLASS_1, State.CLASS_2, State.CLASS_3]:
+		return
+	if index < 0 or index >= _class_ids.size():
+		_class_info_panel.visible = false
+		return
+	_class_info_panel.show_class(_class_ids[index], not _is_s2())
+	# Sync focus to mirror viewers
+	if _is_my_character_state() and NetManager.is_multiplayer_active:
+		_rpc_class_focus.rpc(index)
 
 
 func _show_portrait_selection() -> void:
@@ -663,8 +695,8 @@ func _rpc_party_finalized(party_data: Array) -> void:
 	GameState.advance_to_battle(GameState.get_first_battle_id())
 
 
-## Host -> All: Show class options as read-only mirror for non-owning peers.
-@rpc("authority", "call_remote", "reliable")
+## Active player -> All: Show class options as read-only mirror for non-owning peers.
+@rpc("any_peer", "call_remote", "reliable")
 func _rpc_show_class_mirror(char_idx: int, owner_name: String) -> void:
 	if NetManager.is_my_fighter(char_idx):
 		return  # I'm the one choosing, ignore mirror
@@ -676,3 +708,16 @@ func _rpc_show_class_mirror(char_idx: int, owner_name: String) -> void:
 		copy["disabled"] = true
 		mirror_options.append(copy)
 	_choice_menu.show_choices(mirror_options)
+	# Show first option highlighted by default
+	if not _class_ids.is_empty():
+		_choice_menu.highlight_option(0)
+		_class_info_panel.show_class(_class_ids[0], not _is_s2())
+
+
+## Active player -> All: Sync which class option is focused (for mirror viewers).
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_class_focus(index: int) -> void:
+	if index < 0 or index >= _class_ids.size():
+		return
+	_class_info_panel.show_class(_class_ids[index], not _is_s2())
+	_choice_menu.highlight_option(index)

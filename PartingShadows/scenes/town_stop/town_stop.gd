@@ -5,6 +5,7 @@ extends Control
 
 const DialoguePanel := preload("res://scripts/ui/dialogue_panel.gd")
 const ChoiceMenu := preload("res://scripts/ui/choice_menu.gd")
+const ClassInfoPanel := preload("res://scripts/ui/class_info_panel.gd")
 const ReadyGate := preload("res://scripts/ui/ready_gate.gd")
 const VotePanel := preload("res://scripts/ui/vote_panel.gd")
 const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
@@ -25,10 +26,12 @@ var _pending_advance: Callable
 var _tip_overlay: TipOverlay
 var _waiting_overlay: WaitingOverlay
 var _upgrade_label: Label
+var _class_info_panel: ClassInfoPanel
 var _scene_image: TextureRect
 var _player_indicator: Label
 var _phase: TownPhase = TownPhase.INTRO_TEXT
 var _upgrade_index: int = 0  ## Which party member is choosing
+var _upgrade_class_ids: Array[String] = []  ## Class IDs for current upgrade options (for panel)
 var _shop_items: Array = []  ## Current shop inventory [{item_id, price}]
 var _gold_label: Label
 
@@ -62,6 +65,7 @@ func _build_ui() -> void:
 	margin.anchor_top = 0.0
 	margin.anchor_right = 1.0
 	margin.anchor_bottom = 0.5
+	margin.clip_contents = true
 	margin.add_theme_constant_override("margin_left", 80)
 	margin.add_theme_constant_override("margin_right", 80)
 	margin.add_theme_constant_override("margin_top", 60)
@@ -86,6 +90,7 @@ func _build_ui() -> void:
 	_choice_menu = ChoiceMenu.new()
 	_choice_menu.visible = false
 	_choice_menu.choice_selected.connect(_on_choice_selected)
+	_choice_menu.option_focused.connect(_on_option_focused)
 	vbox.add_child(_choice_menu)
 
 	_ready_gate = ReadyGate.new()
@@ -98,6 +103,22 @@ func _build_ui() -> void:
 	_vote_panel.vote_resolved.connect(_on_vote_resolved)
 	_vote_panel.vote_cast.connect(_on_vote_cast)
 	vbox.add_child(_vote_panel)
+
+	# Class info panel (bottom half, shown during upgrade selection)
+	var info_margin := MarginContainer.new()
+	info_margin.anchor_left = 0.0
+	info_margin.anchor_top = 0.5
+	info_margin.anchor_right = 1.0
+	info_margin.anchor_bottom = 1.0
+	info_margin.add_theme_constant_override("margin_left", 80)
+	info_margin.add_theme_constant_override("margin_right", 80)
+	info_margin.add_theme_constant_override("margin_top", 8)
+	info_margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(info_margin)
+
+	_class_info_panel = ClassInfoPanel.new()
+	_class_info_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	info_margin.add_child(_class_info_panel)
 
 	_tip_overlay = TipOverlay.new()
 	add_child(_tip_overlay)
@@ -312,11 +333,14 @@ func _show_next_upgrade() -> void:
 
 func _format_upgrade_options(fighter: FighterData) -> Array[Dictionary]:
 	var options: Array[Dictionary] = []
+	_upgrade_class_ids.clear()
 	for item: String in fighter.upgrade_items:
 		var preview: Dictionary = FighterDB.preview_upgrade(fighter, item)
 		if preview.is_empty():
 			options.append({"label": item})
+			_upgrade_class_ids.append("")
 			continue
+		_upgrade_class_ids.append(preview.get("new_class_id", ""))
 		var parts: Array[String] = []
 		for key: String in preview["deltas"]:
 			var diff: int = preview["deltas"][key]
@@ -324,14 +348,12 @@ func _format_upgrade_options(fighter: FighterData) -> Array[Dictionary]:
 		var desc: String = preview["new_class"]
 		if not parts.is_empty():
 			desc += "  |  " + ", ".join(parts)
-		var ability_names: Array[String] = preview.get("abilities", [])
-		if not ability_names.is_empty():
-			desc += "\nAbilities: " + ", ".join(ability_names)
 		options.append({"label": item, "description": desc})
 	return options
 
 
 func _on_choice_selected(index: int) -> void:
+	_class_info_panel.visible = false
 	match _phase:
 		TownPhase.UPGRADING:
 			_on_upgrade_selected(index)
@@ -339,6 +361,27 @@ func _on_choice_selected(index: int) -> void:
 			_on_shop_selected(index)
 		TownPhase.BRANCH_CHOICE:
 			_on_branch_selected(index)
+
+
+func _on_option_focused(index: int) -> void:
+	if _phase == TownPhase.UPGRADING:
+		if index >= 0 and index < _upgrade_class_ids.size():
+			var class_id: String = _upgrade_class_ids[index]
+			if not class_id.is_empty():
+				_class_info_panel.show_class(class_id)
+			else:
+				_class_info_panel.visible = false
+		else:
+			_class_info_panel.visible = false
+		# Sync focus to mirror viewers
+		if NetManager.is_multiplayer_active:
+			_rpc_mirror_focus.rpc(index)
+	elif _phase == TownPhase.SHOPPING:
+		# Sync focus to mirror viewers
+		if NetManager.is_multiplayer_active:
+			_rpc_mirror_focus.rpc(index)
+	else:
+		_class_info_panel.visible = false
 
 
 func _on_upgrade_selected(index: int) -> void:
@@ -444,10 +487,11 @@ func _show_shop_menu_readonly() -> void:
 	options.append({"label": "Done Shopping", "disabled": true})
 
 	var host_name: String = NetManager.get_fighter_owner_name(0)
-	_upgrade_label.text = "%s is shopping  |  Gold: %d  |  Items: %d/6" % [
-		host_name, GameState.inventory.gold, GameState.inventory.size()]
+	_upgrade_label.text = "%s is shopping  |  Gold: %d  |  Items: %d/%d" % [
+		host_name, GameState.inventory.gold, GameState.inventory.size(), GameState.inventory.MAX_ITEMS]
 	_upgrade_label.visible = true
 	_choice_menu.show_choices(options)
+	_choice_menu.highlight_option(0)
 
 
 func _show_shop_menu() -> void:
@@ -465,8 +509,8 @@ func _show_shop_menu() -> void:
 	options.append({"label": "Done Shopping"})
 
 	# Update gold display
-	_upgrade_label.text = "Shop  |  Gold: %d  |  Items: %d/6" % [
-		GameState.inventory.gold, GameState.inventory.size()]
+	_upgrade_label.text = "Shop  |  Gold: %d  |  Items: %d/%d" % [
+		GameState.inventory.gold, GameState.inventory.size(), GameState.inventory.MAX_ITEMS]
 	_upgrade_label.visible = true
 	_choice_menu.show_choices(options)
 
@@ -493,7 +537,7 @@ func _on_shop_selected(index: int) -> void:
 
 	if GameState.inventory.is_full():
 		_dialogue.visible = true
-		_dialogue.show_text(["Your inventory is full (6/6). Use or drop items in battle first."])
+		_dialogue.show_text(["Your inventory is full (%d/%d). Use or drop items in battle first." % [GameState.inventory.size(), GameState.inventory.MAX_ITEMS]])
 		await get_tree().create_timer(1.5).timeout
 		_dialogue.visible = false
 		_show_shop_menu()
@@ -662,6 +706,10 @@ func _rpc_show_upgrade_mirror(party_index: int, char_name: String, char_class: S
 	for opt: Dictionary in options:
 		opt["disabled"] = true
 	_choice_menu.show_choices(options)
+	# Show first option highlighted by default
+	_choice_menu.highlight_option(0)
+	if not _upgrade_class_ids.is_empty() and not _upgrade_class_ids[0].is_empty():
+		_class_info_panel.show_class(_upgrade_class_ids[0])
 
 
 ## Guest -> Host: Submit chosen upgrade item.
@@ -774,3 +822,16 @@ func _rpc_shop_closed() -> void:
 	_choice_menu.hide_menu()
 	_upgrade_label.visible = false
 	_show_outro_or_advance()
+
+
+## Any -> All: Sync which option the active player is focusing (for mirror viewers).
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_mirror_focus(index: int) -> void:
+	_choice_menu.highlight_option(index)
+	# Show class info panel for upgrade options
+	if _phase == TownPhase.UPGRADING and index >= 0 and index < _upgrade_class_ids.size():
+		var class_id: String = _upgrade_class_ids[index]
+		if not class_id.is_empty():
+			_class_info_panel.show_class(class_id)
+		else:
+			_class_info_panel.visible = false

@@ -1,54 +1,10 @@
 class_name ItemDB
 
 ## Factory for all consumable items. Each method returns a fresh ItemData instance.
+## Design: no healing items. All items are combat effects (buffs, damage, cures).
 
 const Enums := preload("res://scripts/data/enums.gd")
 const ItemData := preload("res://scripts/data/item_data.gd")
-
-
-# ---------------------------------------------------------------------------
-# Healing
-# ---------------------------------------------------------------------------
-
-static func minor_salve() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "minor_salve"; i.item_name = "Minor Salve"
-	i.description = "A simple herbal paste that soothes minor wounds."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 10
-	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 30
-	return i
-
-static func healing_potion() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "healing_potion"; i.item_name = "Healing Potion"
-	i.description = "A glowing vial that mends flesh and bone."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 20
-	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 60
-	return i
-
-static func greater_potion() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "greater_potion"; i.item_name = "Greater Potion"
-	i.description = "A potent elixir brewed from rare ingredients."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 35
-	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 100
-	return i
-
-static func mana_shard() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "mana_shard"; i.item_name = "Mana Shard"
-	i.description = "A crystalline fragment humming with arcane energy."
-	i.effect_type = Enums.ItemEffect.HEAL_MP; i.magnitude = 3
-	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 40
-	return i
-
-static func mana_crystal() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "mana_crystal"; i.item_name = "Mana Crystal"
-	i.description = "A larger crystal pulsing with deep blue light."
-	i.effect_type = Enums.ItemEffect.HEAL_MP; i.magnitude = 5
-	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 70
-	return i
 
 
 # ---------------------------------------------------------------------------
@@ -58,8 +14,8 @@ static func mana_crystal() -> ItemData:
 static func antidote() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "antidote"; i.item_name = "Antidote"
-	i.description = "A bitter tincture that purges poison and corruption."
-	i.effect_type = Enums.ItemEffect.CURE_DEBUFF
+	i.description = "A bitter tincture that purges a single affliction."
+	i.effect_type = Enums.ItemEffect.CURE_DEBUFF; i.magnitude = 1
 	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 40
 	return i
 
@@ -72,50 +28,174 @@ static func clarity_tonic() -> ItemData:
 	return i
 
 
+
 # ---------------------------------------------------------------------------
-# Buffs
+# Buffs (T1: +25%, COMMON, 50g)
 # ---------------------------------------------------------------------------
+
+static func shimmer_oil() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "shimmer_oil"; i.item_name = "Shimmer Oil"
+	i.description = "A shimmering oil that channels arcane energy through weapons."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 25; i.duration = 3
+	i.stat_type = Enums.StatType.MAGIC_ATTACK
+	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 50
+	return i
 
 static func whetstone() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "whetstone"; i.item_name = "Whetstone"
 	i.description = "A coarse stone that hones blades to a keen edge."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 5; i.duration = 2
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 25; i.duration = 3
 	i.stat_type = Enums.StatType.ATTACK
 	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 50
 	return i
 
-static func bark_charm() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "bark_charm"; i.item_name = "Bark Charm"
-	i.description = "A talisman carved from ancient ironwood."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 5; i.duration = 2
-	i.stat_type = Enums.StatType.DEFENSE
-	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 50
-	return i
 
 static func swiftroot() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "swiftroot"; i.item_name = "Swiftroot"
 	i.description = "A fibrous root that quickens reflexes when chewed."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 5; i.duration = 2
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 25; i.duration = 3
 	i.stat_type = Enums.StatType.SPEED
 	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 50
 	return i
 
-static func iron_draught() -> ItemData:
+
+# ---------------------------------------------------------------------------
+# Buffs (T2: +40%, UNCOMMON, 70-80g)
+# ---------------------------------------------------------------------------
+
+static func ether_shard() -> ItemData:
 	var i := ItemData.new()
-	i.item_id = "iron_draught"; i.item_name = "Iron Draught"
-	i.description = "A thick metallic brew that hardens skin like steel."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 8; i.duration = 2
-	i.stat_type = Enums.StatType.DEFENSE
+	i.item_id = "ether_shard"; i.item_name = "Ether Shard"
+	i.description = "A crystal shard that amplifies magical power."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 40; i.duration = 3
+	i.stat_type = Enums.StatType.MAGIC_ATTACK
+	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 80
+	return i
+
+
+static func keen_edge() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "keen_edge"; i.item_name = "Keen Edge"
+	i.description = "A blade oil that makes every cut bite deeper."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 40; i.duration = 3
+	i.stat_type = Enums.StatType.ATTACK
+	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 80
+	return i
+
+static func galeroot() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "galeroot"; i.item_name = "Galeroot"
+	i.description = "A wind-dried root that makes the body feel weightless."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 40; i.duration = 3
+	i.stat_type = Enums.StatType.SPEED
+	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 80
+	return i
+
+
+# ---------------------------------------------------------------------------
+# AoE Buffs (RARE, 120g)
+# ---------------------------------------------------------------------------
+
+static func smoke_bomb() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "smoke_bomb"; i.item_name = "Smoke Bomb"
+	i.description = "Thick smoke that makes your party harder to hit."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 20; i.duration = 3
+	i.stat_type = Enums.StatType.DODGE_CHANCE
+	i.target_ally = true; i.target_all = true
 	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 70
+	return i
+
+static func war_drum() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "war_drum"; i.item_name = "War Drum"
+	i.description = "A thunderous drum that drives allies into a fighting frenzy."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 15; i.duration = 3
+	i.stat_type = Enums.StatType.ATTACK; i.target_all = true
+	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
+	return i
+
+static func spell_prism() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "spell_prism"; i.item_name = "Spell Prism"
+	i.description = "A prismatic crystal that refracts and amplifies arcane power."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 15; i.duration = 3
+	i.stat_type = Enums.StatType.MAGIC_ATTACK; i.target_all = true
+	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
+	return i
+
+static func crystal_lens() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "crystal_lens"; i.item_name = "Crystal Lens"
+	i.description = "A polished crystal that sharpens focus and precision."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 10; i.duration = 3
+	i.stat_type = Enums.StatType.CRIT_CHANCE
+	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
+	return i
+
+
+
+# ---------------------------------------------------------------------------
+# Debuffs (T1: -15%, COMMON, 50g)
+# ---------------------------------------------------------------------------
+
+static func hex_powder() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "hex_powder"; i.item_name = "Hex Powder"
+	i.description = "A cursed dust that saps the strength from muscles."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 15; i.duration = 3
+	i.stat_type = Enums.StatType.ATTACK; i.target_ally = false
+	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 50
+	return i
+
+static func mind_fog() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "mind_fog"; i.item_name = "Mind Fog"
+	i.description = "An acrid vapor that clouds concentration and dulls spellcraft."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 15; i.duration = 3
+	i.stat_type = Enums.StatType.MAGIC_ATTACK; i.target_ally = false
+	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 50
+	return i
+
+
+# ---------------------------------------------------------------------------
+# Debuffs (T2: -25%, UNCOMMON, 70-80g)
+# ---------------------------------------------------------------------------
+
+static func enfeebling_dust() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "enfeebling_dust"; i.item_name = "Enfeebling Dust"
+	i.description = "A potent toxin that drains all physical power."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 25; i.duration = 3
+	i.stat_type = Enums.StatType.ATTACK; i.target_ally = false
+	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 80
+	return i
+
+static func void_salt() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "void_salt"; i.item_name = "Void Salt"
+	i.description = "Crystals that dissolve magical resonance on contact."
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 25; i.duration = 3
+	i.stat_type = Enums.StatType.MAGIC_ATTACK; i.target_ally = false
+	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 80
 	return i
 
 
 # ---------------------------------------------------------------------------
 # Damage
 # ---------------------------------------------------------------------------
+
+static func cinder_bomb() -> ItemData:
+	var i := ItemData.new()
+	i.item_id = "cinder_bomb"; i.item_name = "Cinder Bomb"
+	i.description = "A small clay pot with a weak incendiary charge."
+	i.effect_type = Enums.ItemEffect.DAMAGE; i.magnitude = 12
+	i.target_ally = false
+	i.rarity = Enums.ItemRarity.COMMON; i.shop_price = 40
+	return i
 
 static func fire_bomb() -> ItemData:
 	var i := ItemData.new()
@@ -126,68 +206,10 @@ static func fire_bomb() -> ItemData:
 	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 60
 	return i
 
-static func smoke_bomb() -> ItemData:
+static func blast_powder() -> ItemData:
 	var i := ItemData.new()
-	i.item_id = "smoke_bomb"; i.item_name = "Smoke Bomb"
-	i.description = "Thick smoke that chokes and disorients."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = -5; i.duration = 2
-	i.stat_type = Enums.StatType.SPEED
-	i.target_ally = false; i.target_all = true
-	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 70
-	return i
-
-
-# ---------------------------------------------------------------------------
-# Shop Exclusives
-# ---------------------------------------------------------------------------
-
-static func battle_standard() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "battle_standard"; i.item_name = "Battle Standard"
-	i.description = "A war banner that inspires allies to fight harder."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 5; i.duration = 2
-	i.stat_type = Enums.StatType.ATTACK; i.target_all = true
-	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
-	return i
-
-static func iron_flask() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "iron_flask"; i.item_name = "Iron Flask"
-	i.description = "A masterwork flask containing a potent restorative."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 999
-	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 150
-	return i
-
-static func crystal_lens() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "crystal_lens"; i.item_name = "Crystal Lens"
-	i.description = "A polished crystal that sharpens focus and precision."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 10; i.duration = 3
-	i.stat_type = Enums.StatType.DODGE_CHANCE  # boosts crit via dodge stat slot
-	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
-	return i
-
-static func cave_moss_poultice() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "cave_moss_poultice"; i.item_name = "Cave Moss Poultice"
-	i.description = "Damp cave moss with remarkable healing properties."
-	i.effect_type = Enums.ItemEffect.HEAL_HP; i.magnitude = 20
-	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 130
-	return i
-
-static func dream_anchor() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "dream_anchor"; i.item_name = "Dream Anchor"
-	i.description = "A token that grounds the mind against manipulation."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 8; i.duration = 2
-	i.stat_type = Enums.StatType.DEFENSE; i.target_all = true
-	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
-	return i
-
-static func thread_cutter() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "thread_cutter"; i.item_name = "Thread Cutter"
-	i.description = "A sharp blade infused with anti-magic runes."
+	i.item_id = "blast_powder"; i.item_name = "Blast Powder"
+	i.description = "A volatile compound that detonates in a wide radius."
 	i.effect_type = Enums.ItemEffect.DAMAGE; i.magnitude = 30
 	i.target_ally = false; i.target_all = true
 	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 150
@@ -200,24 +222,24 @@ static func thread_cutter() -> ItemData:
 
 static func create_by_id(id: String) -> ItemData:
 	match id:
-		"minor_salve": return minor_salve()
-		"healing_potion": return healing_potion()
-		"greater_potion": return greater_potion()
-		"mana_shard": return mana_shard()
-		"mana_crystal": return mana_crystal()
 		"antidote": return antidote()
 		"clarity_tonic": return clarity_tonic()
+		"shimmer_oil": return shimmer_oil()
+		"ether_shard": return ether_shard()
 		"whetstone": return whetstone()
-		"bark_charm": return bark_charm()
 		"swiftroot": return swiftroot()
-		"iron_draught": return iron_draught()
+		"keen_edge": return keen_edge()
+		"galeroot": return galeroot()
+		"cinder_bomb": return cinder_bomb()
 		"fire_bomb": return fire_bomb()
 		"smoke_bomb": return smoke_bomb()
-		"battle_standard": return battle_standard()
-		"iron_flask": return iron_flask()
+		"war_drum": return war_drum()
 		"crystal_lens": return crystal_lens()
-		"cave_moss_poultice": return cave_moss_poultice()
-		"dream_anchor": return dream_anchor()
-		"thread_cutter": return thread_cutter()
+		"blast_powder": return blast_powder()
+		"spell_prism": return spell_prism()
+		"hex_powder": return hex_powder()
+		"mind_fog": return mind_fog()
+		"enfeebling_dust": return enfeebling_dust()
+		"void_salt": return void_salt()
 	push_warning("ItemDB: unknown item_id '%s'" % id)
-	return minor_salve()
+	return fire_bomb()

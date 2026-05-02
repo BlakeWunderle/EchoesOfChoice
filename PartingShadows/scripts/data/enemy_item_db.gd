@@ -1,117 +1,88 @@
 class_name EnemyItemDB
 
-## Maps enemy character_type to battle items they carry.
-## Only humanoid/intelligent enemies carry items. Beasts, constructs,
-## and dream creatures do not.
-## Items scale with story progression: early = minor, late = potent.
+## Maps battle_id to the enemy team's shared item loadout.
+## Items are shared across all enemies (like player party inventory).
+## Design target: -2 to -3pp win rate delta per battle when items are active.
+## No healing items. All items are combat effects (buffs, damage, cures).
 
 const ItemDB := preload("res://scripts/data/item_db.gd")
-const FighterData := preload("res://scripts/data/fighter_data.gd")
 
 
-static func assign_items(fighter: FighterData) -> void:
-	var items: Array = _get_items(fighter.character_type)
-	if not items.is_empty():
-		fighter.battle_items = items
+static func get_battle_items(battle_id: String) -> Array:
+	match battle_id:
+		# ==============================================================
+		# Story 1 - Act I (T0: minor items)
+		# ==============================================================
+		"BeachBattle": return [ItemDB.crystal_lens()]
+		"WaypointDefenseBattle": return [ItemDB.cinder_bomb()]
 
+		# ==============================================================
+		# Story 1 - Act II (T1: standard buffs)
+		# ==============================================================
+		"HighlandBattle": return [ItemDB.cinder_bomb()]
+		"CircusBattle": return [ItemDB.smoke_bomb()]
+		"ArmyBattle": return [ItemDB.whetstone()]
+		"CemeteryBattle": return [ItemDB.shimmer_oil()]
+		"OutpostDefenseBattle": return [ItemDB.hex_powder()]
 
-static func _get_items(character_type: String) -> Array:
-	match character_type:
-		# ==================================================================
-		# Story 1 - Act I (early: minor salves)
-		# ==================================================================
-		"Thug": return [ItemDB.minor_salve()]
-		"Ruffian": return [ItemDB.minor_salve()]
-		"Bandit": return [ItemDB.minor_salve()]
+		# ==============================================================
+		# Story 1 - Acts III-V (T2: potent items)
+		# ==============================================================
+		"GateBattle": return [ItemDB.war_drum()]
+		"StrangerFinalBattle": return [ItemDB.ether_shard()]
 
-		# ==================================================================
-		# Story 1 - Act II (mid: healing potions, some buffs)
-		# ==================================================================
-		"Raider": return [ItemDB.whetstone()]
-		"Orc": return [ItemDB.minor_salve()]
-		"Captain": return [ItemDB.healing_potion(), ItemDB.whetstone()]
-		"Pirate": return [ItemDB.healing_potion()]
-		"Commander": return [ItemDB.healing_potion(), ItemDB.whetstone()]
-		"Chaplain": return [ItemDB.healing_potion()]
-		"Ringmaster": return [ItemDB.healing_potion()]
+		# ==============================================================
+		# Story 1 - Path B
+		# ==============================================================
 
-		# ==================================================================
-		# Story 1 - Acts III-V (late: better items)
-		# ==================================================================
-		"Royal Guard": return [ItemDB.healing_potion()]
-		"Guard Sergeant": return [ItemDB.healing_potion(), ItemDB.bark_charm()]
-		"Guard Archer": return [ItemDB.healing_potion()]
-		"Dark Knight": return [ItemDB.healing_potion(), ItemDB.whetstone()]
-		"Stranger": return [ItemDB.healing_potion(), ItemDB.healing_potion()]
-		"StrangerFinal": return [ItemDB.greater_potion()]
-		"StrangerUndone": return [ItemDB.greater_potion()]
-		"Lich": return [ItemDB.mana_shard()]
+		# ==============================================================
+		# Story 2 - Act I (T0: cave items)
+		# ==============================================================
+		"S2_FungalHollow": return [ItemDB.hex_powder()]
+		"S2_CaveExit": return [ItemDB.swiftroot()]
 
-		# ==================================================================
-		# Story 2 - Act I (cave humanoids)
-		# ==================================================================
-		"Cave Dweller": return [ItemDB.minor_salve()]
-		"Tunnel Shaman": return [ItemDB.mana_shard()]
-		"Burrow Scout": return [ItemDB.minor_salve()]
+		# ==============================================================
+		# Story 2 - Act II (T1: coastal items)
+		# ==============================================================
+		"S2_SmugglersBluff": return [ItemDB.whetstone()]
+		"S2_WreckersCove": return [ItemDB.fire_bomb()]
+		"S2_CoastalRuins": return [ItemDB.mind_fog()]
 
-		# ==================================================================
-		# Story 2 - Act II (coastal humanoids)
-		# ==================================================================
-		"Driftwood Bandit": return [ItemDB.minor_salve()]
-		"Saltrunner Smuggler": return [ItemDB.healing_potion()]
-		"Tide Warden": return [ItemDB.bark_charm()]
-		"Blackwater Captain": return [ItemDB.healing_potion(), ItemDB.whetstone()]
-		"Corsair Hexer": return [ItemDB.mana_shard()]
-		"Drowned Sailor": return [ItemDB.minor_salve()]
+		# ==============================================================
+		# Story 2 - Acts III-IV (T2: sanctum items)
+		# ==============================================================
+		"S2_EchoGallery": return [ItemDB.ether_shard()]
+		"S2_GuardiansThreshold": return [ItemDB.enfeebling_dust()]
 
-		# ==================================================================
-		# Story 2 - Acts III-IV (sanctum/memory enemies)
-		# ==================================================================
-		"Silent Archivist": return [ItemDB.mana_shard()]
-		"Fractured Protector": return [ItemDB.healing_potion()]
-		"Thoughtform Knight": return [ItemDB.bark_charm()]
-		"The Warden": return [ItemDB.healing_potion()]
-		"The Iris": return [ItemDB.healing_potion()]
-		"The Lidless Eye": return [ItemDB.greater_potion()]
-
-		# ==================================================================
+		# ==============================================================
 		# Story 2 - Path B
-		# ==================================================================
-		"Fractured Scholar": return [ItemDB.healing_potion()]
-		"The Unblinking Eye": return [ItemDB.greater_potion()]
+		# ==============================================================
+		"S2_B_ResonanceChamber": return [ItemDB.keen_edge()]
+		"S2_B_EyeUnblinking": return [ItemDB.war_drum()]
 
-		# ==================================================================
-		# Story 3 - Acts I-II (town/investigation humanoids)
-		# ==================================================================
-		"Market Watcher": return [ItemDB.healing_potion()]
-		"Thread Smith": return [ItemDB.whetstone()]
-		"Hex Herbalist": return [ItemDB.antidote()]
+		# ==============================================================
+		# Story 3 - Acts I-II (T0-T1: investigation items)
+		# ==============================================================
+		"S3_DreamShadowChase": return [ItemDB.swiftroot()]
+		"S3_DreamNightmare": return [ItemDB.mind_fog()]
+		"S3_DreamClockTower": return [ItemDB.whetstone()]
 
-		# ==================================================================
-		# Story 3 - Acts III-V (cult members)
-		# ==================================================================
-		"Cult Acolyte": return [ItemDB.healing_potion()]
-		"Cult Enforcer": return [ItemDB.bark_charm()]
-		"Cult Hexer": return [ItemDB.mana_shard()]
-		"Cult Ritualist": return [ItemDB.mana_shard()]
-		"Thread Guard": return [ItemDB.whetstone()]
-		"High Weaver": return [ItemDB.healing_potion()]
-		"The Threadmaster": return [ItemDB.greater_potion()]
+		# ==============================================================
+		# Story 3 - Acts III-V (T2: cult items)
+		# ==============================================================
+		"S3_CultCatacombs": return [ItemDB.blast_powder()]
+		"S3_DreamVoid": return [ItemDB.ether_shard()]
+		"S3_DreamNexus": return [ItemDB.war_drum()]
 
-		# ==================================================================
+		# ==============================================================
 		# Story 3 - Path B
-		# ==================================================================
-		"Thread Disciple": return [ItemDB.healing_potion()]
-		"Thread Warden": return [ItemDB.bark_charm()]
-		"Pale Devotee": return [ItemDB.mana_shard()]
-		"Shadow Innkeeper": return [ItemDB.healing_potion()]
-		"Lira, the Threadmaster": return [ItemDB.greater_potion()]
+		# ==============================================================
+		"S3_B_DreamNexus": return [ItemDB.galeroot()]
 
-		# ==================================================================
+		# ==============================================================
 		# Story 3 - Path C
-		# ==================================================================
-		"Dream Priest": return [ItemDB.mana_shard()]
-		"Astral Enforcer": return [ItemDB.whetstone()]
-		"The Ancient Threadmaster": return [ItemDB.greater_potion()]
+		# ==============================================================
+		"S3_C_CultInterception": return [ItemDB.keen_edge()]
+		"S3_C_DreamNexus": return [ItemDB.spell_prism()]
 
 	return []

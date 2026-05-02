@@ -102,9 +102,13 @@ static func build(battle: Control) -> Dictionary:
 	ui_root.add_child(portraits_row)
 
 	# Bottom area: combat log (left) + action menu (right)
+	# Fixed minimum height so portraits never shift when the action menu shows/hides
+	var row_h: int = maxi(ChoiceMenu.GRID_BUTTON_MIN_SIZE.y,
+		SettingsManager.font_size * 2 + 28)
 	var bottom_row := HBoxContainer.new()
 	bottom_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	bottom_row.size_flags_stretch_ratio = 1.2
+	bottom_row.custom_minimum_size.y = row_h * 3 + 16
 	bottom_row.add_theme_constant_override("separation", 16)
 	ui_root.add_child(bottom_row)
 

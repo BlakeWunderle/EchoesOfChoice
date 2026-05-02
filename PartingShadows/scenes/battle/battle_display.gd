@@ -181,6 +181,15 @@ func show_battle_summary() -> void:
 
 
 func show_loot_drops(items: Array, gold: int) -> void:
+	# Show tip before loot overlay so it renders on top
+	var tip_shown: bool = not _battle._tip_overlay.was_seen("first_item_drop")
+	_battle._tip_overlay.show_tip_once("first_item_drop",
+		"After winning a battle, you may find loot dropped by " +
+		"your enemies. Items are added to your shared inventory " +
+		"(up to %d). Use items during battle from the Item menu." % GameState.inventory.MAX_ITEMS)
+	if tip_shown:
+		await _battle._tip_overlay.dismissed
+
 	SFXManager.play(SFXManager.Category.SHIMMER, 1.0, true)
 
 	var overlay := PanelContainer.new()
@@ -242,7 +251,7 @@ func show_loot_drops(items: Array, gold: int) -> void:
 
 	if had_overflow:
 		var full_label := Label.new()
-		full_label.text = "Inventory full (6/6)"
+		full_label.text = "Inventory full (%d/%d)" % [GameState.inventory.size(), GameState.inventory.MAX_ITEMS]
 		full_label.add_theme_font_size_override("font_size", 13)
 		full_label.add_theme_color_override("font_color", Color(0.8, 0.5, 0.3))
 		vbox.add_child(full_label)
@@ -253,11 +262,6 @@ func show_loot_drops(items: Array, gold: int) -> void:
 	hint.add_theme_font_size_override("font_size", 14)
 	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	vbox.add_child(hint)
-
-	_battle._tip_overlay.show_tip_once("first_item_drop",
-		"After winning a battle, you may find loot dropped by " +
-		"your enemies. Items are added to your shared inventory " +
-		"(up to 6). Use items during battle from the Item menu.")
 
 	await _battle.get_tree().create_timer(0.5, false).timeout
 	_battle._loot_waiting = true

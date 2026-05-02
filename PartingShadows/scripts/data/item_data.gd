@@ -21,10 +21,14 @@ func get_use_description() -> String:
 	match effect_type:
 		Enums.ItemEffect.HEAL_HP:
 			var scope: String = " to all allies" if target_all else ""
-			return "Restores %d HP%s" % [magnitude, scope]
+			if magnitude >= 100:
+				return "Fully restores HP%s" % scope
+			return "Restores %d%% HP%s" % [magnitude, scope]
 		Enums.ItemEffect.HEAL_MP:
 			return "Restores %d MP" % magnitude
 		Enums.ItemEffect.CURE_DEBUFF:
+			if magnitude > 0:
+				return "Removes %d debuff(s)" % magnitude
 			return "Removes all debuffs"
 		Enums.ItemEffect.BUFF:
 			var stat_name: String = _stat_name()
@@ -46,6 +50,7 @@ func _stat_name() -> String:
 		Enums.StatType.MAGIC_DEFENSE: return "M.DEF"
 		Enums.StatType.SPEED: return "SPD"
 		Enums.StatType.DODGE_CHANCE: return "DODGE"
+		Enums.StatType.CRIT_CHANCE: return "CRIT"
 	return "STAT"
 
 

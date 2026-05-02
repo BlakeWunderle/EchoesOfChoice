@@ -58,6 +58,26 @@ func _ready() -> void:
 	_turn_timeout_timer.wait_time = 60.0
 	add_child(_turn_timeout_timer)
 
+	# Dev-only: --host auto-hosts, --connect <ip> auto-joins (ENet, no Steam)
+	if OS.is_debug_build():
+		var args := OS.get_cmdline_user_args()
+		if "--host" in args:
+			call_deferred("_dev_auto_host")
+		elif "--connect" in args:
+			var idx := args.find("--connect")
+			var addr := args[idx + 1] if idx + 1 < args.size() else "127.0.0.1"
+			call_deferred("_dev_auto_connect", addr)
+
+
+func _dev_auto_host() -> void:
+	GameLog.info("NetManager: [DEV] Auto-hosting on port %d" % DEFAULT_PORT)
+	host_game()
+
+
+func _dev_auto_connect(address: String) -> void:
+	GameLog.info("NetManager: [DEV] Auto-connecting to %s:%d" % [address, DEFAULT_PORT])
+	join_game(address)
+
 
 # =============================================================================
 # Transport setup

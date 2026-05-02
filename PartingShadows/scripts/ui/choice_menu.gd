@@ -6,6 +6,7 @@ class_name ChoiceMenu extends VBoxContainer
 ## All players on the same button shows a white combined border.
 
 signal choice_selected(index: int)
+signal option_focused(index: int)
 
 const BUTTON_MIN_SIZE := Vector2(420, 48)
 const GRID_BUTTON_MIN_SIZE := Vector2(200, 64)
@@ -50,9 +51,9 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 		_grid.columns = 2
 		_grid.add_theme_constant_override("h_separation", 12)
 		_grid.add_theme_constant_override("v_separation", 8)
-		# Fixed height for 2 rows so grid never resizes between menus
+		# Fixed height for 3 rows so grid never resizes between menus
 		var row_h: int = maxi(GRID_BUTTON_MIN_SIZE.y, SettingsManager.font_size * 2 + 28)
-		_grid.custom_minimum_size.y = row_h * 2 + 8
+		_grid.custom_minimum_size.y = row_h * 3 + 16
 		add_child(_grid)
 		btn_parent = _grid
 
@@ -107,6 +108,8 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 		_apply_focus_style(btn)
 		var idx: int = i
 		btn.pressed.connect(func() -> void: _on_button_pressed(idx))
+		btn.focus_entered.connect(func() -> void: option_focused.emit(idx))
+		btn.mouse_entered.connect(func() -> void: option_focused.emit(idx))
 		btn_parent.add_child(btn)
 		_buttons.append(btn)
 
@@ -147,6 +150,12 @@ func focus_first() -> void:
 		if not btn.disabled:
 			btn.grab_focus()
 			break
+
+
+func highlight_option(index: int) -> void:
+	for i: int in _buttons.size():
+		if _buttons[i].disabled:
+			_buttons[i].modulate.a = 0.85 if i == index else 0.5
 
 
 func hide_menu() -> void:

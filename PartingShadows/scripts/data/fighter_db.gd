@@ -11,6 +11,7 @@ const T2 := preload("res://scripts/data/fighter_db_t2.gd")
 const T2B := preload("res://scripts/data/fighter_db_t2b.gd")
 const T2C := preload("res://scripts/data/fighter_db_t2c.gd")
 const Meta := preload("res://scripts/data/fighter_db_meta.gd")
+const Roles := preload("res://scripts/data/fighter_db_roles.gd")
 
 
 # =============================================================================
@@ -342,9 +343,26 @@ static func preview_upgrade(fighter: FighterData, item: String) -> Dictionary:
 		if diff != 0:
 			deltas[key] = diff
 	var ability_names: Array[String] = []
+	var ability_details: Array[Dictionary] = []
 	for a: RefCounted in c.abilities:
 		ability_names.append(a.ability_name)
-	return {"new_class": c.character_type, "deltas": deltas, "abilities": ability_names}
+		ability_details.append({
+			"name": a.ability_name,
+			"description": a.get_compendium_description(),
+			"mana_cost": a.mana_cost,
+		})
+	var role_labels: Array[String] = []
+	for role in Roles.get_roles(c.class_id):
+		match role:
+			Enums.Role.DPS: role_labels.append("Striker")
+			Enums.Role.FIGHTER: role_labels.append("Fighter")
+			Enums.Role.BURST: role_labels.append("Nuker")
+			Enums.Role.TANK: role_labels.append("Tank")
+			Enums.Role.SUPPORT: role_labels.append("Support")
+			Enums.Role.CASTER: role_labels.append("Caster")
+			Enums.Role.HYBRID: role_labels.append("Hybrid")
+	return {"new_class": c.character_type, "new_class_id": c.class_id, "deltas": deltas,
+		"abilities": ability_names, "ability_details": ability_details, "roles": role_labels}
 
 
 static func _snapshot_stats(f: FighterData) -> Dictionary:

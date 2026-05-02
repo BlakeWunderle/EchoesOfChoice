@@ -172,8 +172,9 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			party_size = party_fighters.size()  # capture before run_single_battle mutates via units ref
 			var enemies: Array = _clone_fighters(enemy_template)
 			if enable_enemy_items:
-				for e: FighterData in enemies:
-					EnemyItemDB.assign_items(e)
+				engine.enemy_shared_items = EnemyItemDB.get_battle_items(stage.name)
+			else:
+				engine.enemy_shared_items.clear()
 			var br: Dictionary = run_single_battle(party_fighters, enemies, engine)
 			if br.won:
 				wins += 1

@@ -157,8 +157,7 @@ func _start_battle() -> void:
 		MusicManager.play_music(battle.music_track)
 	else:
 		MusicManager.play_context(MusicManager.MusicContext.BATTLE)
-	for enemy: FighterData in battle.enemies:
-		EnemyItemDB.assign_items(enemy)
+	_engine.enemy_shared_items = EnemyItemDB.get_battle_items(GameState.current_battle_id)
 	_engine.start_battle(GameState.party, battle.enemies)
 	for enemy: FighterData in battle.enemies:
 		CompendiumManager.record_enemy(enemy, GameState.current_story_id)
@@ -505,13 +504,13 @@ func _show_action_menu(actor: FighterData) -> void:
 			break
 
 	var options: Array[Dictionary] = [{"label": "Actions"}]
-	if has_available:
-		options.append({"label": "Ability"})
-	if GameState.inventory.size() > 0:
-		options.append({"label": "Item"})
-	if _auto_battle_unlocked:
-		options.append({"label": "Auto"})
+	options.append({"label": "Ability", "disabled": not has_available})
+	options.append({"label": "Item", "disabled": GameState.inventory.size() == 0})
+	options.append({"label": "Auto", "disabled": not _auto_battle_unlocked})
 	options.append({"label": "Stats"})
+	# Pad to 6 so the grid is always 3x2
+	while options.size() < 6:
+		options.append({"label": "", "disabled": true})
 	_action_menu.show_choices(options, true)
 	_tip_overlay.show_tip_once("combat_actions",
 		"Attack, Block, and Rest all restore MP based on your Magic Attack.\n\n" +
@@ -523,24 +522,9 @@ func _show_action_menu(actor: FighterData) -> void:
 func _on_action_selected(index: int) -> void:
 	_action_menu.hide_menu()
 
-	# Map index accounting for possibly missing Ability/Auto options
-	var has_available: bool = false
-	for a: AbilityData in _current_actor.abilities:
-		if _is_ability_available(_current_actor, a):
-			has_available = true
-			break
-
-	# Rebuild the same label list used in _show_action_menu to find action by index
-	var labels: Array[String] = ["Actions"]
-	if has_available:
-		labels.append("Ability")
-	if GameState.inventory.size() > 0:
-		labels.append("Item")
-	if _auto_battle_unlocked:
-		labels.append("Auto")
-	labels.append("Stats")
-
-	var action: String = labels[index] if index < labels.size() else "Stats"
+	# Fixed layout: Actions(0), Ability(1), Item(2), Auto(3), Stats(4)
+	var labels: Array[String] = ["Actions", "Ability", "Item", "Auto", "Stats"]
+	var action: String = labels[index] if index < labels.size() else ""
 
 	match action:
 		"Actions":
@@ -770,6 +754,9 @@ func _show_item_menu() -> void:
 	var options: Array[Dictionary] = []
 	for item: ItemData in items:
 		options.append({"label": item.item_name, "description": item.get_use_description()})
+	# Pad to 5 slots so the grid never resizes when items are consumed
+	while options.size() < 5:
+		options.append({"label": "", "disabled": true})
 	options.append({"label": "Back"})
 
 	_action_menu.show_choices(options, true)

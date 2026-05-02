@@ -4,7 +4,7 @@ class_name Inventory extends RefCounted
 
 const ItemData := preload("res://scripts/data/item_data.gd")
 
-const MAX_ITEMS := 6
+const MAX_ITEMS := 5
 
 var _items: Array = []  ## Array of ItemData
 var gold: int = 0
