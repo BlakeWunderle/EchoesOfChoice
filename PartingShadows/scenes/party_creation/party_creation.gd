@@ -369,6 +369,11 @@ func _on_text_finished() -> void:
 			_mp_set_state(State.NAME_1)
 		State.CLASS_1, State.CLASS_2, State.CLASS_3:
 			_dialogue.visible = false
+			# Broadcast mirror to non-owning peers
+			if NetManager.is_multiplayer_active and NetManager.is_host:
+				var char_idx: int = _state_to_char_index(_state)
+				var owner_name: String = NetManager.get_fighter_owner_name(char_idx)
+				_rpc_show_class_mirror.rpc(char_idx, owner_name)
 			# If this is my character, show class choices locally
 			if _is_my_character_state():
 				_choice_menu.show_choices(_class_options)
@@ -656,3 +661,18 @@ func _rpc_party_finalized(party_data: Array) -> void:
 	for fighter: RefCounted in _party:
 		GameLog.info("Party: %s the %s" % [fighter.character_name, fighter.character_type])
 	GameState.advance_to_battle(GameState.get_first_battle_id())
+
+
+## Host -> All: Show class options as read-only mirror for non-owning peers.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_show_class_mirror(char_idx: int, owner_name: String) -> void:
+	if NetManager.is_my_fighter(char_idx):
+		return  # I'm the one choosing, ignore mirror
+	_waiting_overlay.hide_waiting()
+	_dialogue.visible = false
+	var mirror_options: Array[Dictionary] = []
+	for opt: Dictionary in _class_options:
+		var copy: Dictionary = opt.duplicate()
+		copy["disabled"] = true
+		mirror_options.append(copy)
+	_choice_menu.show_choices(mirror_options)

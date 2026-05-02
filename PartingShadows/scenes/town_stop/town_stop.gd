@@ -276,6 +276,10 @@ func _show_next_upgrade() -> void:
 	# Multiplayer: host drives all upgrades via RPCs
 	if NetManager.is_multiplayer_active:
 		if NetManager.is_host:
+			var items: Array[String] = fighter.upgrade_items.duplicate()
+			# Broadcast mirror to all peers (non-owners show disabled view)
+			_rpc_show_upgrade_mirror.rpc(_upgrade_index, fighter.character_name,
+				fighter.character_type, items)
 			if NetManager.is_my_fighter(_upgrade_index):
 				# Host's own character — show choice menu locally
 				_upgrade_label.text = "%s the %s. Choose an upgrade:" % [
@@ -290,17 +294,12 @@ func _show_next_upgrade() -> void:
 				_choice_menu.visible = false
 				_waiting_overlay.show_waiting(owner_name)
 				var owner_peer: int = NetManager.get_fighter_owner_peer(_upgrade_index)
-				var items: Array[String] = fighter.upgrade_items.duplicate()
 				_rpc_request_upgrade.rpc_id(owner_peer, _upgrade_index, fighter.character_name,
 					fighter.character_type, items)
 		else:
-			# Guest: always wait for host's _rpc_request_upgrade to avoid double-show
+			# Guest: wait for mirror RPC or request_upgrade RPC
 			_upgrade_label.visible = false
 			_choice_menu.visible = false
-			if not NetManager.is_my_fighter(_upgrade_index):
-				# Not my character — show waiting for the owner while they pick
-				var owner_name: String = NetManager.get_fighter_owner_name(_upgrade_index)
-				_waiting_overlay.show_waiting(owner_name)
 		return
 
 	_upgrade_label.text = "%s the %s. Choose an upgrade:" % [
@@ -415,7 +414,40 @@ func _start_shopping() -> void:
 		"Items can be used during battle as a turn action.\n\n" +
 		"Your inventory holds up to 6 items.")
 
+	# Online multiplayer: only host interacts, guests see read-only mirror
+	if NetManager.is_multiplayer_active and not NetManager.is_host:
+		_show_shop_menu_readonly()
+		return
+
+	if NetManager.is_multiplayer_active and NetManager.is_host:
+		# Broadcast shop items to peers
+		var items_data: Array = []
+		for entry: Dictionary in _shop_items:
+			items_data.append({"item_id": entry.item_id, "price": entry.price})
+		_rpc_shop_opened.rpc(JSON.stringify(items_data))
+
 	_show_shop_menu()
+
+
+func _show_shop_menu_readonly() -> void:
+	var options: Array[Dictionary] = []
+	for entry: Dictionary in _shop_items:
+		var item: ItemData = ItemDB.create_by_id(entry.item_id)
+		if item:
+			options.append({
+				"label": "%s - %dg" % [item.item_name, entry.price],
+				"description": item.get_use_description(),
+				"disabled": true,
+			})
+		else:
+			options.append({"label": entry.item_id, "disabled": true})
+	options.append({"label": "Done Shopping", "disabled": true})
+
+	var host_name: String = NetManager.get_fighter_owner_name(0)
+	_upgrade_label.text = "%s is shopping  |  Gold: %d  |  Items: %d/6" % [
+		host_name, GameState.inventory.gold, GameState.inventory.size()]
+	_upgrade_label.visible = true
+	_choice_menu.show_choices(options)
 
 
 func _show_shop_menu() -> void:
@@ -447,6 +479,8 @@ func _on_shop_selected(index: int) -> void:
 		if _gold_label:
 			_gold_label.queue_free()
 			_gold_label = null
+		if NetManager.is_multiplayer_active and NetManager.is_host:
+			_rpc_shop_closed.rpc()
 		_show_outro_or_advance()
 		return
 
@@ -480,6 +514,8 @@ func _on_shop_selected(index: int) -> void:
 	if GameState.inventory.gold <= 0:
 		_choice_menu.hide_menu()
 		_upgrade_label.visible = false
+		if NetManager.is_multiplayer_active and NetManager.is_host:
+			_rpc_shop_closed.rpc()
 		_show_outro_or_advance()
 		return
 	_show_shop_menu()
@@ -610,6 +646,24 @@ func _rpc_request_upgrade(party_index: int, char_name: String, char_class: Strin
 	_choice_menu.show_choices(options)
 
 
+## Host -> All: Show upgrade options as read-only mirror for non-owning peers.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_show_upgrade_mirror(party_index: int, char_name: String, char_class: String,
+		_items: Array) -> void:
+	if NetManager.is_my_fighter(party_index):
+		return  # I'm the one choosing, ignore mirror
+	_upgrade_index = party_index
+	_phase = TownPhase.UPGRADING
+	_waiting_overlay.hide_waiting()
+	_upgrade_label.text = "Choosing upgrade for %s the %s:" % [char_name, char_class]
+	_upgrade_label.visible = true
+	var fighter: FighterData = GameState.party[party_index]
+	var options: Array[Dictionary] = _format_upgrade_options(fighter)
+	for opt: Dictionary in options:
+		opt["disabled"] = true
+	_choice_menu.show_choices(options)
+
+
 ## Guest -> Host: Submit chosen upgrade item.
 @rpc("any_peer", "call_remote", "reliable")
 func _rpc_submit_upgrade(party_index: int, item: String) -> void:
@@ -690,10 +744,33 @@ func _rpc_vote_broadcast(player_index: int, choice_index: int) -> void:
 	_vote_panel.receive_vote(player_index, choice_index)
 
 
-## Host -> All: Broadcast a shop purchase so peers update inventory.
+## Host -> All: Broadcast a shop purchase so peers update inventory + refresh mirror.
 @rpc("authority", "call_remote", "reliable")
 func _rpc_shop_purchase(item_id: String, price: int) -> void:
 	GameState.inventory.spend_gold(price)
 	var item: ItemData = ItemDB.create_by_id(item_id)
 	if item:
 		GameState.inventory.add_item(item)
+	# Refresh the read-only mirror display
+	if _phase == TownPhase.SHOPPING:
+		_show_shop_menu_readonly()
+
+
+## Host -> All: Shop opened with inventory list (guest receives items to display).
+@rpc("authority", "call_remote", "reliable")
+func _rpc_shop_opened(items_json: String) -> void:
+	var parsed: Array = JSON.parse_string(items_json)
+	if parsed == null:
+		return
+	_shop_items.clear()
+	for entry in parsed:
+		_shop_items.append({"item_id": entry["item_id"], "price": int(entry["price"])})
+	_show_shop_menu_readonly()
+
+
+## Host -> All: Shop closed, proceed to next phase.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_shop_closed() -> void:
+	_choice_menu.hide_menu()
+	_upgrade_label.visible = false
+	_show_outro_or_advance()
