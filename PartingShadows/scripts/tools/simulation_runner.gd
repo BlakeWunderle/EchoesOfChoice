@@ -8,6 +8,7 @@ const FighterData := preload("res://scripts/data/fighter_data.gd")
 const PC := preload("res://scripts/tools/party_composer.gd")
 const BSDB := preload("res://scripts/tools/battle_stage_db.gd")
 const EnemyItemDB := preload("res://scripts/data/enemy_item_db.gd")
+const EquipmentData := preload("res://scripts/data/equipment_data.gd")
 
 const MIN_TOTAL_BATTLES := 200_000
 const MIN_SIMS_PER_COMBO := 40
@@ -151,6 +152,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 
 	var combo_results := []
 	var class_diag := {}
+	var equip_stats := {}  ## { "physical_weapon": {wins: int, total: int}, ... }
 	var start_ms := Time.get_ticks_msec()
 	var engine := _get_sim_engine()
 	var turn_all_sum := 0
@@ -202,6 +204,14 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 				class_diag[ct].dmg_mitigated += ss.get("dmg_mitigated", 0)
 				class_diag[ct].buffs_applied += ss.get("buffs_applied", 0)
 				class_diag[ct].debuffs_applied += ss.get("debuffs_applied", 0)
+				# Accumulate per-equipment-piece win rates.
+				for equip: EquipmentData in f.equipment:
+					var eid: String = equip.base_id
+					if not equip_stats.has(eid):
+						equip_stats[eid] = {wins = 0, total = 0}
+					equip_stats[eid].total += 1
+					if br.won:
+						equip_stats[eid].wins += 1
 
 		combo_results.append({
 			"description": PC.get_party_description(party_def),
@@ -235,6 +245,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		"overall_win_rate": overall_wr,
 		"elapsed_ms": Time.get_ticks_msec() - start_ms,
 		"class_diag": class_diag,
+		"equip_stats": equip_stats,
 		"turn_stats": {
 			"avg_player_per_char": avg_player_per_char,
 			"avg_all_actions": avg_all,
@@ -281,6 +292,7 @@ static func print_stage_result(result: Dictionary) -> void:
 			ts.min_all_actions, ts.max_all_actions, stale_str])
 	print_combo_extremes(result)
 	print_class_breakdown(result)
+	print_equipment_breakdown(result)
 	print("\n  STATUS: %s" % get_status(result))
 
 
@@ -400,6 +412,55 @@ static func print_class_breakdown(result: Dictionary) -> void:
 		var avg_heals: float = float(d.get("heals", 0)) / battles
 		print("    %-22s %8.1f %8.1f %10.1f %8.1f" % [
 			e["class"], avg_dealt, avg_taken, avg_mitigated, avg_heals])
+
+
+static func get_equipment_breakdown(result: Dictionary) -> Dictionary:
+	var es: Dictionary = result.get("equip_stats", {})
+	if es.is_empty():
+		return {}
+	var slots := {"Weapon": [], "Armor": [], "Boots": []}
+	for eid: String in es:
+		var s: Dictionary = es[eid]
+		var wr: float = float(s.wins) / s.total if s.total > 0 else 0.0
+		var entry := {"id": eid, "win_rate": wr, "total": s.total}
+		if eid.ends_with("_weapon"):
+			slots["Weapon"].append(entry)
+		elif eid.ends_with("_armor"):
+			slots["Armor"].append(entry)
+		elif eid.ends_with("_boots"):
+			slots["Boots"].append(entry)
+	for slot_entries: Array in slots.values():
+		slot_entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			return a.win_rate > b.win_rate)
+	return slots
+
+
+static func print_equipment_breakdown(result: Dictionary) -> void:
+	var slots := get_equipment_breakdown(result)
+	if slots.is_empty():
+		return
+	print("\n  EQUIPMENT BREAKDOWN:")
+	print("    %-22s %10s %10s  %s" % ["Piece", "Win Rate", "Battles", "Note"])
+	print("    " + "-".repeat(56))
+	for slot_name: String in ["Weapon", "Armor", "Boots"]:
+		var entries: Array = slots[slot_name]
+		if entries.is_empty():
+			continue
+		var slot_avg := 0.0
+		for e: Dictionary in entries:
+			slot_avg += e.win_rate
+		slot_avg /= entries.size()
+		for e: Dictionary in entries:
+			var diff: float = (e.win_rate - slot_avg) * 100
+			var note := ""
+			if absf(diff) > 5.0:
+				note = "** %+.1fpp **" % diff
+			elif absf(diff) > 3.0:
+				note = "(%+.1fpp)" % diff
+			print("    %-22s %9.1f%% %10d  %s" % [
+				e.id, e.win_rate * 100, e.total, note])
+		print("    %-22s %9.1f%% %10s" % [
+			"  [%s avg]" % slot_name, slot_avg * 100, ""])
 
 
 static func print_summary(results: Array) -> void:
@@ -554,6 +615,33 @@ static func format_stage_verbose(result: Dictionary) -> PackedStringArray:
 		var avg_heals: float = float(dc.get("heals", 0)) / battles_c
 		lines.append("    %-22s %8.1f %8.1f %10.1f %8.1f" % [
 			e["class"], avg_dealt, avg_taken, avg_mitigated, avg_heals])
+
+	# Equipment breakdown.
+	var equip_slots := get_equipment_breakdown(result)
+	if not equip_slots.is_empty():
+		lines.append("")
+		lines.append("  EQUIPMENT BREAKDOWN:")
+		lines.append("    %-22s %10s %10s  %s" % ["Piece", "Win Rate", "Battles", "Note"])
+		lines.append("    " + "-".repeat(56))
+		for slot_name: String in ["Weapon", "Armor", "Boots"]:
+			var slot_entries: Array = equip_slots.get(slot_name, [])
+			if slot_entries.is_empty():
+				continue
+			var slot_avg := 0.0
+			for eq: Dictionary in slot_entries:
+				slot_avg += eq.win_rate
+			slot_avg /= slot_entries.size()
+			for eq: Dictionary in slot_entries:
+				var diff: float = (eq.win_rate - slot_avg) * 100
+				var note := ""
+				if absf(diff) > 5.0:
+					note = "** %+.1fpp **" % diff
+				elif absf(diff) > 3.0:
+					note = "(%+.1fpp)" % diff
+				lines.append("    %-22s %9.1f%% %10d  %s" % [
+					eq.id, eq.win_rate * 100, eq.total, note])
+			lines.append("    %-22s %9.1f%% %10s" % [
+				"  [%s avg]" % slot_name, slot_avg * 100, ""])
 
 	lines.append("")
 	lines.append("  STATUS: %s" % get_status(result))

@@ -66,7 +66,21 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 		"worst_combos": worst_entries,
 		"turn_stats": result.get("turn_stats", {}),
 		"diagnostics": SD.to_json(SD.analyze(result, stage)),
+		"equip_stats": _build_equip_json(result),
 	}
+
+
+static func _build_equip_json(result: Dictionary) -> Dictionary:
+	var es: Dictionary = result.get("equip_stats", {})
+	var out := {}
+	for eid: String in es:
+		var s: Dictionary = es[eid]
+		out[eid] = {
+			"wins": s.wins,
+			"total": s.total,
+			"win_rate": float(s.wins) / s.total if s.total > 0 else 0.0,
+		}
+	return out
 
 
 ## Write an array of report entries to a JSON file.
