@@ -171,7 +171,8 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		var enemy_template: Array = BSDB.create_enemies(stage.name)
 		for si in sims_per_combo:
 			var party_fighters := PC.create_party(party_def, stage.level_ups)
-			party_size = party_fighters.size()  # capture before run_single_battle mutates via units ref
+			var all_party := party_fighters.duplicate()  # snapshot before battle mutates array
+			party_size = party_fighters.size()
 			var enemies: Array = _clone_fighters(enemy_template)
 			if enable_enemy_items:
 				engine.enemy_shared_items = EnemyItemDB.get_battle_items(stage.name)
@@ -188,7 +189,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			turn_max = maxi(turn_max, br.all_actions)
 			turn_battle_count += 1
 			# Accumulate per-class combat diagnostics.
-			for f: FighterData in party_fighters:
+			for f: FighterData in all_party:
 				var ct: String = f.character_type
 				if not class_diag.has(ct):
 					class_diag[ct] = {dmg_dealt = 0, dmg_taken = 0,

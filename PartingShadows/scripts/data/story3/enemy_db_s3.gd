@@ -31,9 +31,9 @@ static func create_phantasm(n: String, lvl: int = 1) -> FighterData:
 	var f := EH.base(n, "Phantasm", lvl)
 	f.health = EH.es(37, 48, 2, 5, lvl, 1); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 1, lvl, 1); f.max_mana = f.mana
-	f.physical_attack = EH.es(16, 19, 1, 2, lvl, 1)
+	f.physical_attack = EH.es(17, 20, 1, 2, lvl, 1)
 	f.physical_defense = EH.es(7, 10, 0, 1, lvl, 1)
-	f.magic_attack = EH.es(16, 19, 1, 2, lvl, 1)
+	f.magic_attack = EH.es(17, 20, 1, 2, lvl, 1)
 	f.magic_defense = EH.es(9, 13, 1, 2, lvl, 1)
 	f.speed = EH.es(25, 31, 1, 3, lvl, 1)
 	f.crit_chance = 6; f.crit_damage = 1; f.dodge_chance = 7
@@ -110,7 +110,7 @@ static func create_fog_wraith(n: String, lvl: int = 2) -> FighterData:
 	f.mana = EH.es(7, 10, 1, 2, lvl, 2); f.max_mana = f.mana
 	f.physical_attack = EH.es(11, 14, 0, 2, lvl, 2)
 	f.physical_defense = EH.es(5, 8, 0, 1, lvl, 2)
-	f.magic_attack = EH.es(20, 24, 1, 3, lvl, 2)
+	f.magic_attack = EH.es(19, 23, 1, 3, lvl, 2)
 	f.magic_defense = EH.es(10, 15, 1, 2, lvl, 2)
 	f.speed = EH.es(24, 29, 1, 3, lvl, 2)
 	f.crit_chance = 5; f.crit_damage = 1; f.dodge_chance = 7

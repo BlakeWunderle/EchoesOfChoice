@@ -49,7 +49,7 @@ static func create_shade_crawler(n: String, lvl: int = 2) -> FighterData:
 	var f := EH.base(n, "Shade Crawler", lvl)
 	f.health = EH.es(50, 60, 3, 5, lvl, 2); f.max_health = f.health
 	f.mana = EH.es(4, 7, 1, 2, lvl, 2); f.max_mana = f.mana
-	f.physical_attack = EH.es(18, 22, 1, 3, lvl, 2)
+	f.physical_attack = EH.es(17, 21, 1, 3, lvl, 2)
 	f.physical_defense = EH.es(10, 13, 1, 2, lvl, 2)
 	f.magic_attack = EH.es(16, 19, 1, 2, lvl, 2)
 	f.magic_defense = EH.es(6, 9, 1, 2, lvl, 2)
@@ -66,7 +66,7 @@ static func create_echo_wisp(n: String, lvl: int = 2) -> FighterData:
 	f.mana = EH.es(7, 9, 1, 2, lvl, 2); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 13, 0, 1, lvl, 2)
 	f.physical_defense = EH.es(6, 9, 0, 1, lvl, 2)
-	f.magic_attack = EH.es(21, 25, 1, 3, lvl, 2)
+	f.magic_attack = EH.es(20, 24, 1, 3, lvl, 2)
 	f.magic_defense = EH.es(11, 14, 1, 2, lvl, 2)
 	f.speed = EH.es(27, 33, 2, 3, lvl, 2)
 	f.crit_chance = 9; f.crit_damage = 1; f.dodge_chance = 13
@@ -115,7 +115,7 @@ static func create_cap_wisp(n: String, lvl: int = 2) -> FighterData:
 	f.mana = EH.es(8, 10, 1, 2, lvl, 2); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 13, 0, 1, lvl, 2)
 	f.physical_defense = EH.es(6, 9, 0, 1, lvl, 2)
-	f.magic_attack = EH.es(20, 24, 1, 3, lvl, 2)
+	f.magic_attack = EH.es(21, 25, 1, 3, lvl, 2)
 	f.magic_defense = EH.es(11, 14, 1, 2, lvl, 2)
 	f.speed = EH.es(25, 31, 2, 3, lvl, 2)
 	f.crit_chance = 6; f.crit_damage = 1; f.dodge_chance = 7
@@ -181,7 +181,7 @@ static func create_silt_lurker(n: String, lvl: int = 3) -> FighterData:
 	var f := EH.base(n, "Silt Lurker", lvl)
 	f.health = EH.es(58, 68, 3, 5, lvl, 3); f.max_health = f.health
 	f.mana = EH.es(4, 7, 1, 1, lvl, 3); f.max_mana = f.mana
-	f.physical_attack = EH.es(23, 27, 2, 3, lvl, 3)
+	f.physical_attack = EH.es(24, 28, 2, 3, lvl, 3)
 	f.physical_defense = EH.es(10, 13, 1, 2, lvl, 3)
 	f.magic_attack = EH.es(7, 10, 0, 1, lvl, 3)
 	f.magic_defense = EH.es(8, 11, 0, 1, lvl, 3)
@@ -200,7 +200,7 @@ static func create_cave_dweller(n: String, lvl: int = 3) -> FighterData:
 	var f := EH.base(n, "Cave Dweller", lvl)
 	f.health = EH.es(63, 78, 3, 5, lvl, 3); f.max_health = f.health
 	f.mana = EH.es(4, 7, 1, 1, lvl, 3); f.max_mana = f.mana
-	f.physical_attack = EH.es(21, 25, 2, 3, lvl, 3)
+	f.physical_attack = EH.es(22, 26, 2, 3, lvl, 3)
 	f.physical_defense = EH.es(12, 16, 1, 2, lvl, 3)
 	f.magic_attack = EH.es(9, 12, 0, 1, lvl, 3)
 	f.magic_defense = EH.es(8, 11, 1, 2, lvl, 3)
