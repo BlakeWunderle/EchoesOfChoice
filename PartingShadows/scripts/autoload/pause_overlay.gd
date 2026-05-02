@@ -13,8 +13,9 @@ const InputRemapPanel := preload("res://scripts/ui/input_remap_panel.gd")
 const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
 const PauseSaveSlots_C := preload("res://scripts/autoload/pause_save_slots.gd")
 const ItemData := preload("res://scripts/data/item_data.gd")
+const EquipmentPanel := preload("res://scripts/ui/equipment_panel.gd")
 
-enum Mode { HIDDEN, MAIN_MENU, SAVE_SLOTS, SETTINGS, COMPENDIUM, INVENTORY, KEY_BINDINGS, MP_CHOICE, WAITING_MP, FIGHTER_PICK, LOCAL_ASSIGN }
+enum Mode { HIDDEN, MAIN_MENU, SAVE_SLOTS, SETTINGS, COMPENDIUM, INVENTORY, EQUIPMENT, KEY_BINDINGS, MP_CHOICE, WAITING_MP, FIGHTER_PICK, LOCAL_ASSIGN }
 
 var _mode: Mode = Mode.HIDDEN
 var _panel: Control
@@ -44,6 +45,7 @@ var _local_device_labels: Array[Label] = []
 var _local_claimed: Array[int] = []  # device_id per slot (-2 = unclaimed)
 var _local_player_count: int = 2
 var _inventory_vbox: VBoxContainer
+var _equipment_vbox: VBoxContainer
 var _waiting_mp_vbox: VBoxContainer
 
 
@@ -131,6 +133,10 @@ func _build_ui() -> void:
 	var inventory_btn := _make_button("Inventory")
 	inventory_btn.pressed.connect(_show_inventory)
 	_main_vbox.add_child(inventory_btn)
+
+	var equipment_btn := _make_button("Equipment")
+	equipment_btn.pressed.connect(_show_equipment)
+	_main_vbox.add_child(equipment_btn)
 
 	var logs_btn := _make_button("Copy Logs")
 	logs_btn.pressed.connect(_copy_logs)
@@ -236,6 +242,13 @@ func _build_ui() -> void:
 	_inventory_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root_vbox.add_child(_inventory_vbox)
 
+	# Equipment panel (hidden by default)
+	_equipment_vbox = VBoxContainer.new()
+	_equipment_vbox.add_theme_constant_override("separation", 6)
+	_equipment_vbox.visible = false
+	_equipment_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_vbox.add_child(_equipment_vbox)
+
 	# Key bindings panel (hidden by default)
 	_remap_panel = InputRemapPanel.new()
 	_remap_panel.visible = false
@@ -290,6 +303,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			Mode.COMPENDIUM:
 				_back_to_main()
 			Mode.INVENTORY:
+				_back_to_main()
+			Mode.EQUIPMENT:
 				_back_to_main()
 			Mode.KEY_BINDINGS:
 				_back_to_main()
@@ -709,6 +724,64 @@ func _show_inventory() -> void:
 	_inventory_vbox.visible = true
 
 
+func _show_equipment() -> void:
+	_mode = Mode.EQUIPMENT
+	_main_vbox.visible = false
+	_pause_title.visible = false
+	_pause_sep.visible = false
+
+	for child: Node in _equipment_vbox.get_children():
+		child.queue_free()
+
+	var title := Label.new()
+	title.text = "EQUIPMENT"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 22)
+	title.add_theme_color_override("font_color", Color(0.5, 0.9, 0.8))
+	_equipment_vbox.add_child(title)
+
+	var sep := HSeparator.new()
+	_equipment_vbox.add_child(sep)
+
+	var _EquipmentData := preload("res://scripts/data/equipment_data.gd")
+	for fighter: RefCounted in GameState.party:
+		if not fighter.is_user_controlled:
+			continue
+		var name_lbl := Label.new()
+		name_lbl.text = "%s the %s" % [fighter.character_name, fighter.character_type]
+		name_lbl.add_theme_font_size_override("font_size", SettingsManager.font_size)
+		name_lbl.add_theme_color_override("font_color", Color(0.85, 0.95, 0.9))
+		_equipment_vbox.add_child(name_lbl)
+
+		if fighter.equipment.is_empty():
+			var empty_lbl := Label.new()
+			empty_lbl.text = "  No equipment"
+			empty_lbl.add_theme_font_size_override("font_size", SettingsManager.font_size - 1)
+			empty_lbl.add_theme_color_override("font_color", Color(0.4, 0.4, 0.4))
+			_equipment_vbox.add_child(empty_lbl)
+		else:
+			for equip: RefCounted in fighter.equipment:
+				var upgraded: String = "  [Upgraded]" if equip.upgrade_level > 0 else ""
+				var line := Label.new()
+				line.text = "  %s: %s  (%s)%s" % [
+					equip.get_slot_name(), equip.display_name,
+					equip.get_bonus_text(), upgraded]
+				line.add_theme_font_size_override("font_size", SettingsManager.font_size - 1)
+				line.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
+				_equipment_vbox.add_child(line)
+
+		var spacer := Control.new()
+		spacer.custom_minimum_size = Vector2(0, 4)
+		_equipment_vbox.add_child(spacer)
+
+	var back_btn := _make_button("Back")
+	back_btn.pressed.connect(_back_to_main)
+	_equipment_vbox.add_child(back_btn)
+	back_btn.call_deferred("grab_focus")
+
+	_equipment_vbox.visible = true
+
+
 func _show_key_bindings() -> void:
 	_mode = Mode.KEY_BINDINGS
 	_main_vbox.visible = false
@@ -759,6 +832,7 @@ func _back_to_main() -> void:
 	_settings_panel.visible = false
 	_compendium_panel.visible = false
 	_inventory_vbox.visible = false
+	_equipment_vbox.visible = false
 	_remap_panel.visible = false
 	_mp_choice_vbox.visible = false
 	_local_assign_vbox.visible = false

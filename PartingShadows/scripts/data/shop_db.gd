@@ -118,3 +118,34 @@ static func get_shop_items(battle_id: String) -> Array:
 
 static func has_shop(battle_id: String) -> bool:
 	return not get_shop_items(battle_id).is_empty()
+
+
+## Returns story-specific narration lines shown before the shop menu.
+static func get_shop_text(battle_id: String) -> Array[String]:
+	match battle_id:
+		# Story 1
+		"ForestWaypoint":
+			return ["A peddler has set up a modest stall by the waypoint. 'Dangerous road ahead. Stock up while you can.'"]
+		"CityOutskirtsStop":
+			return ["An arms dealer has a cart parked outside the city walls. Business has been good lately."]
+		"CopperMugStop":
+			return ["The Copper Mug's back room doubles as a black market. The barkeep slides a price list across the counter."]
+		# Story 2
+		"S2_CaveMerchant":
+			return ["A figure crouches by a dim lantern, surrounded by trinkets and vials. 'Trade? I have things. You have gold. Simple.'"]
+		"S2_HarborTown":
+			return ["The harbor market is chaos. Salt-crusted merchants hawk their wares over the crash of waves."]
+		"S2_CoastalCamp":
+			return ["A quiet trader has laid out supplies on a weathered blanket. 'Last chance before the deep.'"]
+		# Story 3
+		"S3_WearyTraveler":
+			return ["The innkeeper gestures to a shelf behind the bar. 'Not just rooms and meals. I keep a few things on hand for travelers like you.'"]
+		"S3_TownMorning":
+			return ["The morning market is alive with voices. A vendor catches your eye with a knowing look."]
+		"S3_TownInvestigation":
+			return ["A hooded merchant tugs your sleeve. 'You're the ones asking questions. You'll need more than answers.'"]
+		"S3_B_CallumsTruth":
+			return ["Callum opens a hidden compartment in the wall. 'Take what you need. I won't be needing it.'"]
+		"S3_C_LirasConfession":
+			return ["Lira presses a small pouch into your hands. 'From my own supplies. It's the least I can do.'"]
+	return []

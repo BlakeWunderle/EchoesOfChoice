@@ -124,3 +124,46 @@ static func get_outro_text_s3() -> Array[String]:
 		"The fire burns low. The conversation fades. The beds upstairs are calling.",
 		"Sleep comes fast. Faster than it should.",
 	]
+
+
+# --- Equipment narration (per story, per character index 0-2) ---
+
+static func get_equip_text(story_id: String, char_index: int) -> Array[String]:
+	if story_id == "story_2":
+		return _get_equip_text_s2(char_index)
+	if story_id == "story_3":
+		return _get_equip_text_s3(char_index)
+	return _get_equip_text_s1(char_index)
+
+
+static func _get_equip_text_s1(char_index: int) -> Array[String]:
+	match char_index:
+		0:
+			return ["The stranger slides a heavy sack across the table. 'You'll need more than courage. Take what suits you.'"]
+		1:
+			return ["The barkeep eyes your companion, then produces another bundle from beneath the counter."]
+		2:
+			return ["'Last one,' the stranger says, pushing the final bundle forward. 'Choose wisely.'"]
+	return []
+
+
+static func _get_equip_text_s2(char_index: int) -> Array[String]:
+	match char_index:
+		0:
+			return ["A pile of gear is scattered across the cave floor. Your hands reach for something familiar."]
+		1:
+			return ["More equipment in the rubble. Instinct guides your choices."]
+		2:
+			return ["The last of the scattered gear. Something about these feels right."]
+	return []
+
+
+static func _get_equip_text_s3(char_index: int) -> Array[String]:
+	match char_index:
+		0:
+			return ["The innkeeper opens a chest beneath the bar. 'Travelers leave things behind. Might as well put them to use.'"]
+		1:
+			return ["'Still more in here,' she says, pulling out another armful."]
+		2:
+			return ["She shakes the last of the dust off a bundle. 'That's the lot of it.'"]
+	return []

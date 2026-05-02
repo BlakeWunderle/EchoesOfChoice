@@ -12,11 +12,16 @@ const FighterData := preload("res://scripts/data/fighter_data.gd")
 const FighterDB := preload("res://scripts/data/fighter_db.gd")
 const ClassInfoPanel := preload("res://scripts/ui/class_info_panel.gd")
 const PCText := preload("res://scenes/party_creation/party_creation_text.gd")
+const EquipmentDB := preload("res://scripts/data/equipment_db.gd")
+const EquipmentData := preload("res://scripts/data/equipment_data.gd")
 
 enum State {
-	INTRO, NAME_1, CLASS_1, PORTRAIT_1, CONFIRM_1,
-	BRIDGE_1, NAME_2, CLASS_2, PORTRAIT_2, CONFIRM_2,
-	BRIDGE_2, NAME_3, CLASS_3, PORTRAIT_3, CONFIRM_3,
+	INTRO, NAME_1, CLASS_1, PORTRAIT_1,
+	EQUIP_INTRO_1, EQUIP_WEAPON_1, EQUIP_ARMOR_1, EQUIP_BOOTS_1, CONFIRM_1,
+	BRIDGE_1, NAME_2, CLASS_2, PORTRAIT_2,
+	EQUIP_INTRO_2, EQUIP_WEAPON_2, EQUIP_ARMOR_2, EQUIP_BOOTS_2, CONFIRM_2,
+	BRIDGE_2, NAME_3, CLASS_3, PORTRAIT_3,
+	EQUIP_INTRO_3, EQUIP_WEAPON_3, EQUIP_ARMOR_3, EQUIP_BOOTS_3, CONFIRM_3,
 	OUTRO, DONE,
 }
 
@@ -36,6 +41,8 @@ var _current_class_id: String = ""
 var _party: Array[FighterData] = []
 var _class_options: Array[Dictionary] = []
 var _class_ids: Array[String] = []
+var _equip_choices: Array[Dictionary] = []  ## Current equipment choice list
+var _equip_choice_ids: Array[String] = []   ## IDs matching _equip_choices
 
 var _dialogue: DialoguePanel
 var _name_input: NameInput
@@ -268,11 +275,14 @@ func _build_ui() -> void:
 ## Returns the party index (0, 1, 2) for character creation states, or -1.
 func _state_to_char_index(s: State) -> int:
 	match s:
-		State.NAME_1, State.CLASS_1, State.PORTRAIT_1:
+		State.NAME_1, State.CLASS_1, State.PORTRAIT_1, \
+		State.EQUIP_INTRO_1, State.EQUIP_WEAPON_1, State.EQUIP_ARMOR_1, State.EQUIP_BOOTS_1:
 			return 0
-		State.NAME_2, State.CLASS_2, State.PORTRAIT_2:
+		State.NAME_2, State.CLASS_2, State.PORTRAIT_2, \
+		State.EQUIP_INTRO_2, State.EQUIP_WEAPON_2, State.EQUIP_ARMOR_2, State.EQUIP_BOOTS_2:
 			return 1
-		State.NAME_3, State.CLASS_3, State.PORTRAIT_3:
+		State.NAME_3, State.CLASS_3, State.PORTRAIT_3, \
+		State.EQUIP_INTRO_3, State.EQUIP_WEAPON_3, State.EQUIP_ARMOR_3, State.EQUIP_BOOTS_3:
 			return 2
 	return -1
 
@@ -354,6 +364,15 @@ func _set_state(new_state: State) -> void:
 				_show_dialogue(["What is your calling?"])
 		State.PORTRAIT_1, State.PORTRAIT_2, State.PORTRAIT_3:
 			_show_portrait_selection()
+		State.EQUIP_INTRO_1, State.EQUIP_INTRO_2, State.EQUIP_INTRO_3:
+			var ci: int = _state_to_char_index(_state)
+			_show_dialogue(PCText.get_equip_text(GameState.current_story_id, ci))
+		State.EQUIP_WEAPON_1, State.EQUIP_WEAPON_2, State.EQUIP_WEAPON_3:
+			_show_equip_choices("weapon")
+		State.EQUIP_ARMOR_1, State.EQUIP_ARMOR_2, State.EQUIP_ARMOR_3:
+			_show_equip_choices("armor")
+		State.EQUIP_BOOTS_1, State.EQUIP_BOOTS_2, State.EQUIP_BOOTS_3:
+			_show_equip_choices("boots")
 		State.CONFIRM_1, State.CONFIRM_2, State.CONFIRM_3:
 			var fighter: FighterData = _party.back()
 			_show_dialogue(["%s the %s joins the party!" % [
@@ -377,11 +396,12 @@ func _on_text_finished() -> void:
 	# Exception: guests can advance CLASS dialogue for their own characters
 	# so they see the class choice menu locally.
 	if NetManager.is_multiplayer_active and not NetManager.is_host:
-		var is_own_class: bool = (
-			_state in [State.CLASS_1, State.CLASS_2, State.CLASS_3]
+		var is_own_input: bool = (
+			_state in [State.CLASS_1, State.CLASS_2, State.CLASS_3,
+				State.EQUIP_INTRO_1, State.EQUIP_INTRO_2, State.EQUIP_INTRO_3]
 			and _is_my_character_state()
 		)
-		if not is_own_class:
+		if not is_own_input:
 			return
 
 	match _state:
@@ -404,6 +424,12 @@ func _on_text_finished() -> void:
 						"and Wildlings channel nature.\n\n" +
 						"Your party of three can be any combination. " +
 						"Variety helps, but any team can win!")
+		State.EQUIP_INTRO_1:
+			_mp_set_state(State.EQUIP_WEAPON_1)
+		State.EQUIP_INTRO_2:
+			_mp_set_state(State.EQUIP_WEAPON_2)
+		State.EQUIP_INTRO_3:
+			_mp_set_state(State.EQUIP_WEAPON_3)
 		State.CONFIRM_1:
 			_mp_set_state(State.BRIDGE_1)
 		State.CONFIRM_2:
@@ -450,6 +476,11 @@ func _on_name_entered(player_name: String) -> void:
 
 
 func _on_class_selected(index: int) -> void:
+	# Route to equipment handler if in an equipment state
+	if _is_equip_state():
+		_on_equip_selected(index)
+		return
+
 	_choice_menu.hide_menu()
 	_class_info_panel.visible = false
 	_current_class_id = _class_ids[index]
@@ -461,6 +492,8 @@ func _on_class_selected(index: int) -> void:
 
 
 func _on_class_option_focused(index: int) -> void:
+	if _is_equip_state():
+		return  # No info panel preview for equipment choices
 	if _state not in [State.CLASS_1, State.CLASS_2, State.CLASS_3]:
 		return
 	if index < 0 or index >= _class_ids.size():
@@ -543,9 +576,9 @@ func _on_portrait_clicked(index: int) -> void:
 			# Host created: broadcast to guests and advance
 			_rpc_character_created.rpc(char_data)
 			match _state:
-				State.PORTRAIT_1: _mp_set_state(State.CONFIRM_1)
-				State.PORTRAIT_2: _mp_set_state(State.CONFIRM_2)
-				State.PORTRAIT_3: _mp_set_state(State.CONFIRM_3)
+				State.PORTRAIT_1: _mp_set_state(State.EQUIP_INTRO_1)
+				State.PORTRAIT_2: _mp_set_state(State.EQUIP_INTRO_2)
+				State.PORTRAIT_3: _mp_set_state(State.EQUIP_INTRO_3)
 		else:
 			# Guest created: send to host
 			_rpc_submit_character.rpc_id(1, char_data)
@@ -553,9 +586,100 @@ func _on_portrait_clicked(index: int) -> void:
 
 	# Singleplayer path
 	match _state:
-		State.PORTRAIT_1: _set_state(State.CONFIRM_1)
-		State.PORTRAIT_2: _set_state(State.CONFIRM_2)
-		State.PORTRAIT_3: _set_state(State.CONFIRM_3)
+		State.PORTRAIT_1: _set_state(State.EQUIP_INTRO_1)
+		State.PORTRAIT_2: _set_state(State.EQUIP_INTRO_2)
+		State.PORTRAIT_3: _set_state(State.EQUIP_INTRO_3)
+
+
+# =============================================================================
+# Equipment selection
+# =============================================================================
+
+func _show_equip_choices(slot_type: String) -> void:
+	var choices: Array[Dictionary]
+	var header: String
+	match slot_type:
+		"weapon":
+			choices = EquipmentDB.get_weapon_choices()
+			header = "Choose a weapon:"
+		"armor":
+			choices = EquipmentDB.get_armor_choices()
+			header = "Choose armor:"
+		"boots":
+			choices = EquipmentDB.get_boots_choices()
+			header = "Choose boots:"
+		_:
+			return
+
+	_equip_choices.clear()
+	_equip_choice_ids.clear()
+	var options: Array[Dictionary] = []
+	for c: Dictionary in choices:
+		_equip_choice_ids.append(c.id)
+		options.append({"label": c.label, "description": c.description})
+	_equip_choices = options
+
+	_dialogue.visible = true
+	_dialogue.show_text([header])
+	# Don't wait for text advance; show choices immediately below
+	_choice_menu.show_choices(options)
+
+	if _state in [State.EQUIP_WEAPON_1, State.EQUIP_WEAPON_2, State.EQUIP_WEAPON_3]:
+		_tip_overlay.show_tip_once("first_equipment",
+			"Equipment gives permanent stat bonuses to each character. " +
+			"Choose a weapon, armor, and boots that complement your class.\n\n" +
+			"You'll get a chance to upgrade each piece at town stops later.")
+
+	# Multiplayer: broadcast mirror for equipment choices
+	if _is_my_character_state() and NetManager.is_multiplayer_active:
+		var char_idx: int = _state_to_char_index(_state)
+		var owner_name: String = NetManager.get_fighter_owner_name(char_idx)
+		_rpc_show_equip_mirror.rpc(char_idx, owner_name, slot_type)
+
+
+func _on_equip_selected(index: int) -> void:
+	if index < 0 or index >= _equip_choice_ids.size():
+		return
+
+	_choice_menu.hide_menu()
+	_dialogue.visible = false
+
+	var choice_id: String = _equip_choice_ids[index]
+	var fighter: FighterData = _party.back()
+	var equip: EquipmentData = EquipmentDB.create_equipment(choice_id)
+	EquipmentDB.apply_to_fighter(equip, fighter)
+	fighter.equipment.append(equip)
+
+	# Broadcast in multiplayer
+	if NetManager.is_multiplayer_active:
+		var char_idx: int = _state_to_char_index(_state)
+		if NetManager.is_host:
+			_rpc_equip_applied.rpc(char_idx, choice_id)
+		else:
+			_rpc_submit_equip.rpc_id(1, char_idx, choice_id)
+
+	_advance_equip_state()
+
+
+func _advance_equip_state() -> void:
+	match _state:
+		State.EQUIP_WEAPON_1: _mp_set_state(State.EQUIP_ARMOR_1)
+		State.EQUIP_WEAPON_2: _mp_set_state(State.EQUIP_ARMOR_2)
+		State.EQUIP_WEAPON_3: _mp_set_state(State.EQUIP_ARMOR_3)
+		State.EQUIP_ARMOR_1: _mp_set_state(State.EQUIP_BOOTS_1)
+		State.EQUIP_ARMOR_2: _mp_set_state(State.EQUIP_BOOTS_2)
+		State.EQUIP_ARMOR_3: _mp_set_state(State.EQUIP_BOOTS_3)
+		State.EQUIP_BOOTS_1: _mp_set_state(State.CONFIRM_1)
+		State.EQUIP_BOOTS_2: _mp_set_state(State.CONFIRM_2)
+		State.EQUIP_BOOTS_3: _mp_set_state(State.CONFIRM_3)
+
+
+func _is_equip_state() -> bool:
+	return _state in [
+		State.EQUIP_WEAPON_1, State.EQUIP_ARMOR_1, State.EQUIP_BOOTS_1,
+		State.EQUIP_WEAPON_2, State.EQUIP_ARMOR_2, State.EQUIP_BOOTS_2,
+		State.EQUIP_WEAPON_3, State.EQUIP_ARMOR_3, State.EQUIP_BOOTS_3,
+	]
 
 
 func _finish() -> void:
@@ -650,16 +774,11 @@ func _rpc_submit_character(char_data: Dictionary) -> void:
 	# Broadcast to all peers (including the submitter)
 	_rpc_character_created.rpc(char_data)
 
-	# Advance state
-	match _state:
-		# We might be in the NAME or CLASS state waiting for the remote player
-		# but the state should correspond to the right portrait state
-		_:
-			# Determine which confirm state to go to based on party index
-			match char_idx:
-				0: _mp_set_state(State.CONFIRM_1)
-				1: _mp_set_state(State.CONFIRM_2)
-				2: _mp_set_state(State.CONFIRM_3)
+	# Advance state: portrait -> equipment intro
+	match char_idx:
+		0: _mp_set_state(State.EQUIP_INTRO_1)
+		1: _mp_set_state(State.EQUIP_INTRO_2)
+		2: _mp_set_state(State.EQUIP_INTRO_3)
 
 
 ## Host -> All: A character has been created (broadcast to all peers).
@@ -721,3 +840,50 @@ func _rpc_class_focus(index: int) -> void:
 		return
 	_class_info_panel.show_class(_class_ids[index], not _is_s2())
 	_choice_menu.highlight_option(index)
+
+
+## Active player -> All: Show equipment options as read-only mirror.
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_show_equip_mirror(char_idx: int, owner_name: String,
+		slot_type: String) -> void:
+	if NetManager.is_my_fighter(char_idx):
+		return
+	_waiting_overlay.hide_waiting()
+	_dialogue.visible = false
+	var choices: Array[Dictionary]
+	match slot_type:
+		"weapon": choices = EquipmentDB.get_weapon_choices()
+		"armor": choices = EquipmentDB.get_armor_choices()
+		"boots": choices = EquipmentDB.get_boots_choices()
+		_: return
+	var mirror_options: Array[Dictionary] = []
+	for c: Dictionary in choices:
+		mirror_options.append({"label": c.label, "description": c.description, "disabled": true})
+	_choice_menu.show_choices(mirror_options)
+	_choice_menu.highlight_option(0)
+
+
+## Host -> All: Equipment choice was applied.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_equip_applied(char_idx: int, choice_id: String) -> void:
+	if char_idx < 0 or char_idx >= _party.size():
+		return
+	var fighter: FighterData = _party[char_idx]
+	var equip: EquipmentData = EquipmentDB.create_equipment(choice_id)
+	EquipmentDB.apply_to_fighter(equip, fighter)
+	fighter.equipment.append(equip)
+
+
+## Guest -> Host: Submit an equipment choice.
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_submit_equip(char_idx: int, choice_id: String) -> void:
+	if not NetManager.is_host:
+		return
+	if char_idx < 0 or char_idx >= _party.size():
+		return
+	var fighter: FighterData = _party[char_idx]
+	var equip: EquipmentData = EquipmentDB.create_equipment(choice_id)
+	EquipmentDB.apply_to_fighter(equip, fighter)
+	fighter.equipment.append(equip)
+	_rpc_equip_applied.rpc(char_idx, choice_id)
+	_advance_equip_state()

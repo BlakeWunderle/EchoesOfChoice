@@ -6,6 +6,7 @@ class_name PartyComposer
 const FighterDB := preload("res://scripts/data/fighter_db.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const FighterDBRoles := preload("res://scripts/data/fighter_db_roles.gd")
+const EquipmentDB := preload("res://scripts/data/equipment_db.gd")
 
 const LEVELS_AS_BASE := 3
 const LEVELS_AS_TIER1 := 5
@@ -71,6 +72,10 @@ static func create_fighter(base_type: String, t1_item: String,
 		fighter.is_user_controlled = false
 		for i in remaining:
 			FighterDB.level_up(fighter)
+
+	# Apply random equipment (upgraded if past T0)
+	var upgraded: bool = t1_item != ""
+	EquipmentDB.apply_random_equipment(fighter, upgraded)
 
 	return fighter
 

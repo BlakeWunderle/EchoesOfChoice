@@ -3,6 +3,7 @@ class_name FighterData extends RefCounted
 ## Mirrors C# BaseFighter. A live fighter instance with mutable combat state.
 
 const Enums := preload("res://scripts/data/enums.gd")
+const _EquipmentData := preload("res://scripts/data/equipment_data.gd")
 
 var character_name: String
 var character_type: String  ## Class display name (e.g. "Squire", "Thug")
@@ -32,6 +33,7 @@ var abilities: Array = []  ## Array of AbilityData
 var modified_stats: Array[Dictionary] = []  ## {stat, modifier, turns, is_negative, damage_per_turn}
 var upgrade_items: Array[String] = []       ## For class upgrade paths
 var battle_items: Array = []  ## Array of ItemData: consumables available during combat (enemies only)
+var equipment: Array = []    ## Array of EquipmentData: permanent gear (weapon, armor, boots)
 
 
 func clone() -> FighterData:
@@ -56,6 +58,8 @@ func clone() -> FighterData:
 	c.abilities = abilities.duplicate()
 	c.upgrade_items = upgrade_items.duplicate()
 	c.battle_items = battle_items.duplicate()
+	for equip in equipment:
+		c.equipment.append(equip.clone())
 	return c
 
 
@@ -138,6 +142,7 @@ func to_save_data() -> Dictionary:
 		"dodge_chance": dodge_chance,
 		"upgrade_items": upgrade_items,
 		"owner_peer_id": owner_peer_id,
+		"equipment": equipment.map(func(e: RefCounted) -> Dictionary: return e.to_save_data()),
 	}
 
 
@@ -168,3 +173,6 @@ func apply_save_data(data: Dictionary) -> void:
 	else:
 		for item in saved_items:
 			upgrade_items.append(item)
+	equipment.clear()
+	for equip_data: Dictionary in data.get("equipment", []):
+		equipment.append(_EquipmentData.from_save_data(equip_data))

@@ -15,8 +15,9 @@ const FighterDB := preload("res://scripts/data/fighter_db.gd")
 const ShopDB := preload("res://scripts/data/shop_db.gd")
 const ItemDB := preload("res://scripts/data/item_db.gd")
 const ItemData := preload("res://scripts/data/item_data.gd")
+const TownEquipmentHandler := preload("res://scripts/ui/town_equipment_handler.gd")
 
-enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, SHOPPING, OUTRO_TEXT, BRANCH_CHOICE }
+enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, EQUIPPING, SHOPPING, OUTRO_TEXT, BRANCH_CHOICE }
 
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
@@ -34,6 +35,8 @@ var _upgrade_index: int = 0  ## Which party member is choosing
 var _upgrade_class_ids: Array[String] = []  ## Class IDs for current upgrade options (for panel)
 var _shop_items: Array = []  ## Current shop inventory [{item_id, price}]
 var _gold_label: Label
+var _equip_handler: TownEquipmentHandler  ## Equipment upgrade phase handler
+var _equip_sub_phase: String = "slot"     ## "slot" or "upgrade"
 
 
 func _ready() -> void:
@@ -169,6 +172,10 @@ func _on_text_finished() -> void:
 				_show_ready_gate(_do_intro_advance)
 			TownPhase.UPGRADE_REVEAL:
 				_show_ready_gate(_do_reveal_advance)
+			TownPhase.EQUIPPING:
+				_show_ready_gate(_do_equip_narration_advance)
+			TownPhase.SHOPPING:
+				_show_ready_gate(_do_shop_menu_open)
 			TownPhase.OUTRO_TEXT:
 				_show_ready_gate(_do_outro_advance)
 		return
@@ -182,8 +189,18 @@ func _do_text_advance() -> void:
 			_do_intro_advance()
 		TownPhase.UPGRADE_REVEAL:
 			_do_reveal_advance()
+		TownPhase.EQUIPPING:
+			_do_equip_narration_advance()
+		TownPhase.SHOPPING:
+			_do_shop_menu_open()
 		TownPhase.OUTRO_TEXT:
 			_do_outro_advance()
+
+
+func _do_equip_narration_advance() -> void:
+	_dialogue.visible = false
+	if _equip_handler:
+		_equip_handler.on_narration_done()
 
 
 func _do_intro_advance() -> void:
@@ -357,6 +374,8 @@ func _on_choice_selected(index: int) -> void:
 	match _phase:
 		TownPhase.UPGRADING:
 			_on_upgrade_selected(index)
+		TownPhase.EQUIPPING:
+			_on_equip_choice_selected(index)
 		TownPhase.SHOPPING:
 			_on_shop_selected(index)
 		TownPhase.BRANCH_CHOICE:
@@ -425,6 +444,45 @@ func _finish_upgrades() -> void:
 	# Level up party after upgrades
 	GameState.level_up_party()
 
+	# Check for equipment upgrades before shop
+	_start_equipping()
+
+
+func _start_equipping() -> void:
+	_equip_handler = TownEquipmentHandler.new()
+	_equip_handler.narration_requested.connect(_on_equip_narration)
+	_equip_handler.choices_requested.connect(_on_equip_choices)
+	_equip_handler.upgrade_complete.connect(_on_equip_upgrade_complete)
+	_equip_handler.phase_finished.connect(_on_equip_finished)
+	_phase = TownPhase.EQUIPPING
+	_equip_sub_phase = "slot"
+	_equip_handler.start(GameState.party, GameState.current_story_id)
+
+
+func _on_equip_narration(lines: Array) -> void:
+	_dialogue.visible = true
+	_dialogue.show_text(lines)
+
+
+func _on_equip_choices(options: Array, header: String) -> void:
+	_dialogue.visible = false
+	_upgrade_label.text = header
+	_upgrade_label.visible = true
+	_class_info_panel.visible = false
+	_choice_menu.show_choices(options)
+	_equip_sub_phase = _equip_handler.get_sub_phase()
+
+
+func _on_equip_upgrade_complete(_char_index: int, slot_name: String,
+		equip_name: String) -> void:
+	GameLog.info("Equipment: upgraded %s (%s)" % [equip_name, slot_name])
+
+
+func _on_equip_finished() -> void:
+	_choice_menu.hide_menu()
+	_upgrade_label.visible = false
+	_equip_handler = null
+
 	# Check for shop before outro
 	var battle = GameState.current_battle
 	_shop_items = ShopDB.get_shop_items(battle.battle_id)
@@ -448,6 +506,21 @@ func _show_outro_or_advance() -> void:
 
 func _start_shopping() -> void:
 	_phase = TownPhase.SHOPPING
+
+	# Show shop narration if available
+	var battle = GameState.current_battle
+	var shop_text: Array[String] = ShopDB.get_shop_text(battle.battle_id)
+	if not shop_text.is_empty():
+		_dialogue.visible = true
+		_upgrade_label.visible = false
+		_dialogue.show_text(shop_text)
+		_pending_advance = _do_shop_menu_open
+		return
+
+	_do_shop_menu_open()
+
+
+func _do_shop_menu_open() -> void:
 	_dialogue.visible = false
 	_upgrade_label.text = "Shop"
 	_upgrade_label.visible = true
@@ -455,7 +528,7 @@ func _start_shopping() -> void:
 	_tip_overlay.show_tip_once("first_shop",
 		"Spend gold earned from battle to buy items. " +
 		"Items can be used during battle as a turn action.\n\n" +
-		"Your inventory holds up to 6 items.")
+		"Your inventory holds up to 5 items.")
 
 	# Online multiplayer: only host interacts, guests see read-only mirror
 	if NetManager.is_multiplayer_active and not NetManager.is_host:
@@ -513,6 +586,15 @@ func _show_shop_menu() -> void:
 		GameState.inventory.gold, GameState.inventory.size(), GameState.inventory.MAX_ITEMS]
 	_upgrade_label.visible = true
 	_choice_menu.show_choices(options)
+
+
+func _on_equip_choice_selected(index: int) -> void:
+	if _equip_handler == null:
+		return
+	if _equip_sub_phase == "slot":
+		_equip_handler.on_slot_selected(index)
+	else:
+		_equip_handler.on_upgrade_selected(index)
 
 
 func _on_shop_selected(index: int) -> void:
