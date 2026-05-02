@@ -362,9 +362,12 @@ static func apply_random_equipment(fighter: FighterData, upgraded: bool) -> void
 		var weapon_choices: Array[String] = ["mana", "crit_chance", "crit_damage", "reckless"]
 		var armor_choices: Array[String] = ["health", "dodge", "mana", "ironclad"]
 		var boots_choices: Array[String] = ["speed", "crit_chance", "dodge", "crit_damage", "nimble"]
-		apply_upgrade(weapon, fighter, weapon_choices[randi() % weapon_choices.size()])
-		apply_upgrade(armor, fighter, armor_choices[randi() % armor_choices.size()])
-		apply_upgrade(boots, fighter, boots_choices[randi() % boots_choices.size()])
+		# Player upgrades 1 piece per town stop; pick a random slot to upgrade.
+		var slot := randi() % 3
+		match slot:
+			0: apply_upgrade(weapon, fighter, weapon_choices[randi() % weapon_choices.size()])
+			1: apply_upgrade(armor, fighter, armor_choices[randi() % armor_choices.size()])
+			2: apply_upgrade(boots, fighter, boots_choices[randi() % boots_choices.size()])
 
 
 # =============================================================================
