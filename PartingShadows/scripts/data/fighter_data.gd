@@ -4,6 +4,7 @@ class_name FighterData extends RefCounted
 
 const Enums := preload("res://scripts/data/enums.gd")
 const _EquipmentData := preload("res://scripts/data/equipment_data.gd")
+const _UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
 var character_name: String
 var character_type: String  ## Class display name (e.g. "Squire", "Thug")
@@ -34,6 +35,8 @@ var modified_stats: Array[Dictionary] = []  ## {stat, modifier, turns, is_negati
 var upgrade_items: Array[String] = []       ## For class upgrade paths
 var battle_items: Array = []  ## Array of ItemData: consumables available during combat (enemies only)
 var equipment: Array = []    ## Array of EquipmentData: permanent gear (weapon, armor, boots)
+var ultimate: RefCounted = null  ## UltimateData: chosen ultimate ability (null = not unlocked)
+var ultimate_charge: int = 0     ## Current charge (0 to ultimate.charge_cost)
 
 
 func clone() -> FighterData:
@@ -60,6 +63,8 @@ func clone() -> FighterData:
 	c.battle_items = battle_items.duplicate()
 	for equip in equipment:
 		c.equipment.append(equip.clone())
+	c.ultimate = ultimate  # Immutable reference, no deep clone needed
+	c.ultimate_charge = ultimate_charge
 	return c
 
 
@@ -67,6 +72,8 @@ func reset_for_battle() -> void:
 	health = max_health
 	mana = max_mana
 	turn_calculation = 0
+	# Carry over 1/3 of ultimate charge between battles
+	ultimate_charge = ultimate_charge / 3
 	# Revert any lingering stat mods
 	for mod: Dictionary in modified_stats:
 		_revert_mod(mod)
@@ -143,6 +150,8 @@ func to_save_data() -> Dictionary:
 		"upgrade_items": upgrade_items,
 		"owner_peer_id": owner_peer_id,
 		"equipment": equipment.map(func(e: RefCounted) -> Dictionary: return e.to_save_data()),
+		"ultimate_id": ultimate.ultimate_id if ultimate else "",
+		"ultimate_charge": ultimate_charge,
 	}
 
 
@@ -176,3 +185,9 @@ func apply_save_data(data: Dictionary) -> void:
 	equipment.clear()
 	for equip_data: Dictionary in data.get("equipment", []):
 		equipment.append(_EquipmentData.from_save_data(equip_data))
+	var ult_id: String = data.get("ultimate_id", "")
+	if not ult_id.is_empty():
+		ultimate = _UltimateDB.get_ultimate_by_id(ult_id)
+	else:
+		ultimate = null
+	ultimate_charge = data.get("ultimate_charge", 0)
