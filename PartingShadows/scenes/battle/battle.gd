@@ -526,6 +526,12 @@ func _show_action_menu(actor: FighterData) -> void:
 	if has_ult:
 		var pct: int = mini(int(float(actor.ultimate_charge) / float(actor.ultimate.charge_cost) * 100), 100)
 		options.append({"label": "Ultimate (%d%%)" % pct, "disabled": not ult_ready})
+		if ult_ready:
+			_tip_overlay.show_tip_once("ultimate_ready",
+				"Your ultimate ability is fully charged! Select Ultimate " +
+				"to unleash a powerful finishing move.\n\n" +
+				"Ultimates charge through basic actions: Attack, Block, " +
+				"and Rest. Charge carries over partially between battles.")
 	else:
 		options.append({"label": "", "disabled": true})
 	_action_menu.show_choices(options, true)
