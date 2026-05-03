@@ -492,6 +492,26 @@ func use_ultimate(user: FighterData, target: FighterData) -> void:
 			use_ability_on_teammate(user, target, abil, true)
 
 
+func _pick_ultimate_target(user: FighterData, targets: Array,
+		allies: Array) -> FighterData:
+	## Choose a target for AI ultimate usage. For offensive ultimates, pick the
+	## lowest-HP enemy. For supportive ultimates, pick the most wounded ally.
+	## AoE ultimates ignore the target in use_ultimate, so any valid pick works.
+	var abil: AbilityData = user.ultimate.ability
+	if abil.use_on_enemy:
+		var best: FighterData = targets[0]
+		for t: FighterData in targets:
+			if t.health < best.health:
+				best = t
+		return best
+	else:
+		var best: FighterData = user
+		for ally: FighterData in allies:
+			if ally.health > 0 and ally.health < best.health:
+				best = ally
+		return best
+
+
 func _has_defense_buff(fighter: FighterData) -> bool:
 	for mod: Dictionary in fighter.modified_stats:
 		if mod["stat"] == Enums.StatType.PHYSICAL_DEFENSE and not mod["is_negative"]:
@@ -777,6 +797,13 @@ func execute_ai_turn(unit: FighterData, targets: Array,
 	if _eff_diff > 0:
 		_execute_smart_ai_turn(unit, targets, allies)
 		return
+
+	# Priority 0: Use ultimate if charged (player auto-battle only at this diff)
+	if unit.ultimate and unit.ultimate_charge >= unit.ultimate.charge_cost:
+		var best: FighterData = _pick_ultimate_target(unit, targets, allies)
+		use_ultimate(unit, best)
+		return
+
 	var affordable: Array[AbilityData] = []
 	var heal_abilities: Array[AbilityData] = []
 	var buff_abilities: Array[AbilityData] = []
@@ -1068,6 +1095,12 @@ func _choose_offensive_ability(unit: FighterData,
 
 func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		allies: Array) -> void:
+	# Priority 0: Use ultimate if charged
+	if unit.ultimate and unit.ultimate_charge >= unit.ultimate.charge_cost:
+		var best: FighterData = _pick_ultimate_target(unit, targets, allies)
+		use_ultimate(unit, best)
+		return
+
 	# -- Classify abilities --
 	var heal_abilities: Array[AbilityData] = []
 	var buff_abilities: Array[AbilityData] = []
