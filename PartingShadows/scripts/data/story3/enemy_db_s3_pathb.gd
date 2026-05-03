@@ -139,7 +139,7 @@ static func create_thread_ritualist(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(19, 23, 1, 2, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(21, 25, 0, 2, lvl, 14)
 	f.physical_defense = EH.es(42, 51, 2, 4, lvl, 14)
-	f.magic_attack = EH.es(144, 159, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(145, 160, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(48, 58, 2, 4, lvl, 14)
 	f.speed = EH.es(37, 43, 2, 3, lvl, 14)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 17

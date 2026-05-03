@@ -115,7 +115,7 @@ static func create_null_sentinel(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(21, 25, 2, 3, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(24, 30, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(34, 42, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(132, 148, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(133, 149, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(62, 72, 3, 4, lvl, 14)
 	f.speed = EH.es(48, 56, 2, 3, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17

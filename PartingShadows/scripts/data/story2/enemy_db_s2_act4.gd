@@ -126,7 +126,7 @@ static func create_the_iris(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(30, 35, 2, 3, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(36, 45, 1, 3, lvl, 15)
 	f.physical_defense = EH.es(61, 72, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(158, 177, 4, 7, lvl, 15)
+	f.magic_attack = EH.es(159, 178, 4, 7, lvl, 15)
 	f.magic_defense = EH.es(77, 87, 3, 5, lvl, 15)
 	f.speed = EH.es(55, 61, 1, 3, lvl, 15)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
@@ -139,7 +139,7 @@ static func create_the_lidless_eye(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "The Lidless Eye", lvl)
 	f.health = EH.es(1008, 1146, 9, 13, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(43, 49, 2, 3, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(185, 205, 5, 8, lvl, 15)
+	f.physical_attack = EH.es(186, 206, 5, 8, lvl, 15)
 	f.physical_defense = EH.es(64, 76, 3, 5, lvl, 15)
 	f.magic_attack = EH.es(62, 72, 1, 3, lvl, 15)
 	f.magic_defense = EH.es(82, 96, 4, 6, lvl, 15)
