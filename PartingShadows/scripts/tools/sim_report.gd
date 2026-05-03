@@ -93,6 +93,7 @@ static func _build_ult_json(result: Dictionary) -> Dictionary:
 		out[uid] = {
 			"wins": s.wins,
 			"total": s.total,
+			"uses": s.get("uses", 0),
 			"win_rate": float(s.wins) / s.total if s.total > 0 else 0.0,
 			"class": cm.get(uid, "Unknown"),
 		}

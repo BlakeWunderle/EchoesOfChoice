@@ -216,13 +216,14 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 					equip_stats[eid].total += 1
 					if br.won:
 						equip_stats[eid].wins += 1
-				# Accumulate per-ultimate win rates.
+				# Accumulate per-ultimate win rates and usage counts.
 				if f.ultimate != null:
 					var uid: String = f.ultimate.ultimate_id
 					if not ult_stats.has(uid):
-						ult_stats[uid] = {wins = 0, total = 0}
+						ult_stats[uid] = {wins = 0, total = 0, uses = 0}
 						ult_class_map[uid] = f.character_type
 					ult_stats[uid].total += 1
+					ult_stats[uid].uses += ss.get("ultimates_used", 0)
 					if br.won:
 						ult_stats[uid].wins += 1
 
@@ -491,10 +492,13 @@ static func get_ultimate_breakdown(result: Dictionary) -> Dictionary:
 		var cname: String = cm.get(uid, s.get("class", "Unknown"))
 		var ult_ref = UltimateDB.get_ultimate_by_id(uid)
 		var display_name: String = ult_ref.ultimate_name if ult_ref != null else uid
+		var uses: int = int(s.get("uses", 0))
+		var avg_uses: float = float(uses) / s.total if s.total > 0 else 0.0
 		if not by_class.has(cname):
 			by_class[cname] = []
 		by_class[cname].append({
-			"id": uid, "name": display_name, "win_rate": wr, "total": s.total})
+			"id": uid, "name": display_name, "win_rate": wr,
+			"total": s.total, "uses": uses, "avg_uses": avg_uses})
 	for entries: Array in by_class.values():
 		entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 			return a.win_rate > b.win_rate)
@@ -508,9 +512,9 @@ static func print_ultimate_breakdown(result: Dictionary) -> void:
 	var class_names: Array = by_class.keys()
 	class_names.sort()
 	print("\n  ULTIMATE BREAKDOWN:")
-	print("    %-22s %-22s %10s %10s  %s" % [
-		"Class", "Ultimate", "Win Rate", "Battles", "Note"])
-	print("    " + "-".repeat(72))
+	print("    %-22s %-22s %10s %10s %8s  %s" % [
+		"Class", "Ultimate", "Win Rate", "Battles", "AvgUses", "Note"])
+	print("    " + "-".repeat(82))
 	for cname: String in class_names:
 		var entries: Array = by_class[cname]
 		if entries.is_empty():
@@ -526,10 +530,12 @@ static func print_ultimate_breakdown(result: Dictionary) -> void:
 				note = "** %+.1fpp **" % diff
 			elif absf(diff) > 3.0:
 				note = "(%+.1fpp)" % diff
-			print("    %-22s %-22s %9.1f%% %10d  %s" % [
-				cname, e.name, e.win_rate * 100, e.total, note])
-		print("    %-22s %-22s %9.1f%% %10s" % [
-			"", "  [%s avg]" % cname, class_avg * 100, ""])
+			if e.avg_uses < 0.1:
+				note += " [NEVER FIRES]" if note == "" else " [NEVER FIRES]"
+			print("    %-22s %-22s %9.1f%% %10d %8.2f  %s" % [
+				cname, e.name, e.win_rate * 100, e.total, e.avg_uses, note])
+		print("    %-22s %-22s %9.1f%% %10s %8s" % [
+			"", "  [%s avg]" % cname, class_avg * 100, "", ""])
 
 
 static func print_summary(results: Array) -> void:

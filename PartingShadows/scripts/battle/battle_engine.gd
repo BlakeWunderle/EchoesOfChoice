@@ -453,7 +453,9 @@ func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
 
 ## Add ultimate charge to a fighter (player-controlled only).
 func _add_ultimate_charge(fighter: FighterData, amount: int) -> void:
-	if fighter.ultimate == null or not fighter.is_user_controlled:
+	if fighter.ultimate == null:
+		return
+	if not fighter.is_user_controlled and not sim_mode:
 		return
 	var old_charge: int = fighter.ultimate_charge
 	fighter.ultimate_charge = mini(fighter.ultimate_charge + amount, fighter.ultimate.charge_cost)

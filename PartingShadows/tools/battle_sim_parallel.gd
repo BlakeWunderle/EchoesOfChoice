@@ -595,9 +595,10 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 		for uid: String in partial.get("ult_stats", {}):
 			var ps: Dictionary = partial.ult_stats[uid]
 			if not merged.ult_stats.has(uid):
-				merged.ult_stats[uid] = {wins = 0, total = 0}
+				merged.ult_stats[uid] = {wins = 0, total = 0, uses = 0}
 			merged.ult_stats[uid].wins += ps.get("wins", 0)
 			merged.ult_stats[uid].total += ps.get("total", 0)
+			merged.ult_stats[uid].uses += ps.get("uses", 0)
 		merged.ult_class_map.merge(partial.get("ult_class_map", {}))
 	## Merge turn_stats from all partials.
 	var ts_all_sum := 0
