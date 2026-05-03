@@ -96,7 +96,7 @@ static func cavalry_thundering_charge() -> UltimateData:
 		_make("Thundering Charge",
 			"The ground shakes as hooves thunder across the battlefield.",
 			Enums.StatType.PHYSICAL_ATTACK, 30, 0, true, 0, true),
-		100)
+		70)
 
 static func cavalry_rallying_cry() -> UltimateData:
 	return _ult("cavalry_rallying_cry", "Rallying Cry",
@@ -104,7 +104,7 @@ static func cavalry_rallying_cry() -> UltimateData:
 		_make("Rallying Cry",
 			"A commanding shout rings across the field, steel sings in answer.",
 			Enums.StatType.ATTACK, 15, 3, false, 0, true),
-		80)
+		65)
 
 # Dragoon -- Fighter / AoE / Mixed
 static func dragoon_cataclysm_dive() -> UltimateData:
@@ -113,7 +113,7 @@ static func dragoon_cataclysm_dive() -> UltimateData:
 		_make("Cataclysm Dive",
 			"The sky splits open as draconic fury descends upon the battlefield.",
 			Enums.StatType.MIXED_ATTACK, 35, 0, true, 0, true),
-		120)
+		105)
 
 static func dragoon_draconic_aegis() -> UltimateData:
 	return _ult("dragoon_draconic_aegis", "Draconic Aegis",
@@ -121,7 +121,7 @@ static func dragoon_draconic_aegis() -> UltimateData:
 		_make("Draconic Aegis",
 			"Ancient scales shimmer into existence around each ally.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
-		80)
+		75)
 
 # Mercenary -- Burst / Glass Cannon / Crit / Physical
 static func mercenary_execution_shot() -> UltimateData:
@@ -130,7 +130,7 @@ static func mercenary_execution_shot() -> UltimateData:
 		_make("Execution Shot",
 			"One bullet. One chance. The mercenary never misses.",
 			Enums.StatType.PHYSICAL_ATTACK, 45, 0, true, 0, false),
-		100)
+		95)
 
 static func mercenary_killzone() -> UltimateData:
 	return _ult("mercenary_killzone", "Killzone",
@@ -138,7 +138,7 @@ static func mercenary_killzone() -> UltimateData:
 		_make("Killzone",
 			"Smoke and thunder fill the air as bullets tear through everything.",
 			Enums.StatType.PHYSICAL_ATTACK, 28, 0, true, 0, true),
-		120)
+		100)
 
 # Hunter -- Fighter / Debuffer / Physical
 static func hunter_perfect_shot() -> UltimateData:
@@ -147,7 +147,7 @@ static func hunter_perfect_shot() -> UltimateData:
 		_make("Perfect Shot",
 			"The arrow flies true, finding the one gap in every defense.",
 			Enums.StatType.PHYSICAL_ATTACK, 42, 0, true, 0, false),
-		100)
+		85)
 
 static func hunter_predators_domain() -> UltimateData:
 	return _ult("hunter_predators_domain", "Predator's Domain",
@@ -155,7 +155,7 @@ static func hunter_predators_domain() -> UltimateData:
 		_make("Predator's Domain",
 			"Hunter's instinct surges. Every flaw and opening becomes visible.",
 			Enums.StatType.DEFENSE, 16, 3, true, 0, true),
-		80)
+		65)
 
 # Ninja -- DPS / Glass Cannon / Evasion / Crit / Physical
 static func ninja_deaths_shadow() -> UltimateData:
@@ -164,7 +164,7 @@ static func ninja_deaths_shadow() -> UltimateData:
 		_make("Death's Shadow",
 			"A shadow detaches from the darkness and strikes with lethal precision.",
 			Enums.StatType.PHYSICAL_ATTACK, 40, 0, true, 0, false, 0, 0.3),
-		100)
+		95)
 
 static func ninja_vanishing_act() -> UltimateData:
 	return _ult("ninja_vanishing_act", "Vanishing Act",
@@ -172,7 +172,7 @@ static func ninja_vanishing_act() -> UltimateData:
 		_make("Vanishing Act",
 			"Shadows swirl and engulf the party. They flicker in and out of sight.",
 			Enums.StatType.DODGE_CHANCE, 15, 3, false, 0, true),
-		80)
+		85)
 
 # Monk -- Fighter / Support / Healer / Mixed
 static func monk_thousand_fists() -> UltimateData:
@@ -181,7 +181,7 @@ static func monk_thousand_fists() -> UltimateData:
 		_make("Thousand Fists",
 			"Each blow carries the weight of a lifetime of discipline.",
 			Enums.StatType.MIXED_ATTACK, 42, 0, true, 0, false),
-		100)
+		80)
 
 static func monk_transcendence() -> UltimateData:
 	return _ult("monk_transcendence", "Transcendence",
@@ -189,7 +189,7 @@ static func monk_transcendence() -> UltimateData:
 		_make("Transcendence",
 			"A wave of spiritual calm washes over every ally, mending body and soul.",
 			Enums.StatType.HEALTH, 25, 0, false, 0, true),
-		80)
+		60)
 
 
 # =============================================================================
@@ -203,7 +203,7 @@ static func infernalist_inferno() -> UltimateData:
 		_make("Inferno",
 			"Fire rises from the earth itself, consuming everything in its path.",
 			Enums.StatType.MAGIC_ATTACK, 35, 0, true, 0, true),
-		120)
+		60)
 
 static func infernalist_meteor_strike() -> UltimateData:
 	return _ult("infernalist_meteor_strike", "Meteor Strike",
@@ -211,7 +211,7 @@ static func infernalist_meteor_strike() -> UltimateData:
 		_make("Meteor Strike",
 			"The sky burns crimson as a star falls upon the enemy.",
 			Enums.StatType.MAGIC_ATTACK, 48, 0, true, 0, false),
-		100)
+		50)
 
 # Tidecaller -- Support / Caster / Healer / AoE / Magical
 static func tidecaller_maelstrom() -> UltimateData:
@@ -220,7 +220,7 @@ static func tidecaller_maelstrom() -> UltimateData:
 		_make("Maelstrom",
 			"The sea answers the call. A roaring spiral of water descends.",
 			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
-		100)
+		55)
 
 static func tidecaller_deluge() -> UltimateData:
 	return _ult("tidecaller_deluge", "Deluge",
@@ -228,7 +228,7 @@ static func tidecaller_deluge() -> UltimateData:
 		_make("Deluge",
 			"Cool water surges through the party, knitting flesh and calming minds.",
 			Enums.StatType.HEALTH, 28, 0, false, 0, true),
-		80)
+		50)
 
 # Tempest -- Caster / AoE / Magical
 static func tempest_supercell() -> UltimateData:
@@ -237,7 +237,7 @@ static func tempest_supercell() -> UltimateData:
 		_make("Supercell",
 			"Lightning, wind, and thunder collide in a cataclysmic tempest.",
 			Enums.StatType.MAGIC_ATTACK, 32, 0, true, 0, true),
-		100)
+		55)
 
 static func tempest_eye_of_the_storm() -> UltimateData:
 	return _ult("tempest_eye_of_the_storm", "Eye of the Storm",
@@ -245,7 +245,7 @@ static func tempest_eye_of_the_storm() -> UltimateData:
 		_make("Eye of the Storm",
 			"Static crackles across every ally. Their spells burn brighter.",
 			Enums.StatType.MAGIC_ATTACK, 16, 3, false, 0, true),
-		80)
+		50)
 
 # Paladin -- Fighter / Support / Tank / Healer / Mixed
 static func paladin_divine_judgment() -> UltimateData:
@@ -254,7 +254,7 @@ static func paladin_divine_judgment() -> UltimateData:
 		_make("Divine Judgment",
 			"Light gathers in the blade, then falls like the judgment of heaven.",
 			Enums.StatType.MIXED_ATTACK, 44, 0, true, 0, false),
-		100)
+		50)
 
 static func paladin_sacred_barrier() -> UltimateData:
 	return _ult("paladin_sacred_barrier", "Sacred Barrier",
@@ -262,7 +262,7 @@ static func paladin_sacred_barrier() -> UltimateData:
 		_make("Sacred Barrier",
 			"A wall of golden light rises around each ally, turning aside all harm.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
-		80)
+		45)
 
 # Priest -- Support / Caster / Healer / Buffer / Magical
 static func priest_holy_nova() -> UltimateData:
@@ -271,7 +271,7 @@ static func priest_holy_nova() -> UltimateData:
 		_make("Holy Nova",
 			"Pure light erupts outward, burning every shadow it touches.",
 			Enums.StatType.MAGIC_ATTACK, 28, 0, true, 0, true),
-		100)
+		60)
 
 static func priest_salvation() -> UltimateData:
 	return _ult("priest_salvation", "Salvation",
@@ -279,7 +279,7 @@ static func priest_salvation() -> UltimateData:
 		_make("Salvation",
 			"Warm light descends from above, closing every wound at once.",
 			Enums.StatType.HEALTH, 30, 0, false, 0, true),
-		80)
+		55)
 
 # Warlock -- Caster / Debuffer / Drain / Magical
 static func warlock_soul_harvest() -> UltimateData:
@@ -288,7 +288,7 @@ static func warlock_soul_harvest() -> UltimateData:
 		_make("Soul Harvest",
 			"Dark tendrils pierce the enemy, draining life to feed the caster.",
 			Enums.StatType.MAGIC_ATTACK, 40, 0, true, 0, false, 0, 0.4),
-		100)
+		40)
 
 static func warlock_plague_of_shadows() -> UltimateData:
 	return _ult("warlock_plague_of_shadows", "Plague of Shadows",
@@ -296,7 +296,7 @@ static func warlock_plague_of_shadows() -> UltimateData:
 		_make("Plague of Shadows",
 			"Dark fog creeps across the battlefield, weakening everything it touches.",
 			Enums.StatType.ATTACK, 16, 3, true, 0, true),
-		80)
+		35)
 
 
 # =============================================================================
@@ -310,7 +310,7 @@ static func warcrier_earthshaker() -> UltimateData:
 		_make("Earthshaker",
 			"The roar splits stone. The battlefield itself buckles under the sound.",
 			Enums.StatType.PHYSICAL_ATTACK, 28, 0, true, 0, true),
-		100)
+		75)
 
 static func warcrier_battle_anthem() -> UltimateData:
 	return _ult("warcrier_battle_anthem", "Battle Anthem",
@@ -318,7 +318,7 @@ static func warcrier_battle_anthem() -> UltimateData:
 		_make("Battle Anthem",
 			"Every ally feels their blood quicken and their arms grow strong.",
 			Enums.StatType.ATTACK, 15, 3, false, 0, true),
-		80)
+		60)
 
 # Minstrel -- Support / Healer / Buffer / Magical
 static func minstrel_final_movement() -> UltimateData:
@@ -327,7 +327,7 @@ static func minstrel_final_movement() -> UltimateData:
 		_make("Final Movement",
 			"The melody reaches its peak. Every note strikes like a blade.",
 			Enums.StatType.MAGIC_ATTACK, 28, 0, true, 0, true),
-		100)
+		60)
 
 static func minstrel_symphony_of_renewal() -> UltimateData:
 	return _ult("minstrel_symphony_of_renewal", "Symphony of Renewal",
@@ -335,7 +335,7 @@ static func minstrel_symphony_of_renewal() -> UltimateData:
 		_make("Symphony of Renewal",
 			"Gentle notes drift across the field, mending wounds with every measure.",
 			Enums.StatType.HEALTH, 28, 0, false, 0, true),
-		80)
+		50)
 
 # Illusionist -- DPS / Debuffer / Evasion / Magical
 static func illusionist_grand_illusion() -> UltimateData:
@@ -344,7 +344,7 @@ static func illusionist_grand_illusion() -> UltimateData:
 		_make("Grand Illusion",
 			"The world twists. What is real? Every enemy sees their worst fear.",
 			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
-		100)
+		95)
 
 static func illusionist_mirror_image() -> UltimateData:
 	return _ult("illusionist_mirror_image", "Mirror Image",
@@ -352,7 +352,7 @@ static func illusionist_mirror_image() -> UltimateData:
 		_make("Mirror Image",
 			"Copies of each ally shimmer into existence. Which is real?",
 			Enums.StatType.DODGE_CHANCE, 15, 3, false, 0, true),
-		80)
+		70)
 
 # Mime -- Tank / Fighter / Mixed
 static func mime_perfect_copy() -> UltimateData:
@@ -361,7 +361,7 @@ static func mime_perfect_copy() -> UltimateData:
 		_make("Perfect Copy",
 			"Every motion on the field is absorbed and released in one blow.",
 			Enums.StatType.MIXED_ATTACK, 42, 0, true, 0, false),
-		100)
+		75)
 
 static func mime_mimes_bulwark() -> UltimateData:
 	return _ult("mime_mimes_bulwark", "Mime's Bulwark",
@@ -369,7 +369,7 @@ static func mime_mimes_bulwark() -> UltimateData:
 		_make("Mime's Bulwark",
 			"Hands press against nothing. Yet no attack can pass through.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
-		80)
+		60)
 
 # Laureate -- Support / Buffer / AoE / Magical
 static func laureate_crowning_verse() -> UltimateData:
@@ -378,7 +378,7 @@ static func laureate_crowning_verse() -> UltimateData:
 		_make("Crowning Verse",
 			"A single stanza rings out. Every ally stands taller, fights harder.",
 			Enums.StatType.ATTACK, 16, 3, false, 0, true),
-		80)
+		60)
 
 static func laureate_words_of_might() -> UltimateData:
 	return _ult("laureate_words_of_might", "Words of Might",
@@ -386,7 +386,7 @@ static func laureate_words_of_might() -> UltimateData:
 		_make("Words of Might",
 			"Each syllable lands like a hammer blow across the battlefield.",
 			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
-		100)
+		80)
 
 # Elegist -- Support / Debuffer / AoE / Magical
 static func elegist_death_knell() -> UltimateData:
@@ -395,7 +395,7 @@ static func elegist_death_knell() -> UltimateData:
 		_make("Death Knell",
 			"A single tone rings out, deep and final. The enemy's will to fight crumbles.",
 			Enums.StatType.ATTACK, 16, 3, true, 0, true),
-		80)
+		65)
 
 static func elegist_elegy_of_sorrow() -> UltimateData:
 	return _ult("elegist_elegy_of_sorrow", "Elegy of Sorrow",
@@ -403,7 +403,7 @@ static func elegist_elegy_of_sorrow() -> UltimateData:
 		_make("Elegy of Sorrow",
 			"Tears become weapons. The weight of loss crashes over every foe.",
 			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
-		100)
+		85)
 
 
 # =============================================================================
@@ -417,7 +417,7 @@ static func alchemist_transmutation() -> UltimateData:
 		_make("Transmutation",
 			"Glass shatters. Fumes rise. The mixture burns through everything.",
 			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
-		100)
+		50)
 
 static func alchemist_philosophers_stone() -> UltimateData:
 	return _ult("alchemist_philosophers_stone", "Philosopher's Stone",
@@ -425,7 +425,7 @@ static func alchemist_philosophers_stone() -> UltimateData:
 		_make("Philosopher's Stone",
 			"Golden liquid pours forth, healing flesh and spirit alike.",
 			Enums.StatType.HEALTH, 28, 0, false, 0, true),
-		80)
+		40)
 
 # Bombardier -- Burst / Glass Cannon / AoE / Magical
 static func bombardier_scorched_earth() -> UltimateData:
@@ -434,7 +434,7 @@ static func bombardier_scorched_earth() -> UltimateData:
 		_make("Scorched Earth",
 			"The sky fills with fire. Nowhere is safe. Everything burns.",
 			Enums.StatType.MAGIC_ATTACK, 35, 0, true, 0, true),
-		120)
+		60)
 
 static func bombardier_precision_strike() -> UltimateData:
 	return _ult("bombardier_precision_strike", "Precision Strike",
@@ -442,7 +442,7 @@ static func bombardier_precision_strike() -> UltimateData:
 		_make("Precision Strike",
 			"One perfect charge. One perfect throw. One perfect detonation.",
 			Enums.StatType.MAGIC_ATTACK, 48, 0, true, 0, false),
-		100)
+		50)
 
 # Chronomancer -- Support / Caster / Buffer / Debuffer / Magical
 static func chronomancer_time_stop() -> UltimateData:
@@ -451,7 +451,7 @@ static func chronomancer_time_stop() -> UltimateData:
 		_make("Time Stop",
 			"The clock stops. Every enemy hangs suspended in frozen time.",
 			Enums.StatType.SPEED, 16, 3, true, 0, true),
-		80)
+		55)
 
 static func chronomancer_temporal_acceleration() -> UltimateData:
 	return _ult("chronomancer_temporal_acceleration", "Temporal Acceleration",
@@ -459,7 +459,7 @@ static func chronomancer_temporal_acceleration() -> UltimateData:
 		_make("Temporal Acceleration",
 			"Time bends. Every ally moves in a blur of accelerated motion.",
 			Enums.StatType.SPEED, 16, 3, false, 0, true),
-		80)
+		55)
 
 # Astronomer -- Burst / Caster / Glass Cannon / AoE / Magical
 static func astronomer_supernova() -> UltimateData:
@@ -468,7 +468,7 @@ static func astronomer_supernova() -> UltimateData:
 		_make("Supernova",
 			"A point of impossible light collapses, then explodes outward.",
 			Enums.StatType.MAGIC_ATTACK, 35, 0, true, 0, true),
-		120)
+		65)
 
 static func astronomer_cosmic_alignment() -> UltimateData:
 	return _ult("astronomer_cosmic_alignment", "Cosmic Alignment",
@@ -476,7 +476,7 @@ static func astronomer_cosmic_alignment() -> UltimateData:
 		_make("Cosmic Alignment",
 			"Stars wheel overhead. Arcane power floods through every ally.",
 			Enums.StatType.MAGIC_ATTACK, 16, 3, false, 0, true),
-		80)
+		50)
 
 # Automaton -- Tank / Fighter / Mixed
 static func automaton_overload() -> UltimateData:
@@ -485,7 +485,7 @@ static func automaton_overload() -> UltimateData:
 		_make("Overload",
 			"Gears scream. Steam vents. Every joule of power channels into one blow.",
 			Enums.StatType.MIXED_ATTACK, 44, 0, true, 0, false),
-		100)
+		65)
 
 static func automaton_iron_fortress() -> UltimateData:
 	return _ult("automaton_iron_fortress", "Iron Fortress",
@@ -493,7 +493,7 @@ static func automaton_iron_fortress() -> UltimateData:
 		_make("Iron Fortress",
 			"Metal panels unfold and lock into place around every ally.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
-		80)
+		60)
 
 # Technomancer -- Fighter / Caster / Drain / Mixed
 static func technomancer_arc_lightning() -> UltimateData:
@@ -502,7 +502,7 @@ static func technomancer_arc_lightning() -> UltimateData:
 		_make("Arc Lightning",
 			"Electricity leaps from foe to foe. Each spark feeds the caster.",
 			Enums.StatType.MIXED_ATTACK, 26, 0, true, 0, true, 0, 0.25),
-		100)
+		65)
 
 static func technomancer_power_surge() -> UltimateData:
 	return _ult("technomancer_power_surge", "Power Surge",
@@ -510,7 +510,7 @@ static func technomancer_power_surge() -> UltimateData:
 		_make("Power Surge",
 			"Crackling energy arcs across every blade and staff.",
 			Enums.StatType.ATTACK, 15, 3, false, 0, true),
-		80)
+		55)
 
 
 # =============================================================================
@@ -524,7 +524,7 @@ static func blighter_blight_storm() -> UltimateData:
 		_make("Blight Storm",
 			"Poisonous clouds surge across the field, corroding everything.",
 			Enums.StatType.MAGIC_ATTACK, 32, 0, true, 0, true),
-		100)
+		55)
 
 static func blighter_withering_curse() -> UltimateData:
 	return _ult("blighter_withering_curse", "Withering Curse",
@@ -532,7 +532,7 @@ static func blighter_withering_curse() -> UltimateData:
 		_make("Withering Curse",
 			"Dark spores settle on every foe. Their armor crumbles to dust.",
 			Enums.StatType.DEFENSE, 16, 3, true, 0, true),
-		80)
+		45)
 
 # Grove Keeper -- Support / Hybrid / Healer / Buffer / Magical
 static func grove_keeper_natures_embrace() -> UltimateData:
@@ -541,7 +541,7 @@ static func grove_keeper_natures_embrace() -> UltimateData:
 		_make("Nature's Embrace",
 			"Roots and vines cradle each ally, pouring life into every wound.",
 			Enums.StatType.HEALTH, 28, 0, false, 0, true),
-		80)
+		60)
 
 static func grove_keeper_overgrowth() -> UltimateData:
 	return _ult("grove_keeper_overgrowth", "Overgrowth",
@@ -549,7 +549,7 @@ static func grove_keeper_overgrowth() -> UltimateData:
 		_make("Overgrowth",
 			"The forest answers. Bark hardens around each ally like a second skin.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
-		80)
+		60)
 
 # Witch Doctor -- Support / Caster / Debuffer / DoT / Magical
 static func witch_doctor_plague_voodoo() -> UltimateData:
@@ -558,7 +558,7 @@ static func witch_doctor_plague_voodoo() -> UltimateData:
 		_make("Plague Voodoo",
 			"Dolls crumble to dust. Every enemy staggers as the curse takes hold.",
 			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
-		100)
+		55)
 
 static func witch_doctor_hex_storm() -> UltimateData:
 	return _ult("witch_doctor_hex_storm", "Hex Storm",
@@ -566,7 +566,7 @@ static func witch_doctor_hex_storm() -> UltimateData:
 		_make("Hex Storm",
 			"Curses swirl through the air, draining power from every foe.",
 			Enums.StatType.ATTACK, 16, 3, true, 0, true),
-		80)
+		45)
 
 # Spiritwalker -- Support / Caster / Healer / Buffer / Magical
 static func spiritwalker_spirit_wrath() -> UltimateData:
@@ -575,7 +575,7 @@ static func spiritwalker_spirit_wrath() -> UltimateData:
 		_make("Spirit Wrath",
 			"Ghostly warriors charge through the battlefield, striking every foe.",
 			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
-		100)
+		55)
 
 static func spiritwalker_ancestral_blessing() -> UltimateData:
 	return _ult("spiritwalker_ancestral_blessing", "Ancestral Blessing",
@@ -583,7 +583,7 @@ static func spiritwalker_ancestral_blessing() -> UltimateData:
 		_make("Ancestral Blessing",
 			"Whispers of the departed fill the air. Warmth and strength follow.",
 			Enums.StatType.HEALTH, 28, 0, false, 0, true),
-		80)
+		45)
 
 # Falconer -- DPS / Glass Cannon / Physical
 static func falconer_death_from_above() -> UltimateData:
@@ -592,7 +592,7 @@ static func falconer_death_from_above() -> UltimateData:
 		_make("Death From Above",
 			"The falcon screams and dives. Talons find their mark with terrible force.",
 			Enums.StatType.PHYSICAL_ATTACK, 45, 0, true, 0, false),
-		100)
+		70)
 
 static func falconer_raptor_storm() -> UltimateData:
 	return _ult("falconer_raptor_storm", "Raptor Storm",
@@ -600,7 +600,7 @@ static func falconer_raptor_storm() -> UltimateData:
 		_make("Raptor Storm",
 			"The sky darkens with wings. Talons and beaks tear at every foe.",
 			Enums.StatType.PHYSICAL_ATTACK, 28, 0, true, 0, true),
-		100)
+		70)
 
 # Shapeshifter -- Hybrid / Tank / Physical
 static func shapeshifter_apex_predator() -> UltimateData:
@@ -609,7 +609,7 @@ static func shapeshifter_apex_predator() -> UltimateData:
 		_make("Apex Predator",
 			"Bones crack and reform. A creature of pure savagery lunges forward.",
 			Enums.StatType.PHYSICAL_ATTACK, 44, 0, true, 0, false),
-		100)
+		80)
 
 static func shapeshifter_ironhide() -> UltimateData:
 	return _ult("shapeshifter_ironhide", "Ironhide",
@@ -617,7 +617,7 @@ static func shapeshifter_ironhide() -> UltimateData:
 		_make("Ironhide",
 			"Thick scales spread across every ally. Nothing can pierce this hide.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
-		80)
+		65)
 
 
 # =============================================================================
@@ -631,7 +631,7 @@ static func bulwark_rampart_crush() -> UltimateData:
 		_make("Rampart Crush",
 			"The shield connects with the force of a collapsing wall.",
 			Enums.StatType.PHYSICAL_ATTACK, 42, 0, true, 0, false),
-		100)
+		70)
 
 static func bulwark_unbreakable() -> UltimateData:
 	return _ult("bulwark_unbreakable", "Unbreakable",
@@ -639,7 +639,7 @@ static func bulwark_unbreakable() -> UltimateData:
 		_make("Unbreakable",
 			"The bulwark plants their feet. An aura of invincibility radiates outward.",
 			Enums.StatType.DEFENSE, 20, 3, false, 0, true),
-		80)
+		65)
 
 # Aegis -- Fighter / Tank / Mixed
 static func aegis_counter_storm() -> UltimateData:
@@ -648,7 +648,7 @@ static func aegis_counter_storm() -> UltimateData:
 		_make("Counter Storm",
 			"Every blocked blow returns tenfold in a single explosive release.",
 			Enums.StatType.MIXED_ATTACK, 44, 0, true, 0, false),
-		100)
+		75)
 
 static func aegis_aegis_wall() -> UltimateData:
 	return _ult("aegis_aegis_wall", "Aegis Wall",
@@ -656,7 +656,7 @@ static func aegis_aegis_wall() -> UltimateData:
 		_make("Aegis Wall",
 			"Runes blaze to life. A shimmering wall surrounds every ally.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
-		80)
+		65)
 
 # Trailblazer -- Fighter / Debuffer / Mixed
 static func trailblazer_blazing_trail() -> UltimateData:
@@ -665,7 +665,7 @@ static func trailblazer_blazing_trail() -> UltimateData:
 		_make("Blazing Trail",
 			"A streak of fire and steel cuts across the entire enemy line.",
 			Enums.StatType.MIXED_ATTACK, 30, 0, true, 0, true),
-		100)
+		75)
 
 static func trailblazer_lay_bare() -> UltimateData:
 	return _ult("trailblazer_lay_bare", "Lay Bare",
@@ -673,7 +673,7 @@ static func trailblazer_lay_bare() -> UltimateData:
 		_make("Lay Bare",
 			"The trailblazer reads the battlefield. Every flaw becomes clear.",
 			Enums.StatType.DEFENSE, 16, 3, true, 0, true),
-		80)
+		65)
 
 # Survivalist -- Tank / Drain / Mixed
 static func survivalist_endurance_strike() -> UltimateData:
@@ -682,7 +682,7 @@ static func survivalist_endurance_strike() -> UltimateData:
 		_make("Endurance Strike",
 			"Pain fuels power. Every wound dealt returns as strength.",
 			Enums.StatType.MIXED_ATTACK, 38, 0, true, 0, false, 0, 0.35),
-		100)
+		80)
 
 static func survivalist_will_to_live() -> UltimateData:
 	return _ult("survivalist_will_to_live", "Will to Live",
@@ -690,4 +690,4 @@ static func survivalist_will_to_live() -> UltimateData:
 		_make("Will to Live",
 			"Refuse to fall. That stubbornness spreads to every ally.",
 			Enums.StatType.HEALTH, 25, 0, false, 0, true),
-		80)
+		65)
