@@ -16,7 +16,7 @@ static func create_thread_lurker(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Thread Lurker", lvl)
 	f.health = EH.es(140, 165, 3, 5, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 1, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(23, 27, 1, 3, lvl, 5)
+	f.physical_attack = EH.es(26, 30, 1, 3, lvl, 5)
 	f.physical_defense = EH.es(13, 16, 1, 2, lvl, 5)
 	f.magic_attack = EH.es(10, 13, 0, 2, lvl, 5)
 	f.magic_defense = EH.es(12, 15, 1, 2, lvl, 5)
@@ -31,7 +31,7 @@ static func create_dream_sentinel(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Dream Sentinel", lvl)
 	f.health = EH.es(160, 188, 3, 6, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 1, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(22, 26, 1, 2, lvl, 5)
+	f.physical_attack = EH.es(27, 31, 1, 2, lvl, 5)
 	f.physical_defense = EH.es(21, 25, 1, 3, lvl, 5)
 	f.magic_attack = EH.es(11, 14, 0, 2, lvl, 5)
 	f.magic_defense = EH.es(13, 16, 1, 2, lvl, 5)
@@ -48,7 +48,7 @@ static func create_gloom_spinner(n: String, lvl: int = 5) -> FighterData:
 	f.mana = EH.es(8, 11, 1, 2, lvl, 5); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 13, 0, 2, lvl, 5)
 	f.physical_defense = EH.es(8, 11, 1, 2, lvl, 5)
-	f.magic_attack = EH.es(23, 29, 1, 3, lvl, 5)
+	f.magic_attack = EH.es(26, 32, 1, 3, lvl, 5)
 	f.magic_defense = EH.es(16, 19, 1, 2, lvl, 5)
 	f.speed = EH.es(27, 32, 1, 2, lvl, 5)
 	f.crit_chance = 15; f.crit_damage = 1; f.dodge_chance = 17
@@ -67,7 +67,7 @@ static func create_drowned_reverie(n: String, lvl: int = 6) -> FighterData:
 	f.mana = EH.es(9, 11, 1, 2, lvl, 6); f.max_mana = f.mana
 	f.physical_attack = EH.es(11, 14, 0, 2, lvl, 6)
 	f.physical_defense = EH.es(10, 13, 1, 2, lvl, 6)
-	f.magic_attack = EH.es(25, 29, 1, 3, lvl, 6)
+	f.magic_attack = EH.es(28, 32, 1, 3, lvl, 6)
 	f.magic_defense = EH.es(17, 20, 1, 2, lvl, 6)
 	f.speed = EH.es(27, 32, 1, 2, lvl, 6)
 	f.crit_chance = 14; f.crit_damage = 1; f.dodge_chance = 12
@@ -80,7 +80,7 @@ static func create_riptide_beast(n: String, lvl: int = 6) -> FighterData:
 	var f := EH.base(n, "Riptide Beast", lvl)
 	f.health = EH.es(193, 224, 3, 6, lvl, 6); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 1, lvl, 6); f.max_mana = f.mana
-	f.physical_attack = EH.es(26, 30, 1, 3, lvl, 6)
+	f.physical_attack = EH.es(29, 33, 1, 3, lvl, 6)
 	f.physical_defense = EH.es(16, 19, 1, 2, lvl, 6)
 	f.magic_attack = EH.es(10, 13, 0, 2, lvl, 6)
 	f.magic_defense = EH.es(10, 13, 1, 2, lvl, 6)
@@ -95,7 +95,7 @@ static func create_depth_crawler(n: String, lvl: int = 6) -> FighterData:
 	var f := EH.base(n, "Depth Crawler", lvl)
 	f.health = EH.es(207, 237, 3, 6, lvl, 6); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 1, lvl, 6); f.max_mana = f.mana
-	f.physical_attack = EH.es(21, 25, 1, 3, lvl, 6)
+	f.physical_attack = EH.es(25, 29, 1, 3, lvl, 6)
 	f.physical_defense = EH.es(16, 19, 1, 2, lvl, 6)
 	f.magic_attack = EH.es(19, 23, 1, 2, lvl, 6)
 	f.magic_defense = EH.es(14, 17, 1, 2, lvl, 6)
@@ -114,7 +114,7 @@ static func create_fragment_golem(n: String, lvl: int = 6) -> FighterData:
 	var f := EH.base(n, "Fragment Golem", lvl)
 	f.health = EH.es(220, 255, 3, 6, lvl, 6); f.max_health = f.health
 	f.mana = EH.es(4, 6, 1, 1, lvl, 6); f.max_mana = f.mana
-	f.physical_attack = EH.es(27, 31, 1, 3, lvl, 6)
+	f.physical_attack = EH.es(31, 35, 1, 3, lvl, 6)
 	f.physical_defense = EH.es(22, 26, 1, 3, lvl, 6)
 	f.magic_attack = EH.es(9, 12, 0, 1, lvl, 6)
 	f.magic_defense = EH.es(13, 17, 1, 2, lvl, 6)
@@ -131,7 +131,7 @@ static func create_portrait_wight(n: String, lvl: int = 6) -> FighterData:
 	f.mana = EH.es(10, 13, 1, 2, lvl, 6); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 13, 0, 1, lvl, 6)
 	f.physical_defense = EH.es(13, 16, 1, 2, lvl, 6)
-	f.magic_attack = EH.es(22, 26, 1, 3, lvl, 6)
+	f.magic_attack = EH.es(26, 30, 1, 3, lvl, 6)
 	f.magic_defense = EH.es(20, 24, 1, 3, lvl, 6)
 	f.speed = EH.es(26, 31, 1, 2, lvl, 6)
 	f.crit_chance = 13; f.crit_damage = 2; f.dodge_chance = 10
@@ -144,7 +144,7 @@ static func create_gallery_shade(n: String, lvl: int = 6) -> FighterData:
 	var f := EH.base(n, "Gallery Shade", lvl)
 	f.health = EH.es(185, 215, 3, 5, lvl, 6); f.max_health = f.health
 	f.mana = EH.es(8, 11, 1, 2, lvl, 6); f.max_mana = f.mana
-	f.physical_attack = EH.es(29, 33, 1, 3, lvl, 6)
+	f.physical_attack = EH.es(32, 36, 1, 3, lvl, 6)
 	f.physical_defense = EH.es(15, 18, 1, 2, lvl, 6)
 	f.magic_attack = EH.es(12, 15, 0, 2, lvl, 6)
 	f.magic_defense = EH.es(12, 15, 1, 2, lvl, 6)
@@ -163,7 +163,7 @@ static func create_shadow_pursuer(n: String, lvl: int = 7) -> FighterData:
 	var f := EH.base(n, "Shadow Pursuer", lvl)
 	f.health = EH.es(248, 289, 3, 7, lvl, 7); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 1, lvl, 7); f.max_mana = f.mana
-	f.physical_attack = EH.es(30, 35, 1, 3, lvl, 7)
+	f.physical_attack = EH.es(33, 38, 1, 3, lvl, 7)
 	f.physical_defense = EH.es(15, 18, 1, 2, lvl, 7)
 	f.magic_attack = EH.es(12, 15, 0, 2, lvl, 7)
 	f.magic_defense = EH.es(14, 17, 1, 2, lvl, 7)
@@ -180,7 +180,7 @@ static func create_dread_tendril(n: String, lvl: int = 7) -> FighterData:
 	f.mana = EH.es(10, 13, 1, 2, lvl, 7); f.max_mana = f.mana
 	f.physical_attack = EH.es(12, 15, 0, 2, lvl, 7)
 	f.physical_defense = EH.es(11, 14, 1, 2, lvl, 7)
-	f.magic_attack = EH.es(26, 31, 1, 3, lvl, 7)
+	f.magic_attack = EH.es(29, 34, 1, 3, lvl, 7)
 	f.magic_defense = EH.es(19, 22, 1, 2, lvl, 7)
 	f.speed = EH.es(29, 34, 1, 2, lvl, 7)
 	f.crit_chance = 21; f.crit_damage = 1; f.dodge_chance = 19
@@ -193,7 +193,7 @@ static func create_faded_voice(n: String, lvl: int = 7) -> FighterData:
 	var f := EH.base(n, "Faded Voice", lvl)
 	f.health = EH.es(205, 240, 3, 5, lvl, 7); f.max_health = f.health
 	f.mana = EH.es(9, 11, 1, 2, lvl, 7); f.max_mana = f.mana
-	f.physical_attack = EH.es(23, 28, 1, 3, lvl, 7)
+	f.physical_attack = EH.es(27, 32, 1, 3, lvl, 7)
 	f.physical_defense = EH.es(10, 13, 1, 2, lvl, 7)
 	f.magic_attack = EH.es(14, 17, 0, 2, lvl, 7)
 	f.magic_defense = EH.es(18, 21, 1, 2, lvl, 7)
