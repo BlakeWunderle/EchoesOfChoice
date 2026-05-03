@@ -340,8 +340,8 @@ static func get_upgrade_text(story_id: String) -> Array[String]:
 # =============================================================================
 
 ## Assign random equipment to a fighter for simulation purposes.
-## If upgraded is true, each piece also gets a random upgrade applied.
-static func apply_random_equipment(fighter: FighterData, upgraded: bool) -> void:
+## num_upgrades controls how many of the 3 slots get a random upgrade (0-3).
+static func apply_random_equipment(fighter: FighterData, num_upgrades: int = 0) -> void:
 	var weapon_ids: Array[String] = ["physical_weapon", "magic_weapon", "combo_weapon"]
 	var armor_ids: Array[String] = ["physical_armor", "magic_armor", "combo_armor"]
 	var boots_ids: Array[String] = ["speed_boots", "crit_boots", "dodge_boots"]
@@ -358,16 +358,23 @@ static func apply_random_equipment(fighter: FighterData, upgraded: bool) -> void
 	apply_to_fighter(boots, fighter)
 	fighter.equipment.append(boots)
 
-	if upgraded:
+	if num_upgrades > 0:
 		var weapon_choices: Array[String] = ["mana", "crit_chance", "crit_damage", "reckless"]
 		var armor_choices: Array[String] = ["health", "dodge", "mana", "ironclad"]
 		var boots_choices: Array[String] = ["speed", "crit_chance", "dodge", "crit_damage", "nimble"]
-		# Player upgrades 1 piece per town stop; pick a random slot to upgrade.
-		var slot := randi() % 3
-		match slot:
-			0: apply_upgrade(weapon, fighter, weapon_choices[randi() % weapon_choices.size()])
-			1: apply_upgrade(armor, fighter, armor_choices[randi() % armor_choices.size()])
-			2: apply_upgrade(boots, fighter, boots_choices[randi() % boots_choices.size()])
+		var pieces := [weapon, armor, boots]
+		var choices := [weapon_choices, armor_choices, boots_choices]
+		# Shuffle slot order and upgrade the first N distinct slots.
+		var slots: Array[int] = [0, 1, 2]
+		for si in slots.size() - 1:
+			var swap_idx: int = si + randi() % (slots.size() - si)
+			var tmp: int = slots[si]
+			slots[si] = slots[swap_idx]
+			slots[swap_idx] = tmp
+		for ui in mini(num_upgrades, 3):
+			var slot: int = slots[ui]
+			var c: Array[String] = choices[slot]
+			apply_upgrade(pieces[slot], fighter, c[randi() % c.size()])
 
 
 # =============================================================================

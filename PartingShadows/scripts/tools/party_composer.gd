@@ -48,7 +48,8 @@ static var _cached_t2_parties: Array = []
 
 
 static func create_fighter(base_type: String, t1_item: String,
-		t2_item: String, total_level_ups: int) -> FighterData:
+		t2_item: String, total_level_ups: int,
+		equip_upgrades: int = 0) -> FighterData:
 	var fighter := FighterDB.create_player(base_type, base_type)
 	fighter.is_user_controlled = false
 	var remaining := total_level_ups
@@ -73,9 +74,7 @@ static func create_fighter(base_type: String, t1_item: String,
 		for i in remaining:
 			FighterDB.level_up(fighter)
 
-	# Apply random equipment (upgraded if past T0)
-	var upgraded: bool = t1_item != ""
-	EquipmentDB.apply_random_equipment(fighter, upgraded)
+	EquipmentDB.apply_random_equipment(fighter, equip_upgrades)
 
 	return fighter
 
@@ -108,12 +107,13 @@ static func get_party_description(party: Dictionary) -> String:
 	return " / ".join(parts)
 
 
-static func create_party(party: Dictionary, level_ups: int) -> Array:
+static func create_party(party: Dictionary, level_ups: int,
+		equip_upgrades: int = 0) -> Array:
 	var fighters := []
 	for i in 3:
 		var f := create_fighter(
 			party.base_types[i], party.t1_items[i],
-			party.t2_items[i], level_ups)
+			party.t2_items[i], level_ups, equip_upgrades)
 		f.character_name = "Hero" + str(i + 1)
 		fighters.append(f)
 	return fighters
