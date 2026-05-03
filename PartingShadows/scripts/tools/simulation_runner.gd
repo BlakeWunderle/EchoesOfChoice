@@ -487,8 +487,8 @@ static func get_ultimate_breakdown(result: Dictionary) -> Dictionary:
 	var by_class := {}  ## { "Cavalry": [{id, name, win_rate, total}, ...] }
 	for uid: String in us:
 		var s: Dictionary = us[uid]
-		var wr: float = float(s.wins) / s.total if s.total > 0 else 0.0
-		var cname: String = cm.get(uid, "Unknown")
+		var wr: float = s.get("win_rate", float(s.wins) / s.total if s.total > 0 else 0.0)
+		var cname: String = cm.get(uid, s.get("class", "Unknown"))
 		var ult_ref = UltimateDB.get_ultimate_by_id(uid)
 		var display_name: String = ult_ref.ultimate_name if ult_ref != null else uid
 		if not by_class.has(cname):
