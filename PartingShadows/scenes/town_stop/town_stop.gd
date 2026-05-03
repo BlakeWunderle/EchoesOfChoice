@@ -16,8 +16,9 @@ const ShopDB := preload("res://scripts/data/shop_db.gd")
 const ItemDB := preload("res://scripts/data/item_db.gd")
 const ItemData := preload("res://scripts/data/item_data.gd")
 const TownEquipmentHandler := preload("res://scripts/ui/town_equipment_handler.gd")
+const TownUltimateHandler := preload("res://scripts/ui/town_ultimate_handler.gd")
 
-enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, EQUIPPING, SHOPPING, OUTRO_TEXT, BRANCH_CHOICE }
+enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, EQUIPPING, ULTIMATE_SELECT, SHOPPING, OUTRO_TEXT, BRANCH_CHOICE }
 
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
@@ -37,6 +38,7 @@ var _shop_items: Array = []  ## Current shop inventory [{item_id, price}]
 var _gold_label: Label
 var _equip_handler: TownEquipmentHandler  ## Equipment upgrade phase handler
 var _equip_sub_phase: String = "slot"     ## "slot" or "upgrade"
+var _ult_handler: TownUltimateHandler    ## Ultimate ability selection handler
 
 
 func _ready() -> void:
@@ -174,6 +176,8 @@ func _on_text_finished() -> void:
 				_show_ready_gate(_do_reveal_advance)
 			TownPhase.EQUIPPING:
 				_show_ready_gate(_do_equip_narration_advance)
+			TownPhase.ULTIMATE_SELECT:
+				_show_ready_gate(_do_ult_narration_advance)
 			TownPhase.SHOPPING:
 				_show_ready_gate(_do_shop_menu_open)
 			TownPhase.OUTRO_TEXT:
@@ -191,6 +195,8 @@ func _do_text_advance() -> void:
 			_do_reveal_advance()
 		TownPhase.EQUIPPING:
 			_do_equip_narration_advance()
+		TownPhase.ULTIMATE_SELECT:
+			_do_ult_narration_advance()
 		TownPhase.SHOPPING:
 			_do_shop_menu_open()
 		TownPhase.OUTRO_TEXT:
@@ -376,6 +382,8 @@ func _on_choice_selected(index: int) -> void:
 			_on_upgrade_selected(index)
 		TownPhase.EQUIPPING:
 			_on_equip_choice_selected(index)
+		TownPhase.ULTIMATE_SELECT:
+			_on_ult_choice_selected(index)
 		TownPhase.SHOPPING:
 			_on_shop_selected(index)
 		TownPhase.BRANCH_CHOICE:
@@ -483,6 +491,68 @@ func _on_equip_finished() -> void:
 	_upgrade_label.visible = false
 	_equip_handler = null
 
+	# Check for ultimate selection before shop
+	_start_ultimate_select()
+
+
+func _start_ultimate_select() -> void:
+	_ult_handler = TownUltimateHandler.new()
+	_ult_handler.narration_requested.connect(_on_ult_narration)
+	_ult_handler.choices_requested.connect(_on_ult_choices)
+	_ult_handler.selection_complete.connect(_on_ult_selection_complete)
+	_ult_handler.phase_finished.connect(_on_ult_finished)
+	_phase = TownPhase.ULTIMATE_SELECT
+	_ult_handler.start(GameState.party)
+
+
+func _do_ult_narration_advance() -> void:
+	_dialogue.visible = false
+	if _ult_handler:
+		_ult_handler.on_narration_done()
+
+
+func _on_ult_narration(lines: Array) -> void:
+	_dialogue.visible = true
+	_dialogue.show_text(lines)
+
+
+func _on_ult_choices(options: Array, header: String) -> void:
+	_dialogue.visible = false
+	_upgrade_label.text = header
+	_upgrade_label.visible = true
+	_class_info_panel.visible = false
+	_choice_menu.show_choices(options)
+
+	# Local co-op: gate input to the owning player
+	if LocalCoop.is_active:
+		var owner: int = LocalCoop.get_player_for_slot(_ult_handler.get_current_char_index())
+		LocalCoop.set_active_player(owner)
+		_player_indicator.text = "Player %d" % (owner + 1)
+		_player_indicator.visible = true
+
+
+func _on_ult_selection_complete(_char_index: int, ultimate_name: String) -> void:
+	GameLog.info("Ultimate: selected %s" % ultimate_name)
+
+
+func _on_ult_choice_selected(index: int) -> void:
+	if _ult_handler == null:
+		return
+	if LocalCoop.is_active:
+		LocalCoop.clear_active_player()
+		_player_indicator.visible = false
+	_ult_handler.on_choice_selected(index)
+
+
+func _on_ult_finished() -> void:
+	_choice_menu.hide_menu()
+	_upgrade_label.visible = false
+	_ult_handler = null
+
+	_check_shop_or_advance()
+
+
+func _check_shop_or_advance() -> void:
 	# Check for shop before outro
 	var battle = GameState.current_battle
 	_shop_items = ShopDB.get_shop_items(battle.battle_id)
