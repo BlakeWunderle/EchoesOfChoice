@@ -7,6 +7,7 @@ const FighterDB := preload("res://scripts/data/fighter_db.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const FighterDBRoles := preload("res://scripts/data/fighter_db_roles.gd")
 const EquipmentDB := preload("res://scripts/data/equipment_db.gd")
+const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
 const LEVELS_AS_BASE := 3
 const LEVELS_AS_TIER1 := 5
@@ -75,6 +76,12 @@ static func create_fighter(base_type: String, t1_item: String,
 			FighterDB.level_up(fighter)
 
 	EquipmentDB.apply_random_equipment(fighter, equip_upgrades)
+
+	# Assign a random ultimate when all equipment is upgraded
+	if equip_upgrades >= 3 and t2_item != "":
+		var ults: Array = UltimateDB.get_ultimates_for_class(fighter.class_id)
+		if not ults.is_empty():
+			fighter.ultimate = ults[randi() % ults.size()]
 
 	return fighter
 
