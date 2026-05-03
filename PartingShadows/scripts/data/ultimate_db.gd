@@ -38,15 +38,15 @@ static func get_ultimates_for_class(class_id: String) -> Array:
 		"Priest": return [priest_holy_nova(), priest_salvation()]
 		"Warlock": return [warlock_soul_harvest(), warlock_plague_of_shadows()]
 		# Entertainer tree
-		"Warcrier": return [warcrier_war_cry(), warcrier_battle_anthem()]
-		"Minstrel": return [minstrel_crescendo(), minstrel_symphony_of_renewal()]
+		"Warcrier": return [warcrier_earthshaker(), warcrier_battle_anthem()]
+		"Minstrel": return [minstrel_final_movement(), minstrel_symphony_of_renewal()]
 		"Illusionist": return [illusionist_grand_illusion(), illusionist_mirror_image()]
 		"Mime": return [mime_perfect_copy(), mime_mimes_bulwark()]
-		"Laureate": return [laureate_magnum_opus(), laureate_words_of_might()]
-		"Elegist": return [elegist_requiem(), elegist_elegy_of_sorrow()]
+		"Laureate": return [laureate_crowning_verse(), laureate_words_of_might()]
+		"Elegist": return [elegist_death_knell(), elegist_elegy_of_sorrow()]
 		# Tinker tree
 		"Alchemist": return [alchemist_transmutation(), alchemist_philosophers_stone()]
-		"Bombardier": return [bombardier_carpet_bombing(), bombardier_precision_strike()]
+		"Bombardier": return [bombardier_scorched_earth(), bombardier_precision_strike()]
 		"Chronomancer": return [chronomancer_time_stop(), chronomancer_temporal_acceleration()]
 		"Astronomer": return [astronomer_supernova(), astronomer_cosmic_alignment()]
 		"Automaton": return [automaton_overload(), automaton_iron_fortress()]
@@ -59,9 +59,9 @@ static func get_ultimates_for_class(class_id: String) -> Array:
 		"Falconer": return [falconer_death_from_above(), falconer_raptor_storm()]
 		"Shapeshifter": return [shapeshifter_apex_predator(), shapeshifter_ironhide()]
 		# Wanderer tree
-		"Bulwark": return [bulwark_shield_slam(), bulwark_unbreakable()]
+		"Bulwark": return [bulwark_rampart_crush(), bulwark_unbreakable()]
 		"Aegis": return [aegis_counter_storm(), aegis_aegis_wall()]
-		"Trailblazer": return [trailblazer_blazing_trail(), trailblazer_expose_weakness()]
+		"Trailblazer": return [trailblazer_blazing_trail(), trailblazer_lay_bare()]
 		"Survivalist": return [survivalist_endurance_strike(), survivalist_will_to_live()]
 		_: return []
 
@@ -304,11 +304,11 @@ static func warlock_plague_of_shadows() -> UltimateData:
 # =============================================================================
 
 # Warcrier -- Support / Fighter / Buffer / Physical
-static func warcrier_war_cry() -> UltimateData:
-	return _ult("warcrier_war_cry", "War Cry",
-		"A primal shout that batters all enemies with sheer force.",
-		_make("War Cry",
-			"The roar shakes the ground and rattles the bones of every foe.",
+static func warcrier_earthshaker() -> UltimateData:
+	return _ult("warcrier_earthshaker", "Earthshaker",
+		"A shout so powerful it cracks the ground beneath every foe.",
+		_make("Earthshaker",
+			"The roar splits stone. The battlefield itself buckles under the sound.",
 			Enums.StatType.PHYSICAL_ATTACK, 28, 0, true, 0, true),
 		100)
 
@@ -321,11 +321,11 @@ static func warcrier_battle_anthem() -> UltimateData:
 		80)
 
 # Minstrel -- Support / Healer / Buffer / Magical
-static func minstrel_crescendo() -> UltimateData:
-	return _ult("minstrel_crescendo", "Crescendo",
-		"Build to a shattering musical climax that overwhelms all enemies.",
-		_make("Crescendo",
-			"The melody rises, higher and higher, until it shatters the air.",
+static func minstrel_final_movement() -> UltimateData:
+	return _ult("minstrel_final_movement", "Final Movement",
+		"Play the last movement of a symphony so beautiful it breaks the world.",
+		_make("Final Movement",
+			"The melody reaches its peak. Every note strikes like a blade.",
 			Enums.StatType.MAGIC_ATTACK, 28, 0, true, 0, true),
 		100)
 
@@ -372,11 +372,11 @@ static func mime_mimes_bulwark() -> UltimateData:
 		80)
 
 # Laureate -- Support / Buffer / AoE / Magical
-static func laureate_magnum_opus() -> UltimateData:
-	return _ult("laureate_magnum_opus", "Magnum Opus",
-		"Recite the greatest work ever composed, empowering all allies.",
-		_make("Magnum Opus",
-			"Words of power cascade forth. Every ally stands taller, fights harder.",
+static func laureate_crowning_verse() -> UltimateData:
+	return _ult("laureate_crowning_verse", "Crowning Verse",
+		"Speak the one verse that surpasses all others, empowering every ally.",
+		_make("Crowning Verse",
+			"A single stanza rings out. Every ally stands taller, fights harder.",
 			Enums.StatType.ATTACK, 16, 3, false, 0, true),
 		80)
 
@@ -389,11 +389,11 @@ static func laureate_words_of_might() -> UltimateData:
 		100)
 
 # Elegist -- Support / Debuffer / AoE / Magical
-static func elegist_requiem() -> UltimateData:
-	return _ult("elegist_requiem", "Requiem",
-		"Sing a dirge that saps the fighting spirit from all enemies.",
-		_make("Requiem",
-			"A mournful song fills the air. The enemy's will to fight crumbles.",
+static func elegist_death_knell() -> UltimateData:
+	return _ult("elegist_death_knell", "Death Knell",
+		"Toll a final bell that saps the fighting spirit from all enemies.",
+		_make("Death Knell",
+			"A single tone rings out, deep and final. The enemy's will to fight crumbles.",
 			Enums.StatType.ATTACK, 16, 3, true, 0, true),
 		80)
 
@@ -428,10 +428,10 @@ static func alchemist_philosophers_stone() -> UltimateData:
 		80)
 
 # Bombardier -- Burst / Glass Cannon / AoE / Magical
-static func bombardier_carpet_bombing() -> UltimateData:
-	return _ult("bombardier_carpet_bombing", "Carpet Bombing",
-		"Rain explosions across the entire battlefield.",
-		_make("Carpet Bombing",
+static func bombardier_scorched_earth() -> UltimateData:
+	return _ult("bombardier_scorched_earth", "Scorched Earth",
+		"Leave nothing standing. Rain fire across the entire battlefield.",
+		_make("Scorched Earth",
 			"The sky fills with fire. Nowhere is safe. Everything burns.",
 			Enums.StatType.MAGIC_ATTACK, 35, 0, true, 0, true),
 		120)
@@ -625,11 +625,11 @@ static func shapeshifter_ironhide() -> UltimateData:
 # =============================================================================
 
 # Bulwark -- Tank / Buffer / Physical
-static func bulwark_shield_slam() -> UltimateData:
-	return _ult("bulwark_shield_slam", "Shield Slam",
-		"Put every ounce of strength behind the shield for a devastating blow.",
-		_make("Shield Slam",
-			"The shield connects with the force of a battering ram.",
+static func bulwark_rampart_crush() -> UltimateData:
+	return _ult("bulwark_rampart_crush", "Rampart Crush",
+		"Bring the full weight of a fortress down on a single foe.",
+		_make("Rampart Crush",
+			"The shield connects with the force of a collapsing wall.",
 			Enums.StatType.PHYSICAL_ATTACK, 42, 0, true, 0, false),
 		100)
 
@@ -667,10 +667,10 @@ static func trailblazer_blazing_trail() -> UltimateData:
 			Enums.StatType.MIXED_ATTACK, 30, 0, true, 0, true),
 		100)
 
-static func trailblazer_expose_weakness() -> UltimateData:
-	return _ult("trailblazer_expose_weakness", "Expose Weakness",
-		"Reveal every enemy's vulnerabilities to the entire party.",
-		_make("Expose Weakness",
+static func trailblazer_lay_bare() -> UltimateData:
+	return _ult("trailblazer_lay_bare", "Lay Bare",
+		"Strip away every defense, leaving all enemies completely exposed.",
+		_make("Lay Bare",
 			"The trailblazer reads the battlefield. Every flaw becomes clear.",
 			Enums.StatType.DEFENSE, 16, 3, true, 0, true),
 		80)
