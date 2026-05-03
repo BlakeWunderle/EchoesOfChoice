@@ -502,7 +502,7 @@ func _start_ultimate_select() -> void:
 	_ult_handler.selection_complete.connect(_on_ult_selection_complete)
 	_ult_handler.phase_finished.connect(_on_ult_finished)
 	_phase = TownPhase.ULTIMATE_SELECT
-	_ult_handler.start(GameState.party)
+	_ult_handler.start(GameState.party, GameState.current_battle.battle_id)
 
 
 func _do_ult_narration_advance() -> void:

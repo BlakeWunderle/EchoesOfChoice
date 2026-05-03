@@ -8,6 +8,7 @@ const FighterData := preload("res://scripts/data/fighter_data.gd")
 const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
 var _party: Array = []
+var _battle_id: String = ""
 var _char_index: int = 0
 var _ult_options: Array = []  ## Array of UltimateData for current fighter
 
@@ -17,19 +18,16 @@ signal selection_complete(char_index: int, ultimate_name: String)
 signal phase_finished
 
 
-func start(party: Array) -> void:
+func start(party: Array, battle_id: String = "") -> void:
 	_party = party
+	_battle_id = battle_id
 	_char_index = 0
 
 	if not _any_eligible():
 		phase_finished.emit()
 		return
 
-	var lines: Array[String] = [
-		"Your party has grown strong. Each warrior now stands ready to unlock a powerful technique.",
-		"Choose an ultimate ability for each companion. Once chosen, it cannot be changed.",
-	]
-	narration_requested.emit(lines)
+	narration_requested.emit(_get_narration_text())
 
 
 func on_narration_done() -> void:
@@ -100,3 +98,42 @@ func on_choice_selected(index: int) -> void:
 
 func get_current_char_index() -> int:
 	return _char_index
+
+
+func _get_narration_text() -> Array[String]:
+	match _battle_id:
+		"CopperMugStop":
+			return [
+				"The world is breaking and there is no more time to prepare carefully. But desperation has a way of stripping away hesitation. What remains is instinct, honed by every battle fought to reach this moment.",
+				"Each companion reaches for something deeper. A technique held in reserve, waiting for the hour when nothing less would do.",
+			]
+		"S2_CoastalCamp":
+			return [
+				"Sera's recovered memories carry more than grief. They carry understanding. The Eye feeds on stolen lives, but it also reveals what those lives contained. Strength. Resilience. Purpose.",
+				"That knowledge sparks something in the party. A final edge, sharpened by everything the coast has taken from them and everything they refuse to let it keep.",
+			]
+		"S2_B_SafeHaven":
+			return [
+				"Sera's clarity is contagious. Knowing the plan, knowing the failsafe exists, knowing that sacrifice is not the only option. It changes how the party holds their weapons.",
+				"There is focus now where there was only grim resolve. Each companion finds a well of strength they did not know they had.",
+			]
+		"S3_TownRealization":
+			return [
+				"Lira's training goes deeper than technique. She teaches them to hold their awareness in the dream, to fight while sleeping, to trust instincts that the waking world would dismiss.",
+				"Under her guidance, old limitations fall away. Each companion discovers a power that was always there, waiting for someone to show them how to reach it.",
+			]
+		"S3_B_CallumsTruth":
+			return [
+				"Callum's knowledge of the threads changes everything. Understanding the enemy reveals weaknesses that were invisible before. The party's strength reshapes itself around what they now know.",
+				"Each companion finds new purpose in the fight ahead. The Threadmaster has been untouchable for centuries. That ends here.",
+			]
+		"S3_C_LirasConfession":
+			return [
+				"Lira's truth forges something between the party that was not there before. Not just trust, but a shared weight. She has carried this alone for centuries. She will not carry it alone tonight.",
+				"The bond unlocks something deeper in each companion. A final reserve of strength, drawn from the knowledge that this path leads to the heart of the Loom itself.",
+			]
+		_:
+			return [
+				"The journey has tested each companion to their limits. But limits, once reached, can be surpassed.",
+				"Each warrior stands ready to unlock a powerful technique, forged from everything they have endured.",
+			]
