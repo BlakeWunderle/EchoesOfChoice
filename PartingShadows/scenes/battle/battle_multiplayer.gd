@@ -75,6 +75,22 @@ func execute_remote_action(actor: FighterData, action: Dictionary) -> void:
 		"rest":
 			_battle._engine.perform_rest(actor)
 
+		"ultimate":
+			if actor.ultimate and actor.ultimate_charge >= actor.ultimate.charge_cost:
+				var abil: AbilityData = actor.ultimate.ability
+				var target: FighterData
+				if abil.use_on_enemy:
+					if target_index < _battle._engine.enemies.size():
+						target = _battle._engine.enemies[target_index]
+					else:
+						target = _battle._engine.enemies[0]
+				else:
+					if target_index < _battle._engine.units.size():
+						target = _battle._engine.units[target_index]
+					else:
+						target = actor
+				_battle._engine.use_ultimate(actor, target)
+
 		"item":
 			var item_idx: int = action.get("item_index", 0)
 			var item: ItemData = GameState.inventory.use_item(item_idx)
@@ -146,6 +162,7 @@ func serialize_fighter_combat(f: FighterData) -> Dictionary:
 		"speed": f.speed,
 		"crit": f.crit_chance,
 		"dodge": f.dodge_chance,
+		"ult_charge": f.ultimate_charge,
 	}
 
 
@@ -162,6 +179,7 @@ func apply_fighter_combat(f: FighterData, data: Dictionary) -> void:
 	f.speed = data.get("speed", f.speed)
 	f.crit_chance = data.get("crit", f.crit_chance)
 	f.dodge_chance = data.get("dodge", f.dodge_chance)
+	f.ultimate_charge = data.get("ult_charge", f.ultimate_charge)
 
 
 # =============================================================================
