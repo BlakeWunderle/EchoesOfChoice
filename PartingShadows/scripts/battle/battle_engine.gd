@@ -48,9 +48,9 @@ func start_battle_sim(party: Array, enemy_list: Array) -> void:
 		f.reset_for_battle()
 	sim_stats.clear()
 	for f: FighterData in units:
-		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0, ultimates_used = 0}
+		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0, ultimates_used = 0, charge_gained = 0}
 	for f: FighterData in enemies:
-		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0, ultimates_used = 0}
+		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0, ultimates_used = 0, charge_gained = 0}
 
 
 ## Advance ATB timers by one tick. Returns true if any units can act.
@@ -251,6 +251,9 @@ func use_ability_on_enemy(attacker: FighterData, defender: FighterData,
 				combat_message.emit("[color=#cc4dcc]%s was hit with this ability.[/color]" % defender.character_name)
 				combat_event.emit(defender, delta, "debuff")
 
+	# Ultimate charge: Offensive ability grants 5
+	_add_ultimate_charge(attacker, 5)
+
 
 func use_ability_on_teammate(caster: FighterData, target: FighterData,
 		ability: AbilityData, skip_flavor: bool = false) -> void:
@@ -294,6 +297,9 @@ func use_ability_on_teammate(caster: FighterData, target: FighterData,
 				combat_message.emit(ability.flavor_text)
 			combat_message.emit("[color=#66ccff]%s was impacted by the ability.[/color]" % target.character_name)
 			combat_event.emit(target, delta, "buff")
+
+	# Ultimate charge: Supportive ability grants 5
+	_add_ultimate_charge(caster, 5)
 
 
 func _calc_ability_damage(attacker: FighterData, defender: FighterData,
@@ -459,7 +465,9 @@ func _add_ultimate_charge(fighter: FighterData, amount: int) -> void:
 		return
 	var old_charge: int = fighter.ultimate_charge
 	fighter.ultimate_charge = mini(fighter.ultimate_charge + amount, fighter.ultimate.charge_cost)
-	if not sim_mode and fighter.ultimate_charge > old_charge:
+	if sim_mode:
+		sim_stats[fighter].charge_gained += fighter.ultimate_charge - old_charge
+	elif fighter.ultimate_charge > old_charge:
 		combat_event.emit(fighter, fighter.ultimate_charge - old_charge, "charge_gain")
 
 

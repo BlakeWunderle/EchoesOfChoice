@@ -205,6 +205,7 @@ func _init() -> void:
 						e["class"], e.win_rate * 100, e.count, note])
 			SR.print_equipment_breakdown(s)
 			SR.print_ultimate_breakdown(s)
+			SR.print_charge_analysis(s)
 			# Print detailed diagnostics when --diagnostics requested.
 			if passthrough.has("--diagnostics"):
 				SD.print_diagnostics(s.get("diagnostics", []), s.stage_name)
@@ -584,7 +585,7 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 				merged.class_diag[cls] = partial.class_diag[cls].duplicate()
 			else:
 				for key: String in ["dmg_dealt", "dmg_taken", "heals", "deaths", "battles",
-					"actions", "dmg_mitigated", "buffs_applied", "debuffs_applied"]:
+					"actions", "dmg_mitigated", "buffs_applied", "debuffs_applied", "charge_gained"]:
 					merged.class_diag[cls][key] += partial.class_diag[cls].get(key, 0)
 		for eid: String in partial.get("equip_stats", {}):
 			var ps: Dictionary = partial.equip_stats[eid]

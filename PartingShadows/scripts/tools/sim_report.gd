@@ -61,6 +61,7 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 		"enemy_roles": enemy_profile,
 		"class_breakdown": breakdown,
 		"combat_stats": combat_stats,
+		"class_diag": diag_raw,
 		"spread": spread,
 		"best_combos": best_entries,
 		"worst_combos": worst_entries,

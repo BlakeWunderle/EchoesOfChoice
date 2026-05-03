@@ -197,7 +197,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 				if not class_diag.has(ct):
 					class_diag[ct] = {dmg_dealt = 0, dmg_taken = 0,
 						heals = 0, deaths = 0, battles = 0, actions = 0, dmg_mitigated = 0,
-					buffs_applied = 0, debuffs_applied = 0}
+					buffs_applied = 0, debuffs_applied = 0, charge_gained = 0}
 				var ss: Dictionary = engine.sim_stats.get(f, {})
 				class_diag[ct].dmg_dealt += ss.get("dmg_dealt", 0)
 				class_diag[ct].dmg_taken += ss.get("dmg_taken", 0)
@@ -208,6 +208,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 				class_diag[ct].dmg_mitigated += ss.get("dmg_mitigated", 0)
 				class_diag[ct].buffs_applied += ss.get("buffs_applied", 0)
 				class_diag[ct].debuffs_applied += ss.get("debuffs_applied", 0)
+				class_diag[ct].charge_gained += ss.get("charge_gained", 0)
 				# Accumulate per-equipment-piece win rates.
 				for equip: EquipmentData in f.equipment:
 					var eid: String = equip.base_id
@@ -310,6 +311,7 @@ static func print_stage_result(result: Dictionary) -> void:
 	print_class_breakdown(result)
 	print_equipment_breakdown(result)
 	print_ultimate_breakdown(result)
+	print_charge_analysis(result)
 	print("\n  STATUS: %s" % get_status(result))
 
 
@@ -536,6 +538,55 @@ static func print_ultimate_breakdown(result: Dictionary) -> void:
 				cname, e.name, e.win_rate * 100, e.total, e.avg_uses, note])
 		print("    %-22s %-22s %9.1f%% %10s %8s" % [
 			"", "  [%s avg]" % cname, class_avg * 100, "", ""])
+
+
+static func print_charge_analysis(result: Dictionary) -> void:
+	var diag: Dictionary = result.get("class_diag", {})
+	var cm: Dictionary = result.get("ult_class_map", {})
+	var us: Dictionary = result.get("ult_stats", {})
+	if diag.is_empty() or us.is_empty():
+		return
+	# Build class -> charge_per_action from class_diag
+	var class_cpa := {}  ## { "Cavalry": charge_per_action }
+	for cname: String in diag:
+		var d: Dictionary = diag[cname]
+		var actions: int = d.get("actions", 0)
+		var charge: int = d.get("charge_gained", 0)
+		if actions > 0 and charge > 0:
+			class_cpa[cname] = float(charge) / actions
+	if class_cpa.is_empty():
+		return
+	# Build entries with current cost and recommended costs for 5/6/7 turn targets
+	var entries := []
+	for uid: String in us:
+		var cname: String = cm.get(uid, us[uid].get("class", ""))
+		if cname == "" or not class_cpa.has(cname):
+			continue
+		var cpa: float = class_cpa[cname]
+		var ult_ref = UltimateDB.get_ultimate_by_id(uid)
+		if ult_ref == null:
+			continue
+		entries.append({
+			"class": cname,
+			"name": ult_ref.ultimate_name,
+			"current_cost": ult_ref.charge_cost,
+			"cpa": cpa,
+			"cost_5t": roundi(cpa * 5),
+			"cost_6t": roundi(cpa * 6),
+			"cost_7t": roundi(cpa * 7),
+		})
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if a["class"] != b["class"]:
+			return a["class"] < b["class"]
+		return a.current_cost < b.current_cost)
+	print("\n  CHARGE RATE ANALYSIS (charge per action):")
+	print("    %-22s %-22s %6s %8s %8s %8s %8s" % [
+		"Class", "Ultimate", "Ch/Act", "Current", "5-turn", "6-turn", "7-turn"])
+	print("    " + "-".repeat(88))
+	for e: Dictionary in entries:
+		print("    %-22s %-22s %6.1f %8d %8d %8d %8d" % [
+			e["class"], e.name, e.cpa, e.current_cost,
+			e.cost_5t, e.cost_6t, e.cost_7t])
 
 
 static func print_summary(results: Array) -> void:
