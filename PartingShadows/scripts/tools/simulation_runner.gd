@@ -9,6 +9,7 @@ const PC := preload("res://scripts/tools/party_composer.gd")
 const BSDB := preload("res://scripts/tools/battle_stage_db.gd")
 const EnemyItemDB := preload("res://scripts/data/enemy_item_db.gd")
 const EquipmentData := preload("res://scripts/data/equipment_data.gd")
+const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
 const MIN_TOTAL_BATTLES := 200_000
 const MIN_SIMS_PER_COMBO := 40
@@ -153,6 +154,8 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 	var combo_results := []
 	var class_diag := {}
 	var equip_stats := {}  ## { "physical_weapon": {wins: int, total: int}, ... }
+	var ult_stats := {}      ## { "cavalry_thundering_charge": {wins: int, total: int}, ... }
+	var ult_class_map := {}  ## { "cavalry_thundering_charge": "Cavalry", ... }
 	var start_ms := Time.get_ticks_msec()
 	var engine := _get_sim_engine()
 	var turn_all_sum := 0
@@ -213,6 +216,15 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 					equip_stats[eid].total += 1
 					if br.won:
 						equip_stats[eid].wins += 1
+				# Accumulate per-ultimate win rates.
+				if f.ultimate != null:
+					var uid: String = f.ultimate.ultimate_id
+					if not ult_stats.has(uid):
+						ult_stats[uid] = {wins = 0, total = 0}
+						ult_class_map[uid] = f.character_type
+					ult_stats[uid].total += 1
+					if br.won:
+						ult_stats[uid].wins += 1
 
 		combo_results.append({
 			"description": PC.get_party_description(party_def),
@@ -247,6 +259,8 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		"elapsed_ms": Time.get_ticks_msec() - start_ms,
 		"class_diag": class_diag,
 		"equip_stats": equip_stats,
+		"ult_stats": ult_stats,
+		"ult_class_map": ult_class_map,
 		"turn_stats": {
 			"avg_player_per_char": avg_player_per_char,
 			"avg_all_actions": avg_all,
@@ -294,6 +308,7 @@ static func print_stage_result(result: Dictionary) -> void:
 	print_combo_extremes(result)
 	print_class_breakdown(result)
 	print_equipment_breakdown(result)
+	print_ultimate_breakdown(result)
 	print("\n  STATUS: %s" % get_status(result))
 
 
@@ -462,6 +477,59 @@ static func print_equipment_breakdown(result: Dictionary) -> void:
 				e.id, e.win_rate * 100, e.total, note])
 		print("    %-22s %9.1f%% %10s" % [
 			"  [%s avg]" % slot_name, slot_avg * 100, ""])
+
+
+static func get_ultimate_breakdown(result: Dictionary) -> Dictionary:
+	var us: Dictionary = result.get("ult_stats", {})
+	var cm: Dictionary = result.get("ult_class_map", {})
+	if us.is_empty():
+		return {}
+	var by_class := {}  ## { "Cavalry": [{id, name, win_rate, total}, ...] }
+	for uid: String in us:
+		var s: Dictionary = us[uid]
+		var wr: float = float(s.wins) / s.total if s.total > 0 else 0.0
+		var cname: String = cm.get(uid, "Unknown")
+		var ult_ref = UltimateDB.get_ultimate_by_id(uid)
+		var display_name: String = ult_ref.ultimate_name if ult_ref != null else uid
+		if not by_class.has(cname):
+			by_class[cname] = []
+		by_class[cname].append({
+			"id": uid, "name": display_name, "win_rate": wr, "total": s.total})
+	for entries: Array in by_class.values():
+		entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			return a.win_rate > b.win_rate)
+	return by_class
+
+
+static func print_ultimate_breakdown(result: Dictionary) -> void:
+	var by_class := get_ultimate_breakdown(result)
+	if by_class.is_empty():
+		return
+	var class_names: Array = by_class.keys()
+	class_names.sort()
+	print("\n  ULTIMATE BREAKDOWN:")
+	print("    %-22s %-22s %10s %10s  %s" % [
+		"Class", "Ultimate", "Win Rate", "Battles", "Note"])
+	print("    " + "-".repeat(72))
+	for cname: String in class_names:
+		var entries: Array = by_class[cname]
+		if entries.is_empty():
+			continue
+		var class_avg := 0.0
+		for e: Dictionary in entries:
+			class_avg += e.win_rate
+		class_avg /= entries.size()
+		for e: Dictionary in entries:
+			var diff: float = (e.win_rate - class_avg) * 100
+			var note := ""
+			if absf(diff) > 5.0:
+				note = "** %+.1fpp **" % diff
+			elif absf(diff) > 3.0:
+				note = "(%+.1fpp)" % diff
+			print("    %-22s %-22s %9.1f%% %10d  %s" % [
+				cname, e.name, e.win_rate * 100, e.total, note])
+		print("    %-22s %-22s %9.1f%% %10s" % [
+			"", "  [%s avg]" % cname, class_avg * 100, ""])
 
 
 static func print_summary(results: Array) -> void:

@@ -204,6 +204,7 @@ func _init() -> void:
 					print("    %-22s %9.1f%% %8d  %s" % [
 						e["class"], e.win_rate * 100, e.count, note])
 			SR.print_equipment_breakdown(s)
+			SR.print_ultimate_breakdown(s)
 			# Print detailed diagnostics when --diagnostics requested.
 			if passthrough.has("--diagnostics"):
 				SD.print_diagnostics(s.get("diagnostics", []), s.stage_name)
@@ -572,6 +573,8 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 	merged["combo_results"] = []
 	merged["class_diag"] = {}
 	merged["equip_stats"] = {}
+	merged["ult_stats"] = {}
+	merged["ult_class_map"] = {}
 	merged["elapsed_ms"] = 0
 	for partial: Dictionary in partials:
 		merged.combo_results.append_array(partial.get("combo_results", []))
@@ -589,6 +592,13 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 				merged.equip_stats[eid] = {wins = 0, total = 0}
 			merged.equip_stats[eid].wins += ps.get("wins", 0)
 			merged.equip_stats[eid].total += ps.get("total", 0)
+		for uid: String in partial.get("ult_stats", {}):
+			var ps: Dictionary = partial.ult_stats[uid]
+			if not merged.ult_stats.has(uid):
+				merged.ult_stats[uid] = {wins = 0, total = 0}
+			merged.ult_stats[uid].wins += ps.get("wins", 0)
+			merged.ult_stats[uid].total += ps.get("total", 0)
+		merged.ult_class_map.merge(partial.get("ult_class_map", {}))
 	## Merge turn_stats from all partials.
 	var ts_all_sum := 0
 	var ts_player_sum := 0

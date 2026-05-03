@@ -67,6 +67,7 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 		"turn_stats": result.get("turn_stats", {}),
 		"diagnostics": SD.to_json(SD.analyze(result, stage)),
 		"equip_stats": _build_equip_json(result),
+		"ult_stats": _build_ult_json(result),
 	}
 
 
@@ -79,6 +80,21 @@ static func _build_equip_json(result: Dictionary) -> Dictionary:
 			"wins": s.wins,
 			"total": s.total,
 			"win_rate": float(s.wins) / s.total if s.total > 0 else 0.0,
+		}
+	return out
+
+
+static func _build_ult_json(result: Dictionary) -> Dictionary:
+	var us: Dictionary = result.get("ult_stats", {})
+	var cm: Dictionary = result.get("ult_class_map", {})
+	var out := {}
+	for uid: String in us:
+		var s: Dictionary = us[uid]
+		out[uid] = {
+			"wins": s.wins,
+			"total": s.total,
+			"win_rate": float(s.wins) / s.total if s.total > 0 else 0.0,
+			"class": cm.get(uid, "Unknown"),
 		}
 	return out
 
