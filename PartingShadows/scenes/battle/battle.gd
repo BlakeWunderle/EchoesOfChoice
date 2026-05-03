@@ -34,6 +34,8 @@ enum Phase {
 	STATS_PICK,
 	PLAYER_ITEM_SELECT,
 	PLAYER_ITEM_TARGET,
+	PLAYER_ULTIMATE_TARGET_ENEMY,
+	PLAYER_ULTIMATE_TARGET_ALLY,
 	AI_ACTING,
 	MESSAGE_DELAY,
 	BATTLE_END,
@@ -485,6 +487,16 @@ func _handle_cancel() -> void:
 			_phase = Phase.PLAYER_ITEM_SELECT
 			_show_item_menu()
 			get_viewport().set_input_as_handled()
+		Phase.PLAYER_ULTIMATE_TARGET_ENEMY, Phase.PLAYER_ULTIMATE_TARGET_ALLY:
+			# Back to main action menu
+			if _action_menu.choice_selected.is_connected(_on_target_selected):
+				_action_menu.choice_selected.disconnect(_on_target_selected)
+			if not _action_menu.choice_selected.is_connected(_on_action_selected):
+				_action_menu.choice_selected.connect(_on_action_selected)
+			_action_menu.hide_menu()
+			_phase = Phase.PLAYER_ACTION
+			_show_action_menu(_current_actor)
+			get_viewport().set_input_as_handled()
 		Phase.SHOWING_STATS:
 			_stats_panel.visible = false
 			_phase = Phase.STATS_PICK
@@ -508,8 +520,13 @@ func _show_action_menu(actor: FighterData) -> void:
 	options.append({"label": "Item", "disabled": GameState.inventory.size() == 0})
 	options.append({"label": "Auto", "disabled": not _auto_battle_unlocked})
 	options.append({"label": "Stats"})
-	# Pad to 6 so the grid is always 3x2
-	while options.size() < 6:
+	# Slot 6: Ultimate (shows charge %)
+	var has_ult: bool = actor.ultimate != null
+	var ult_ready: bool = has_ult and actor.ultimate_charge >= actor.ultimate.charge_cost
+	if has_ult:
+		var pct: int = mini(int(float(actor.ultimate_charge) / float(actor.ultimate.charge_cost) * 100), 100)
+		options.append({"label": "Ultimate (%d%%)" % pct, "disabled": not ult_ready})
+	else:
 		options.append({"label": "", "disabled": true})
 	_action_menu.show_choices(options, true)
 	_tip_overlay.show_tip_once("combat_actions",
@@ -522,21 +539,18 @@ func _show_action_menu(actor: FighterData) -> void:
 func _on_action_selected(index: int) -> void:
 	_action_menu.hide_menu()
 
-	# Fixed layout: Actions(0), Ability(1), Item(2), Auto(3), Stats(4)
-	var labels: Array[String] = ["Actions", "Ability", "Item", "Auto", "Stats"]
-	var action: String = labels[index] if index < labels.size() else ""
-
-	match action:
-		"Actions":
+	# Fixed layout: Actions(0), Ability(1), Item(2), Auto(3), Stats(4), Ultimate(5)
+	match index:
+		0: # Actions
 			_phase = Phase.PLAYER_ACTIONS_SUBMENU
 			_show_actions_submenu()
-		"Ability":
+		1: # Ability
 			_phase = Phase.PLAYER_ABILITY_SELECT
 			_show_ability_menu()
-		"Item":
+		2: # Item
 			_phase = Phase.PLAYER_ITEM_SELECT
 			_show_item_menu()
-		"Auto":
+		3: # Auto
 			_auto_battle = true
 			_update_auto_button_style()
 			_tip_overlay.show_tip_once("auto_battle",
@@ -545,9 +559,32 @@ func _on_action_selected(index: int) -> void:
 				"Auto-battle speeds up combat but may not always make " +
 				"the best strategic choices.")
 			_execute_auto_turn()
-		"Stats":
+		4: # Stats
 			_phase = Phase.STATS_PICK
 			_show_stats_pick()
+		5: # Ultimate
+			_start_ultimate_targeting()
+
+
+func _start_ultimate_targeting() -> void:
+	var ult: RefCounted = _current_actor.ultimate
+	if ult == null:
+		return
+	var abil: AbilityData = ult.ability
+	if abil.target_all:
+		# AoE ultimate: execute immediately, no target selection
+		if _is_mp_guest():
+			_rpc_submit_action.rpc_id(1, {"type": "ultimate", "target_index": 0})
+			_player_turn_done.emit()
+			return
+		_engine.use_ultimate(_current_actor, null)
+		_player_turn_done.emit()
+	elif abil.use_on_enemy:
+		_phase = Phase.PLAYER_ULTIMATE_TARGET_ENEMY
+		_show_target_menu(_engine.enemies)
+	else:
+		_phase = Phase.PLAYER_ULTIMATE_TARGET_ALLY
+		_show_target_menu(_engine.units)
 
 
 func _show_actions_submenu() -> void:
@@ -608,9 +645,10 @@ func _on_target_selected(index: int) -> void:
 	# Check for Back option
 	var fighter_count: int
 	match _phase:
-		Phase.PLAYER_TARGET_ATTACK, Phase.PLAYER_ABILITY_TARGET_ENEMY:
+		Phase.PLAYER_TARGET_ATTACK, Phase.PLAYER_ABILITY_TARGET_ENEMY, \
+		Phase.PLAYER_ULTIMATE_TARGET_ENEMY:
 			fighter_count = _engine.enemies.size()
-		Phase.PLAYER_ABILITY_TARGET_ALLY:
+		Phase.PLAYER_ABILITY_TARGET_ALLY, Phase.PLAYER_ULTIMATE_TARGET_ALLY:
 			fighter_count = _engine.units.size()
 		_:
 			fighter_count = 0
@@ -623,6 +661,10 @@ func _on_target_selected(index: int) -> void:
 		if _phase == Phase.PLAYER_TARGET_ATTACK:
 			_phase = Phase.PLAYER_ACTIONS_SUBMENU
 			_show_actions_submenu()
+		elif _phase == Phase.PLAYER_ULTIMATE_TARGET_ENEMY or \
+				_phase == Phase.PLAYER_ULTIMATE_TARGET_ALLY:
+			_phase = Phase.PLAYER_ACTION
+			_show_action_menu(_current_actor)
 		else:
 			# Ability target, go back to ability list
 			_phase = Phase.PLAYER_ABILITY_SELECT
@@ -643,6 +685,8 @@ func _on_target_selected(index: int) -> void:
 				action = {"type": "ability_enemy", "ability_name": _selected_ability.ability_name, "target_index": index}
 			Phase.PLAYER_ABILITY_TARGET_ALLY:
 				action = {"type": "ability_ally", "ability_name": _selected_ability.ability_name, "target_index": index}
+			Phase.PLAYER_ULTIMATE_TARGET_ENEMY, Phase.PLAYER_ULTIMATE_TARGET_ALLY:
+				action = {"type": "ultimate", "target_index": index}
 		_rpc_submit_action.rpc_id(1, action)
 		_player_turn_done.emit()
 		return
@@ -671,6 +715,17 @@ func _on_target_selected(index: int) -> void:
 			_current_actor.mana -= _selected_ability.mana_cost
 			_engine.use_ability_on_teammate(
 				_current_actor, _engine.units[index], _selected_ability)
+		Phase.PLAYER_ULTIMATE_TARGET_ENEMY:
+			var taunter: FighterData = _engine.get_taunt_target(_engine.enemies)
+			var ult_target: FighterData
+			if taunter:
+				ult_target = taunter
+				_add_log("%s has taunted your attention!" % taunter.character_name)
+			else:
+				ult_target = _engine.enemies[index]
+			_engine.use_ultimate(_current_actor, ult_target)
+		Phase.PLAYER_ULTIMATE_TARGET_ALLY:
+			_engine.use_ultimate(_current_actor, _engine.units[index])
 
 	_player_turn_done.emit()
 

@@ -87,6 +87,9 @@ func on_combat_event(target: FighterData, amount: int, event_type: String) -> vo
 			SFXManager.play(SFXManager.Category.SHIMMER, 1.0, true)
 			card.show_floating_text("REST +%d MP" % amount, Color(0.5, 0.8, 0.4))
 			card.update_display(target)
+		"charge_gain":
+			card.show_floating_text("+%d" % amount, Color(0.85, 0.65, 0.15), 13)
+			card.update_display(target)
 
 
 func screen_shake(intensity: float, duration: float) -> void:

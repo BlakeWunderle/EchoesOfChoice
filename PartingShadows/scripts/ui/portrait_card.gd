@@ -18,6 +18,7 @@ var _is_enemy: bool = false
 var _fighter_ref: FighterData
 var _hp_tween: Tween
 var _mp_tween: Tween
+var _charge_tween: Tween
 var _low_hp_tween: Tween
 
 # Active highlight stylebox
@@ -30,6 +31,12 @@ var _hp_fill: StyleBoxFlat
 var _hp_bg: StyleBoxFlat
 var _mp_fill: StyleBoxFlat
 var _mp_bg: StyleBoxFlat
+var _charge_bar: ProgressBar
+var _charge_label: Label
+var _charge_fill: StyleBoxFlat
+var _charge_bg: StyleBoxFlat
+var _charge_container: Control
+var _charge_pulse_tween: Tween
 
 
 func _ready() -> void:
@@ -147,6 +154,39 @@ func _build_ui() -> void:
 	_mp_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
 	mp_container.add_child(_mp_label)
 
+	# Ultimate charge bar -- gold/amber, hidden until fighter has an ultimate
+	_charge_container = Control.new()
+	_charge_container.custom_minimum_size = Vector2(0, 12)
+	_charge_container.visible = false
+	add_child(_charge_container)
+
+	_charge_bar = ProgressBar.new()
+	_charge_bar.custom_minimum_size = Vector2(0, 12)
+	_charge_bar.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_charge_bar.show_percentage = false
+
+	_charge_bg = StyleBoxFlat.new()
+	_charge_bg.bg_color = Color(0.15, 0.13, 0.08, 0.9)
+	_charge_bg.set_corner_radius_all(2)
+	_charge_bar.add_theme_stylebox_override("background", _charge_bg)
+
+	_charge_fill = StyleBoxFlat.new()
+	_charge_fill.bg_color = Color(0.85, 0.65, 0.15)  # Gold/amber
+	_charge_fill.set_corner_radius_all(2)
+	_charge_bar.add_theme_stylebox_override("fill", _charge_fill)
+
+	_charge_container.add_child(_charge_bar)
+
+	_charge_label = Label.new()
+	_charge_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_charge_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_charge_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_charge_label.add_theme_font_size_override("font_size", 10)
+	_charge_label.add_theme_color_override("font_color", Color(1, 1, 1, 0.9))
+	_charge_label.add_theme_constant_override("outline_size", 2)
+	_charge_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
+	_charge_container.add_child(_charge_label)
+
 	# Status effects label (compact, fixed height to prevent bouncing)
 	_status_label = RichTextLabel.new()
 	_status_label.bbcode_enabled = true
@@ -165,6 +205,7 @@ func setup(fighter: FighterData, is_enemy: bool, portrait_tex: Texture2D) -> voi
 	_fighter_ref = fighter
 	_is_enemy = is_enemy
 	_mp_bar.get_parent().visible = not is_enemy
+	_charge_container.visible = not is_enemy and fighter.ultimate != null
 
 	if portrait_tex:
 		_portrait.texture = portrait_tex
@@ -313,6 +354,37 @@ func _update_bars(fighter: FighterData, instant: bool = false) -> void:
 
 		_mp_fill.bg_color = palette["mp"]
 
+	# Ultimate charge bar
+	if not _is_enemy and fighter.ultimate != null:
+		_charge_container.visible = true
+		_charge_bar.max_value = fighter.ultimate.charge_cost
+		var target_charge: float = float(fighter.ultimate_charge)
+		var charge_pct: int = int(target_charge / float(fighter.ultimate.charge_cost) * 100.0)
+		_charge_label.text = "ULT %d%%" % charge_pct
+
+		if instant or not is_inside_tree():
+			_charge_bar.value = target_charge
+		else:
+			if _charge_tween and _charge_tween.is_valid():
+				_charge_tween.kill()
+			_charge_tween = create_tween()
+			_charge_tween.tween_property(_charge_bar, "value", target_charge, 0.25).set_ease(Tween.EASE_OUT)
+
+		# Pulse when fully charged
+		var is_full: bool = fighter.ultimate_charge >= fighter.ultimate.charge_cost
+		if is_full:
+			_charge_fill.bg_color = Color(1.0, 0.85, 0.2)  # Bright gold when ready
+			if not SettingsManager.reduced_motion and (_charge_pulse_tween == null or not _charge_pulse_tween.is_valid()):
+				_charge_pulse_tween = create_tween().set_loops()
+				_charge_pulse_tween.tween_property(_charge_fill, "bg_color:a", 0.6, 0.4)
+				_charge_pulse_tween.tween_property(_charge_fill, "bg_color:a", 1.0, 0.4)
+		else:
+			_charge_fill.bg_color = Color(0.85, 0.65, 0.15)
+			if _charge_pulse_tween != null and _charge_pulse_tween.is_valid():
+				_charge_pulse_tween.kill()
+				_charge_pulse_tween = null
+				_charge_fill.bg_color.a = 1.0
+
 	_update_status(fighter)
 	_update_tooltip(fighter)
 
@@ -324,6 +396,9 @@ func _update_tooltip(fighter: FighterData) -> void:
 	var tip: String = "%s: HP %d/%d" % [fighter.character_name, maxi(0, fighter.health), fighter.max_health]
 	if not _is_enemy:
 		tip += ", MP %d/%d" % [maxi(0, fighter.mana), fighter.max_mana]
+		if fighter.ultimate != null:
+			var charge_pct: int = int(float(fighter.ultimate_charge) / float(fighter.ultimate.charge_cost) * 100.0)
+			tip += ", ULT %d%%" % charge_pct
 	if not fighter.modified_stats.is_empty():
 		var status_parts: Array[String] = []
 		for mod: Dictionary in fighter.modified_stats:
