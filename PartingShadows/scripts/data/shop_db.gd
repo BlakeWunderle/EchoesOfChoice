@@ -70,6 +70,19 @@ static func get_shop_items(battle_id: String) -> Array:
 				{"item_id": "spell_prism", "price": 120},
 				{"item_id": "blast_powder", "price": 150},
 			]
+		"S2_B_SafeHaven":
+			return [
+				{"item_id": "keen_edge", "price": 80},
+				{"item_id": "ether_shard", "price": 80},
+				{"item_id": "galeroot", "price": 80},
+				{"item_id": "enfeebling_dust", "price": 80},
+				{"item_id": "void_salt", "price": 80},
+				{"item_id": "smoke_bomb", "price": 70},
+				{"item_id": "crystal_lens", "price": 120},
+				{"item_id": "war_drum", "price": 120},
+				{"item_id": "spell_prism", "price": 120},
+				{"item_id": "blast_powder", "price": 150},
+			]
 
 		# ---- Story 3 ----
 		"S3_WearyTraveler":
@@ -137,6 +150,8 @@ static func get_shop_text(battle_id: String) -> Array[String]:
 			return ["The harbor market is chaos. Salt-crusted merchants hawk their wares over the crash of waves."]
 		"S2_CoastalCamp":
 			return ["A quiet trader has laid out supplies on a weathered blanket. 'Last chance before the deep.'"]
+		"S2_B_SafeHaven":
+			return ["Sera rummages through a cache hidden in the ruins. 'I stashed supplies here months ago. Take what you need.'"]
 		# Story 3
 		"S3_WearyTraveler":
 			return ["The innkeeper gestures to a shelf behind the bar. 'Not just rooms and meals. I keep a few things on hand for travelers like you.'"]

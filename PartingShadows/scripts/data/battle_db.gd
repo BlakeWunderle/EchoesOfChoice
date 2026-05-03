@@ -77,9 +77,9 @@ static func create_battle(battle_id: String) -> BattleData:
 		"S2_EyeAwakening", "S2_EyeOfOblivion":
 			return S2Act4.create_battle(battle_id)
 		# Story 2 - Path B (Save Sera)
-		"S2_B_ArchiveAwakening", "S2_B_LighthouseCore", \
-		"S2_B_ResonanceChamber", "S2_B_MemoryFlood", \
-		"S2_B_EyeUnblinking":
+		"S2_B_ArchiveAwakening", "S2_B_SafeHaven", \
+		"S2_B_LighthouseCore", "S2_B_ResonanceChamber", \
+		"S2_B_MemoryFlood", "S2_B_EyeUnblinking":
 			return S2PathB.create_battle(battle_id)
 		# Story 3 - Acts I-II
 		"S3_WearyTraveler", "S3_DreamMeadow", "S3_DreamMirrorHall", \

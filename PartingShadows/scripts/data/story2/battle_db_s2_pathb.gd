@@ -1,8 +1,8 @@
 class_name BattleDBS2PathB
 
 ## Story 2 Path B battle configurations: Save Sera.
-## Flow: ForgottenArchive → ArchiveAwakening → LighthouseCore
-##   → ResonanceChamber → MemoryFlood → EyeUnblinking
+## Flow: ForgottenArchive → ArchiveAwakening → SafeHaven (town)
+##   → LighthouseCore → ResonanceChamber → MemoryFlood → EyeUnblinking
 
 const BattleData := preload("res://scripts/data/battle_data.gd")
 const EnemyDB := preload("res://scripts/data/story2/enemy_db_s2_pathb.gd")
@@ -11,6 +11,7 @@ const EnemyDB := preload("res://scripts/data/story2/enemy_db_s2_pathb.gd")
 static func create_battle(battle_id: String) -> BattleData:
 	match battle_id:
 		"S2_B_ArchiveAwakening": return s2_b_archive_awakening()
+		"S2_B_SafeHaven": return s2_b_safe_haven()
 		"S2_B_LighthouseCore": return s2_b_lighthouse_core()
 		"S2_B_ResonanceChamber": return s2_b_resonance_chamber()
 		"S2_B_MemoryFlood": return s2_b_memory_flood()
@@ -48,9 +49,34 @@ static func s2_b_archive_awakening() -> BattleData:
 		"'I designed this failsafe.' She presses her palm against the wall. 'I forgot I designed it. I built a way to kill the Eye using its own stored memories. Feed them back faster than it can process them.'",
 		"She pulls the wave-and-eye pendant from her neck. 'We don't have to go in blind this time. We don't have to sacrifice anything. Follow me.'",
 	]
-	b.next_battle_id = "S2_B_LighthouseCore"
+	b.next_battle_id = "S2_B_SafeHaven"
 	b.music_track = "res://assets/audio/music/boss/Impending Terror_FULL.wav"
 	b.cutscene_track = "res://assets/audio/music/cutscene/#15 Dark Strings Swell.wav"
+	return b
+
+
+# =============================================================================
+# Town Stop: Safe Haven (post-T2, equipment upgrades, ultimates, shop)
+# =============================================================================
+
+static func s2_b_safe_haven() -> BattleData:
+	var b := BattleData.new()
+	b.battle_id = "S2_B_SafeHaven"
+	b.scene_image = "res://assets/art/battles/coastal_ruins.png"
+	b.is_town_stop = true
+	b.pre_battle_text = [
+		"Beyond the archive, a sheltered cove. Crumbling stone walls form a natural windbreak. Someone lived here once, long ago, before the Eye claimed this stretch of coast.",
+		"Sera kneels by a fire pit and coaxes a flame from driftwood. Her hands are steadier now. The memories have settled, not fully sorted but no longer a storm.",
+		"'We should rest,' she says. 'What comes next will not be gentle.'",
+		"The cove is quiet. Waves lap against dark stone. For a few hours, the coast feels like it belongs to them.",
+	]
+	b.post_battle_text = [
+		"The fire burns low. Sera stands and looks toward the lighthouse, its beam sweeping the horizon in slow, hungry arcs.",
+		"'The core is below the lighthouse. I built the extraction systems down there.' She pauses. 'I also built the way to break them.'",
+		"She tightens her pack. 'Ready when you are.'",
+	]
+	b.next_battle_id = "S2_B_LighthouseCore"
+	b.cutscene_track = "res://assets/audio/music/cutscene/#9.wav"
 	return b
 
 
