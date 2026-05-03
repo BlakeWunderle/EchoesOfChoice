@@ -15,9 +15,9 @@ static func create_pupil_leech(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Pupil Leech", lvl)
 	f.health = EH.es(620, 710, 5, 8, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(16, 20, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(16, 22, 1, 2, lvl, 14)
+	f.physical_attack = EH.es(25, 31, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(48, 57, 2, 4, lvl, 14)
-	f.magic_attack = EH.es(96, 109, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(105, 118, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(46, 55, 2, 3, lvl, 14)
 	f.speed = EH.es(38, 45, 1, 3, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 10
@@ -30,9 +30,9 @@ static func create_gaze_stalker(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Gaze Stalker", lvl)
 	f.health = EH.es(492, 558, 5, 8, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(11, 14, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(84, 96, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(93, 105, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(38, 46, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(78, 89, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(87, 98, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(33, 42, 2, 3, lvl, 14)
 	f.speed = EH.es(55, 61, 2, 3, lvl, 14)
 	f.crit_chance = 25; f.crit_damage = 4; f.dodge_chance = 25
@@ -45,9 +45,9 @@ static func create_memory_harvester(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Memory Harvester", lvl)
 	f.health = EH.es(521, 590, 5, 8, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(19, 23, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(20, 28, 1, 2, lvl, 14)
+	f.physical_attack = EH.es(29, 37, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(31, 40, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(121, 136, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(130, 145, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(49, 57, 2, 4, lvl, 14)
 	f.speed = EH.es(47, 54, 2, 3, lvl, 14)
 	f.crit_chance = 20; f.crit_damage = 4; f.dodge_chance = 17
@@ -60,9 +60,9 @@ static func create_oblivion_shade(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Oblivion Shade", lvl)
 	f.health = EH.es(333, 377, 4, 7, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(17, 20, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(20, 28, 1, 2, lvl, 14)
+	f.physical_attack = EH.es(30, 38, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(21, 30, 1, 3, lvl, 14)
-	f.magic_attack = EH.es(108, 124, 3, 4, lvl, 14)
+	f.magic_attack = EH.es(118, 134, 3, 4, lvl, 14)
 	f.magic_defense = EH.es(45, 54, 2, 4, lvl, 14)
 	f.speed = EH.es(50, 57, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 4; f.dodge_chance = 25
@@ -75,9 +75,9 @@ static func create_memory_reaper(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Memory Reaper", lvl)
 	f.health = EH.es(630, 705, 5, 8, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(19, 23, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(20, 28, 1, 2, lvl, 14)
+	f.physical_attack = EH.es(30, 38, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(28, 37, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(124, 142, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(134, 152, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(52, 60, 2, 4, lvl, 14)
 	f.speed = EH.es(42, 49, 2, 3, lvl, 14)
 	f.crit_chance = 20; f.crit_damage = 4; f.dodge_chance = 17
@@ -90,9 +90,9 @@ static func create_void_iris(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Void Iris", lvl)
 	f.health = EH.es(620, 695, 4, 7, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(17, 20, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(20, 28, 1, 2, lvl, 14)
+	f.physical_attack = EH.es(29, 37, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(38, 48, 1, 3, lvl, 14)
-	f.magic_attack = EH.es(110, 125, 3, 4, lvl, 14)
+	f.magic_attack = EH.es(119, 134, 3, 4, lvl, 14)
 	f.magic_defense = EH.es(65, 75, 2, 4, lvl, 14)
 	f.speed = EH.es(61, 68, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -105,9 +105,9 @@ static func create_thoughtform_knight(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Thoughtform Knight", lvl)
 	f.health = EH.es(677, 770, 7, 10, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(14, 17, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(141, 160, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(151, 170, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(64, 75, 3, 5, lvl, 14)
-	f.magic_attack = EH.es(16, 23, 1, 2, lvl, 14)
+	f.magic_attack = EH.es(26, 33, 1, 2, lvl, 14)
 	f.magic_defense = EH.es(52, 61, 2, 4, lvl, 14)
 	f.speed = EH.es(48, 56, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 4; f.dodge_chance = 10
@@ -124,9 +124,9 @@ static func create_the_iris(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "The Iris", lvl)
 	f.health = EH.es(738, 842, 8, 11, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(30, 35, 2, 3, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(27, 36, 1, 3, lvl, 15)
+	f.physical_attack = EH.es(36, 45, 1, 3, lvl, 15)
 	f.physical_defense = EH.es(61, 72, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(149, 168, 4, 7, lvl, 15)
+	f.magic_attack = EH.es(158, 177, 4, 7, lvl, 15)
 	f.magic_defense = EH.es(77, 87, 3, 5, lvl, 15)
 	f.speed = EH.es(55, 61, 1, 3, lvl, 15)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
@@ -139,9 +139,9 @@ static func create_the_lidless_eye(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "The Lidless Eye", lvl)
 	f.health = EH.es(1008, 1146, 9, 13, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(43, 49, 2, 3, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(171, 191, 5, 8, lvl, 15)
+	f.physical_attack = EH.es(185, 205, 5, 8, lvl, 15)
 	f.physical_defense = EH.es(64, 76, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(48, 58, 1, 3, lvl, 15)
+	f.magic_attack = EH.es(62, 72, 1, 3, lvl, 15)
 	f.magic_defense = EH.es(82, 96, 4, 6, lvl, 15)
 	f.speed = EH.es(61, 67, 2, 3, lvl, 15)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 17

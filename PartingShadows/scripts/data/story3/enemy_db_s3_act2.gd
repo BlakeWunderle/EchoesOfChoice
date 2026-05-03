@@ -213,9 +213,9 @@ static func create_market_watcher(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Market Watcher", lvl)
 	f.health = EH.es(438, 504, 4, 7, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 1, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(73, 85, 2, 4, lvl, 10)
+	f.physical_attack = EH.es(82, 94, 2, 4, lvl, 10)
 	f.physical_defense = EH.es(41, 48, 2, 3, lvl, 10)
-	f.magic_attack = EH.es(10, 14, 0, 2, lvl, 10)
+	f.magic_attack = EH.es(19, 23, 0, 2, lvl, 10)
 	f.magic_defense = EH.es(24, 32, 1, 3, lvl, 10)
 	f.speed = EH.es(29, 35, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
@@ -228,9 +228,9 @@ static func create_thread_smith(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Thread Smith", lvl)
 	f.health = EH.es(516, 594, 5, 8, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 1, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(71, 83, 2, 4, lvl, 10)
+	f.physical_attack = EH.es(80, 92, 2, 4, lvl, 10)
 	f.physical_defense = EH.es(26, 33, 2, 3, lvl, 10)
-	f.magic_attack = EH.es(8, 12, 0, 1, lvl, 10)
+	f.magic_attack = EH.es(17, 21, 0, 1, lvl, 10)
 	f.magic_defense = EH.es(34, 41, 1, 3, lvl, 10)
 	f.speed = EH.es(25, 31, 2, 3, lvl, 10)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 10
@@ -243,9 +243,9 @@ static func create_hex_herbalist(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Hex Herbalist", lvl)
 	f.health = EH.es(348, 408, 4, 7, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(16, 19, 1, 2, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(10, 14, 0, 2, lvl, 10)
+	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 10)
 	f.physical_defense = EH.es(19, 25, 1, 3, lvl, 10)
-	f.magic_attack = EH.es(71, 80, 2, 4, lvl, 10)
+	f.magic_attack = EH.es(80, 89, 2, 4, lvl, 10)
 	f.magic_defense = EH.es(34, 41, 2, 3, lvl, 10)
 	f.speed = EH.es(28, 34, 2, 3, lvl, 10)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 17
@@ -263,9 +263,9 @@ static func create_cellar_watcher(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Cellar Watcher", lvl)
 	f.health = EH.es(434, 499, 4, 7, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(13, 15, 1, 2, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(66, 77, 2, 4, lvl, 11)
+	f.physical_attack = EH.es(75, 86, 2, 4, lvl, 11)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 11)
-	f.magic_attack = EH.es(63, 74, 2, 4, lvl, 11)
+	f.magic_attack = EH.es(72, 83, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(29, 37, 1, 3, lvl, 11)
 	f.speed = EH.es(32, 38, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
@@ -278,9 +278,9 @@ static func create_thread_construct(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Thread Construct", lvl)
 	f.health = EH.es(509, 582, 5, 8, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(10, 13, 1, 1, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(77, 91, 2, 4, lvl, 11)
+	f.physical_attack = EH.es(86, 100, 2, 4, lvl, 11)
 	f.physical_defense = EH.es(37, 43, 2, 3, lvl, 11)
-	f.magic_attack = EH.es(8, 12, 0, 1, lvl, 11)
+	f.magic_attack = EH.es(17, 21, 0, 1, lvl, 11)
 	f.magic_defense = EH.es(23, 29, 1, 3, lvl, 11)
 	f.speed = EH.es(24, 30, 1, 2, lvl, 11)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 10
@@ -293,9 +293,9 @@ static func create_ink_shade(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Ink Shade", lvl)
 	f.health = EH.es(370, 430, 4, 7, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(20, 23, 1, 2, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(10, 14, 0, 2, lvl, 11)
+	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(20, 26, 1, 3, lvl, 11)
-	f.magic_attack = EH.es(88, 99, 2, 4, lvl, 11)
+	f.magic_attack = EH.es(97, 108, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(36, 43, 2, 3, lvl, 11)
 	f.speed = EH.es(32, 38, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 20
