@@ -39,7 +39,7 @@ static func get_ultimates_for_class(class_id: String) -> Array:
 		"Warlock": return [warlock_soul_harvest(), warlock_plague_of_shadows()]
 		# Entertainer tree
 		"Warcrier": return [warcrier_earthshaker(), warcrier_battle_anthem()]
-		"Minstrel": return [minstrel_final_movement(), minstrel_symphony_of_renewal()]
+		"Minstrel": return [minstrel_serenade_of_dawn(), minstrel_symphony_of_renewal()]
 		"Illusionist": return [illusionist_grand_illusion(), illusionist_mirror_image()]
 		"Mime": return [mime_perfect_copy(), mime_mimes_bulwark()]
 		"Laureate": return [laureate_crowning_verse(), laureate_words_of_might()]
@@ -55,7 +55,7 @@ static func get_ultimates_for_class(class_id: String) -> Array:
 		"Blighter": return [blighter_blight_storm(), blighter_withering_curse()]
 		"GroveKeeper": return [grove_keeper_natures_embrace(), grove_keeper_overgrowth()]
 		"WitchDoctor": return [witch_doctor_plague_voodoo(), witch_doctor_hex_storm()]
-		"Spiritwalker": return [spiritwalker_spirit_wrath(), spiritwalker_ancestral_blessing()]
+		"Spiritwalker": return [spiritwalker_spirit_mend(), spiritwalker_ancestral_blessing()]
 		"Falconer": return [falconer_death_from_above(), falconer_raptor_storm()]
 		"Shapeshifter": return [shapeshifter_apex_predator(), shapeshifter_ironhide()]
 		# Wanderer tree
@@ -321,13 +321,13 @@ static func warcrier_battle_anthem() -> UltimateData:
 		60)
 
 # Minstrel -- Support / Healer / Buffer / Magical
-static func minstrel_final_movement() -> UltimateData:
-	return _ult("minstrel_final_movement", "Final Movement",
-		"Play the last movement of a symphony so beautiful it breaks the world.",
-		_make("Final Movement",
-			"The melody reaches its peak. Every note strikes like a blade.",
-			Enums.StatType.MAGIC_ATTACK, 28, 0, true, 0, true),
-		60)
+static func minstrel_serenade_of_dawn() -> UltimateData:
+	return _ult("minstrel_serenade_of_dawn", "Serenade of Dawn",
+		"Play a gentle melody that mends wounds over time for the entire party.",
+		_make("Serenade of Dawn",
+			"Soft notes linger in the air, weaving life back into weary bodies.",
+			Enums.StatType.HEALTH, 0, 3, false, 0, true, 12),
+		50)
 
 static func minstrel_symphony_of_renewal() -> UltimateData:
 	return _ult("minstrel_symphony_of_renewal", "Symphony of Renewal",
@@ -475,7 +475,7 @@ static func astronomer_cosmic_alignment() -> UltimateData:
 		"Align celestial forces to amplify the party's magical power.",
 		_make("Cosmic Alignment",
 			"Stars wheel overhead. Arcane power floods through every ally.",
-			Enums.StatType.MAGIC_ATTACK, 16, 3, false, 0, true),
+			Enums.StatType.MAGIC_ATTACK, 22, 3, false, 0, true),
 		50)
 
 # Automaton -- Tank / Fighter / Mixed
@@ -548,7 +548,7 @@ static func grove_keeper_overgrowth() -> UltimateData:
 		"Surround the party in living armor of bark and thorns.",
 		_make("Overgrowth",
 			"The forest answers. Bark hardens around each ally like a second skin.",
-			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
+			Enums.StatType.DEFENSE, 24, 3, false, 0, true),
 		60)
 
 # Witch Doctor -- Support / Caster / Debuffer / DoT / Magical
@@ -569,13 +569,13 @@ static func witch_doctor_hex_storm() -> UltimateData:
 		45)
 
 # Spiritwalker -- Support / Caster / Healer / Buffer / Magical
-static func spiritwalker_spirit_wrath() -> UltimateData:
-	return _ult("spiritwalker_spirit_wrath", "Spirit Wrath",
-		"Summon ancestral spirits to strike all enemies.",
-		_make("Spirit Wrath",
-			"Ghostly warriors charge through the battlefield, striking every foe.",
-			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
-		55)
+static func spiritwalker_spirit_mend() -> UltimateData:
+	return _ult("spiritwalker_spirit_mend", "Spirit Mend",
+		"Call upon ancestral spirits to slowly restore the party's vitality.",
+		_make("Spirit Mend",
+			"Warm light drifts from spectral hands, closing wounds with each passing moment.",
+			Enums.StatType.HEALTH, 0, 3, false, 0, true, 12),
+		45)
 
 static func spiritwalker_ancestral_blessing() -> UltimateData:
 	return _ult("spiritwalker_ancestral_blessing", "Ancestral Blessing",

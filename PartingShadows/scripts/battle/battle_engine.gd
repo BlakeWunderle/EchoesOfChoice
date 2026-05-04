@@ -279,24 +279,44 @@ func use_ability_on_teammate(caster: FighterData, target: FighterData,
 				target.character_name, heal_amount])
 			combat_event.emit(target, heal_amount, "heal")
 	else:
-		# Buff
-		var delta: int = _compute_buff_delta(
-			target, ability.modified_stat, ability.modifier)
-		target.modified_stats.append({
-			"stat": ability.modified_stat,
-			"modifier": delta,
-			"turns": ability.impacted_turns,
-			"is_negative": false,
-			"damage_per_turn": 0,
-		})
-		_modify_stats(target, ability.modified_stat, delta, false)
-		if sim_mode:
-			sim_stats[caster].buffs_applied += 1
-		if not sim_mode:
-			if not skip_flavor:
-				combat_message.emit(ability.flavor_text)
-			combat_message.emit("[color=#66ccff]%s was impacted by the ability.[/color]" % target.character_name)
-			combat_event.emit(target, delta, "buff")
+		if ability.damage_per_turn > 0:
+			# Regen (heal over time)
+			var hot_flat: int = maxi(1, floori(
+				float(target.max_health) * float(ability.damage_per_turn) / 100.0))
+			target.modified_stats.append({
+				"stat": ability.modified_stat,
+				"modifier": 0,
+				"turns": ability.impacted_turns,
+				"is_negative": false,
+				"damage_per_turn": hot_flat,
+			})
+			if sim_mode:
+				sim_stats[caster].buffs_applied += 1
+			else:
+				if not skip_flavor:
+					combat_message.emit(ability.flavor_text)
+				combat_message.emit("[color=#4dff66]%s will recover %d health per turn for %d turns.[/color]" % [
+					target.character_name, hot_flat, ability.impacted_turns])
+				combat_event.emit(target, hot_flat, "buff")
+		else:
+			# Stat buff
+			var delta: int = _compute_buff_delta(
+				target, ability.modified_stat, ability.modifier)
+			target.modified_stats.append({
+				"stat": ability.modified_stat,
+				"modifier": delta,
+				"turns": ability.impacted_turns,
+				"is_negative": false,
+				"damage_per_turn": 0,
+			})
+			_modify_stats(target, ability.modified_stat, delta, false)
+			if sim_mode:
+				sim_stats[caster].buffs_applied += 1
+			if not sim_mode:
+				if not skip_flavor:
+					combat_message.emit(ability.flavor_text)
+				combat_message.emit("[color=#66ccff]%s was impacted by the ability.[/color]" % target.character_name)
+				combat_event.emit(target, delta, "buff")
 
 	# Ultimate charge: Supportive ability grants 5
 	_add_ultimate_charge(caster, 5)
@@ -573,13 +593,24 @@ func reset_modified_stat(fighter: FighterData) -> void:
 		var mod: Dictionary = fighter.modified_stats[i]
 
 		if mod.get("damage_per_turn", 0) > 0:
-			fighter.health -= mod["damage_per_turn"]
-			if sim_mode:
-				sim_stats[fighter].dmg_taken += mod["damage_per_turn"]
+			if mod["is_negative"]:
+				fighter.health -= mod["damage_per_turn"]
+				if sim_mode:
+					sim_stats[fighter].dmg_taken += mod["damage_per_turn"]
+				else:
+					combat_message.emit("[color=#cc4dcc]%s takes %d damage from a lingering effect.[/color]" % [
+						fighter.character_name, mod["damage_per_turn"]])
+					combat_event.emit(fighter, mod["damage_per_turn"], "damage")
 			else:
-				combat_message.emit("[color=#cc4dcc]%s takes %d damage from a lingering effect.[/color]" % [
-					fighter.character_name, mod["damage_per_turn"]])
-				combat_event.emit(fighter, mod["damage_per_turn"], "damage")
+				var heal: int = mini(mod["damage_per_turn"],
+					fighter.max_health - fighter.health)
+				fighter.health += heal
+				if sim_mode:
+					sim_stats[fighter].heals += heal
+				else:
+					combat_message.emit("[color=#4dff66]%s recovers %d health from a lingering effect.[/color]" % [
+						fighter.character_name, heal])
+					combat_event.emit(fighter, heal, "heal")
 
 		if mod["turns"] == 0:
 			if mod.get("damage_per_turn", 0) == 0:
