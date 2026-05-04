@@ -15,11 +15,11 @@ static func create_sigil_colossus(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Sigil Colossus", lvl)
 	f.health = EH.es(677, 744, 7, 10, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(14, 18, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(92, 100, 4, 6, lvl, 14)
+	f.physical_attack = EH.es(94, 102, 4, 6, lvl, 14)
 	f.physical_defense = EH.es(60, 70, 3, 5, lvl, 14)
 	f.magic_attack = EH.es(22, 27, 0, 2, lvl, 14)
 	f.magic_defense = EH.es(37, 45, 2, 4, lvl, 14)
-	f.speed = EH.es(43, 50, 1, 3, lvl, 14)
+	f.speed = EH.es(44, 51, 1, 3, lvl, 14)
 	f.crit_chance = 10; f.crit_damage = 6; f.dodge_chance = 8
 	f.abilities = [EAB.sigil_crush(), EAB.anchor_pulse(), EAB.sigil_ward()]
 	f.flavor_text = "A massive construct of carved stone and living sigils. It guards the ritual pillars with relentless force."
@@ -32,9 +32,9 @@ static func create_ritual_conduit(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(24, 29, 2, 3, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 27, 0, 2, lvl, 14)
 	f.physical_defense = EH.es(31, 39, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(86, 95, 4, 6, lvl, 14)
+	f.magic_attack = EH.es(88, 97, 4, 6, lvl, 14)
 	f.magic_defense = EH.es(51, 59, 3, 5, lvl, 14)
-	f.speed = EH.es(51, 58, 2, 4, lvl, 14)
+	f.speed = EH.es(52, 59, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 4; f.dodge_chance = 17
 	f.abilities = [EAB.conduit_beam(), EAB.mending_sigil(), EAB.ritual_shield()]
 	f.flavor_text = "A crystalline pillar that channels ritual energy. It mends damage to the anchors and shields its allies."
@@ -45,11 +45,11 @@ static func create_void_sentinel(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Void Sentinel", lvl)
 	f.health = EH.es(554, 620, 8, 11, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(18, 22, 2, 3, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(74, 83, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(75, 84, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(40, 48, 2, 4, lvl, 14)
-	f.magic_attack = EH.es(76, 83, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(77, 84, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(42, 49, 2, 4, lvl, 14)
-	f.speed = EH.es(53, 60, 2, 4, lvl, 14)
+	f.speed = EH.es(54, 61, 2, 4, lvl, 14)
 	f.crit_chance = 20; f.crit_damage = 6; f.dodge_chance = 17
 	f.abilities = [EAB.void_slash(), EAB.nullfield()]
 	f.flavor_text = "A silent guardian of void energy. Its blade cuts through both armor and magic with equal ease."
@@ -114,11 +114,11 @@ static func create_stranger_undone(n: String, lvl: int = 15) -> FighterData:
 	f.class_id = "StrangerUndone"
 	f.health = EH.es(1090, 1194, 12, 18, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(42, 48, 3, 4, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(98, 109, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(100, 111, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(55, 64, 2, 4, lvl, 15)
-	f.magic_attack = EH.es(112, 124, 3, 6, lvl, 15)
+	f.magic_attack = EH.es(114, 126, 3, 6, lvl, 15)
 	f.magic_defense = EH.es(58, 67, 2, 4, lvl, 15)
-	f.speed = EH.es(78, 88, 3, 5, lvl, 15)
+	f.speed = EH.es(79, 89, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 7; f.dodge_chance = 20
 	f.abilities = [EAB.shadow_remnant_strike(), EAB.void_drain(), EAB.crumbling_shield(), EAB.final_echo(), EAB.desperation()]
 	f.flavor_text = "The Stranger, stripped of ritual power, smaller and more human than ever before. Desperate, fast, and unpredictable."

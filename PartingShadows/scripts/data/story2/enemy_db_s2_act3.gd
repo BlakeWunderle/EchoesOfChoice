@@ -92,9 +92,9 @@ static func create_sorrow_shade(n: String, lvl: int = 11) -> FighterData:
 	f.mana = EH.es(19, 22, 1, 2, lvl, 11); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(21, 28, 1, 2, lvl, 11)
-	f.magic_attack = EH.es(85, 96, 2, 4, lvl, 11)
+	f.magic_attack = EH.es(86, 97, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(34, 41, 2, 3, lvl, 11)
-	f.speed = EH.es(42, 48, 2, 3, lvl, 11)
+	f.speed = EH.es(43, 49, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 20
 	f.abilities = [EABL.grief_surge(), EABL.shattered_trust()]
 	f.flavor_text = "A shadow crystallized from the sanctum's deepest sorrows. Unlike grief shades born elsewhere, this one carries the weight of shattered memories and broken trust."
@@ -124,11 +124,11 @@ static func create_mirror_self(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Mirror Self", lvl)
 	f.health = EH.es(418, 477, 4, 7, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(19, 22, 1, 2, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(79, 90, 2, 4, lvl, 12)
+	f.physical_attack = EH.es(80, 91, 2, 4, lvl, 12)
 	f.physical_defense = EH.es(34, 42, 2, 3, lvl, 12)
-	f.magic_attack = EH.es(79, 90, 2, 4, lvl, 12)
+	f.magic_attack = EH.es(80, 91, 2, 4, lvl, 12)
 	f.magic_defense = EH.es(34, 42, 2, 3, lvl, 12)
-	f.speed = EH.es(44, 50, 2, 3, lvl, 12)
+	f.speed = EH.es(45, 51, 2, 3, lvl, 12)
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 20
 	f.abilities = [EABL.mirrored_slash(), EABL.reflected_spell()]
 	f.flavor_text = "A perfect reflection of the one who gazes upon it. It fights with borrowed skill, turning your own strengths against you."
@@ -141,9 +141,9 @@ static func create_void_weaver(n: String, lvl: int = 12) -> FighterData:
 	f.mana = EH.es(23, 27, 1, 2, lvl, 12); f.max_mana = f.mana
 	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 12)
 	f.physical_defense = EH.es(27, 34, 1, 3, lvl, 12)
-	f.magic_attack = EH.es(87, 101, 3, 5, lvl, 12)
+	f.magic_attack = EH.es(88, 102, 3, 5, lvl, 12)
 	f.magic_defense = EH.es(35, 42, 2, 4, lvl, 12)
-	f.speed = EH.es(41, 47, 2, 3, lvl, 12)
+	f.speed = EH.es(42, 48, 2, 3, lvl, 12)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EABL.void_bolt(), EABL.unravel()]
 	f.flavor_text = "A spindly entity that weaves threads of nothingness between its fingers. Where its threads fall, memory and meaning unravel."
@@ -175,9 +175,9 @@ static func create_the_warden(n: String, lvl: int = 13) -> FighterData:
 	f.mana = EH.es(18, 22, 1, 2, lvl, 13); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 13)
 	f.physical_defense = EH.es(38, 44, 2, 3, lvl, 13)
-	f.magic_attack = EH.es(126, 140, 3, 5, lvl, 13)
+	f.magic_attack = EH.es(128, 142, 3, 5, lvl, 13)
 	f.magic_defense = EH.es(47, 53, 2, 4, lvl, 13)
-	f.speed = EH.es(46, 52, 2, 3, lvl, 13)
+	f.speed = EH.es(47, 53, 2, 3, lvl, 13)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EABL.sanctum_judgment(), EABL.barrier_of_ages(), EABL.decree_of_exile(), EABL.memory_verdict(), EABL.dispel_will()]
 	f.flavor_text = "The sanctum's supreme guardian, an entity of crystallized law and ancient purpose. It judges all who enter and finds them wanting."
@@ -188,11 +188,11 @@ static func create_fractured_protector(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Fractured Protector", lvl)
 	f.health = EH.es(978, 1102, 8, 13, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(17, 20, 1, 2, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(109, 121, 2, 4, lvl, 13)
+	f.physical_attack = EH.es(111, 123, 2, 4, lvl, 13)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 13)
-	f.magic_attack = EH.es(96, 108, 2, 4, lvl, 13)
+	f.magic_attack = EH.es(98, 110, 2, 4, lvl, 13)
 	f.magic_defense = EH.es(35, 41, 2, 3, lvl, 13)
-	f.speed = EH.es(48, 54, 2, 3, lvl, 13)
+	f.speed = EH.es(49, 55, 2, 3, lvl, 13)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EABL.corrupted_mending(), EABL.eye_infused_strike(), EABL.drowned_light(), EABL.memory_fracture(), EABL.fractured_blessing()]
 	f.flavor_text = "Once a noble defender of the memory sanctum, now cracked and unstable. Her healing magic has been inverted by the Eye's corruption, burning instead of mending, taking instead of giving."
@@ -243,11 +243,11 @@ static func create_ward_construct(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Ward Construct", lvl)
 	f.health = EH.es(534, 616, 6, 9, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 1, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(136, 152, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(138, 154, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(57, 66, 2, 4, lvl, 12)
 	f.magic_attack = EH.es(20, 24, 0, 1, lvl, 12)
 	f.magic_defense = EH.es(46, 54, 2, 3, lvl, 12)
-	f.speed = EH.es(32, 39, 1, 2, lvl, 12)
+	f.speed = EH.es(33, 40, 1, 2, lvl, 12)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EABL.reinforced_strike(), EABL.warding_presence()]
 	f.flavor_text = "A massive stone construct bound by ancient wards. It was built to hold the threshold against any intrusion, and it has never failed."
@@ -260,9 +260,9 @@ static func create_null_phantom(n: String, lvl: int = 12) -> FighterData:
 	f.mana = EH.es(20, 23, 1, 2, lvl, 12); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 26, 0, 2, lvl, 12)
 	f.physical_defense = EH.es(29, 36, 1, 3, lvl, 12)
-	f.magic_attack = EH.es(108, 121, 3, 5, lvl, 12)
+	f.magic_attack = EH.es(110, 123, 3, 5, lvl, 12)
 	f.magic_defense = EH.es(51, 60, 2, 4, lvl, 12)
-	f.speed = EH.es(41, 48, 2, 3, lvl, 12)
+	f.speed = EH.es(42, 49, 2, 3, lvl, 12)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
 	f.abilities = [EABL.null_lance(), EABL.nullification()]
 	f.flavor_text = "A phantom of pure negation that erases whatever it touches. Magic withers in its presence, and even thoughts lose coherence."
@@ -273,11 +273,11 @@ static func create_threshold_echo(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Threshold Echo", lvl)
 	f.health = EH.es(435, 497, 5, 8, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(16, 20, 1, 2, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(96, 108, 2, 4, lvl, 12)
+	f.physical_attack = EH.es(98, 110, 2, 4, lvl, 12)
 	f.physical_defense = EH.es(35, 44, 2, 3, lvl, 12)
-	f.magic_attack = EH.es(94, 106, 2, 4, lvl, 12)
+	f.magic_attack = EH.es(96, 108, 2, 4, lvl, 12)
 	f.magic_defense = EH.es(35, 44, 2, 3, lvl, 12)
-	f.speed = EH.es(42, 49, 2, 3, lvl, 12)
+	f.speed = EH.es(43, 50, 2, 3, lvl, 12)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 20
 	f.abilities = [EABL.liminal_strike(), EABL.threshold_bind()]
 	f.flavor_text = "A repeating impression left at the boundary between memory and void. It strikes with the force of a moment that refuses to be forgotten."
@@ -295,9 +295,9 @@ static func create_ink_devourer(n: String, lvl: int = 11) -> FighterData:
 	f.mana = EH.es(16, 19, 1, 2, lvl, 11); f.max_mana = f.mana
 	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(22, 28, 1, 2, lvl, 11)
-	f.magic_attack = EH.es(109, 122, 2, 5, lvl, 11)
+	f.magic_attack = EH.es(110, 123, 2, 5, lvl, 11)
 	f.magic_defense = EH.es(32, 40, 2, 3, lvl, 11)
-	f.speed = EH.es(49, 55, 2, 3, lvl, 11)
+	f.speed = EH.es(50, 56, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
 	f.abilities = [EABL.ink_lash(), EABL.devour_script()]
 	f.flavor_text = "A glistening predator of living ink that slithers between the shelves. It consumed the forbidden texts and now hunts with their stolen knowledge."
@@ -310,9 +310,9 @@ static func create_silent_archivist(n: String, lvl: int = 11) -> FighterData:
 	f.mana = EH.es(12, 14, 1, 2, lvl, 11); f.max_mana = f.mana
 	f.physical_attack = EH.es(23, 27, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 11)
-	f.magic_attack = EH.es(100, 112, 3, 5, lvl, 11)
+	f.magic_attack = EH.es(101, 113, 3, 5, lvl, 11)
 	f.magic_defense = EH.es(39, 46, 2, 3, lvl, 11)
-	f.speed = EH.es(42, 48, 1, 3, lvl, 11)
+	f.speed = EH.es(43, 49, 1, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
 	f.abilities = [EABL.archived_spell(), EABL.silence()]
 	f.flavor_text = "A robed figure that glides between shelves of crystallized memory. It enforces silence with absolute authority, sealing the voices of intruders."
@@ -338,11 +338,11 @@ static func create_maw_codex(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Maw Codex", lvl)
 	f.health = EH.es(490, 560, 5, 7, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 1, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(94, 106, 2, 4, lvl, 11)
+	f.physical_attack = EH.es(95, 107, 2, 4, lvl, 11)
 	f.physical_defense = EH.es(30, 37, 2, 3, lvl, 11)
 	f.magic_attack = EH.es(17, 21, 0, 1, lvl, 11)
 	f.magic_defense = EH.es(28, 35, 1, 3, lvl, 11)
-	f.speed = EH.es(40, 46, 1, 3, lvl, 11)
+	f.speed = EH.es(41, 47, 1, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EABL.tome_bite(), EABL.knowledge_storm()]
 	f.flavor_text = "A massive grimoire that has grown teeth and hunger. Its cover yawns open to reveal a gullet of razored pages that devour anything within reach."
