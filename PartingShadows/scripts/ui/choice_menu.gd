@@ -8,9 +8,11 @@ class_name ChoiceMenu extends VBoxContainer
 signal choice_selected(index: int)
 signal option_focused(index: int)
 
-const BUTTON_MIN_SIZE := Vector2(420, 48)
+const _DEFAULT_MIN_SIZE := Vector2(420, 48)
 const GRID_BUTTON_MIN_SIZE := Vector2(200, 64)
 const _DESC_FONT := preload("res://assets/fonts/CormorantGaramond-SemiBold.ttf")
+
+var button_min_size := _DEFAULT_MIN_SIZE
 ## Distinct cursor colors per player slot (P1 blue, P2 orange, P3 green)
 const PLAYER_COLORS: Array[Color] = [
 	Color(0.3, 0.65, 1.0),
@@ -57,10 +59,12 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 		add_child(_grid)
 		btn_parent = _grid
 
+	var _desc_pairs: Array[Array] = []
+
 	for i: int in options.size():
 		var opt: Dictionary = options[i]
 		var btn := Button.new()
-		btn.custom_minimum_size = GRID_BUTTON_MIN_SIZE if use_grid else BUTTON_MIN_SIZE
+		btn.custom_minimum_size = GRID_BUTTON_MIN_SIZE if use_grid else button_min_size
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.focus_mode = Control.FOCUS_ALL
 		btn.add_theme_font_size_override("font_size", SettingsManager.font_size)
@@ -70,11 +74,7 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 		var has_desc: bool = opt.has("description") and not opt["description"].is_empty()
 		if has_desc:
 			btn.text = ""
-			var desc_text: String = opt.get("description", "")
-			var desc_lines: int = desc_text.count("\n") + 1
-			var desc_fs: int = maxi(SettingsManager.font_size - 2, 14)
-			var est_h: int = SettingsManager.font_size + desc_fs * desc_lines + 32
-			btn.custom_minimum_size.y = maxi(btn.custom_minimum_size.y, est_h)
+			btn.custom_minimum_size.y = maxi(btn.custom_minimum_size.y, SettingsManager.font_size * 2 + 24)
 			var vbox := VBoxContainer.new()
 			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -95,6 +95,7 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 			vbox.add_child(title_lbl)
 			vbox.add_child(desc_lbl)
 			btn.add_child(vbox)
+			_desc_pairs.append([btn, desc_lbl])
 		else:
 			btn.text = opt["label"]
 
@@ -115,6 +116,11 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 
 	_wire_focus(use_grid)
 
+	if not _desc_pairs.is_empty():
+		await get_tree().process_frame
+		for pair: Array in _desc_pairs:
+			_fix_button_height(pair[0] as Button, pair[1] as Label)
+
 	if LocalCoop.is_active and LocalCoop.player_devices.size() > 1:
 		_setup_coop_cursors()
 	else:
@@ -132,9 +138,12 @@ func _on_button_pressed(index: int) -> void:
 
 func _clear_buttons() -> void:
 	for btn: Button in _buttons:
+		if btn.get_parent():
+			btn.get_parent().remove_child(btn)
 		btn.queue_free()
 	_buttons.clear()
 	if _grid:
+		remove_child(_grid)
 		_grid.queue_free()
 		_grid = null
 	_coop_mode = false
@@ -143,6 +152,21 @@ func _clear_buttons() -> void:
 	_player_sbs.clear()
 	_last_nav_ms.clear()
 	_sp_last_nav_ms = 0
+
+
+func _fix_button_height(btn: Button, desc_lbl: Label) -> void:
+	var avail_w: float = btn.size.x - 12.0
+	if avail_w <= 0:
+		return
+	var desc_font: Font = desc_lbl.get_theme_font("font")
+	var desc_size: int = desc_lbl.get_theme_font_size("font_size")
+	var desc_h: float = desc_font.get_multiline_string_size(
+		desc_lbl.text, HORIZONTAL_ALIGNMENT_CENTER, avail_w, desc_size
+	).y
+	var title_h: float = float(SettingsManager.font_size)
+	var needed: float = title_h + desc_h + 24.0
+	if needed > btn.custom_minimum_size.y:
+		btn.custom_minimum_size.y = ceili(needed)
 
 
 func focus_first() -> void:

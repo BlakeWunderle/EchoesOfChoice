@@ -75,9 +75,9 @@ func _build_ui() -> void:
 	# Center panel container
 	_center_panel = PanelContainer.new()
 	_center_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_center_panel.offset_left = -200.0
+	_center_panel.offset_left = -250.0
 	_center_panel.offset_top = -280.0
-	_center_panel.offset_right = 200.0
+	_center_panel.offset_right = 250.0
 	_center_panel.offset_bottom = 280.0
 	_panel.add_child(_center_panel)
 
