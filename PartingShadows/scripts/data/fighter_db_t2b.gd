@@ -97,7 +97,7 @@ static func _lu_mime(f: FighterData) -> void:
 static func upgrade_to_laureate(f: FighterData) -> void:
 	f.class_id = "Laureate"; f.character_type = "Laureate"
 	f.health += 15; f.max_health += 15; f.mana += 2; f.max_mana += 2
-	f.physical_attack += 2; f.physical_defense += 5; f.magic_attack += 13; f.magic_defense += 7
+	f.physical_attack += 2; f.physical_defense += 5; f.magic_attack += 15; f.magic_defense += 7
 	f.speed += 5; f.crit_chance += 2; f.crit_damage += 2; f.dodge_chance += 2
 	f.abilities = [PAB.ovation(), PAB.recite(), PAB.magnum_opus()]
 	f.upgrade_items = []
@@ -179,7 +179,7 @@ static func _lu_bombardier(f: FighterData) -> void:
 static func upgrade_to_chronomancer(f: FighterData) -> void:
 	f.class_id = "Chronomancer"; f.character_type = "Chronomancer"
 	f.health += 14; f.max_health += 14; f.mana += 2; f.max_mana += 2
-	f.physical_attack += 2; f.physical_defense += 5; f.magic_attack += 16; f.magic_defense += 6
+	f.physical_attack += 2; f.physical_defense += 5; f.magic_attack += 17; f.magic_defense += 6
 	f.speed += 8; f.crit_chance += 2; f.crit_damage += 2; f.dodge_chance += 2
 	f.abilities = [PAB_B.temporal_rift(), PAB_B.time_bomb(), PAB_B.time_freeze()]
 	f.upgrade_items = []
@@ -188,7 +188,7 @@ static func upgrade_to_astronomer(f: FighterData) -> void:
 	f.class_id = "Astronomer"; f.character_type = "Astronomer"
 	f.health += 9; f.max_health += 9; f.mana += 2; f.max_mana += 2
 	f.physical_attack += 2; f.physical_defense += 5; f.magic_attack += 18; f.magic_defense += 7
-	f.speed += 6; f.crit_chance += 3; f.crit_damage += 2; f.dodge_chance += 2
+	f.speed += 7; f.crit_chance += 3; f.crit_damage += 2; f.dodge_chance += 2
 	f.abilities = [PAB_B.starfall(), PAB_B.meteor_shower(), PAB_B.eclipse()]
 	f.upgrade_items = []
 

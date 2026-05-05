@@ -195,7 +195,7 @@ static func _lu_tempest(f: FighterData) -> void:
 static func upgrade_to_paladin(f: FighterData) -> void:
 	f.class_id = "Paladin"; f.character_type = "Paladin"
 	f.health += 17; f.max_health += 17; f.mana += 2; f.max_mana += 2
-	f.physical_attack += 11; f.physical_defense += 6; f.magic_attack += 16; f.magic_defense += 4
+	f.physical_attack += 13; f.physical_defense += 6; f.magic_attack += 16; f.magic_defense += 4
 	f.speed += 3; f.crit_chance += 2; f.crit_damage += 2; f.dodge_chance += 2
 	f.abilities = [PAB.lay_on_hands(), PAB.holy_strike(), PAB.smite()]
 	f.upgrade_items = []
