@@ -305,7 +305,7 @@ static func create_zombie(n: String, lvl: int = 6) -> FighterData:
 	var f := EH.base(n, "Zombie", lvl)
 	f.health = EH.es(152, 182, 5, 9, lvl, 6); f.max_health = f.health
 	f.mana = EH.es(10, 13, 1, 2, lvl, 6); f.max_mana = f.mana
-	f.physical_attack = EH.es(28, 42, 3, 5, lvl, 6)
+	f.physical_attack = EH.es(29, 43, 3, 5, lvl, 6)
 	f.physical_defense = EH.es(14, 19, 1, 2, lvl, 6)
 	f.magic_attack = EH.es(23, 37, 3, 5, lvl, 6)
 	f.magic_defense = EH.es(12, 17, 1, 2, lvl, 6)

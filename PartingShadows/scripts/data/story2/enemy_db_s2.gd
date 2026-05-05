@@ -115,7 +115,7 @@ static func create_cap_wisp(n: String, lvl: int = 2) -> FighterData:
 	f.mana = EH.es(8, 10, 1, 2, lvl, 2); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 13, 0, 1, lvl, 2)
 	f.physical_defense = EH.es(6, 9, 0, 1, lvl, 2)
-	f.magic_attack = EH.es(21, 25, 1, 3, lvl, 2)
+	f.magic_attack = EH.es(22, 26, 1, 3, lvl, 2)
 	f.magic_defense = EH.es(11, 14, 1, 2, lvl, 2)
 	f.speed = EH.es(25, 31, 2, 3, lvl, 2)
 	f.crit_chance = 6; f.crit_damage = 1; f.dodge_chance = 7

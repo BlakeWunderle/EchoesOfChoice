@@ -62,7 +62,7 @@ static func create_sleep_stalker(n: String, lvl: int = 2) -> FighterData:
 	var f := EH.base(n, "Sleep Stalker", lvl)
 	f.health = EH.es(52, 61, 3, 6, lvl, 2); f.max_health = f.health
 	f.mana = EH.es(4, 7, 1, 1, lvl, 2); f.max_mana = f.mana
-	f.physical_attack = EH.es(21, 25, 1, 3, lvl, 2)
+	f.physical_attack = EH.es(22, 26, 1, 3, lvl, 2)
 	f.physical_defense = EH.es(12, 15, 1, 2, lvl, 2)
 	f.magic_attack = EH.es(10, 13, 0, 1, lvl, 2)
 	f.magic_defense = EH.es(5, 8, 0, 1, lvl, 2)
@@ -265,7 +265,7 @@ static func create_clock_specter(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Clock Specter", lvl)
 	f.health = EH.es(225, 275, 4, 6, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 2, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(24, 29, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(25, 30, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(13, 17, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(33, 38, 1, 3, lvl, 8)
 	f.magic_defense = EH.es(22, 26, 1, 2, lvl, 8)
@@ -317,7 +317,7 @@ static func create_void_echo(n: String, lvl: int = 9) -> FighterData:
 	f.physical_defense = EH.es(12, 16, 1, 2, lvl, 9)
 	f.magic_attack = EH.es(28, 34, 1, 3, lvl, 9)
 	f.magic_defense = EH.es(20, 24, 1, 2, lvl, 9)
-	f.speed = EH.es(29, 34, 1, 2, lvl, 9)
+	f.speed = EH.es(28, 33, 1, 2, lvl, 9)
 	f.crit_chance = 21; f.crit_damage = 1; f.dodge_chance = 17
 	f.abilities = [EAB.void_echo_drain(), EAB.hollow_wail()]
 	f.flavor_text = "The psychic residue left by the Nightmare's passage through the dreamscape. It repeats fragments of devoured thoughts and feeds on the vitality of the living."

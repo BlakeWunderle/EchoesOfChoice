@@ -79,7 +79,7 @@ static func create_reef_shaman(n: String, lvl: int = 5) -> FighterData:
 	f.physical_defense = EH.es(13, 17, 1, 2, lvl, 5)
 	f.magic_attack = EH.es(33, 39, 2, 3, lvl, 5)
 	f.magic_defense = EH.es(14, 18, 1, 2, lvl, 5)
-	f.speed = EH.es(29, 35, 2, 3, lvl, 5)
+	f.speed = EH.es(28, 34, 2, 3, lvl, 5)
 	f.crit_chance = 14; f.crit_damage = 2; f.dodge_chance = 14
 	f.abilities = [EAB.coral_blast(), EAB.coral_barrage()]
 	f.flavor_text = "A hermit who communes with the living reef. Coral answers their call, erupting as both blade and storm."
