@@ -8,6 +8,7 @@ const FighterData := preload("res://scripts/data/fighter_data.gd")
 const PC := preload("res://scripts/tools/party_composer.gd")
 const BSDB := preload("res://scripts/tools/battle_stage_db.gd")
 const EnemyItemDB := preload("res://scripts/data/enemy_item_db.gd")
+const ItemDB := preload("res://scripts/data/item_db.gd")
 const EquipmentData := preload("res://scripts/data/equipment_data.gd")
 const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
@@ -27,6 +28,17 @@ const STALEMATE_MAX_PERIODS := 3
 
 static var _sim_engine: BattleEngine = null
 static var enable_enemy_items: bool = false  ## Set via --items flag
+static var player_item_id: String = ""  ## Set via --player-item flag
+
+const ITEM_MIN_PROG: Dictionary = {
+	"antidote": 3, "cinder_bomb": 3, "shimmer_oil": 3,
+	"whetstone": 3, "swiftroot": 3, "fire_bomb": 3,
+	"clarity_tonic": 6, "hex_powder": 6, "mind_fog": 6,
+	"war_drum": 6, "crystal_lens": 6,
+	"keen_edge": 8, "ether_shard": 8, "galeroot": 8,
+	"enfeebling_dust": 8, "void_salt": 8, "smoke_bomb": 8,
+	"spell_prism": 8, "blast_powder": 8,
+}
 
 
 static func _get_sim_engine() -> BattleEngine:
@@ -151,6 +163,11 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		parties = parties.filter(func(p: Dictionary) -> bool:
 			return not exclude_set.has(PC.get_party_description(p)))
 
+	if player_item_id != "":
+		var min_prog: int = ITEM_MIN_PROG.get(player_item_id, 0)
+		if stage.progression_stage < min_prog:
+			return {}
+
 	var combo_results := []
 	var class_diag := {}
 	var equip_stats := {}  ## { "physical_weapon": {wins: int, total: int}, ... }
@@ -174,6 +191,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 	var turn_max_losses := 0
 	var turn_loss_count := 0
 	var stalemate_count := 0
+	var item_uses := 0
 	var party_size := 3
 
 	for pi in parties.size():
@@ -191,11 +209,17 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 				engine.enemy_shared_items = EnemyItemDB.get_battle_items(stage.name)
 			else:
 				engine.enemy_shared_items.clear()
+			if player_item_id != "":
+				engine.player_shared_items = [ItemDB.create_by_id(player_item_id)]
+				engine.player_items_used = 0
+			else:
+				engine.player_shared_items.clear()
 			var br: Dictionary = run_single_battle(party_fighters, enemies, engine)
 			if br.won:
 				wins += 1
 			if br.get("stalemate", false):
 				stalemate_count += 1
+			item_uses += engine.player_items_used
 			turn_all_sum += br.all_actions
 			turn_player_sum += br.player_actions
 			turn_min = mini(turn_min, br.all_actions)
@@ -279,7 +303,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		if turn_loss_count > 0 else 0.0)
 	var avg_all_losses := float(turn_all_sum_losses) / turn_loss_count if turn_loss_count > 0 else 0.0
 
-	return {
+	var result := {
 		"stage_name": stage.name,
 		"target_win_rate": stage.target_win_rate,
 		"progression_stage": stage.progression_stage,
@@ -322,6 +346,14 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			},
 		},
 	}
+	if player_item_id != "":
+		result["player_item"] = player_item_id
+		result["item_usage"] = {
+			"uses": item_uses,
+			"total_battles": turn_battle_count,
+			"use_rate": float(item_uses) / turn_battle_count if turn_battle_count > 0 else 0.0,
+		}
+	return result
 
 
 # =============================================================================

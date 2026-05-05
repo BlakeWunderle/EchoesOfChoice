@@ -47,7 +47,7 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 			has_boss = true
 	var enemy_profile := EnemyRoles.get_battle_profile(enemy_ids)
 
-	return {
+	var entry := {
 		"stage_name": result.stage_name,
 		"story": stage.get("story", 1),
 		"progression_stage": result.progression_stage,
@@ -70,6 +70,10 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 		"equip_stats": _build_equip_json(result),
 		"ult_stats": _build_ult_json(result),
 	}
+	if result.has("player_item"):
+		entry["player_item"] = result["player_item"]
+		entry["item_usage"] = result.get("item_usage", {})
+	return entry
 
 
 static func _build_equip_json(result: Dictionary) -> Dictionary:

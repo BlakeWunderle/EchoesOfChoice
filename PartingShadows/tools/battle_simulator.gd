@@ -149,6 +149,10 @@ func _init() -> void:
 					i += 1
 			"--items":
 				SR.enable_enemy_items = true
+			"--player-item":
+				if i + 1 < args.size():
+					SR.player_item_id = args[i + 1]
+					i += 1
 			"--diagnostics":
 				_diagnostics = true
 			"--compact":
@@ -317,6 +321,12 @@ func _run_single(stage: Dictionary, sims_per_combo: int,
 		_combo_worker_index, _combo_worker_count, _exclude_combos)
 	var elapsed := (Time.get_ticks_msec() - sw) / 1000.0
 
+	if result.is_empty():
+		if not quiet:
+			print("  %s: SKIPPED (item not available at P%d)" % [
+				stage.name, stage.progression_stage])
+		return
+
 	_all_results.append(result)
 	_all_stages.append(stage)
 	if _use_cache:
@@ -390,6 +400,11 @@ func _run_stages(stages: Array, sims_per_combo: int,
 		else:
 			result = SR.simulate_stage(stage, sims, sample_size,
 				_combo_worker_index, _combo_worker_count, _exclude_combos)
+			if result.is_empty():
+				if not quiet:
+					print("  %s: SKIPPED (item not available at P%d)" % [
+						stage.name, stage.progression_stage])
+				continue
 			if _use_cache:
 				SC.store(stage.name, stage.get("story", 1),
 					sims, sample_size, result, stage)

@@ -18,6 +18,8 @@ var units: Array = []      ## Player party (alive)
 var enemies: Array = []    ## Enemy team (alive)
 var dead_units: Array = [] ## Dead party members (revived at end)
 var enemy_shared_items: Array = []  ## Shared enemy item pool (like player inventory)
+var player_shared_items: Array = []  ## Shared player item pool for sim testing
+var player_items_used: int = 0  ## Counter for sim tracking
 
 var sim_mode: bool = false  ## Skip signal emissions for headless simulation
 var difficulty_level: int = 1  ## 0=easy, 1=normal, 2=hard. Set by caller.
@@ -826,6 +828,85 @@ func _consume_shared_item(unit: FighterData, target: FighterData, index: int) ->
 
 
 # =============================================================================
+# Player Item AI (deterministic, for sim power-level testing)
+# =============================================================================
+
+func _try_player_item(unit: FighterData, targets: Array,
+		allies: Array) -> bool:
+	if player_shared_items.is_empty():
+		return false
+	var unit_offense := unit.physical_attack + unit.magic_attack
+	for ally: FighterData in allies:
+		if ally.health > 0 and (ally.physical_attack + ally.magic_attack) < unit_offense:
+			return false
+
+	# Priority 1: Cure debuffs if 2+
+	var debuff_count: int = 0
+	for mod: Dictionary in unit.modified_stats:
+		if mod["is_negative"]:
+			debuff_count += 1
+	if debuff_count >= 2:
+		var idx: int = _find_player_item(Enums.ItemEffect.CURE_DEBUFF)
+		if idx >= 0:
+			return _consume_player_item(unit, unit, idx)
+
+	# Priority 2: Buff best ally if unbuffed
+	for i: int in player_shared_items.size():
+		var item: ItemData = player_shared_items[i]
+		if item.effect_type == Enums.ItemEffect.BUFF and item.target_ally \
+				and item.magnitude > 0:
+			if item.target_all:
+				var any_unbuffed: bool = false
+				for ally: FighterData in allies:
+					if ally.health > 0 and not _has_modifier(ally, item.stat_type, false):
+						any_unbuffed = true
+						break
+				if any_unbuffed:
+					return _consume_player_item(unit, unit, i)
+			else:
+				var best: FighterData = _best_item_buff_target(allies, item)
+				if best != null:
+					return _consume_player_item(unit, best, i)
+
+	# Priority 3: Debuff strongest enemy
+	for i: int in player_shared_items.size():
+		var item: ItemData = player_shared_items[i]
+		if item.effect_type == Enums.ItemEffect.BUFF and not item.target_ally:
+			if not targets.is_empty():
+				if item.target_all:
+					return _consume_player_item(unit, targets[0], i)
+				var best: FighterData = _best_debuff_item_target(targets, item)
+				if best != null and not _has_modifier(best, item.stat_type, true):
+					return _consume_player_item(unit, best, i)
+
+	# Priority 4: Use damage item on enemy
+	for i: int in player_shared_items.size():
+		var item: ItemData = player_shared_items[i]
+		if item.effect_type == Enums.ItemEffect.DAMAGE and not item.target_ally:
+			if not targets.is_empty():
+				var target: FighterData = targets[randi() % targets.size()]
+				return _consume_player_item(unit, target, i)
+
+	return false
+
+
+func _find_player_item(effect: Enums.ItemEffect) -> int:
+	for i: int in player_shared_items.size():
+		var item: ItemData = player_shared_items[i]
+		if item.target_ally and item.effect_type == effect:
+			return i
+	return -1
+
+
+func _consume_player_item(unit: FighterData, target: FighterData, index: int) -> bool:
+	var item: ItemData = player_shared_items[index]
+	player_shared_items.remove_at(index)
+	use_item(unit, target, item)
+	player_items_used += 1
+	return true
+
+
+# =============================================================================
 # AI: port of C# ExecuteAITurn
 # =============================================================================
 
@@ -1299,9 +1380,13 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 			perform_rest(unit)
 			return
 
-	# -- Priority 4.5: Battle items (alongside block/rest) --
-	if _try_enemy_item(unit, targets, allies):
-		return
+	# -- Priority 4.5: Battle items --
+	if unit in units:
+		if _try_player_item(unit, targets, allies):
+			return
+	else:
+		if _try_enemy_item(unit, targets, allies):
+			return
 
 	# -- Priority 5: Life steal when wounded --
 	if hp_pct < 0.7 and not offensive_abilities.is_empty():

@@ -87,7 +87,8 @@ func _init() -> void:
 				passthrough.append(args[i])
 				# Forward the value of flags that take an argument.
 				if args[i] in ["--sims", "--sample", "--progression",
-						"--story", "--tier", "--difficulty"] and i + 1 < args.size():
+						"--story", "--tier", "--difficulty",
+						"--player-item"] and i + 1 < args.size():
 					i += 1
 					passthrough.append(args[i])
 		i += 1
@@ -703,6 +704,21 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 			"_total_battle_count": ts_count_l,
 		},
 	}
+
+	## Merge player item usage stats if present.
+	if partials[0].has("player_item"):
+		merged["player_item"] = partials[0]["player_item"]
+		var item_uses := 0
+		var item_battles := 0
+		for partial: Dictionary in partials:
+			var iu: Dictionary = partial.get("item_usage", {})
+			item_uses += int(iu.get("uses", 0))
+			item_battles += int(iu.get("total_battles", 0))
+		merged["item_usage"] = {
+			"uses": item_uses,
+			"total_battles": item_battles,
+			"use_rate": float(item_uses) / item_battles if item_battles > 0 else 0.0,
+		}
 
 	## Recalculate overall_win_rate as average of combo win_rates (matches simulate_stage).
 	var total_wr := 0.0
