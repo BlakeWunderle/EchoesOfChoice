@@ -630,6 +630,16 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 	var ts_min := 999999
 	var ts_max := 0
 	var ts_party_size := 3
+	var ts_all_sum_w := 0
+	var ts_player_sum_w := 0
+	var ts_count_w := 0
+	var ts_min_w := 999999
+	var ts_max_w := 0
+	var ts_all_sum_l := 0
+	var ts_player_sum_l := 0
+	var ts_count_l := 0
+	var ts_min_l := 999999
+	var ts_max_l := 0
 	for partial: Dictionary in partials:
 		var ts: Dictionary = partial.get("turn_stats", {})
 		ts_all_sum += int(ts.get("_total_all_actions", 0))
@@ -643,6 +653,26 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 		if pmax > ts_max:
 			ts_max = pmax
 		ts_party_size = int(ts.get("_party_size", 3))
+		var tw: Dictionary = ts.get("wins", {})
+		ts_all_sum_w += int(tw.get("_total_all_actions", 0))
+		ts_player_sum_w += int(tw.get("_total_player_actions", 0))
+		ts_count_w += int(tw.get("_total_battle_count", 0))
+		var wmin: int = int(tw.get("min_all_actions", 999999))
+		var wmax: int = int(tw.get("max_all_actions", 0))
+		if wmin < ts_min_w:
+			ts_min_w = wmin
+		if wmax > ts_max_w:
+			ts_max_w = wmax
+		var tl: Dictionary = ts.get("losses", {})
+		ts_all_sum_l += int(tl.get("_total_all_actions", 0))
+		ts_player_sum_l += int(tl.get("_total_player_actions", 0))
+		ts_count_l += int(tl.get("_total_battle_count", 0))
+		var lmin: int = int(tl.get("min_all_actions", 999999))
+		var lmax: int = int(tl.get("max_all_actions", 0))
+		if lmin < ts_min_l:
+			ts_min_l = lmin
+		if lmax > ts_max_l:
+			ts_max_l = lmax
 	merged["turn_stats"] = {
 		"avg_player_per_char": float(ts_player_sum) / (ts_party_size * ts_battle_count) if ts_battle_count > 0 else 0.0,
 		"avg_all_actions": float(ts_all_sum) / ts_battle_count if ts_battle_count > 0 else 0.0,
@@ -654,6 +684,24 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 		"_total_player_actions": ts_player_sum,
 		"_total_battle_count": ts_battle_count,
 		"_party_size": ts_party_size,
+		"wins": {
+			"avg_player_per_char": float(ts_player_sum_w) / (ts_party_size * ts_count_w) if ts_count_w > 0 else 0.0,
+			"avg_all_actions": float(ts_all_sum_w) / ts_count_w if ts_count_w > 0 else 0.0,
+			"min_all_actions": ts_min_w if ts_count_w > 0 else 0,
+			"max_all_actions": ts_max_w if ts_count_w > 0 else 0,
+			"_total_all_actions": ts_all_sum_w,
+			"_total_player_actions": ts_player_sum_w,
+			"_total_battle_count": ts_count_w,
+		},
+		"losses": {
+			"avg_player_per_char": float(ts_player_sum_l) / (ts_party_size * ts_count_l) if ts_count_l > 0 else 0.0,
+			"avg_all_actions": float(ts_all_sum_l) / ts_count_l if ts_count_l > 0 else 0.0,
+			"min_all_actions": ts_min_l if ts_count_l > 0 else 0,
+			"max_all_actions": ts_max_l if ts_count_l > 0 else 0,
+			"_total_all_actions": ts_all_sum_l,
+			"_total_player_actions": ts_player_sum_l,
+			"_total_battle_count": ts_count_l,
+		},
 	}
 
 	## Recalculate overall_win_rate as average of combo win_rates (matches simulate_stage).

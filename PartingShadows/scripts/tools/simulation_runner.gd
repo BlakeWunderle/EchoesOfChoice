@@ -163,6 +163,16 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 	var turn_min := 999999
 	var turn_max := 0
 	var turn_battle_count := 0
+	var turn_all_sum_wins := 0
+	var turn_player_sum_wins := 0
+	var turn_min_wins := 999999
+	var turn_max_wins := 0
+	var turn_win_count := 0
+	var turn_all_sum_losses := 0
+	var turn_player_sum_losses := 0
+	var turn_min_losses := 999999
+	var turn_max_losses := 0
+	var turn_loss_count := 0
 	var stalemate_count := 0
 	var party_size := 3
 
@@ -191,6 +201,18 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			turn_min = mini(turn_min, br.all_actions)
 			turn_max = maxi(turn_max, br.all_actions)
 			turn_battle_count += 1
+			if br.won:
+				turn_all_sum_wins += br.all_actions
+				turn_player_sum_wins += br.player_actions
+				turn_min_wins = mini(turn_min_wins, br.all_actions)
+				turn_max_wins = maxi(turn_max_wins, br.all_actions)
+				turn_win_count += 1
+			else:
+				turn_all_sum_losses += br.all_actions
+				turn_player_sum_losses += br.player_actions
+				turn_min_losses = mini(turn_min_losses, br.all_actions)
+				turn_max_losses = maxi(turn_max_losses, br.all_actions)
+				turn_loss_count += 1
 			# Accumulate per-class combat diagnostics.
 			for f: FighterData in all_party:
 				var ct: String = f.character_type
@@ -250,6 +272,12 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 	var avg_player_per_char := (float(turn_player_sum) / (party_size * turn_battle_count)
 		if turn_battle_count > 0 else 0.0)
 	var avg_all := float(turn_all_sum) / turn_battle_count if turn_battle_count > 0 else 0.0
+	var avg_ppc_wins := (float(turn_player_sum_wins) / (party_size * turn_win_count)
+		if turn_win_count > 0 else 0.0)
+	var avg_all_wins := float(turn_all_sum_wins) / turn_win_count if turn_win_count > 0 else 0.0
+	var avg_ppc_losses := (float(turn_player_sum_losses) / (party_size * turn_loss_count)
+		if turn_loss_count > 0 else 0.0)
+	var avg_all_losses := float(turn_all_sum_losses) / turn_loss_count if turn_loss_count > 0 else 0.0
 
 	return {
 		"stage_name": stage.name,
@@ -274,6 +302,24 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			"_total_player_actions": turn_player_sum,
 			"_total_battle_count": turn_battle_count,
 			"_party_size": party_size,
+			"wins": {
+				"avg_player_per_char": avg_ppc_wins,
+				"avg_all_actions": avg_all_wins,
+				"min_all_actions": turn_min_wins if turn_win_count > 0 else 0,
+				"max_all_actions": turn_max_wins if turn_win_count > 0 else 0,
+				"_total_all_actions": turn_all_sum_wins,
+				"_total_player_actions": turn_player_sum_wins,
+				"_total_battle_count": turn_win_count,
+			},
+			"losses": {
+				"avg_player_per_char": avg_ppc_losses,
+				"avg_all_actions": avg_all_losses,
+				"min_all_actions": turn_min_losses if turn_loss_count > 0 else 0,
+				"max_all_actions": turn_max_losses if turn_loss_count > 0 else 0,
+				"_total_all_actions": turn_all_sum_losses,
+				"_total_player_actions": turn_player_sum_losses,
+				"_total_battle_count": turn_loss_count,
+			},
 		},
 	}
 
