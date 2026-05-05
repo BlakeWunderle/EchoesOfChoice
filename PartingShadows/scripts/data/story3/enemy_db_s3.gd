@@ -187,14 +187,14 @@ static func create_hollow_echo(n: String, lvl: int = 4) -> FighterData:
 # Prog 7 Labyrinth enemies (+15% over original)
 static func create_somnolent_serpent(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Somnolent Serpent", lvl)
-	f.health = EH.es(250, 290, 4, 7, lvl, 8); f.max_health = f.health
+	f.health = EH.es(200, 232, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(32, 37, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(35, 40, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(24, 28, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(17, 21, 1, 2, lvl, 8)
 	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 8)
 	f.speed = EH.es(31, 36, 1, 3, lvl, 8)
-	f.crit_chance = 23; f.crit_damage = 1; f.dodge_chance = 17
+	f.crit_chance = 23; f.crit_damage = 1; f.dodge_chance = 12
 	f.abilities = [EAB.venom_coil(), EAB.sleep_fang()]
 	f.flavor_text = "A great serpent that glides through the labyrinth of slumber. Its venom induces a sleep within sleep, trapping victims in layers of dream they cannot escape."
 	return f
@@ -202,14 +202,14 @@ static func create_somnolent_serpent(n: String, lvl: int = 8) -> FighterData:
 
 static func create_twilight_stalker(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Twilight Stalker", lvl)
-	f.health = EH.es(240, 280, 4, 7, lvl, 8); f.max_health = f.health
+	f.health = EH.es(192, 224, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 1, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(33, 38, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(36, 41, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(17, 21, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(14, 17, 0, 2, lvl, 8)
 	f.magic_defense = EH.es(16, 19, 1, 2, lvl, 8)
 	f.speed = EH.es(32, 37, 1, 3, lvl, 8)
-	f.crit_chance = 23; f.crit_damage = 2; f.dodge_chance = 19
+	f.crit_chance = 23; f.crit_damage = 2; f.dodge_chance = 14
 	f.abilities = [EAB.dusk_blade(), EAB.vanish_strike()]
 	f.flavor_text = "A silent hunter cloaked in the half-light between dreams. It vanishes mid-stride and reappears behind its prey with lethal precision."
 	return f
@@ -217,14 +217,14 @@ static func create_twilight_stalker(n: String, lvl: int = 8) -> FighterData:
 
 static func create_waking_terror(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Waking Terror", lvl)
-	f.health = EH.es(248, 288, 4, 7, lvl, 8); f.max_health = f.health
+	f.health = EH.es(198, 230, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(8, 11, 1, 2, lvl, 8); f.max_mana = f.mana
 	f.physical_attack = EH.es(16, 19, 0, 2, lvl, 8)
 	f.physical_defense = EH.es(14, 18, 1, 2, lvl, 8)
-	f.magic_attack = EH.es(33, 38, 1, 3, lvl, 8)
+	f.magic_attack = EH.es(35, 40, 1, 3, lvl, 8)
 	f.magic_defense = EH.es(24, 28, 1, 2, lvl, 8)
 	f.speed = EH.es(30, 35, 1, 2, lvl, 8)
-	f.crit_chance = 24; f.crit_damage = 1; f.dodge_chance = 16
+	f.crit_chance = 24; f.crit_damage = 1; f.dodge_chance = 12
 	f.abilities = [EAB.scream_blast(), EAB.terror_wave()]
 	f.flavor_text = "A towering horror that bleeds into the waking world, born where nightmares press too hard against reality. Its screams carry the force of raw, unfiltered panic."
 	return f
@@ -233,9 +233,9 @@ static func create_waking_terror(n: String, lvl: int = 8) -> FighterData:
 # Prog 7 ClockTower enemies
 static func create_dusk_sentinel(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Dusk Sentinel", lvl)
-	f.health = EH.es(275, 320, 4, 7, lvl, 8); f.max_health = f.health
+	f.health = EH.es(220, 256, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(8, 11, 1, 1, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(32, 37, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(35, 40, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(24, 28, 1, 3, lvl, 8)
 	f.magic_attack = EH.es(12, 15, 0, 1, lvl, 8)
 	f.magic_defense = EH.es(14, 18, 1, 2, lvl, 8)
@@ -248,14 +248,14 @@ static func create_dusk_sentinel(n: String, lvl: int = 8) -> FighterData:
 
 static func create_shattered_hourglass(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Shattered Hourglass", lvl)
-	f.health = EH.es(225, 265, 4, 6, lvl, 8); f.max_health = f.health
+	f.health = EH.es(180, 212, 4, 6, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(10, 13, 1, 2, lvl, 8); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 14, 0, 2, lvl, 8)
 	f.physical_defense = EH.es(11, 15, 1, 2, lvl, 8)
-	f.magic_attack = EH.es(32, 37, 1, 3, lvl, 8)
+	f.magic_attack = EH.es(34, 39, 1, 3, lvl, 8)
 	f.magic_defense = EH.es(19, 23, 1, 2, lvl, 8)
 	f.speed = EH.es(32, 37, 1, 3, lvl, 8)
-	f.crit_chance = 13; f.crit_damage = 1; f.dodge_chance = 18
+	f.crit_chance = 13; f.crit_damage = 1; f.dodge_chance = 12
 	f.abilities = [EAB.grain_siphon(), EAB.eroding_sand()]
 	f.flavor_text = "A broken hourglass floating in the void, its glass cracked and splintered. The sand hangs suspended mid-spill, forming the faint suggestion of a face with hollow, glowing eyes. Every grain is a stolen second from a dreamer who slept too long."
 	return f
@@ -263,11 +263,11 @@ static func create_shattered_hourglass(n: String, lvl: int = 8) -> FighterData:
 
 static func create_clock_specter(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Clock Specter", lvl)
-	f.health = EH.es(225, 275, 4, 6, lvl, 8); f.max_health = f.health
+	f.health = EH.es(180, 220, 4, 6, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 2, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(25, 30, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(26, 31, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(13, 17, 1, 2, lvl, 8)
-	f.magic_attack = EH.es(33, 38, 1, 3, lvl, 8)
+	f.magic_attack = EH.es(34, 39, 1, 3, lvl, 8)
 	f.magic_defense = EH.es(22, 26, 1, 2, lvl, 8)
 	f.speed = EH.es(36, 41, 1, 3, lvl, 8)
 	f.crit_chance = 30; f.crit_damage = 2; f.dodge_chance = 12

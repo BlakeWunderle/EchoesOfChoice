@@ -43,16 +43,16 @@ static func create_orc(n: String, lvl: int = 4) -> FighterData:
 
 static func create_troll(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Troll", lvl)
-	f.health = EH.es(249, 278, 6, 10, lvl, 5); f.max_health = f.health
+	f.health = EH.es(215, 240, 6, 10, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(12, 15, 1, 2, lvl, 5); f.max_mana = f.mana
 	f.physical_attack = EH.es(31, 40, 2, 3, lvl, 5)
-	f.physical_defense = EH.es(18, 22, 1, 3, lvl, 5)
+	f.physical_defense = EH.es(12, 16, 1, 3, lvl, 5)
 	f.magic_attack = EH.es(5, 9, 0, 1, lvl, 5)
-	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 5)
+	f.magic_defense = EH.es(10, 14, 1, 2, lvl, 5)
 	f.speed = EH.es(22, 29, 1, 2, lvl, 5)
 	f.crit_chance = 16; f.crit_damage = 2; f.dodge_chance = 11
-	f.abilities = [EAB.boulder_fist(), EAB.regenerate(), EAB.stomp()]
-	f.flavor_text = "Massive creatures whose wounds knit shut before your eyes. Best dealt with quickly."
+	f.abilities = [EAB.boulder_fist(), EAB.stomp()]
+	f.flavor_text = "A massive brute that swings boulders like fists. What it lacks in wit it makes up in raw, crushing force."
 	return f
 
 static func create_harpy(n: String, lvl: int = 5) -> FighterData:
@@ -117,7 +117,7 @@ static func create_siren(n: String, lvl: int = 4) -> FighterData:
 	f.mana = EH.es(12, 21, 1, 3, lvl, 3); f.max_mana = f.mana
 	f.physical_attack = EH.es(15, 22, 1, 3, lvl, 4)
 	f.physical_defense = EH.es(11, 18, 1, 3, lvl, 4)
-	f.magic_attack = EH.es(27, 40, 3, 6, lvl, 4)
+	f.magic_attack = EH.es(29, 42, 3, 6, lvl, 4)
 	f.magic_defense = EH.es(16, 25, 2, 4, lvl, 4)
 	f.speed = EH.es(26, 33, 1, 2, lvl, 3)
 	f.crit_chance = 11; f.crit_damage = 2; f.dodge_chance = 11
@@ -143,12 +143,12 @@ static func create_captain(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Captain", lvl)
 	f.health = EH.es(175, 213, 5, 11, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(14, 30, 1, 4, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(30, 39, 2, 5, lvl, 5)
+	f.physical_attack = EH.es(31, 40, 2, 5, lvl, 5)
 	f.physical_defense = EH.es(21, 29, 2, 5, lvl, 5)
 	f.magic_attack = EH.es(9, 17, 1, 3, lvl, 5)
 	f.magic_defense = EH.es(9, 17, 1, 3, lvl, 5)
 	f.speed = EH.es(19, 28, 1, 2, lvl, 5)
-	f.crit_chance = 30; f.crit_damage = 2; f.dodge_chance = 23
+	f.crit_chance = 30; f.crit_damage = 2; f.dodge_chance = 12
 	f.abilities = [EAB.flintlock(), EAB.cannon_barrage(), EAB.bravado()]
 	f.flavor_text = "A seasoned officer who commands through firepower and sheer bravado."
 	return f
@@ -157,12 +157,12 @@ static func create_pirate(n: String, lvl: int = 4) -> FighterData:
 	var f := EH.base(n, "Pirate", lvl)
 	f.health = EH.es(137, 171, 5, 11, lvl, 4); f.max_health = f.health
 	f.mana = EH.es(10, 23, 1, 4, lvl, 4); f.max_mana = f.mana
-	f.physical_attack = EH.es(26, 34, 2, 5, lvl, 4)
+	f.physical_attack = EH.es(27, 35, 2, 5, lvl, 4)
 	f.physical_defense = EH.es(17, 24, 2, 5, lvl, 4)
 	f.magic_attack = EH.es(9, 17, 1, 3, lvl, 4)
 	f.magic_defense = EH.es(8, 16, 1, 3, lvl, 4)
 	f.speed = EH.es(19, 29, 1, 3, lvl, 4)
-	f.crit_chance = 27; f.crit_damage = 3; f.dodge_chance = 27
+	f.crit_chance = 27; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.flintlock(), EAB.dirty_trick()]
 	f.flavor_text = "Sea rogues who fight without honor, armed with flintlocks and dirty tricks."
 	return f
