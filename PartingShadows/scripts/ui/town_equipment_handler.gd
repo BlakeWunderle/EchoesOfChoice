@@ -74,7 +74,7 @@ func _show_slot_selection() -> void:
 			options.append({"label": label})
 		_equip_slot_indices.append(i)
 
-	var header: String = "Upgrade equipment for %s:" % fighter.character_name
+	var header: String = "Select equipment for %s:" % fighter.character_name
 	choices_requested.emit(options, header)
 
 
@@ -97,8 +97,7 @@ func on_slot_selected(index: int) -> void:
 		_upgrade_option_ids.append(opt.id)
 		options.append({"label": opt.label, "description": opt.description})
 
-	var header: String = "Upgrade %s for %s:" % [
-		_selected_equip.display_name, fighter.character_name]
+	var header: String = "Select %s:" % _selected_equip.get_slot_name()
 	choices_requested.emit(options, header)
 
 

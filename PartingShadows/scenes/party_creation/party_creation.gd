@@ -58,6 +58,7 @@ var _portrait_btn_a: Button
 var _portrait_btn_b: Button
 var _portrait_back_btn: Button
 var _player_indicator: Label
+var _equip_label: Label
 var _class_info_panel: ClassInfoPanel
 
 
@@ -149,6 +150,12 @@ func _build_ui() -> void:
 	_name_input.name_entered.connect(_on_name_entered)
 	_name_input.visible = false
 	_vbox.add_child(_name_input)
+
+	_equip_label = Label.new()
+	_equip_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_equip_label.add_theme_font_size_override("font_size", 28)
+	_equip_label.visible = false
+	_vbox.add_child(_equip_label)
 
 	_choice_menu = ChoiceMenu.new()
 	_choice_menu.choice_selected.connect(_on_class_selected)
@@ -299,6 +306,7 @@ func _set_state(new_state: State) -> void:
 	_state = new_state
 	_dialogue.visible = false
 	_name_input.visible = false
+	_equip_label.visible = false
 	_choice_menu.visible = false
 	_portrait_container.visible = false
 	_portrait_back_btn.visible = false
@@ -601,13 +609,13 @@ func _show_equip_choices(slot_type: String) -> void:
 	match slot_type:
 		"weapon":
 			choices = EquipmentDB.get_weapon_choices()
-			header = "Choose a weapon:"
+			header = "Select Weapon:"
 		"armor":
 			choices = EquipmentDB.get_armor_choices()
-			header = "Choose armor:"
+			header = "Select Armor:"
 		"boots":
 			choices = EquipmentDB.get_boots_choices()
-			header = "Choose boots:"
+			header = "Select Boots:"
 		_:
 			return
 
@@ -619,9 +627,8 @@ func _show_equip_choices(slot_type: String) -> void:
 		options.append({"label": c.label, "description": c.description})
 	_equip_choices = options
 
-	_dialogue.visible = true
-	_dialogue.show_text([header])
-	# Don't wait for text advance; show choices immediately below
+	_equip_label.text = header
+	_equip_label.visible = true
 	_choice_menu.show_choices(options)
 
 	if _state in [State.EQUIP_WEAPON_1, State.EQUIP_WEAPON_2, State.EQUIP_WEAPON_3]:
@@ -642,7 +649,7 @@ func _on_equip_selected(index: int) -> void:
 		return
 
 	_choice_menu.hide_menu()
-	_dialogue.visible = false
+	_equip_label.visible = false
 
 	var choice_id: String = _equip_choice_ids[index]
 	var fighter: FighterData = _party.back()

@@ -50,6 +50,16 @@ func _ready() -> void:
 		NetManager.peer_scene_ready.connect(_on_peer_scene_ready)
 
 
+func _input(event: InputEvent) -> void:
+	if _phase != TownPhase.SHOPPING or not _choice_menu.visible:
+		return
+	if NetManager.is_multiplayer_active and not NetManager.is_host:
+		return
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("cancel"):
+		_on_shop_selected(_shop_items.size())
+		get_viewport().set_input_as_handled()
+
+
 func _build_ui() -> void:
 	# Background image (behind everything)
 	_scene_image = TextureRect.new()
@@ -204,7 +214,7 @@ func _do_text_advance() -> void:
 
 
 func _do_equip_narration_advance() -> void:
-	_dialogue.visible = false
+	_dialogue.dismiss()
 	if _equip_handler:
 		_equip_handler.on_narration_done()
 
@@ -473,7 +483,7 @@ func _on_equip_narration(lines: Array) -> void:
 
 
 func _on_equip_choices(options: Array, header: String) -> void:
-	_dialogue.visible = false
+	_dialogue.dismiss()
 	_upgrade_label.text = header
 	_upgrade_label.visible = true
 	_class_info_panel.visible = false

@@ -127,6 +127,7 @@ func apply_bindings() -> void:
 	_add_joypad_to_ui_action("ui_accept", _get_confirm_button())
 	_add_joypad_to_ui_action("ui_cancel", _get_cancel_button())
 	_add_joypad_nav_to_ui_actions()
+	_sync_keyboard_nav_to_ui_actions()
 	# Strip Tab / Shift+Tab from focus actions to avoid stealing Steam overlay shortcut
 	for focus_action: String in ["ui_focus_next", "ui_focus_prev"]:
 		if not InputMap.has_action(focus_action):
@@ -198,6 +199,28 @@ func _add_joypad_nav_to_ui_actions() -> void:
 		axis.axis = nav_axes[action][0] as JoyAxis
 		axis.axis_value = nav_axes[action][1]
 		InputMap.action_add_event(action, axis)
+
+
+func _sync_keyboard_nav_to_ui_actions() -> void:
+	var mapping: Dictionary = {
+		"move_up": "ui_up", "move_down": "ui_down",
+		"move_left": "ui_left", "move_right": "ui_right",
+	}
+	for move_action: String in mapping:
+		var ui_action: String = mapping[move_action]
+		if not InputMap.has_action(ui_action):
+			continue
+		for keycode in keyboard_bindings.get(move_action, []):
+			var key: Key = int(keycode) as Key
+			var already: bool = false
+			for existing: InputEvent in InputMap.action_get_events(ui_action):
+				if existing is InputEventKey and (existing as InputEventKey).keycode == key:
+					already = true
+					break
+			if not already:
+				var ev := InputEventKey.new()
+				ev.keycode = key
+				InputMap.action_add_event(ui_action, ev)
 
 
 func rebind_action(action_name: String, keycode: Key) -> void:
