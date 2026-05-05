@@ -79,9 +79,9 @@ JSON_PATH="C:/Users/blake/.claude/projects/c--Projects-PartingShadows/memory/cla
 MD_PATH="C:/Users/blake/.claude/projects/c--Projects-PartingShadows/memory/class-balance.md"
 SIM_OUT="C:/Users/blake/.claude/projects/c--Projects-PartingShadows/memory/sim_output.txt"
 
-# Quick iteration (single prog)
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- \
-  --story <N> --sample 100 --sims 50 --progression <P> --compact 2>&1 | grep -v "$NOISE" > "$SIM_OUT"
+# Quick iteration (single progression)
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- \
+  --story <N> --sample 100 --sims 50 --progression <P> --compact --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE" > "$SIM_OUT"
 
 # Tier validation with class data in one pass (recommended)
 "$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- \
@@ -122,6 +122,15 @@ The JSON file at `$JSON_PATH` accumulates results across runs. New runs merge in
 ```
 
 **When you need class data** (band checks, outlier analysis, tier handoffs): read the JSON file first. Only re-sim if stats changed since it was written.
+
+### Post-Run Analysis (No Re-Sim Required)
+
+After any sim command that includes `--json "$JSON_PATH"`, the following skills work immediately:
+
+- **`/fight-length`** -- reads `turn_stats` from the JSON to check for slogs and short bosses
+- **`/class-report`** -- reads `class_breakdown` from the JSON to generate per-class win rate tables
+
+No refresh or re-sim is needed. The JSON accumulates across runs (new results merge into existing data), so partial runs still leave a complete dataset.
 
 ### Resuming a Previous Session
 
@@ -276,7 +285,7 @@ Before tuning a story, read the story-specific reference file for difficulty gra
 | `scripts/data/ability_db.gd`, `ability_db_player.gd` | Player abilities |
 | `scripts/tools/simulation_runner.gd` | CLASS BREAKDOWN, WEAK flags |
 | `scripts/tools/battle_stage_db.gd` | Target win rates per stage |
-| `tools/battle_simulator.gd` | CLI entry point |
+| `tools/battle_simulator.gd` | Worker script (invoked by parallel coordinator) |
 | `tools/battle_sim_parallel.gd` | Parallel coordinator |
 
 Enemy DBs and battle configs are story-specific -- see the story reference files.

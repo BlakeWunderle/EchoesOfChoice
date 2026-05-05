@@ -29,6 +29,7 @@ const IMPORT_SENTINEL_TIMEOUT_MS: int = 90000    ## max ms to wait for a worker 
 
 var _json_path := ""
 var _markdown_path := ""
+var _from_json_path := ""
 var _sim_mode := "quick"
 var _progressive := false
 var _from_prog := 0
@@ -69,6 +70,10 @@ func _init() -> void:
 				if i + 1 < args.size():
 					_markdown_path = args[i + 1]
 					i += 1
+			"--from-json":
+				if i + 1 < args.size():
+					_from_json_path = args[i + 1]
+					i += 1
 			"--progressive":
 				_progressive = true
 			"--compact":
@@ -87,6 +92,13 @@ func _init() -> void:
 					passthrough.append(args[i])
 		i += 1
 
+	# Handle --clear-cache directly (utility command, no workers needed).
+	if "--clear-cache" in args:
+		SC.clear()
+		print("Sim cache cleared.")
+		quit()
+		return
+
 	if "--auto" in passthrough:
 		_sim_mode = "full"
 
@@ -99,6 +111,15 @@ func _init() -> void:
 	## Per-battle timeout: workers only process 1/N of a single battle's combos.
 	if timeout_sec < 0:
 		timeout_sec = PER_BATTLE_TIMEOUT_SEC
+
+	# Convert existing JSON to markdown without simulating.
+	if _from_json_path != "":
+		if _markdown_path == "":
+			print("ERROR: --from-json requires --markdown <path>")
+		else:
+			_generate_from_json()
+		quit()
+		return
 
 	if _progressive:
 		_run_progressive(jobs, passthrough, stagger_ms, timeout_sec)
@@ -696,3 +717,16 @@ func _write_outputs(all_stages: Array) -> void:
 			print("\n  ERROR: Could not write JSON report to: %s" % _json_path)
 	if _markdown_path != "":
 		SRepMD.write_markdown(_markdown_path, all_stages, _sim_mode)
+
+
+func _generate_from_json() -> void:
+	var file := FileAccess.open(_from_json_path, FileAccess.READ)
+	if file == null:
+		print("ERROR: Could not read: %s" % _from_json_path)
+		return
+	var json := JSON.new()
+	if json.parse(file.get_as_text()) != OK or not json.data is Dictionary:
+		print("ERROR: Invalid JSON in: %s" % _from_json_path)
+		return
+	file.close()
+	SRepMD.write_markdown(_markdown_path, json.data.get("stages", []), "cached")

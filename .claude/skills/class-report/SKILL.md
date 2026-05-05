@@ -7,6 +7,8 @@ description: Generate a per-class win rate report across all battles. Uses exist
 
 Builds a persistent markdown report showing how every player class performs at every battle. Uses existing JSON data by default -- only re-sims when explicitly requested.
 
+**Data is always fresh after any `/battle-sim` or `/sim-tools` run** -- those skills always include `--json` so this skill can read immediately without re-simming.
+
 ## Arguments
 
 - No args: use existing JSON if present, otherwise run quick sim
@@ -29,19 +31,19 @@ REPORT_PATH="C:/Users/blake/.claude/projects/c--Projects-PartingShadows/memory/c
 
 **If `refresh` was NOT provided AND `JSON_PATH` exists:** Convert existing JSON to markdown (no simulation):
 ```bash
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --from-json "$JSON_PATH" --markdown "$REPORT_PATH" 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --from-json "$JSON_PATH" --markdown "$REPORT_PATH" 2>&1 | grep -v "$NOISE"
 ```
 
-**If `refresh` was provided OR `JSON_PATH` does not exist:** Run the simulator:
+**If `refresh` was provided OR `JSON_PATH` does not exist:** Run the **parallel** simulator (NEVER use battle_simulator.gd for sim runs):
 
 **Quick mode** (default when refreshing): `--sample 150 --sims 80`
 ```bash
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --sample 150 --sims 80 [--story N] --all --json "$JSON_PATH" --markdown "$REPORT_PATH" 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --jobs 20 --sample 150 --sims 80 [--story N] --all --json "$JSON_PATH" --markdown "$REPORT_PATH" 2>&1 | grep -v "$NOISE"
 ```
 
 **Full mode**: `--auto`
 ```bash
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --auto [--story N] --all --json "$JSON_PATH" --markdown "$REPORT_PATH" 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --jobs 20 --auto [--story N] --all --no-cache --diagnostics --json "$JSON_PATH" --markdown "$REPORT_PATH" 2>&1 | grep -v "$NOISE"
 ```
 
 Use a 600000ms timeout for full mode.
@@ -88,7 +90,7 @@ If the report shows failures or outliers, surface them to the user and wait for 
 
 | File | Purpose |
 |------|---------|
-| `PartingShadows/tools/battle_simulator.gd` | CLI entry point (--json, --markdown, --from-json flags) |
+| `PartingShadows/tools/battle_sim_parallel.gd` | Parallel coordinator (--json, --markdown, --from-json flags) |
 | `PartingShadows/scripts/tools/sim_report_markdown.gd` | Markdown report generator (class tables, outliers, boss section) |
 | `PartingShadows/scripts/tools/sim_report.gd` | JSON report builder (build_entry format) |
 | `PartingShadows/scripts/tools/simulation_runner.gd` | Simulation engine with class breakdown |

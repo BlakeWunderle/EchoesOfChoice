@@ -10,6 +10,7 @@ Advanced utilities for the battle simulator: progressive validation, outlier dia
 ```bash
 GODOT="C:/Users/blake/AppData/Local/Microsoft/WinGet/Packages/GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe/Godot_v4.6.1-stable_win64_console.exe"
 NOISE='No loader\|Oswald\|game_theme\|custom project\|Unreferenced static string\|RID allocations.*leaked\|Pages in use exist at exit\|PagedAllocator\|ObjectDB instances leaked\|resources still in use at exit\|OpenGL API\|NVIDIA\|WASAPI\|Cleanup\|Main::'
+JSON_PATH="C:/Users/blake/.claude/projects/c--Projects-PartingShadows/memory/class-report-data.json"
 ```
 
 ---
@@ -22,10 +23,10 @@ Run specific battles by name with full `--auto` precision, without simming the e
 
 ```bash
 # Run 3 specific battles with auto sims
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --auto --battles S3_DreamShadowChase,S3_DreamLabyrinth,S3_DreamNightmare --compact 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --auto --battles S3_DreamShadowChase,S3_DreamLabyrinth,S3_DreamNightmare --compact --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 
 # Combine with --json to persist class data for those battles
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --auto --battles CityStreetBattle,WolfForestBattle --json report.json 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --auto --battles CityStreetBattle,WolfForestBattle --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 ```
 
 ### When to Use
@@ -40,27 +41,17 @@ Run specific battles by name with full `--auto` precision, without simming the e
 
 Runs battles grouped by progression stage (lowest to highest), stopping at the first progression where any stage fails. Prevents wasting time on later progressions when early ones are broken.
 
-### Sequential
+### Usage
 
 ```bash
 # Run all Story 1 progressions, stop on first failure
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --progressive --story 1 --auto --sample 100 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --progressive --story 1 --auto --sample 100 --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 
 # Skip Progs 0-2, start from Prog 3
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --progressive --from 3 --story 1 --sims 50 --sample 100 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --progressive --from 3 --story 1 --sims 50 --sample 100 --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 
 # Specific tier within a story
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --progressive --story 2 --tier tier1 --sims 50 2>&1 | grep -v "$NOISE"
-```
-
-### Parallel
-
-```bash
-# Progressive with parallel workers (recommended for full validation)
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --progressive --story 1 --auto --jobs 10 2>&1 | grep -v "$NOISE"
-
-# Skip early progressions in parallel
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --progressive --from 5 --story 2 --sims 50 --jobs 10 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --progressive --story 2 --tier tier1 --sims 50 --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 ```
 
 ### Output
@@ -77,7 +68,7 @@ Runs battles grouped by progression stage (lowest to highest), stopping at the f
   PROGRESSION 1  (2 battles)
 ============================================================
   WolfForestBattle: 80.2% (TOO HARD)
-  ForestWaypointBattle: 83.1% (PASS)
+  WaypointDefenseBattle: 83.1% (PASS)
 
   PROGRESSION 1 FAILED:
     WolfForestBattle (80.2%, TOO HARD)
@@ -100,13 +91,10 @@ When a class is flagged WEAK (win rate < target * 60%), diagnostics explain *why
 
 ```bash
 # Single battle with diagnostics
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --diagnostics --sims 50 CityStreetBattle 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --diagnostics --sims 50 --battles CityStreetBattle --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 
 # All battles in a progression with diagnostics
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --diagnostics --sims 50 --progression 3 --story 1 2>&1 | grep -v "$NOISE"
-
-# Diagnostics in JSON output
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --diagnostics --sims 50 --json report.json CityStreetBattle 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --diagnostics --sims 50 --progression 3 --story 1 --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 ```
 
 ### Output
@@ -150,13 +138,10 @@ Reduces stdout to 1 line per PASS stage and 3-5 lines per FAIL stage, writing fu
 
 ```bash
 # Compact single progression
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --compact --story 1 --sims 50 --progression 0 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --compact --story 1 --sims 50 --progression 0 --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 
 # Compact full validation
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --compact --story 1 --auto --all 2>&1 | grep -v "$NOISE"
-
-# Compact parallel
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --compact --story 1 --auto --all --jobs 10 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --compact --story 1 --auto --all --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 ```
 
 ### Output
@@ -199,10 +184,10 @@ Simulation results are automatically cached based on MD5 hashes of all dependenc
 
 ```bash
 # Force re-simulation (ignore cache)
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --no-cache --sims 50 CityStreetBattle 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --no-cache --sims 50 --battles CityStreetBattle --jobs 20 --json "$JSON_PATH" 2>&1 | grep -v "$NOISE"
 
 # Clear all cached results
-"$GODOT" --path PartingShadows --headless --script res://tools/battle_simulator.gd -- --clear-cache 2>&1 | grep -v "$NOISE"
+"$GODOT" --path PartingShadows --headless --script res://tools/battle_sim_parallel.gd -- --clear-cache 2>&1 | grep -v "$NOISE"
 ```
 
 ### What Invalidates Cache
@@ -216,6 +201,12 @@ Any file change in the dependency chain:
 ### Cache File Location
 
 `C:\Users\blake\AppData\Roaming\Godot\app_userdata\Parting Shadows\sim_cache.json`
+
+---
+
+## Data Persistence
+
+Every sim command above includes `--json "$JSON_PATH"`. After any run completes, `/fight-length` and `/class-report` can read the data immediately without re-simulation. The JSON accumulates across runs (new results merge into existing data).
 
 ---
 
@@ -238,4 +229,5 @@ Any file change in the dependency chain:
 |-------|-------------|
 | `/battle-sim` | Main balance feedback loop |
 | `/balance-log` | Record balance results across sessions |
-| `/class-report` | Per-class win rate snapshot |
+| `/class-report` | Per-class win rate snapshot (reads JSON immediately after sim) |
+| `/fight-length` | Fight length analysis (reads JSON immediately after sim) |
