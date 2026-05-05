@@ -263,7 +263,7 @@ static func create_cellar_watcher(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Cellar Watcher", lvl)
 	f.health = EH.es(434, 499, 4, 7, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(13, 15, 1, 2, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(75, 86, 2, 4, lvl, 11)
+	f.physical_attack = EH.es(76, 87, 2, 4, lvl, 11)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 11)
 	f.magic_attack = EH.es(72, 83, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(29, 37, 1, 3, lvl, 11)

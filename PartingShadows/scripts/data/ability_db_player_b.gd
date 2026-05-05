@@ -94,7 +94,7 @@ static func demolition_charge() -> AbilityData:
 # Chronomancer
 static func temporal_rift() -> AbilityData:
 	return _make("Temporal Rift", "Tear open a rift in time, bombarding all enemies with temporal energy.",
-		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 5, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 10, 0, true, 5, true, 0, 0.0)
 
 static func time_bomb() -> AbilityData:
 	return _make("Time Bomb", "A delayed temporal explosion.",
@@ -111,7 +111,7 @@ static func starfall() -> AbilityData:
 
 static func meteor_shower() -> AbilityData:
 	return _make("Meteor Shower", "A rain of cosmic debris.",
-		Enums.StatType.MAGIC_ATTACK, 3, 0, true, 5, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 5, 0, true, 5, true, 0, 0.0)
 
 static func eclipse() -> AbilityData:
 	return _make("Eclipse", "Blot out the enemy's magical senses.",
@@ -225,7 +225,7 @@ static func natures_mend() -> AbilityData:
 
 static func thorn_burst() -> AbilityData:
 	return _make("Thorn Burst", "A violent eruption of razor-sharp thorns.",
-		Enums.StatType.MAGIC_ATTACK, 15, 0, true, 5, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 17, 0, true, 5, false, 0, 0.0)
 
 static func vine_wall() -> AbilityData:
 	return _make("Vine Wall", "A living wall of thorned vines shields all allies.",

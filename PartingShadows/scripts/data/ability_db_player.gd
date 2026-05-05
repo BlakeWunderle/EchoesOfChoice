@@ -225,7 +225,7 @@ static func lay_on_hands() -> AbilityData:
 
 static func holy_strike() -> AbilityData:
 	return _make("Holy Strike", "A blow charged with divine wrath.",
-		Enums.StatType.MIXED_ATTACK, 18, 0, true, 2, false, 0, 0.0)
+		Enums.StatType.MIXED_ATTACK, 20, 0, true, 2, false, 0, 0.0)
 
 static func smite() -> AbilityData:
 	return _make("Smite", "Holy wrath made manifest.",
@@ -364,7 +364,7 @@ static func ovation() -> AbilityData:
 
 static func recite() -> AbilityData:
 	return _make("Recite", "Words of power that wound.",
-		Enums.StatType.MAGIC_ATTACK, 18, 0, true, 4, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 20, 0, true, 4, false, 0, 0.0)
 
 static func magnum_opus() -> AbilityData:
 	return _make("Magnum Opus", "The poet's greatest work. All allies feel invincible.",

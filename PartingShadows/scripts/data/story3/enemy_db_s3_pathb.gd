@@ -32,7 +32,7 @@ static func create_bound_stalker(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Bound Stalker", lvl)
 	f.health = EH.es(425, 489, 4, 7, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(8, 11, 1, 1, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(95, 106, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(96, 107, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 12)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 12)
 	f.magic_defense = EH.es(30, 36, 2, 3, lvl, 12)
