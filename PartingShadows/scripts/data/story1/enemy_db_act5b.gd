@@ -66,7 +66,7 @@ static func create_void_horror(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(26, 31, 2, 3, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(24, 28, 0, 2, lvl, 15)
 	f.physical_defense = EH.es(35, 43, 2, 4, lvl, 15)
-	f.magic_attack = EH.es(106, 116, 4, 6, lvl, 15)
+	f.magic_attack = EH.es(108, 118, 4, 6, lvl, 15)
 	f.magic_defense = EH.es(50, 58, 3, 5, lvl, 15)
 	f.speed = EH.es(52, 58, 2, 4, lvl, 15)
 	f.crit_chance = 20; f.crit_damage = 5; f.dodge_chance = 15
@@ -79,7 +79,7 @@ static func create_fractured_shadow(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "Fractured Shadow", lvl)
 	f.health = EH.es(425, 481, 6, 9, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(14, 18, 1, 2, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(102, 112, 3, 5, lvl, 15)
+	f.physical_attack = EH.es(104, 114, 3, 5, lvl, 15)
 	f.physical_defense = EH.es(29, 36, 2, 3, lvl, 15)
 	f.magic_attack = EH.es(24, 28, 0, 2, lvl, 15)
 	f.magic_defense = EH.es(32, 40, 2, 3, lvl, 15)
@@ -96,7 +96,7 @@ static func create_shadow_remnant(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(22, 27, 2, 3, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(24, 28, 0, 2, lvl, 15)
 	f.physical_defense = EH.es(37, 45, 2, 3, lvl, 15)
-	f.magic_attack = EH.es(93, 102, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(95, 104, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(46, 54, 2, 4, lvl, 15)
 	f.speed = EH.es(55, 62, 2, 4, lvl, 15)
 	f.crit_chance = 20; f.crit_damage = 5; f.dodge_chance = 17

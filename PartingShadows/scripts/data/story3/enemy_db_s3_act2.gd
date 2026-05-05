@@ -163,7 +163,7 @@ static func create_shadow_pursuer(n: String, lvl: int = 7) -> FighterData:
 	var f := EH.base(n, "Shadow Pursuer", lvl)
 	f.health = EH.es(248, 289, 3, 7, lvl, 7); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 1, lvl, 7); f.max_mana = f.mana
-	f.physical_attack = EH.es(33, 38, 1, 3, lvl, 7)
+	f.physical_attack = EH.es(34, 39, 1, 3, lvl, 7)
 	f.physical_defense = EH.es(15, 18, 1, 2, lvl, 7)
 	f.magic_attack = EH.es(12, 15, 0, 2, lvl, 7)
 	f.magic_defense = EH.es(14, 17, 1, 2, lvl, 7)
@@ -263,9 +263,9 @@ static func create_cellar_watcher(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Cellar Watcher", lvl)
 	f.health = EH.es(434, 499, 4, 7, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(13, 15, 1, 2, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(76, 87, 2, 4, lvl, 11)
+	f.physical_attack = EH.es(78, 89, 2, 4, lvl, 11)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 11)
-	f.magic_attack = EH.es(72, 83, 2, 4, lvl, 11)
+	f.magic_attack = EH.es(74, 85, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(29, 37, 1, 3, lvl, 11)
 	f.speed = EH.es(32, 38, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
@@ -278,7 +278,7 @@ static func create_thread_construct(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Thread Construct", lvl)
 	f.health = EH.es(509, 582, 5, 8, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(10, 13, 1, 1, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(86, 100, 2, 4, lvl, 11)
+	f.physical_attack = EH.es(88, 102, 2, 4, lvl, 11)
 	f.physical_defense = EH.es(37, 43, 2, 3, lvl, 11)
 	f.magic_attack = EH.es(17, 21, 0, 1, lvl, 11)
 	f.magic_defense = EH.es(23, 29, 1, 3, lvl, 11)
@@ -295,7 +295,7 @@ static func create_ink_shade(n: String, lvl: int = 11) -> FighterData:
 	f.mana = EH.es(20, 23, 1, 2, lvl, 11); f.max_mana = f.mana
 	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(20, 26, 1, 3, lvl, 11)
-	f.magic_attack = EH.es(97, 108, 2, 4, lvl, 11)
+	f.magic_attack = EH.es(99, 110, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(36, 43, 2, 3, lvl, 11)
 	f.speed = EH.es(32, 38, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 20

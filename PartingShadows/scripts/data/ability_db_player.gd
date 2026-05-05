@@ -275,7 +275,7 @@ static func melody() -> AbilityData:
 
 static func encourage() -> AbilityData:
 	return _make("Encourage", "Inspiring words that bolster attack.",
-		Enums.StatType.MAGIC_ATTACK, 11, 2, false, 2, false, 0, 0.0)
+		Enums.StatType.ATTACK, 11, 2, false, 2, false, 0, 0.0)
 
 # Dervish
 static func mesmerize() -> AbilityData:

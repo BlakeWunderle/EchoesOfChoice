@@ -204,7 +204,7 @@ static func create_cave_dweller(n: String, lvl: int = 3) -> FighterData:
 	f.physical_defense = EH.es(12, 16, 1, 2, lvl, 3)
 	f.magic_attack = EH.es(9, 12, 0, 1, lvl, 3)
 	f.magic_defense = EH.es(8, 11, 1, 2, lvl, 3)
-	f.speed = EH.es(20, 26, 1, 2, lvl, 3)
+	f.speed = EH.es(19, 25, 1, 2, lvl, 3)
 	f.crit_chance = 7; f.crit_damage = 1; f.dodge_chance = 7
 	f.abilities = [EAB.crude_axe(), EAB.rock_toss()]
 	f.flavor_text = "A hunched, pale humanoid adapted to perpetual darkness. It fashions crude weapons from bone and stone."
@@ -219,7 +219,7 @@ static func create_tunnel_shaman(n: String, lvl: int = 3) -> FighterData:
 	f.physical_defense = EH.es(8, 11, 0, 2, lvl, 3)
 	f.magic_attack = EH.es(21, 25, 1, 3, lvl, 3)
 	f.magic_defense = EH.es(13, 17, 1, 2, lvl, 3)
-	f.speed = EH.es(23, 29, 1, 2, lvl, 3)
+	f.speed = EH.es(22, 28, 1, 2, lvl, 3)
 	f.crit_chance = 9; f.crit_damage = 1; f.dodge_chance = 11
 	f.abilities = [EAB.hex_flame(), EAB.ward_bones()]
 	f.flavor_text = "An elder cave dweller draped in carved bone fetishes. It channels the strange energies that seep through the deep rock."
@@ -234,7 +234,7 @@ static func create_burrow_scout(n: String, lvl: int = 3) -> FighterData:
 	f.physical_defense = EH.es(7, 10, 0, 1, lvl, 3)
 	f.magic_attack = EH.es(8, 11, 0, 1, lvl, 3)
 	f.magic_defense = EH.es(7, 10, 0, 1, lvl, 3)
-	f.speed = EH.es(29, 35, 2, 3, lvl, 3)
+	f.speed = EH.es(28, 34, 2, 3, lvl, 3)
 	f.crit_chance = 11; f.crit_damage = 2; f.dodge_chance = 21
 	f.abilities = [EAB.dart_strike(), EAB.smoke_bomb()]
 	f.flavor_text = "A wiry, quick-footed cave dweller that patrols the outer tunnels. It strikes from the shadows and vanishes before retaliation."

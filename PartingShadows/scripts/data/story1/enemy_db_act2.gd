@@ -119,7 +119,7 @@ static func create_siren(n: String, lvl: int = 4) -> FighterData:
 	f.physical_defense = EH.es(11, 18, 1, 3, lvl, 4)
 	f.magic_attack = EH.es(29, 42, 3, 6, lvl, 4)
 	f.magic_defense = EH.es(16, 25, 2, 4, lvl, 4)
-	f.speed = EH.es(26, 33, 1, 2, lvl, 3)
+	f.speed = EH.es(25, 32, 1, 2, lvl, 3)
 	f.crit_chance = 11; f.crit_damage = 2; f.dodge_chance = 11
 	f.abilities = [EAB.siren_song(), EAB.drowning_wave()]
 	f.flavor_text = "Enchanting voices rise from the shore, luring travelers into the crushing tide."
@@ -133,7 +133,7 @@ static func create_merfolk(n: String, lvl: int = 4) -> FighterData:
 	f.physical_defense = EH.es(11, 16, 1, 2, lvl, 4)
 	f.magic_attack = EH.es(21, 27, 2, 3, lvl, 4)
 	f.magic_defense = EH.es(13, 17, 1, 2, lvl, 4)
-	f.speed = EH.es(22, 28, 1, 3, lvl, 4)
+	f.speed = EH.es(21, 27, 1, 3, lvl, 4)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 9
 	f.abilities = [EAB.trident_thrust(), EAB.tidal_splash()]
 	f.flavor_text = "Amphibious warriors who guard the coastal shallows with trident and wave."
@@ -174,7 +174,7 @@ static func create_fire_wyrmling(n: String) -> FighterData:
 	f.health = EH.fixed(135, 152); f.max_health = f.health
 	f.mana = EH.fixed(11, 14); f.max_mana = f.mana
 	f.physical_attack = EH.fixed(14, 18); f.physical_defense = EH.fixed(15, 19)
-	f.magic_attack = EH.fixed(26, 34); f.magic_defense = EH.fixed(19, 23)
+	f.magic_attack = EH.fixed(27, 35); f.magic_defense = EH.fixed(19, 23)
 	f.speed = EH.fixed(26, 34)
 	f.crit_chance = 14; f.crit_damage = 2; f.dodge_chance = 12
 	f.abilities = [EAB.dragon_breath(), EAB.tail_strike(), EAB.searing_hiss()]
