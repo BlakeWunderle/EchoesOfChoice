@@ -238,7 +238,7 @@ func show_loot_drops(items: Array, gold: int) -> void:
 		gold_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
 		vbox.add_child(gold_label)
 
-	var had_overflow: bool = false
+	var overflow_items: Array = []
 	for item: ItemData in items:
 		var line := Label.new()
 		if not GameState.inventory.is_full():
@@ -246,21 +246,17 @@ func show_loot_drops(items: Array, gold: int) -> void:
 			line.text = "+ %s  -  %s" % [item.item_name, item.get_use_description()]
 			line.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
 		else:
-			line.text = "x %s  -  %s (no room)" % [item.item_name, item.get_use_description()]
-			line.add_theme_color_override("font_color", Color(0.6, 0.5, 0.5))
-			had_overflow = true
+			overflow_items.append(item)
+			line.text = "! %s  -  %s (inventory full)" % [item.item_name, item.get_use_description()]
+			line.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
 		line.add_theme_font_size_override("font_size", SettingsManager.font_size)
 		vbox.add_child(line)
 
-	if had_overflow:
-		var full_label := Label.new()
-		full_label.text = "Inventory full (%d/%d)" % [GameState.inventory.size(), GameState.inventory.MAX_ITEMS]
-		full_label.add_theme_font_size_override("font_size", 13)
-		full_label.add_theme_color_override("font_color", Color(0.8, 0.5, 0.3))
-		vbox.add_child(full_label)
-
 	var hint := Label.new()
-	hint.text = "\nPress any key to continue..."
+	if overflow_items.is_empty():
+		hint.text = "\nPress any key to continue..."
+	else:
+		hint.text = "\nPress any key to choose what to discard..."
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.add_theme_font_size_override("font_size", 14)
 	hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
@@ -271,6 +267,91 @@ func show_loot_drops(items: Array, gold: int) -> void:
 	while _battle._loot_waiting:
 		await _battle.get_tree().process_frame
 	overlay.queue_free()
+
+	for overflow_item: ItemData in overflow_items:
+		await _show_loot_discard(overflow_item)
+
+
+func _show_loot_discard(new_item: ItemData) -> void:
+	var panel := PanelContainer.new()
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.05, 0.08, 0.12, 0.95)
+	style.border_color = Color(0.9, 0.8, 0.5, 0.6)
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(8)
+	style.set_content_margin_all(20)
+	panel.add_theme_stylebox_override("panel", style)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.offset_left = -260.0
+	panel.offset_top = -180.0
+	panel.offset_right = 260.0
+	panel.offset_bottom = 180.0
+	panel.modulate.a = 0.0
+	_battle.add_child(panel)
+
+	var tw := _battle.create_tween()
+	tw.tween_property(panel, "modulate:a", 1.0, 0.2)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 4)
+	panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "Discard an item to pick up:"
+	title.add_theme_font_size_override("font_size", SettingsManager.font_size - 6)
+	title.add_theme_color_override("font_color", Color(0.9, 0.8, 0.5))
+	vbox.add_child(title)
+
+	var new_label := Label.new()
+	new_label.text = "%s  -  %s" % [new_item.item_name, new_item.get_use_description()]
+	new_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 6)
+	new_label.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
+	vbox.add_child(new_label)
+
+	var sep := HSeparator.new()
+	vbox.add_child(sep)
+
+	var result := [-1]
+	var inv_items: Array = GameState.inventory.get_items()
+	var buttons: Array[Button] = []
+	for i: int in inv_items.size():
+		var item: ItemData = inv_items[i]
+		var btn := Button.new()
+		btn.text = "%s  -  %s" % [item.item_name, item.get_use_description()]
+		btn.add_theme_font_size_override("font_size", SettingsManager.font_size - 8)
+		btn.focus_mode = Control.FOCUS_ALL
+		var idx: int = i
+		btn.pressed.connect(func() -> void: result[0] = idx)
+		vbox.add_child(btn)
+		buttons.append(btn)
+
+	var skip_btn := Button.new()
+	skip_btn.text = "Skip (discard loot)"
+	skip_btn.add_theme_font_size_override("font_size", SettingsManager.font_size - 8)
+	skip_btn.add_theme_color_override("font_color", Color(0.6, 0.5, 0.5))
+	skip_btn.focus_mode = Control.FOCUS_ALL
+	skip_btn.pressed.connect(func() -> void: result[0] = inv_items.size())
+	vbox.add_child(skip_btn)
+	buttons.append(skip_btn)
+
+	for i: int in buttons.size():
+		if i > 0:
+			buttons[i].focus_neighbor_top = buttons[i - 1].get_path()
+		if i < buttons.size() - 1:
+			buttons[i].focus_neighbor_bottom = buttons[i + 1].get_path()
+	buttons[0].grab_focus()
+
+	while result[0] < 0:
+		await _battle.get_tree().process_frame
+
+	if result[0] < inv_items.size():
+		GameState.inventory.remove_at(result[0])
+		GameState.inventory.add_item(new_item)
+		GameLog.info("Loot: discarded %s, picked up %s" % [inv_items[result[0]].item_name, new_item.item_name])
+	else:
+		GameLog.info("Loot: skipped %s" % new_item.item_name)
+
+	panel.queue_free()
 
 
 func show_victory_flash() -> void:
