@@ -18,7 +18,7 @@ const ItemData := preload("res://scripts/data/item_data.gd")
 const TownEquipmentHandler := preload("res://scripts/ui/town_equipment_handler.gd")
 const TownUltimateHandler := preload("res://scripts/ui/town_ultimate_handler.gd")
 
-enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, EQUIPPING, ULTIMATE_SELECT, SHOPPING, OUTRO_TEXT, BRANCH_CHOICE }
+enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, EQUIPPING, ULTIMATE_SELECT, SHOPPING, DISCARD_FOR_SHOP, OUTRO_TEXT, BRANCH_CHOICE }
 
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
@@ -39,6 +39,8 @@ var _gold_label: Label
 var _equip_handler: TownEquipmentHandler  ## Equipment upgrade phase handler
 var _equip_sub_phase: String = "slot"     ## "slot" or "upgrade"
 var _ult_handler: TownUltimateHandler    ## Ultimate ability selection handler
+var _pending_buy_id: String = ""
+var _pending_buy_price: int = 0
 
 
 func _ready() -> void:
@@ -51,12 +53,17 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if _phase != TownPhase.SHOPPING or not _choice_menu.visible:
+	if not _choice_menu.visible:
+		return
+	if _phase != TownPhase.SHOPPING and _phase != TownPhase.DISCARD_FOR_SHOP:
 		return
 	if NetManager.is_multiplayer_active and not NetManager.is_host:
 		return
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("cancel"):
-		_on_shop_selected(_shop_items.size())
+		if _phase == TownPhase.DISCARD_FOR_SHOP:
+			_on_discard_for_shop_selected(GameState.inventory.size())
+		else:
+			_on_shop_selected(_shop_items.size())
 		get_viewport().set_input_as_handled()
 
 
@@ -396,6 +403,8 @@ func _on_choice_selected(index: int) -> void:
 			_on_ult_choice_selected(index)
 		TownPhase.SHOPPING:
 			_on_shop_selected(index)
+		TownPhase.DISCARD_FOR_SHOP:
+			_on_discard_for_shop_selected(index)
 		TownPhase.BRANCH_CHOICE:
 			_on_branch_selected(index)
 
@@ -698,11 +707,9 @@ func _on_shop_selected(index: int) -> void:
 		return
 
 	if GameState.inventory.is_full():
-		_dialogue.visible = true
-		_dialogue.show_text(["Your inventory is full (%d/%d). Use or drop items in battle first." % [GameState.inventory.size(), GameState.inventory.MAX_ITEMS]])
-		await get_tree().create_timer(1.5).timeout
-		_dialogue.visible = false
-		_show_shop_menu()
+		_pending_buy_id = entry.item_id
+		_pending_buy_price = price
+		_show_discard_for_shop()
 		return
 
 	# Purchase the item
@@ -717,6 +724,54 @@ func _on_shop_selected(index: int) -> void:
 		_rpc_shop_purchase.rpc(entry.item_id, price)
 
 	# Re-show menu (player can buy more)
+	if GameState.inventory.gold <= 0:
+		_choice_menu.hide_menu()
+		_upgrade_label.visible = false
+		if NetManager.is_multiplayer_active and NetManager.is_host:
+			_rpc_shop_closed.rpc()
+		_show_outro_or_advance()
+		return
+	_show_shop_menu()
+
+
+func _show_discard_for_shop() -> void:
+	_phase = TownPhase.DISCARD_FOR_SHOP
+	var items: Array = GameState.inventory.get_items()
+	var options: Array[Dictionary] = []
+	for i: int in items.size():
+		var item: ItemData = items[i]
+		options.append({"label": item.item_name, "description": item.get_use_description()})
+	options.append({"label": "Cancel"})
+	_upgrade_label.text = "Inventory full -- discard an item to make room"
+	_upgrade_label.visible = true
+	_choice_menu.show_choices(options)
+
+
+func _on_discard_for_shop_selected(index: int) -> void:
+	var items: Array = GameState.inventory.get_items()
+	if index >= items.size():
+		_pending_buy_id = ""
+		_pending_buy_price = 0
+		_phase = TownPhase.SHOPPING
+		_show_shop_menu()
+		return
+
+	GameState.inventory.remove_at(index)
+	GameLog.info("Shop: discarded %s to make room" % items[index].item_name)
+
+	GameState.inventory.spend_gold(_pending_buy_price)
+	var item: ItemData = ItemDB.create_by_id(_pending_buy_id)
+	GameState.inventory.add_item(item)
+	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
+	GameLog.info("Shop: bought %s for %dg" % [item.item_name, _pending_buy_price])
+
+	if NetManager.is_multiplayer_active and NetManager.is_host:
+		_rpc_shop_discard_and_buy.rpc(index, _pending_buy_id, _pending_buy_price)
+
+	_pending_buy_id = ""
+	_pending_buy_price = 0
+	_phase = TownPhase.SHOPPING
+
 	if GameState.inventory.gold <= 0:
 		_choice_menu.hide_menu()
 		_upgrade_label.visible = false
@@ -952,6 +1007,18 @@ func _rpc_cast_vote(player_index: int, choice_index: int) -> void:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_vote_broadcast(player_index: int, choice_index: int) -> void:
 	_vote_panel.receive_vote(player_index, choice_index)
+
+
+## Host -> All: Broadcast a shop discard + purchase so peers update inventory.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_shop_discard_and_buy(discard_index: int, item_id: String, price: int) -> void:
+	GameState.inventory.remove_at(discard_index)
+	GameState.inventory.spend_gold(price)
+	var bought: ItemData = ItemDB.create_by_id(item_id)
+	if bought:
+		GameState.inventory.add_item(bought)
+	if _phase == TownPhase.SHOPPING:
+		_show_shop_menu_readonly()
 
 
 ## Host -> All: Broadcast a shop purchase so peers update inventory + refresh mirror.

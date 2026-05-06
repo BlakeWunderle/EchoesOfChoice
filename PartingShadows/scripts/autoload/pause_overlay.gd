@@ -704,24 +704,44 @@ func _show_inventory() -> void:
 	_inventory_vbox.add_child(sep)
 
 	var items: Array = GameState.inventory.get_items()
-	for i: int in 6:
-		var line := Label.new()
-		line.add_theme_font_size_override("font_size", SettingsManager.font_size)
+	var first_item_btn: Button = null
+	for i: int in GameState.inventory.MAX_ITEMS:
 		if i < items.size():
 			var item: ItemData = items[i]
-			line.text = "%s  -  %s" % [item.item_name, item.get_use_description()]
-			line.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
+			var btn := _make_button("%s  -  %s" % [item.item_name, item.get_use_description()])
+			btn.pressed.connect(_on_inventory_item_pressed.bind(i))
+			_inventory_vbox.add_child(btn)
+			if first_item_btn == null:
+				first_item_btn = btn
 		else:
+			var line := Label.new()
+			line.add_theme_font_size_override("font_size", SettingsManager.font_size)
 			line.text = "(empty)"
 			line.add_theme_color_override("font_color", Color(0.4, 0.4, 0.4))
-		_inventory_vbox.add_child(line)
+			_inventory_vbox.add_child(line)
 
 	var back_btn := _make_button("Back")
 	back_btn.pressed.connect(_back_to_main)
 	_inventory_vbox.add_child(back_btn)
-	back_btn.call_deferred("grab_focus")
+	var focus_btn: Button = first_item_btn if first_item_btn else back_btn
+	focus_btn.call_deferred("grab_focus")
 
 	_inventory_vbox.visible = true
+
+
+func _on_inventory_item_pressed(index: int) -> void:
+	var item: ItemData = GameState.inventory.get_item(index)
+	if item == null:
+		return
+	_confirm_dialog.confirmed.connect(_on_discard_confirmed.bind(index), CONNECT_ONE_SHOT)
+	_confirm_dialog.show_confirm("Discard %s?" % item.item_name)
+
+
+func _on_discard_confirmed(accepted: bool, index: int) -> void:
+	if not accepted:
+		return
+	GameState.inventory.remove_at(index)
+	_show_inventory()
 
 
 func _show_equipment() -> void:
