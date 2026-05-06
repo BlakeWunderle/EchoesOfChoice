@@ -13,7 +13,7 @@ static func get_battle_items(battle_id: String) -> Array:
 		# ==============================================================
 		# Story 1 - Act I (T0: minor items)
 		# ==============================================================
-		"BeachBattle": return [ItemDB.crystal_lens()]
+		"BeachBattle": return [ItemDB.swiftroot()]
 		"WaypointDefenseBattle": return [ItemDB.cinder_bomb()]
 
 		# ==============================================================

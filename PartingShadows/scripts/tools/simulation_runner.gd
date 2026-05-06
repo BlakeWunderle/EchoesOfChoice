@@ -34,7 +34,7 @@ const ITEM_MIN_PROG: Dictionary = {
 	"antidote": 3, "cinder_bomb": 3, "shimmer_oil": 3,
 	"whetstone": 3, "swiftroot": 3, "fire_bomb": 3,
 	"clarity_tonic": 6, "hex_powder": 6, "mind_fog": 6,
-	"war_drum": 6, "crystal_lens": 6,
+	"war_drum": 6,
 	"keen_edge": 8, "ether_shard": 8, "galeroot": 8,
 	"enfeebling_dust": 8, "void_salt": 8, "smoke_bomb": 8,
 	"spell_prism": 8, "blast_powder": 8,

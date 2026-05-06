@@ -42,7 +42,6 @@ static func get_shop_items(battle_id: String) -> Array:
 				{"item_id": "enfeebling_dust", "price": 80},
 				{"item_id": "void_salt", "price": 80},
 				{"item_id": "smoke_bomb", "price": 70},
-				{"item_id": "crystal_lens", "price": 120},
 				{"item_id": "war_drum", "price": 120},
 				{"item_id": "spell_prism", "price": 120},
 				{"item_id": "blast_powder", "price": 150},
@@ -57,7 +56,7 @@ static func get_shop_items(battle_id: String) -> Array:
 				{"item_id": "swiftroot", "price": 50},
 				{"item_id": "fire_bomb", "price": 60},
 				{"item_id": "smoke_bomb", "price": 70},
-				{"item_id": "crystal_lens", "price": 120},
+				{"item_id": "spell_prism", "price": 120},
 			]
 		"S2_CaveMerchant":
 			return [
@@ -74,7 +73,6 @@ static func get_shop_items(battle_id: String) -> Array:
 				{"item_id": "hex_powder", "price": 50},
 				{"item_id": "mind_fog", "price": 50},
 				{"item_id": "fire_bomb", "price": 60},
-				{"item_id": "crystal_lens", "price": 120},
 				{"item_id": "war_drum", "price": 120},
 			]
 		"S2_CoastalCamp":
@@ -85,7 +83,6 @@ static func get_shop_items(battle_id: String) -> Array:
 				{"item_id": "enfeebling_dust", "price": 80},
 				{"item_id": "void_salt", "price": 80},
 				{"item_id": "smoke_bomb", "price": 70},
-				{"item_id": "crystal_lens", "price": 120},
 				{"item_id": "war_drum", "price": 120},
 				{"item_id": "spell_prism", "price": 120},
 				{"item_id": "blast_powder", "price": 150},
@@ -98,7 +95,6 @@ static func get_shop_items(battle_id: String) -> Array:
 				{"item_id": "enfeebling_dust", "price": 80},
 				{"item_id": "void_salt", "price": 80},
 				{"item_id": "smoke_bomb", "price": 70},
-				{"item_id": "crystal_lens", "price": 120},
 				{"item_id": "war_drum", "price": 120},
 				{"item_id": "spell_prism", "price": 120},
 				{"item_id": "blast_powder", "price": 150},
@@ -130,7 +126,6 @@ static func get_shop_items(battle_id: String) -> Array:
 				{"item_id": "enfeebling_dust", "price": 80},
 				{"item_id": "void_salt", "price": 80},
 				{"item_id": "smoke_bomb", "price": 70},
-				{"item_id": "crystal_lens", "price": 120},
 				{"item_id": "war_drum", "price": 120},
 				{"item_id": "spell_prism", "price": 120},
 				{"item_id": "blast_powder", "price": 150},

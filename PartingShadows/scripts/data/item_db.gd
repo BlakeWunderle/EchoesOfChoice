@@ -127,14 +127,6 @@ static func spell_prism() -> ItemData:
 	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
 	return i
 
-static func crystal_lens() -> ItemData:
-	var i := ItemData.new()
-	i.item_id = "crystal_lens"; i.item_name = "Crystal Lens"
-	i.description = "A polished crystal that sharpens focus and precision."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 15; i.duration = 3
-	i.stat_type = Enums.StatType.CRIT
-	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
-	return i
 
 
 
@@ -234,7 +226,7 @@ static func create_by_id(id: String) -> ItemData:
 		"fire_bomb": return fire_bomb()
 		"smoke_bomb": return smoke_bomb()
 		"war_drum": return war_drum()
-		"crystal_lens": return crystal_lens()
+		"crystal_lens": return spell_prism()  # Removed item; replace in existing saves
 		"blast_powder": return blast_powder()
 		"spell_prism": return spell_prism()
 		"hex_powder": return hex_powder()
