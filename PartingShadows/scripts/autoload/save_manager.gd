@@ -179,6 +179,7 @@ func get_save_summary(slot: int) -> Dictionary:
 		"party_size": party.size(),
 		"battle_id": data.get("current_battle_id", ""),
 		"story_id": data.get("story_id", "story_1"),
+		"timestamp": data.get("timestamp", ""),
 		"play_seconds": data.get("play_seconds", 0.0),
 		"is_multiplayer": data.get("is_multiplayer", false),
 		"is_local_coop": data.get("is_local_coop", false),

@@ -337,10 +337,17 @@ func _handle_main_choice(index: int) -> void:
 
 
 func _find_best_continue_slot() -> int:
-	var slot: int = SaveManager.get_last_used_slot()
-	if slot >= 0:
-		return slot
-	if SaveManager.has_autosave():
+	var manual_slot: int = SaveManager.get_last_used_slot()
+	var has_auto: bool = SaveManager.has_autosave()
+	if manual_slot >= 0 and has_auto:
+		var manual_ts: String = SaveManager.get_save_summary(manual_slot).get("timestamp", "")
+		var auto_ts: String = SaveManager.get_save_summary(SaveManager.AUTOSAVE_SLOT).get("timestamp", "")
+		if auto_ts > manual_ts:
+			return SaveManager.AUTOSAVE_SLOT
+		return manual_slot
+	if manual_slot >= 0:
+		return manual_slot
+	if has_auto:
 		return SaveManager.AUTOSAVE_SLOT
 	for i: int in SaveManager.MAX_SAVE_SLOTS:
 		if SaveManager.has_save(i):
