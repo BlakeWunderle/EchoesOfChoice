@@ -116,6 +116,9 @@ func _apply_stat_change(stat: Enums.StatType, amount: int, negative: bool) -> vo
 			dodge_chance += amount * sign_val
 		Enums.StatType.CRIT_CHANCE:
 			crit_chance += amount * sign_val
+		Enums.StatType.CRIT:
+			crit_chance += amount * sign_val
+			crit_damage += amount * sign_val
 	_clamp_stats()
 
 

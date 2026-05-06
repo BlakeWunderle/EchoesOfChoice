@@ -131,8 +131,8 @@ static func crystal_lens() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "crystal_lens"; i.item_name = "Crystal Lens"
 	i.description = "A polished crystal that sharpens focus and precision."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 10; i.duration = 3
-	i.stat_type = Enums.StatType.CRIT_CHANCE
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 15; i.duration = 3
+	i.stat_type = Enums.StatType.CRIT
 	i.rarity = Enums.ItemRarity.RARE; i.shop_price = 120
 	return i
 
@@ -162,14 +162,14 @@ static func mind_fog() -> ItemData:
 
 
 # ---------------------------------------------------------------------------
-# Debuffs (T2: -25%, UNCOMMON, 70-80g)
+# Debuffs (T2: -30%, UNCOMMON, 70-80g)
 # ---------------------------------------------------------------------------
 
 static func enfeebling_dust() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "enfeebling_dust"; i.item_name = "Enfeebling Dust"
 	i.description = "A potent toxin that drains all physical power."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 25; i.duration = 3
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 30; i.duration = 3
 	i.stat_type = Enums.StatType.ATTACK; i.target_ally = false
 	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 80
 	return i
@@ -178,7 +178,7 @@ static func void_salt() -> ItemData:
 	var i := ItemData.new()
 	i.item_id = "void_salt"; i.item_name = "Void Salt"
 	i.description = "Crystals that dissolve magical resonance on contact."
-	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 25; i.duration = 3
+	i.effect_type = Enums.ItemEffect.BUFF; i.magnitude = 30; i.duration = 3
 	i.stat_type = Enums.StatType.MAGIC_ATTACK; i.target_ally = false
 	i.rarity = Enums.ItemRarity.UNCOMMON; i.shop_price = 80
 	return i

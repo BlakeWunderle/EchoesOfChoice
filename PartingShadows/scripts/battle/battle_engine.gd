@@ -444,8 +444,6 @@ func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
 					targets = user_allies.duplicate()
 			for t: FighterData in targets:
 				var delta: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
-				if is_debuff:
-					delta = -delta
 				t.modified_stats.append({
 					"stat": item.stat_type,
 					"modifier": delta,
@@ -560,7 +558,7 @@ func _has_defense_buff(fighter: FighterData) -> bool:
 func _compute_buff_delta(fighter: FighterData, stat: Enums.StatType,
 		percent: int) -> int:
 	if stat == Enums.StatType.DODGE_CHANCE or stat == Enums.StatType.TAUNT \
-			or stat == Enums.StatType.CRIT_CHANCE:
+			or stat == Enums.StatType.CRIT_CHANCE or stat == Enums.StatType.CRIT:
 		return percent
 	var base_stat: int
 	match stat:

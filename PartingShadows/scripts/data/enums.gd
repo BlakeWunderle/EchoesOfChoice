@@ -14,6 +14,7 @@ enum StatType {
 	TAUNT,
 	DODGE_CHANCE,
 	CRIT_CHANCE,
+	CRIT, ## Crit chance + crit damage combined
 }
 
 ## Combat role archetypes for player classes and enemies.
