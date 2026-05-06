@@ -201,7 +201,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		# the full factory dispatch on every iteration.
 		var enemy_template: Array = BSDB.create_enemies(stage.name)
 		for si in sims_per_combo:
-			var party_fighters := PC.create_party(party_def, stage.level_ups, stage.get("equip_upgrades", 0))
+			var party_fighters := PC.create_party(party_def, stage.level_ups, stage.get("equip_upgrades", 0), stage.get("has_ultimate", false))
 			var all_party := party_fighters.duplicate()  # snapshot before battle mutates array
 			party_size = party_fighters.size()
 			var enemies: Array = _clone_fighters(enemy_template)

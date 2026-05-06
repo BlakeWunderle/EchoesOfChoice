@@ -24,6 +24,16 @@ static func get_shop_items(battle_id: String) -> Array:
 				{"item_id": "hex_powder", "price": 50},
 				{"item_id": "war_drum", "price": 120},
 			]
+		"TunnelCampStop":
+			return [
+				{"item_id": "clarity_tonic", "price": 50},
+				{"item_id": "whetstone", "price": 50},
+				{"item_id": "hex_powder", "price": 50},
+				{"item_id": "swiftroot", "price": 50},
+				{"item_id": "fire_bomb", "price": 60},
+				{"item_id": "smoke_bomb", "price": 70},
+				{"item_id": "war_drum", "price": 120},
+			]
 		"CopperMugStop":
 			return [
 				{"item_id": "keen_edge", "price": 80},
@@ -39,6 +49,16 @@ static func get_shop_items(battle_id: String) -> Array:
 			]
 
 		# ---- Story 2 ----
+		"S2_LighthouseRest":
+			return [
+				{"item_id": "clarity_tonic", "price": 50},
+				{"item_id": "shimmer_oil", "price": 50},
+				{"item_id": "mind_fog", "price": 50},
+				{"item_id": "swiftroot", "price": 50},
+				{"item_id": "fire_bomb", "price": 60},
+				{"item_id": "smoke_bomb", "price": 70},
+				{"item_id": "crystal_lens", "price": 120},
+			]
 		"S2_CaveMerchant":
 			return [
 				{"item_id": "antidote", "price": 40},
@@ -137,6 +157,8 @@ static func has_shop(battle_id: String) -> bool:
 static func get_shop_text(battle_id: String) -> Array[String]:
 	match battle_id:
 		# Story 1
+		"TunnelCampStop":
+			return ["The runner digs deeper into the pack. 'He said there was more in here. For a price, mind you. The Mug's repairs are not paying for themselves.'"]
 		"ForestWaypoint":
 			return ["A peddler has set up a modest stall by the waypoint. 'Dangerous road ahead. Stock up while you can.'"]
 		"CityOutskirtsStop":
@@ -144,6 +166,8 @@ static func get_shop_text(battle_id: String) -> Array[String]:
 		"CopperMugStop":
 			return ["The Copper Mug's back room doubles as a black market. The barkeep slides a price list across the counter."]
 		# Story 2
+		"S2_LighthouseRest":
+			return ["The trader pulls a battered case from behind the crates. 'Salvage from ships that came too close to the light. Good steel, if you are not particular about where it came from.'"]
 		"S2_CaveMerchant":
 			return ["A figure crouches by a dim lantern, surrounded by trinkets and vials. 'Trade? I have things. You have gold. Simple.'"]
 		"S2_HarborTown":

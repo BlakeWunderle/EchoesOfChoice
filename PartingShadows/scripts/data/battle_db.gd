@@ -51,6 +51,7 @@ static func create_battle(battle_id: String) -> BattleData:
 		"CorruptedCityBattle": return Act45.corrupted_city_battle()
 		"CorruptedWildsBattle": return Act45.corrupted_wilds_battle()
 		"DepthsBattle": return Act45.depths_battle()
+		"TunnelCampStop": return Act45.tunnel_camp_stop()
 		"GateBattle": return Act45.gate_battle()
 		"StrangerFinalBattle": return Act45.stranger_final_battle()
 		# Story 1 - Act V Path B (sever the ritual)
@@ -65,7 +66,7 @@ static func create_battle(battle_id: String) -> BattleData:
 		# Story 2 - Act II
 		"S2_CoastalDescent", "S2_FishingVillage", "S2_SmugglersBluff", \
 		"S2_HarborTown", "S2_WreckersCove", "S2_CoastalRuins", \
-		"S2_BlackwaterBay", "S2_LighthouseStorm":
+		"S2_BlackwaterBay", "S2_LighthouseStorm", "S2_LighthouseRest":
 			return S2Act2.create_battle(battle_id)
 		# Story 2 - Act III
 		"S2_BeneathTheLighthouse", "S2_MemoryVault", "S2_EchoGallery", \

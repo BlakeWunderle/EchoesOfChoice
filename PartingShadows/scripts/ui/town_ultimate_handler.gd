@@ -3,9 +3,19 @@ class_name TownUltimateHandler extends RefCounted
 ## Manages the ultimate ability selection phase at town stops.
 ## Delegated from town_stop.gd following the TownEquipmentHandler pattern.
 ## Eligible fighters: T2, all 3 equipment slots upgraded, no ultimate yet.
+## Only offered at designated stop-4 battles (after all equipment upgrades).
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
+
+const _ULTIMATE_STOPS: Array[String] = [
+	"TunnelCampStop",           # Story 1: post-Depths, barkeep's runner
+	"S2_CoastalCamp",           # Story 2 Path A: post-Sera fight
+	"S2_B_SafeHaven",           # Story 2 Path B: post-Sera fight
+	"S3_TownRealization",       # Story 3 Path A
+	"S3_B_CallumsTruth",        # Story 3 Path B
+	"S3_C_LirasConfession",     # Story 3 Path C
+]
 
 var _party: Array = []
 var _battle_id: String = ""
@@ -23,7 +33,7 @@ func start(party: Array, battle_id: String = "") -> void:
 	_battle_id = battle_id
 	_char_index = 0
 
-	if not _any_eligible():
+	if battle_id not in _ULTIMATE_STOPS or not _any_eligible():
 		phase_finished.emit()
 		return
 
@@ -102,9 +112,9 @@ func get_current_char_index() -> int:
 
 func _get_narration_text() -> Array[String]:
 	match _battle_id:
-		"CopperMugStop":
+		"TunnelCampStop":
 			return [
-				"The world is breaking and there is no more time to prepare carefully. But desperation has a way of stripping away hesitation. What remains is instinct, honed by every battle fought to reach this moment.",
+				"The barkeep's supplies are more than just provisions. They are proof that someone above still believes in the party. That faith settles into bone and muscle, quieting doubt, sharpening focus.",
 				"Each companion reaches for something deeper. A technique held in reserve, waiting for the hour when nothing less would do.",
 			]
 		"S2_CoastalCamp":
@@ -133,6 +143,7 @@ func _get_narration_text() -> Array[String]:
 				"The bond unlocks something deeper in each companion. A final reserve of strength, drawn from the knowledge that this path leads to the heart of the Loom itself.",
 			]
 		_:
+			push_error("No ultimate narration for battle_id: %s" % _battle_id)
 			return [
 				"The journey has tested each companion to their limits. But limits, once reached, can be surpassed.",
 				"Each warrior stands ready to unlock a powerful technique, forged from everything they have endured.",

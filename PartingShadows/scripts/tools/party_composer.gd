@@ -50,7 +50,7 @@ static var _cached_t2_parties: Array = []
 
 static func create_fighter(base_type: String, t1_item: String,
 		t2_item: String, total_level_ups: int,
-		equip_upgrades: int = 0) -> FighterData:
+		equip_upgrades: int = 0, has_ultimate: bool = false) -> FighterData:
 	var fighter := FighterDB.create_player(base_type, base_type)
 	fighter.is_user_controlled = false
 	var remaining := total_level_ups
@@ -77,8 +77,7 @@ static func create_fighter(base_type: String, t1_item: String,
 
 	EquipmentDB.apply_random_equipment(fighter, equip_upgrades)
 
-	# Assign a random ultimate when all equipment is upgraded
-	if equip_upgrades >= 3 and t2_item != "":
+	if has_ultimate and t2_item != "":
 		var ults: Array = UltimateDB.get_ultimates_for_class(fighter.class_id)
 		if not ults.is_empty():
 			fighter.ultimate = ults[randi() % ults.size()]
@@ -115,12 +114,12 @@ static func get_party_description(party: Dictionary) -> String:
 
 
 static func create_party(party: Dictionary, level_ups: int,
-		equip_upgrades: int = 0) -> Array:
+		equip_upgrades: int = 0, has_ultimate: bool = false) -> Array:
 	var fighters := []
 	for i in 3:
 		var f := create_fighter(
 			party.base_types[i], party.t1_items[i],
-			party.t2_items[i], level_ups, equip_upgrades)
+			party.t2_items[i], level_ups, equip_upgrades, has_ultimate)
 		f.character_name = "Hero" + str(i + 1)
 		fighters.append(f)
 	return fighters
