@@ -37,7 +37,7 @@ var _upgrade_index: int = 0  ## Which party member is choosing
 var _upgrade_class_ids: Array[String] = []  ## Class IDs for current upgrade options (for panel)
 var _shop_items: Array = []  ## Current shop inventory [{item_id, price}]
 var _shop_page: int = 0
-const SHOP_PAGE_SIZE: int = 3
+const SHOP_PAGE_SIZE: int = 5
 var _gold_label: Label
 var _shop_pagination: PaginationControls
 var _equip_handler: TownEquipmentHandler  ## Equipment upgrade phase handler
@@ -699,6 +699,12 @@ func _show_shop_menu() -> void:
 	_shop_pagination.current_page = _shop_page + 1
 	_shop_pagination.visible = page_count > 1
 
+	if page_count > 1:
+		var last_btn: Button = _choice_menu.get_last_button()
+		if last_btn:
+			last_btn.focus_neighbor_bottom = _shop_pagination.get_focus_target().get_path()
+			_shop_pagination.set_top_neighbor(last_btn)
+
 
 func _on_equip_choice_selected(index: int) -> void:
 	if _equip_handler == null:
@@ -811,6 +817,10 @@ func _on_discard_for_shop_selected(index: int) -> void:
 func _check_branch_or_advance() -> void:
 	var battle = GameState.current_battle
 	if not battle.choices.is_empty():
+		_tip_overlay.show_tip_once("first_branch",
+			"Your choices shape the story. Different paths lead to " +
+			"different battles, enemies, and endings.\n\n" +
+			"Choose carefully. There is no going back!")
 		_phase = TownPhase.BRANCH_CHOICE
 		_dialogue.visible = false
 		var options: Array[Dictionary] = []

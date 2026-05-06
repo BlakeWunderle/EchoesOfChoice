@@ -182,6 +182,13 @@ func highlight_option(index: int) -> void:
 			_buttons[i].modulate.a = 0.85 if i == index else 0.5
 
 
+func get_last_button() -> Button:
+	for i: int in range(_buttons.size() - 1, -1, -1):
+		if not _buttons[i].disabled:
+			return _buttons[i]
+	return null
+
+
 func hide_menu() -> void:
 	_clear_buttons()
 	visible = false
