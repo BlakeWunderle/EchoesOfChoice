@@ -16,7 +16,7 @@ var _focus_style: StyleBoxFlat
 
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(150, 180)
+	custom_minimum_size = Vector2(185, 210)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_ALL
 
@@ -63,7 +63,7 @@ func _ready() -> void:
 	_name_label = Label.new()
 	_name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_name_label.add_theme_font_size_override("font_size", SettingsManager.font_size)
+	_name_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 5)
 	vbox.add_child(_name_label)
 
 	_update_display()
