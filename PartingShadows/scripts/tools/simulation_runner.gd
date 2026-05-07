@@ -29,6 +29,8 @@ const STALEMATE_MAX_PERIODS := 3
 static var _sim_engine: BattleEngine = null
 static var enable_enemy_items: bool = false  ## Set via --items flag
 static var player_item_id: String = ""  ## Set via --player-item flag
+static var party_filter: PackedStringArray = []  ## Set via --party flag
+static var trace_mode: bool = false  ## Set via --trace flag
 
 const ITEM_MIN_PROG: Dictionary = {
 	"antidote": 3, "cinder_bomb": 3, "shimmer_oil": 3,
@@ -63,6 +65,8 @@ static func run_single_battle(party: Array, enemies: Array,
 		engine: BattleEngine = null) -> Dictionary:
 	if engine == null:
 		engine = BattleEngine.new()
+	engine.trace_mode = trace_mode
+	engine.trace_log.clear()
 	if engine.sim_mode:
 		engine.start_battle_sim(party, enemies)
 	else:
@@ -115,13 +119,16 @@ static func run_single_battle(party: Array, enemies: Array,
 			stale_hp_snapshot = current_enemy_hp
 
 	var stalemate := not engine.is_battle_over()
-	return {
+	var result := {
 		"won": engine.did_player_win(),
 		"stalemate": stalemate,
 		"player_actions": player_actions,
 		"all_actions": all_actions,
 		"unit_actions": unit_actions,
 	}
+	if engine.trace_mode and not engine.trace_log.is_empty():
+		result["trace"] = engine.trace_log.duplicate()
+	return result
 
 
 # =============================================================================
@@ -162,6 +169,22 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			exclude_set[e] = true
 		parties = parties.filter(func(p: Dictionary) -> bool:
 			return not exclude_set.has(PC.get_party_description(p)))
+
+	if not party_filter.is_empty():
+		var filter_set := {}
+		for cname: String in party_filter:
+			filter_set[cname] = true
+		parties = parties.filter(func(p: Dictionary) -> bool:
+			var desc := PC.get_party_description(p)
+			var classes := desc.split(" / ")
+			if classes.size() != filter_set.size():
+				return false
+			for c: String in classes:
+				if not filter_set.has(c):
+					return false
+			return true)
+		if parties.is_empty():
+			print("  WARNING: No party combos match --party filter: %s" % ", ".join(party_filter))
 
 	if player_item_id != "":
 		var min_prog: int = ITEM_MIN_PROG.get(player_item_id, 0)
@@ -219,6 +242,13 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 				wins += 1
 			if br.get("stalemate", false):
 				stalemate_count += 1
+			if br.has("trace"):
+				var outcome: String = "WIN" if br.won else "LOSS"
+				print("\n  --- Sim %d: %s (%s, %d actions) ---" % [
+					si + 1, PC.get_party_description(party_def), outcome, br.all_actions])
+				for line: String in br.trace:
+					print("    %s" % line)
+				print()
 			item_uses += engine.player_items_used
 			turn_all_sum += br.all_actions
 			turn_player_sum += br.player_actions

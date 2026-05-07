@@ -88,7 +88,7 @@ func _init() -> void:
 				# Forward the value of flags that take an argument.
 				if args[i] in ["--sims", "--sample", "--progression",
 						"--story", "--tier", "--difficulty",
-						"--player-item"] and i + 1 < args.size():
+						"--player-item", "--party"] and i + 1 < args.size():
 					i += 1
 					passthrough.append(args[i])
 		i += 1

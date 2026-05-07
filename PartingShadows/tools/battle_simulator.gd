@@ -24,6 +24,8 @@ var _all_results: Array = []
 var _all_stages: Array = []
 var _exclude_combos: Array[String] = []
 var _difficulty_level: int = -1  ## -1 = auto (derive from stage tier)
+var _party_filter: PackedStringArray = []  ## Force specific party comp (class names)
+var _trace_mode: bool = false  ## Log per-action AI decisions
 
 
 func _init() -> void:
@@ -153,6 +155,15 @@ func _init() -> void:
 				if i + 1 < args.size():
 					SR.player_item_id = args[i + 1]
 					i += 1
+			"--party":
+				if i + 1 < args.size():
+					for cname: String in args[i + 1].split(","):
+						var trimmed := cname.strip_edges()
+						if trimmed != "":
+							_party_filter.append(trimmed)
+					i += 1
+			"--trace":
+				_trace_mode = true
 			"--diagnostics":
 				_diagnostics = true
 			"--compact":
@@ -223,6 +234,11 @@ func _init() -> void:
 
 	if not _worker_mode:
 		print("=== Parting Shadows Battle Simulator ===\n")
+
+	if not _party_filter.is_empty():
+		SR.party_filter = _party_filter
+	if _trace_mode:
+		SR.trace_mode = true
 
 	if _difficulty_level >= 0:
 		SR._get_sim_engine().difficulty_level = _difficulty_level
@@ -505,6 +521,8 @@ func _print_help() -> void:
 	print("  --worker <N/M>       Worker mode: run stage slice N of M (used by parallel coordinator)")
 	print("  --combo-worker <N/M> Combo-worker mode: run 1/M of party combos per stage (used by parallel coordinator)")
 	print("  --compact            Minimal output (1 line/PASS, details to file)")
+	print("  --party <a,b,c>      Force specific party (comma-separated T2 class names)")
+	print("  --trace              Log per-action AI decisions (use with --party + small --sims)")
 	print("  --difficulty <mode>   AI difficulty: easy, normal, hard (default: auto by tier)")
 	print("  --items              Enable enemy battle items (compare baseline vs items)")
 	print("  --diagnostics        Show detailed analysis of WEAK classes")

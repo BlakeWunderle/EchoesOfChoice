@@ -25,6 +25,8 @@ var sim_mode: bool = false  ## Skip signal emissions for headless simulation
 var difficulty_level: int = 1  ## 0=easy, 1=normal, 2=hard. Set by caller.
 var _eff_diff: int = 1  ## Effective difficulty for current turn (player always 2)
 var sim_stats: Dictionary = {}  ## Per-fighter combat stats (sim mode only)
+var trace_log: Array[String] = []  ## Per-action trace when trace_mode is on
+var trace_mode: bool = false
 var _acting_units: Array = []
 
 
@@ -171,7 +173,8 @@ func physical_attack(attacker: FighterData, defender: FighterData) -> void:
 
 
 func use_ability_on_enemy(attacker: FighterData, defender: FighterData,
-		ability: AbilityData, skip_flavor: bool = false) -> void:
+		ability: AbilityData, skip_flavor: bool = false,
+		aoe_targets: int = 1) -> void:
 	if _check_for_ability_dodge(defender):
 		if not sim_mode:
 			combat_message.emit("[color=#b3b3b3]%s dodged %s's ability![/color]" % [
@@ -182,6 +185,8 @@ func use_ability_on_enemy(attacker: FighterData, defender: FighterData,
 	if ability.impacted_turns == 0:
 		# Instant damage
 		var damage: int = _calc_ability_damage(attacker, defender, ability)
+		if aoe_targets > 1:
+			damage = ceili(float(damage) / aoe_targets)
 		if damage < 0:
 			damage = 0
 		var is_crit: bool = _check_for_critical(attacker)
@@ -507,9 +512,10 @@ func use_ultimate(user: FighterData, target: FighterData) -> void:
 	if abil.use_on_enemy:
 		if abil.target_all:
 			var targets: Array = enemies if user in units else units
+			var alive_count: int = targets.size()
 			for t: FighterData in targets.duplicate():
 				if t.health > 0:
-					use_ability_on_enemy(user, t, abil, true)
+					use_ability_on_enemy(user, t, abil, true, alive_count)
 		else:
 			use_ability_on_enemy(user, target, abil, true)
 	else:
@@ -908,6 +914,11 @@ func _consume_player_item(unit: FighterData, target: FighterData, index: int) ->
 # AI: port of C# ExecuteAITurn
 # =============================================================================
 
+func _trace(msg: String) -> void:
+	if trace_mode:
+		trace_log.append(msg)
+
+
 func execute_ai_turn(unit: FighterData, targets: Array,
 		allies: Array) -> void:
 	if targets.is_empty():
@@ -1076,7 +1087,7 @@ func execute_ai_turn(unit: FighterData, targets: Array,
 			if not sim_mode:
 				combat_message.emit(ability.flavor_text)
 			for target: FighterData in targets:
-				use_ability_on_enemy(unit, target, ability, true)
+				use_ability_on_enemy(unit, target, ability, true, targets.size())
 		else:
 			var target: FighterData
 			if ability.impacted_turns > 0:
@@ -1194,8 +1205,19 @@ func _weighted_pick(abilities: Array[AbilityData]) -> AbilityData:
 	return abilities[abilities.size() - 1]
 
 
+func _has_affordable_aoe(offensive_abilities: Array[AbilityData],
+		target_count: int) -> bool:
+	if target_count < 2:
+		return false
+	for a: AbilityData in offensive_abilities:
+		if a.target_all:
+			return true
+	return false
+
+
 func _choose_offensive_ability(unit: FighterData,
-		offensive_abilities: Array[AbilityData], magic_ratio: float) -> AbilityData:
+		offensive_abilities: Array[AbilityData], magic_ratio: float,
+		target_count: int = 1) -> AbilityData:
 	var preferred: Enums.StatType = Enums.StatType.MAGIC_ATTACK \
 		if magic_ratio > 0.5 else Enums.StatType.PHYSICAL_ATTACK
 	var preferred_list: Array[AbilityData] = []
@@ -1204,9 +1226,16 @@ func _choose_offensive_ability(unit: FighterData,
 		if a.modified_stat == preferred or a.modified_stat == Enums.StatType.MIXED_ATTACK:
 			preferred_list.append(a)
 
-	if not preferred_list.is_empty():
-		return _weighted_pick(preferred_list)
-	return _weighted_pick(offensive_abilities)
+	var pool: Array[AbilityData] = preferred_list if not preferred_list.is_empty() \
+		else offensive_abilities
+	if target_count >= 2:
+		var aoe_pool: Array[AbilityData] = []
+		for a: AbilityData in pool:
+			if a.target_all:
+				aoe_pool.append(a)
+		if not aoe_pool.is_empty() and randf() < 0.8:
+			return _weighted_pick(aoe_pool)
+	return _weighted_pick(pool)
 
 
 # =============================================================================
@@ -1215,9 +1244,12 @@ func _choose_offensive_ability(unit: FighterData,
 
 func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		allies: Array) -> void:
+	var _tu: String = unit.character_name if trace_mode else ""
+	var _tc: String = unit.character_type if trace_mode else ""
 	# Priority 0: Use ultimate if charged
 	if unit.ultimate and unit.ultimate_charge >= unit.ultimate.charge_cost:
 		var best: FighterData = _pick_ultimate_target(unit, targets, allies)
+		_trace("%s (%s): ULTIMATE -> %s" % [_tu, _tc, best.character_name])
 		use_ultimate(unit, best)
 		return
 
@@ -1274,6 +1306,9 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 			if not eligible.is_empty():
 				var heal: AbilityData = _weighted_pick(eligible)
 				unit.mana -= heal.mana_cost
+				var _ht: String = "ALL" if heal.target_all else wounded.character_name
+				_trace("%s (%s): HEAL %s -> %s (HP %d/%d)" % [
+					_tu, _tc, heal.ability_name, _ht, wounded.health, wounded.max_health])
 				if heal.target_all:
 					if not sim_mode:
 						combat_message.emit(heal.flavor_text)
@@ -1292,6 +1327,7 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		var taunt_chance: float = tank_ratio * (targets.size() / 3.0)
 		if randf() < taunt_chance:
 			unit.mana -= taunt_ability.mana_cost
+			_trace("%s (%s): TAUNT" % [_tu, _tc])
 			use_ability_on_teammate(unit, unit, taunt_ability)
 			return
 
@@ -1324,13 +1360,16 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 						best_debuff_score = score
 						best_debuff = d
 						best_debuff_target = t
-		if best_debuff != null and randf() < 0.4:
+		var debuff_chance := 0.1 if _has_affordable_aoe(offensive_abilities, targets.size()) else 0.4
+		if best_debuff != null and randf() < debuff_chance:
 			unit.mana -= best_debuff.mana_cost
+			var _dt: String = "ALL" if best_debuff.target_all else best_debuff_target.character_name
+			_trace("%s (%s): DEBUFF %s -> %s" % [_tu, _tc, best_debuff.ability_name, _dt])
 			if best_debuff.target_all:
 				if not sim_mode:
 					combat_message.emit(best_debuff.flavor_text)
 				for t: FighterData in targets:
-					use_ability_on_enemy(unit, t, best_debuff, true)
+					use_ability_on_enemy(unit, t, best_debuff, true, targets.size())
 			else:
 				use_ability_on_enemy(unit, best_debuff_target, best_debuff)
 			return
@@ -1351,6 +1390,7 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 							break
 					if any_unbuffed:
 						unit.mana -= buff.mana_cost
+						_trace("%s (%s): BUFF %s -> ALL" % [_tu, _tc, buff.ability_name])
 						if not sim_mode:
 							combat_message.emit(buff.flavor_text)
 						for ally: FighterData in allies:
@@ -1361,6 +1401,7 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 					var buff_target := _best_buff_target(allies, buff)
 					if buff_target != null:
 						unit.mana -= buff.mana_cost
+						_trace("%s (%s): BUFF %s -> %s" % [_tu, _tc, buff.ability_name, buff_target.character_name])
 						use_ability_on_teammate(unit, buff_target, buff)
 						return
 
@@ -1370,11 +1411,13 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 
 	if hp_pct < 0.35 and not _has_defense_buff(unit):
 		if randf() < 0.25:
+			_trace("%s (%s): BLOCK (HP %.0f%%)" % [_tu, _tc, hp_pct * 100])
 			perform_block(unit)
 			return
 
 	if mp_pct < 0.3 and hp_pct >= 0.35:
 		if randf() < 0.25:
+			_trace("%s (%s): REST (MP %.0f%%)" % [_tu, _tc, mp_pct * 100])
 			perform_rest(unit)
 			return
 
@@ -1396,12 +1439,15 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 			var ability: AbilityData = _weighted_pick(steal_abilities)
 			unit.mana -= ability.mana_cost
 			var target: FighterData = _smart_choose_target(unit, targets, magic_ratio)
+			_trace("%s (%s): LIFESTEAL %s -> %s" % [_tu, _tc, ability.ability_name, target.character_name])
 			use_ability_on_enemy(unit, target, ability)
 			return
 
 	# -- Priority 6: Offense --
 	var ability_chance: float = magic_ratio
-	if magic_ratio < 0.4 and not offensive_abilities.is_empty():
+	if _has_affordable_aoe(offensive_abilities, targets.size()):
+		ability_chance = maxf(ability_chance, 0.85)
+	elif magic_ratio < 0.4 and not offensive_abilities.is_empty():
 		for a: AbilityData in offensive_abilities:
 			if a.modified_stat == Enums.StatType.PHYSICAL_ATTACK \
 					or a.modified_stat == Enums.StatType.MIXED_ATTACK:
@@ -1416,22 +1462,26 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 
 	if use_ability:
 		var ability: AbilityData = _choose_offensive_ability(
-			unit, all_offensive, magic_ratio)
+			unit, all_offensive, magic_ratio, targets.size())
 		unit.mana -= ability.mana_cost
 		if ability.target_all:
+			_trace("%s (%s): AOE %s -> ALL (%d targets)" % [_tu, _tc, ability.ability_name, targets.size()])
 			if not sim_mode:
 				combat_message.emit(ability.flavor_text)
 			for target: FighterData in targets:
-				use_ability_on_enemy(unit, target, ability, true)
+				use_ability_on_enemy(unit, target, ability, true, targets.size())
 		else:
 			var target: FighterData
 			if ability.impacted_turns > 0:
 				target = _best_debuff_target(targets, ability)
+				_trace("%s (%s): DEBUFF-ATK %s -> %s" % [_tu, _tc, ability.ability_name, target.character_name])
 			else:
 				target = _smart_choose_target(unit, targets, magic_ratio)
+				_trace("%s (%s): ABILITY %s -> %s (HP %d/%d)" % [_tu, _tc, ability.ability_name, target.character_name, target.health, target.max_health])
 			use_ability_on_enemy(unit, target, ability)
 	else:
 		var target: FighterData = _smart_choose_target(unit, targets, magic_ratio)
+		_trace("%s (%s): PHYS_ATK -> %s (HP %d/%d)" % [_tu, _tc, target.character_name, target.health, target.max_health])
 		physical_attack(unit, target)
 
 

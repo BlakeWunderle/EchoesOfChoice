@@ -790,8 +790,9 @@ func _on_ability_selected(index: int) -> void:
 		_current_actor.mana -= _selected_ability.mana_cost
 		if _selected_ability.use_on_enemy:
 			_add_log("%s targets all enemies!" % _current_actor.character_name)
+			var _aoe_targets: int = _engine.enemies.size()
 			for enemy: FighterData in _engine.enemies.duplicate():
-				_engine.use_ability_on_enemy(_current_actor, enemy, _selected_ability, true)
+				_engine.use_ability_on_enemy(_current_actor, enemy, _selected_ability, true, _aoe_targets)
 		else:
 			_add_log("%s targets all allies!" % _current_actor.character_name)
 			for ally: FighterData in _engine.units.duplicate():

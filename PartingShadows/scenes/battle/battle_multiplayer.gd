@@ -44,8 +44,9 @@ func execute_remote_action(actor: FighterData, action: Dictionary) -> void:
 				return
 			actor.mana -= ability.mana_cost
 			if ability.target_all:
+				var _aoe_targets: int = _battle._engine.enemies.size()
 				for enemy: FighterData in _battle._engine.enemies.duplicate():
-					_battle._engine.use_ability_on_enemy(actor, enemy, ability, true)
+					_battle._engine.use_ability_on_enemy(actor, enemy, ability, true, _aoe_targets)
 			else:
 				var taunter: FighterData = _battle._engine.get_taunt_target(_battle._engine.enemies)
 				var target: FighterData
