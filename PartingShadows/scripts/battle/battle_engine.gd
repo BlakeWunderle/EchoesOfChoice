@@ -1528,6 +1528,7 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 	var best_type: String = ""
 	var best_ability: AbilityData = null
 	var best_target: FighterData = null
+	var best_item_idx: int = -1
 
 	# -- Score heals --
 	for heal: AbilityData in heal_abilities:
@@ -1745,6 +1746,161 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 			best_ability = taunt_ability
 			best_target = unit
 
+	# -- Score items --
+	var item_pool: Array = player_shared_items if unit in units else enemy_shared_items
+	for idx: int in item_pool.size():
+		var item: ItemData = item_pool[idx]
+		match item.effect_type:
+			Enums.ItemEffect.HEAL_HP:
+				if not item.target_ally:
+					continue
+				for ally: FighterData in allies:
+					if ally.health <= 0 or ally.health >= ally.max_health:
+						continue
+					var heal_amount: int = int(ally.max_health * item.magnitude / 100.0)
+					var actual: int = mini(heal_amount, ally.max_health - ally.health)
+					var score: float = float(actual)
+					var hp_frac: float = float(ally.health) / float(ally.max_health)
+					if hp_frac < 0.25:
+						score *= 2.0
+					if item.target_all:
+						var total: float = 0.0
+						for a2: FighterData in allies:
+							if a2.health > 0 and a2.health < a2.max_health:
+								var a_heal: int = mini(
+									int(a2.max_health * item.magnitude / 100.0),
+									a2.max_health - a2.health)
+								var s2: float = float(a_heal)
+								if float(a2.health) / float(a2.max_health) < 0.25:
+									s2 *= 2.0
+								total += s2
+						score = total
+					if score > best_score:
+						best_score = score
+						best_type = "ITEM"
+						best_item_idx = idx
+						best_target = ally
+			Enums.ItemEffect.HEAL_MP:
+				if not item.target_ally:
+					continue
+				for ally: FighterData in allies:
+					if ally.health <= 0 or ally.mana >= ally.max_mana:
+						continue
+					var restored: int = mini(item.magnitude, ally.max_mana - ally.mana)
+					var score: float = 0.0
+					var ally_cheapest: int = 999
+					for a: AbilityData in ally.abilities:
+						if a.mana_cost < ally_cheapest:
+							ally_cheapest = a.mana_cost
+					if ally.mana < ally_cheapest and ally.mana + restored >= ally_cheapest:
+						var best_ev: float = 0.0
+						for a: AbilityData in ally.abilities:
+							if a.mana_cost == ally_cheapest and a.use_on_enemy and a.impacted_turns == 0:
+								for t: FighterData in targets:
+									best_ev = maxf(best_ev, float(maxi(0, _calc_ability_damage(ally, t, a))))
+						score = best_ev * 0.5
+					if score > best_score:
+						best_score = score
+						best_type = "ITEM"
+						best_item_idx = idx
+						best_target = ally
+			Enums.ItemEffect.CURE_DEBUFF:
+				if not item.target_ally:
+					continue
+				for ally: FighterData in allies:
+					if ally.health <= 0:
+						continue
+					var debuff_count: int = 0
+					for mod: Dictionary in ally.modified_stats:
+						if mod["is_negative"]:
+							debuff_count += 1
+					if debuff_count == 0:
+						continue
+					var score: float = float(debuff_count) * 15.0
+					if score > best_score:
+						best_score = score
+						best_type = "ITEM"
+						best_item_idx = idx
+						best_target = ally
+			Enums.ItemEffect.BUFF:
+				if item.target_ally:
+					var delta: int = _compute_buff_delta(unit, item.stat_type, item.magnitude)
+					if item.target_all:
+						var total: float = 0.0
+						for ally: FighterData in allies:
+							if ally.health <= 0:
+								continue
+							var d: int = _compute_buff_delta(ally, item.stat_type, item.magnitude)
+							total += float(d) * float(item.duration)
+						if total > best_score:
+							best_score = total
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = allies[0] if not allies.is_empty() else unit
+					else:
+						for ally: FighterData in allies:
+							if ally.health <= 0:
+								continue
+							var d: int = _compute_buff_delta(ally, item.stat_type, item.magnitude)
+							var score: float = float(d) * float(item.duration)
+							if score > best_score:
+								best_score = score
+								best_type = "ITEM"
+								best_item_idx = idx
+								best_target = ally
+				else:
+					if item.target_all:
+						var total: float = 0.0
+						for t: FighterData in targets:
+							var d: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
+							var s: float = float(d) * float(item.duration)
+							if item.stat_type in defense_stats:
+								s *= float(allies.size())
+							total += s
+						if total > best_score:
+							best_score = total
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = targets[0] if not targets.is_empty() else null
+					else:
+						for t: FighterData in targets:
+							var d: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
+							var score: float = float(d) * float(item.duration)
+							if item.stat_type in defense_stats:
+								score *= float(allies.size())
+							if score > best_score:
+								best_score = score
+								best_type = "ITEM"
+								best_item_idx = idx
+								best_target = t
+			Enums.ItemEffect.DAMAGE:
+				if item.target_ally:
+					continue
+				if item.target_all:
+					var total: float = 0.0
+					for t: FighterData in targets:
+						var score: float = float(item.magnitude)
+						if item.magnitude >= t.health:
+							score *= 3.0
+						total += score
+					if total > best_score:
+						best_score = total
+						best_type = "ITEM"
+						best_item_idx = idx
+						best_target = targets[0] if not targets.is_empty() else null
+				else:
+					for t: FighterData in targets:
+						var score: float = float(item.magnitude)
+						if item.magnitude >= t.health:
+							score *= 3.0
+						elif float(t.health) / float(t.max_health) < 0.25:
+							score *= 1.2
+						if score > best_score:
+							best_score = score
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = t
+
 	# -- Score block --
 	if unit.mana < cheapest_cost:
 		var mp_from_block: int = maxi(1, floori(unit.magic_attack / 7))
@@ -1873,6 +2029,15 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 		"REST":
 			_trace("%s (%s): REST [score: %.1f]" % [_tu, _tc, best_score])
 			perform_rest(unit)
+		"ITEM":
+			var item: ItemData = item_pool[best_item_idx]
+			var tgt_name: String = best_target.character_name if best_target else "ALL"
+			_trace("%s (%s): ITEM %s -> %s [score: %.1f]" % [
+				_tu, _tc, item.item_name, tgt_name, best_score])
+			if unit in units:
+				_consume_player_item(unit, best_target, best_item_idx)
+			else:
+				_consume_shared_item(unit, best_target, best_item_idx)
 		"PHYS_ATK":
 			_trace("%s (%s): PHYS_ATK -> %s [score: %.1f]" % [
 				_tu, _tc, best_target.character_name, best_score])
