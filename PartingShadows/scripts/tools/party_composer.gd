@@ -52,7 +52,6 @@ static func create_fighter(base_type: String, t1_item: String,
 		t2_item: String, total_level_ups: int,
 		equip_upgrades: int = 0, has_ultimate: bool = false) -> FighterData:
 	var fighter := FighterDB.create_player(base_type, base_type)
-	fighter.is_user_controlled = false
 	var remaining := total_level_ups
 
 	var base_levels: int = mini(remaining, LEVELS_AS_BASE) if t1_item != "" else remaining
@@ -62,7 +61,6 @@ static func create_fighter(base_type: String, t1_item: String,
 
 	if t1_item != "":
 		FighterDB.upgrade_class(fighter, t1_item)
-		fighter.is_user_controlled = false
 
 		var t1_levels: int = mini(remaining, LEVELS_AS_TIER1) if t2_item != "" else remaining
 		for i in t1_levels:
@@ -71,7 +69,6 @@ static func create_fighter(base_type: String, t1_item: String,
 
 	if t2_item != "":
 		FighterDB.upgrade_class(fighter, t2_item)
-		fighter.is_user_controlled = false
 		for i in remaining:
 			FighterDB.level_up(fighter)
 

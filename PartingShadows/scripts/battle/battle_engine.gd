@@ -1253,6 +1253,11 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		use_ultimate(unit, best)
 		return
 
+	# Player units use score-based AI instead of priority system
+	if unit.is_user_controlled:
+		_execute_player_ai_turn(unit, targets, allies)
+		return
+
 	# -- Classify abilities --
 	var heal_abilities: Array[AbilityData] = []
 	var buff_abilities: Array[AbilityData] = []
@@ -1483,6 +1488,391 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		var target: FighterData = _smart_choose_target(unit, targets, magic_ratio)
 		_trace("%s (%s): PHYS_ATK -> %s (HP %d/%d)" % [_tu, _tc, target.character_name, target.health, target.max_health])
 		physical_attack(unit, target)
+
+
+func _execute_player_ai_turn(unit: FighterData, targets: Array,
+		allies: Array) -> void:
+	var _tu: String = unit.character_name if trace_mode else ""
+	var _tc: String = unit.character_type if trace_mode else ""
+
+	# -- Classify abilities --
+	var heal_abilities: Array[AbilityData] = []
+	var buff_abilities: Array[AbilityData] = []
+	var offensive_abilities: Array[AbilityData] = []
+	var debuff_abilities: Array[AbilityData] = []
+	var taunt_ability: AbilityData = null
+	var cheapest_cost: int = 999
+
+	for a: AbilityData in unit.abilities:
+		if a.mana_cost < cheapest_cost:
+			cheapest_cost = a.mana_cost
+		if a.mana_cost > unit.mana:
+			continue
+		if a.use_on_enemy:
+			if a.impacted_turns > 0:
+				debuff_abilities.append(a)
+			else:
+				offensive_abilities.append(a)
+		elif a.impacted_turns == 0:
+			heal_abilities.append(a)
+		elif a.modified_stat == Enums.StatType.TAUNT:
+			taunt_ability = a
+		else:
+			buff_abilities.append(a)
+
+	var best_score: float = -1.0
+	var best_type: String = ""
+	var best_ability: AbilityData = null
+	var best_target: FighterData = null
+
+	# -- Score heals --
+	for heal: AbilityData in heal_abilities:
+		for ally: FighterData in allies:
+			if ally.health <= 0:
+				continue
+			var hp_frac: float = float(ally.health) / float(ally.max_health)
+			if hp_frac >= heal.heal_threshold:
+				continue
+			var heal_amount: int
+			if heal.modified_stat == Enums.StatType.MIXED_ATTACK:
+				heal_amount = heal.modifier + (unit.physical_attack + unit.magic_attack) / 4
+			else:
+				heal_amount = heal.modifier + unit.magic_attack / 2
+			heal_amount = maxi(0, heal_amount)
+			var score: float = float(heal_amount)
+			if hp_frac < 0.25:
+				score *= 2.0
+			if heal.target_all:
+				var total: float = 0.0
+				for a2: FighterData in allies:
+					if a2.health > 0 and a2.health < a2.max_health:
+						var f2: float = float(a2.health) / float(a2.max_health)
+						var s2: float = float(heal_amount)
+						if f2 < 0.25:
+							s2 *= 2.0
+						total += s2
+				score = total
+			if score > best_score:
+				best_score = score
+				best_type = "HEAL"
+				best_ability = heal
+				best_target = ally
+
+	# -- Score buffs --
+	var offense_stats: Array = [
+		Enums.StatType.ATTACK, Enums.StatType.PHYSICAL_ATTACK,
+		Enums.StatType.MAGIC_ATTACK, Enums.StatType.MIXED_ATTACK,
+		Enums.StatType.CRIT, Enums.StatType.CRIT_CHANCE,
+	]
+	var defense_stats: Array = [
+		Enums.StatType.DEFENSE, Enums.StatType.PHYSICAL_DEFENSE,
+		Enums.StatType.MAGIC_DEFENSE,
+	]
+	for buff: AbilityData in buff_abilities:
+		if buff.damage_per_turn > 0:
+			# Regen buff: score as heal over time
+			for ally: FighterData in allies:
+				if ally.health <= 0:
+					continue
+				var hp_frac: float = float(ally.health) / float(ally.max_health)
+				var hot_flat: int = maxi(1, floori(
+					float(ally.max_health) * float(buff.damage_per_turn) / 100.0))
+				var score: float = float(hot_flat * buff.impacted_turns)
+				if hp_frac < 0.25:
+					score *= 2.0
+				if buff.target_all:
+					var total: float = 0.0
+					for a2: FighterData in allies:
+						if a2.health > 0:
+							var f2: float = float(a2.health) / float(a2.max_health)
+							var s2: float = float(hot_flat * buff.impacted_turns)
+							if f2 < 0.25:
+								s2 *= 2.0
+							total += s2
+					score = total
+				if score > best_score:
+					best_score = score
+					best_type = "BUFF"
+					best_ability = buff
+					best_target = ally
+			continue
+
+		var is_offense: bool = buff.modified_stat in offense_stats
+		var is_defense: bool = buff.modified_stat in defense_stats
+		var is_speed: bool = buff.modified_stat == Enums.StatType.SPEED
+
+		if buff.target_all:
+			var total: float = 0.0
+			for ally: FighterData in allies:
+				if ally.health <= 0:
+					continue
+				var delta: int = _compute_buff_delta(ally, buff.modified_stat, buff.modifier)
+				var s: float = float(delta) * float(buff.impacted_turns)
+				if is_defense:
+					s *= float(targets.size()) / maxf(1.0, float(allies.size()))
+				elif is_speed:
+					s *= 0.5
+				total += s
+			if total > best_score:
+				best_score = total
+				best_type = "BUFF"
+				best_ability = buff
+				best_target = allies[0]
+		else:
+			for ally: FighterData in allies:
+				if ally.health <= 0:
+					continue
+				var delta: int = _compute_buff_delta(ally, buff.modified_stat, buff.modifier)
+				var score: float = float(delta) * float(buff.impacted_turns)
+				if is_defense:
+					score *= float(targets.size()) / maxf(1.0, float(allies.size()))
+				elif is_speed:
+					score *= 0.5
+				if score > best_score:
+					best_score = score
+					best_type = "BUFF"
+					best_ability = buff
+					best_target = ally
+
+	# -- Score debuffs --
+	for debuff: AbilityData in debuff_abilities:
+		if debuff.damage_per_turn > 0:
+			# DoT debuff: score as total damage over time
+			if debuff.target_all:
+				var total: float = 0.0
+				for t: FighterData in targets:
+					var dot_flat: int = maxi(1, floori(
+						float(t.max_health) * float(debuff.damage_per_turn) / 100.0))
+					total += float(dot_flat * debuff.impacted_turns)
+				if total > best_score:
+					best_score = total
+					best_type = "DEBUFF"
+					best_ability = debuff
+					best_target = targets[0]
+			else:
+				for t: FighterData in targets:
+					var dot_flat: int = maxi(1, floori(
+						float(t.max_health) * float(debuff.damage_per_turn) / 100.0))
+					var score: float = float(dot_flat * debuff.impacted_turns)
+					if score > best_score:
+						best_score = score
+						best_type = "DEBUFF"
+						best_ability = debuff
+						best_target = t
+			continue
+
+		var is_def_debuff: bool = debuff.modified_stat in defense_stats
+		if debuff.target_all:
+			var total: float = 0.0
+			for t: FighterData in targets:
+				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
+				var s: float = float(delta) * float(debuff.impacted_turns)
+				if is_def_debuff:
+					s *= float(allies.size())
+				total += s
+			if total > best_score:
+				best_score = total
+				best_type = "DEBUFF"
+				best_ability = debuff
+				best_target = targets[0]
+		else:
+			for t: FighterData in targets:
+				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
+				var score: float = float(delta) * float(debuff.impacted_turns)
+				if is_def_debuff:
+					score *= float(allies.size())
+				if score > best_score:
+					best_score = score
+					best_type = "DEBUFF"
+					best_ability = debuff
+					best_target = t
+
+	# -- Score offensive abilities --
+	for ability: AbilityData in offensive_abilities:
+		if ability.target_all:
+			var total: float = 0.0
+			for t: FighterData in targets:
+				var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, ability)))
+				dmg = dmg / float(maxi(1, targets.size()))
+				var hit: float = (100.0 - float(t.dodge_chance) / 2.0) / 100.0
+				var t_score: float = dmg * hit
+				if ability.life_steal_percent > 0:
+					t_score += floorf(dmg * ability.life_steal_percent) * hit
+					var hp_frac: float = float(unit.health) / float(unit.max_health)
+					if hp_frac < 0.5:
+						t_score *= 1.3
+				total += t_score
+			if total > best_score:
+				best_score = total
+				best_type = "AOE"
+				best_ability = ability
+				best_target = targets[0]
+		else:
+			for t: FighterData in targets:
+				var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, ability)))
+				var hit: float = (100.0 - float(t.dodge_chance) / 2.0) / 100.0
+				var score: float = dmg * hit
+				if ability.life_steal_percent > 0:
+					score += floorf(dmg * ability.life_steal_percent) * hit
+					var hp_frac: float = float(unit.health) / float(unit.max_health)
+					if hp_frac < 0.5:
+						score *= 1.3
+				var t_hp_frac: float = float(t.health) / float(t.max_health)
+				if t_hp_frac < 0.25:
+					score *= 1.2
+				if score > best_score:
+					best_score = score
+					best_type = "ABILITY"
+					best_ability = ability
+					best_target = t
+
+	# -- Score taunt --
+	if taunt_ability != null and not _has_modifier(unit, Enums.StatType.TAUNT, false):
+		var def_total: float = float(unit.physical_defense + unit.magic_defense)
+		var off_total: float = float(unit.physical_attack + unit.magic_attack)
+		var tank_ratio: float = def_total / (def_total + off_total)
+		var score: float = tank_ratio * 30.0
+		if score > best_score:
+			best_score = score
+			best_type = "TAUNT"
+			best_ability = taunt_ability
+			best_target = unit
+
+	# -- Score block --
+	if unit.mana < cheapest_cost:
+		var mp_from_block: int = maxi(1, floori(unit.magic_attack / 7))
+		var best_atk_ev: float = 0.0
+		for t: FighterData in targets:
+			var phys_dmg: float = float(maxi(
+				maxi(unit.physical_attack - t.physical_defense, 0),
+				maxi((unit.magic_attack - t.magic_defense) / 2, 0)))
+			var hit: float = (100.0 - float(t.dodge_chance)) / 100.0
+			var ev: float = phys_dmg * hit + float(mp_from_block) * hit
+			best_atk_ev = maxf(best_atk_ev, ev)
+		var phys_boost: float = floorf(unit.physical_defense * 0.5)
+		var mag_boost: float = floorf(unit.magic_defense * 0.5)
+		var avg_boost: float = (phys_boost + mag_boost) / 2.0
+		var attacks_on_me: float = float(targets.size()) / maxf(1.0, float(allies.size()))
+		var block_value: float = avg_boost * attacks_on_me + float(mp_from_block)
+		if block_value > best_atk_ev and block_value > best_score:
+			best_score = block_value
+			best_type = "BLOCK"
+			best_ability = null
+			best_target = null
+
+	# -- Score rest --
+	var hp_pct: float = float(unit.health) / float(unit.max_health)
+	var hp_restored: float = float(maxi(1, floori(unit.max_health * 0.1)))
+	var mp_restored: int = maxi(2, floori(unit.magic_attack / 7) * 2)
+	var hp_value: float = hp_restored if hp_pct < 0.5 else hp_restored * 0.3
+	var mp_value: float = 0.0
+	if unit.mana < cheapest_cost and unit.mana + mp_restored >= cheapest_cost:
+		var cheapest_ev: float = 0.0
+		for a: AbilityData in unit.abilities:
+			if a.mana_cost == cheapest_cost and a.use_on_enemy and a.impacted_turns == 0:
+				for t: FighterData in targets:
+					var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, a)))
+					cheapest_ev = maxf(cheapest_ev, dmg)
+		mp_value = cheapest_ev * 0.5
+	var rest_score: float = hp_value + mp_value
+	if hp_pct < 0.3:
+		rest_score *= 1.5
+	if rest_score > best_score:
+		best_score = rest_score
+		best_type = "REST"
+		best_ability = null
+		best_target = null
+
+	# -- Score physical attack on each target (fallback) --
+	for t: FighterData in targets:
+		var phys_dmg: float = float(maxi(
+			maxi(unit.physical_attack - t.physical_defense, 0),
+			maxi((unit.magic_attack - t.magic_defense) / 2, 0)))
+		var hit: float = (100.0 - float(t.dodge_chance)) / 100.0
+		var score: float = phys_dmg * hit
+		var t_hp_frac: float = float(t.health) / float(t.max_health)
+		if t_hp_frac < 0.25:
+			score *= 1.2
+		if score > best_score:
+			best_score = score
+			best_type = "PHYS_ATK"
+			best_ability = null
+			best_target = t
+
+	# -- Execute best action --
+	match best_type:
+		"HEAL":
+			unit.mana -= best_ability.mana_cost
+			if best_ability.target_all:
+				_trace("%s (%s): HEAL %s -> ALL [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_score])
+				if not sim_mode:
+					combat_message.emit(best_ability.flavor_text)
+				for ally: FighterData in allies:
+					if ally.health > 0:
+						use_ability_on_teammate(unit, ally, best_ability, true)
+			else:
+				_trace("%s (%s): HEAL %s -> %s [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_target.character_name, best_score])
+				use_ability_on_teammate(unit, best_target, best_ability)
+		"BUFF":
+			unit.mana -= best_ability.mana_cost
+			if best_ability.target_all:
+				_trace("%s (%s): BUFF %s -> ALL [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_score])
+				if not sim_mode:
+					combat_message.emit(best_ability.flavor_text)
+				for ally: FighterData in allies:
+					if ally.health > 0:
+						use_ability_on_teammate(unit, ally, best_ability, true)
+			else:
+				_trace("%s (%s): BUFF %s -> %s [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_target.character_name, best_score])
+				use_ability_on_teammate(unit, best_target, best_ability)
+		"DEBUFF":
+			unit.mana -= best_ability.mana_cost
+			if best_ability.target_all:
+				_trace("%s (%s): DEBUFF %s -> ALL [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_score])
+				if not sim_mode:
+					combat_message.emit(best_ability.flavor_text)
+				for t: FighterData in targets:
+					use_ability_on_enemy(unit, t, best_ability, true, targets.size())
+			else:
+				_trace("%s (%s): DEBUFF %s -> %s [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_target.character_name, best_score])
+				use_ability_on_enemy(unit, best_target, best_ability)
+		"AOE":
+			unit.mana -= best_ability.mana_cost
+			_trace("%s (%s): AOE %s -> ALL (%d targets) [score: %.1f]" % [
+				_tu, _tc, best_ability.ability_name, targets.size(), best_score])
+			if not sim_mode:
+				combat_message.emit(best_ability.flavor_text)
+			for t: FighterData in targets:
+				use_ability_on_enemy(unit, t, best_ability, true, targets.size())
+		"ABILITY":
+			unit.mana -= best_ability.mana_cost
+			_trace("%s (%s): ABILITY %s -> %s [score: %.1f]" % [
+				_tu, _tc, best_ability.ability_name, best_target.character_name, best_score])
+			use_ability_on_enemy(unit, best_target, best_ability)
+		"TAUNT":
+			unit.mana -= best_ability.mana_cost
+			_trace("%s (%s): TAUNT [score: %.1f]" % [_tu, _tc, best_score])
+			use_ability_on_teammate(unit, unit, best_ability)
+		"BLOCK":
+			_trace("%s (%s): BLOCK [score: %.1f]" % [_tu, _tc, best_score])
+			perform_block(unit)
+		"REST":
+			_trace("%s (%s): REST [score: %.1f]" % [_tu, _tc, best_score])
+			perform_rest(unit)
+		"PHYS_ATK":
+			_trace("%s (%s): PHYS_ATK -> %s [score: %.1f]" % [
+				_tu, _tc, best_target.character_name, best_score])
+			physical_attack(unit, best_target)
+		_:
+			var target: FighterData = targets[0]
+			_trace("%s (%s): PHYS_ATK (fallback) -> %s" % [_tu, _tc, target.character_name])
+			physical_attack(unit, target)
 
 
 func _smart_choose_target(unit: FighterData, targets: Array,
