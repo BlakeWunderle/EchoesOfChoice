@@ -43,7 +43,11 @@ func _ready() -> void:
 
 func _build_ui() -> void:
 	var margin := MarginContainer.new()
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	margin.anchor_left = 0.0
+	margin.anchor_top = 0.0
+	margin.anchor_right = 1.0
+	margin.anchor_bottom = 0.5
+	margin.clip_contents = true
 	margin.add_theme_constant_override("margin_left", 80)
 	margin.add_theme_constant_override("margin_right", 80)
 	margin.add_theme_constant_override("margin_top", 60)
