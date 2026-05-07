@@ -359,8 +359,7 @@ func _update_bars(fighter: FighterData, instant: bool = false) -> void:
 		_charge_container.visible = true
 		_charge_bar.max_value = fighter.ultimate.charge_cost
 		var target_charge: float = float(fighter.ultimate_charge)
-		var charge_pct: int = int(target_charge / float(fighter.ultimate.charge_cost) * 100.0)
-		_charge_label.text = "ULT %d%%" % charge_pct
+		_charge_label.text = "ULT %d/%d" % [fighter.ultimate_charge, fighter.ultimate.charge_cost]
 
 		if instant or not is_inside_tree():
 			_charge_bar.value = target_charge

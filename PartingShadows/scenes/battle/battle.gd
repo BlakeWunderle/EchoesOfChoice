@@ -518,9 +518,8 @@ func _show_action_menu(actor: FighterData) -> void:
 	var options: Array[Dictionary] = [{"label": "Actions"}]
 	options.append({"label": "Ability", "disabled": not has_available})
 	options.append({"label": "Item", "disabled": GameState.inventory.size() == 0})
-	options.append({"label": "Auto", "disabled": not _auto_battle_unlocked})
 	options.append({"label": "Stats"})
-	# Slot 6: Ultimate (shows charge %)
+	# Slot 4: Ultimate (shows charge %)
 	var has_ult: bool = actor.ultimate != null
 	var ult_ready: bool = has_ult and actor.ultimate_charge >= actor.ultimate.charge_cost
 	if has_ult:
@@ -534,6 +533,7 @@ func _show_action_menu(actor: FighterData) -> void:
 				"and Rest. Charge carries over partially between battles.")
 	else:
 		options.append({"label": "", "disabled": true})
+	options.append({"label": "Auto", "disabled": not _auto_battle_unlocked})
 	_action_menu.show_choices(options, true)
 	_tip_overlay.show_tip_once("combat_actions",
 		"Attack, Block, and Rest all restore MP based on your Magic Attack.\n\n" +
@@ -545,7 +545,7 @@ func _show_action_menu(actor: FighterData) -> void:
 func _on_action_selected(index: int) -> void:
 	_action_menu.hide_menu()
 
-	# Fixed layout: Actions(0), Ability(1), Item(2), Auto(3), Stats(4), Ultimate(5)
+	# Fixed layout: Actions(0), Ability(1), Item(2), Stats(3), Ultimate(4), Auto(5)
 	match index:
 		0: # Actions
 			_phase = Phase.PLAYER_ACTIONS_SUBMENU
@@ -556,7 +556,12 @@ func _on_action_selected(index: int) -> void:
 		2: # Item
 			_phase = Phase.PLAYER_ITEM_SELECT
 			_show_item_menu()
-		3: # Auto
+		3: # Stats
+			_phase = Phase.STATS_PICK
+			_show_stats_pick()
+		4: # Ultimate
+			_start_ultimate_targeting()
+		5: # Auto
 			_auto_battle = true
 			_update_auto_button_style()
 			_tip_overlay.show_tip_once("auto_battle",
@@ -565,11 +570,6 @@ func _on_action_selected(index: int) -> void:
 				"Auto-battle speeds up combat but may not always make " +
 				"the best strategic choices.")
 			_execute_auto_turn()
-		4: # Stats
-			_phase = Phase.STATS_PICK
-			_show_stats_pick()
-		5: # Ultimate
-			_start_ultimate_targeting()
 
 
 func _start_ultimate_targeting() -> void:
