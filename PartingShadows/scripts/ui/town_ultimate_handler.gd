@@ -1,12 +1,17 @@
-class_name TownUltimateHandler extends RefCounted
+class_name TownUltimateHandler extends Control
 
-## Manages the ultimate ability selection phase at town stops.
-## Delegated from town_stop.gd following the TownEquipmentHandler pattern.
+## Self-contained ultimate ability selection phase for town stops.
 ## Eligible fighters: T2, all 3 equipment slots upgraded, no ultimate yet.
 ## Only offered at designated stop-4 battles (after all equipment upgrades).
 
+const DialoguePanel := preload("res://scripts/ui/dialogue_panel.gd")
+const ChoiceMenu := preload("res://scripts/ui/choice_menu.gd")
+const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
+const ReadyGate := preload("res://scripts/ui/ready_gate.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
+
+signal phase_finished
 
 const _ULTIMATE_STOPS: Array[String] = [
 	"TunnelCampStop",           # Story 1: post-Depths, barkeep's runner
@@ -20,27 +25,115 @@ const _ULTIMATE_STOPS: Array[String] = [
 var _party: Array = []
 var _battle_id: String = ""
 var _char_index: int = 0
-var _ult_options: Array = []  ## Array of UltimateData for current fighter
+var _ult_options: Array = []
 
-signal narration_requested(lines: Array)
-signal choices_requested(options: Array, header: String)
-signal selection_complete(char_index: int, ultimate_name: String)
-signal phase_finished
+var _dialogue: DialoguePanel
+var _choice_menu: ChoiceMenu
+var _header_label: Label
+var _tip_overlay: TipOverlay
+var _ready_gate: ReadyGate
+var _player_indicator: Label
 
 
-func start(party: Array, battle_id: String = "") -> void:
-	_party = party
-	_battle_id = battle_id
+func _init(params: Dictionary) -> void:
+	set_anchors_preset(Control.PRESET_FULL_RECT)
+	_party = params.get("party", [])
+	_battle_id = params.get("battle_id", "")
+
+
+func _ready() -> void:
+	_build_ui()
+	_start()
+
+
+func _build_ui() -> void:
+	var margin := MarginContainer.new()
+	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 80)
+	margin.add_theme_constant_override("margin_right", 80)
+	margin.add_theme_constant_override("margin_top", 60)
+	margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(margin)
+
+	var vbox := VBoxContainer.new()
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	margin.add_child(vbox)
+
+	_dialogue = DialoguePanel.new()
+	_dialogue.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_dialogue.all_text_finished.connect(_on_text_finished)
+	_dialogue.visible = false
+	vbox.add_child(_dialogue)
+
+	_header_label = Label.new()
+	_header_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_header_label.add_theme_font_size_override("font_size", 28)
+	_header_label.visible = false
+	vbox.add_child(_header_label)
+
+	_choice_menu = ChoiceMenu.new()
+	_choice_menu.visible = false
+	_choice_menu.choice_selected.connect(_on_choice_selected)
+	vbox.add_child(_choice_menu)
+
+	_ready_gate = ReadyGate.new()
+	_ready_gate.visible = false
+	_ready_gate.all_ready.connect(_on_all_ready)
+	vbox.add_child(_ready_gate)
+
+	_tip_overlay = TipOverlay.new()
+	add_child(_tip_overlay)
+
+	_player_indicator = Label.new()
+	_player_indicator.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_player_indicator.add_theme_font_size_override("font_size", 22)
+	_player_indicator.add_theme_color_override("font_color", Color(0.3, 0.9, 0.5))
+	_player_indicator.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_player_indicator.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_player_indicator.offset_left = -200
+	_player_indicator.offset_right = 200
+	_player_indicator.offset_top = 16
+	_player_indicator.visible = false
+	add_child(_player_indicator)
+
+
+func _start() -> void:
 	_char_index = 0
-
-	if battle_id not in _ULTIMATE_STOPS or not _any_eligible():
+	if _battle_id not in _ULTIMATE_STOPS or not _any_eligible():
 		phase_finished.emit()
 		return
+	_dialogue.visible = true
+	_dialogue.show_text(_get_narration_text())
 
-	narration_requested.emit(_get_narration_text())
+
+func _on_text_finished() -> void:
+	if LocalCoop.is_active:
+		_ready_gate.start_local(LocalCoop.player_count)
+		return
+	_dialogue.visible = false
+	_show_ultimate_selection()
 
 
-func on_narration_done() -> void:
+func _on_all_ready() -> void:
+	_dialogue.visible = false
+	_show_ultimate_selection()
+
+
+func _on_choice_selected(index: int) -> void:
+	if index < 0 or index >= _ult_options.size():
+		return
+
+	var fighter: FighterData = _party[_char_index]
+	var chosen: RefCounted = _ult_options[index]
+	fighter.ultimate = chosen
+	fighter.ultimate_charge = 0
+	GameLog.info("Ultimate: selected %s" % chosen.ultimate_name)
+
+	if LocalCoop.is_active:
+		LocalCoop.clear_active_player()
+		_player_indicator.visible = false
+
+	_char_index += 1
 	_show_ultimate_selection()
 
 
@@ -73,11 +166,20 @@ func _show_ultimate_selection() -> void:
 		_char_index += 1
 
 	if _char_index >= _party.size():
+		_choice_menu.hide_menu()
+		_header_label.visible = false
+		_player_indicator.visible = false
 		phase_finished.emit()
 		return
 
 	var fighter: FighterData = _party[_char_index]
 	_ult_options = UltimateDB.get_ultimates_for_class(fighter.class_id)
+
+	if LocalCoop.is_active:
+		var owner: int = LocalCoop.get_player_for_slot(_char_index)
+		LocalCoop.set_active_player(owner)
+		_player_indicator.text = "Player %d" % (owner + 1)
+		_player_indicator.visible = true
 
 	var options: Array[Dictionary] = []
 	for ult: RefCounted in _ult_options:
@@ -86,28 +188,10 @@ func _show_ultimate_selection() -> void:
 			"description": ult.description,
 		})
 
-	var header: String = "Choose an ultimate for %s the %s:" % [
+	_header_label.text = "Choose an ultimate for %s the %s:" % [
 		fighter.character_name, fighter.character_type]
-	choices_requested.emit(options, header)
-
-
-func on_choice_selected(index: int) -> void:
-	if index < 0 or index >= _ult_options.size():
-		return
-
-	var fighter: FighterData = _party[_char_index]
-	var chosen: RefCounted = _ult_options[index]
-	fighter.ultimate = chosen
-	fighter.ultimate_charge = 0
-
-	selection_complete.emit(_char_index, chosen.ultimate_name)
-
-	_char_index += 1
-	_show_ultimate_selection()
-
-
-func get_current_char_index() -> int:
-	return _char_index
+	_header_label.visible = true
+	_choice_menu.show_choices(options)
 
 
 func _get_narration_text() -> Array[String]:

@@ -33,7 +33,6 @@ var _scene_image: TextureRect
 var _player_indicator: Label
 var _phase: TownPhase = TownPhase.INTRO_TEXT
 var _active_handler: Control = null
-var _ult_handler: TownUltimateHandler    ## Ultimate ability selection handler
 
 
 func _ready() -> void:
@@ -167,8 +166,6 @@ func _on_text_finished() -> void:
 		match _phase:
 			TownPhase.INTRO_TEXT:
 				_show_ready_gate(_do_intro_advance)
-			TownPhase.ULTIMATE_SELECT:
-				_show_ready_gate(_do_ult_narration_advance)
 			TownPhase.OUTRO_TEXT:
 				_show_ready_gate(_do_outro_advance)
 		return
@@ -180,8 +177,6 @@ func _do_text_advance() -> void:
 	match _phase:
 		TownPhase.INTRO_TEXT:
 			_do_intro_advance()
-		TownPhase.ULTIMATE_SELECT:
-			_do_ult_narration_advance()
 		TownPhase.OUTRO_TEXT:
 			_do_outro_advance()
 
@@ -288,8 +283,6 @@ func _do_forward_upgrade_rpc(method: String, args: Array) -> void:
 
 func _on_choice_selected(index: int) -> void:
 	match _phase:
-		TownPhase.ULTIMATE_SELECT:
-			_on_ult_choice_selected(index)
 		TownPhase.BRANCH_CHOICE:
 			_on_branch_selected(index)
 
@@ -313,59 +306,20 @@ func _on_equip_finished() -> void:
 
 
 func _start_ultimate_select() -> void:
-	_ult_handler = TownUltimateHandler.new()
-	_ult_handler.narration_requested.connect(_on_ult_narration)
-	_ult_handler.choices_requested.connect(_on_ult_choices)
-	_ult_handler.selection_complete.connect(_on_ult_selection_complete)
-	_ult_handler.phase_finished.connect(_on_ult_finished)
 	_phase = TownPhase.ULTIMATE_SELECT
-	_ult_handler.start(GameState.party, GameState.current_battle.battle_id)
-
-
-func _do_ult_narration_advance() -> void:
-	_dialogue.visible = false
-	if _ult_handler:
-		_ult_handler.on_narration_done()
-
-
-func _on_ult_narration(lines: Array) -> void:
-	_dialogue.visible = true
-	_dialogue.show_text(lines)
-
-
-func _on_ult_choices(options: Array, header: String) -> void:
-	_dialogue.visible = false
-	_upgrade_label.text = header
-	_upgrade_label.visible = true
-	_class_info_panel.visible = false
-	_choice_menu.show_choices(options)
-
-	# Local co-op: gate input to the owning player
-	if LocalCoop.is_active:
-		var owner: int = LocalCoop.get_player_for_slot(_ult_handler.get_current_char_index())
-		LocalCoop.set_active_player(owner)
-		_player_indicator.text = "Player %d" % (owner + 1)
-		_player_indicator.visible = true
-
-
-func _on_ult_selection_complete(_char_index: int, ultimate_name: String) -> void:
-	GameLog.info("Ultimate: selected %s" % ultimate_name)
-
-
-func _on_ult_choice_selected(index: int) -> void:
-	if _ult_handler == null:
-		return
-	if LocalCoop.is_active:
-		LocalCoop.clear_active_player()
-		_player_indicator.visible = false
-	_ult_handler.on_choice_selected(index)
+	var handler := TownUltimateHandler.new({
+		"party": GameState.party,
+		"battle_id": GameState.current_battle.battle_id,
+	})
+	handler.phase_finished.connect(_on_ult_finished)
+	_active_handler = handler
+	add_child(handler)
 
 
 func _on_ult_finished() -> void:
-	_choice_menu.hide_menu()
-	_upgrade_label.visible = false
-	_ult_handler = null
-
+	if _active_handler:
+		_active_handler.queue_free()
+		_active_handler = null
 	_check_shop_or_advance()
 
 
