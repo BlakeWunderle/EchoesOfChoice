@@ -33,8 +33,6 @@ var _scene_image: TextureRect
 var _player_indicator: Label
 var _phase: TownPhase = TownPhase.INTRO_TEXT
 var _active_handler: Control = null
-var _equip_handler: TownEquipmentHandler  ## Equipment upgrade phase handler
-var _equip_sub_phase: String = "slot"     ## "slot" or "upgrade"
 var _ult_handler: TownUltimateHandler    ## Ultimate ability selection handler
 
 
@@ -169,8 +167,6 @@ func _on_text_finished() -> void:
 		match _phase:
 			TownPhase.INTRO_TEXT:
 				_show_ready_gate(_do_intro_advance)
-			TownPhase.EQUIPPING:
-				_show_ready_gate(_do_equip_narration_advance)
 			TownPhase.ULTIMATE_SELECT:
 				_show_ready_gate(_do_ult_narration_advance)
 			TownPhase.OUTRO_TEXT:
@@ -184,18 +180,10 @@ func _do_text_advance() -> void:
 	match _phase:
 		TownPhase.INTRO_TEXT:
 			_do_intro_advance()
-		TownPhase.EQUIPPING:
-			_do_equip_narration_advance()
 		TownPhase.ULTIMATE_SELECT:
 			_do_ult_narration_advance()
 		TownPhase.OUTRO_TEXT:
 			_do_outro_advance()
-
-
-func _do_equip_narration_advance() -> void:
-	_dialogue.dismiss()
-	if _equip_handler:
-		_equip_handler.on_narration_done()
 
 
 func _do_intro_advance() -> void:
@@ -300,8 +288,6 @@ func _do_forward_upgrade_rpc(method: String, args: Array) -> void:
 
 func _on_choice_selected(index: int) -> void:
 	match _phase:
-		TownPhase.EQUIPPING:
-			_on_equip_choice_selected(index)
 		TownPhase.ULTIMATE_SELECT:
 			_on_ult_choice_selected(index)
 		TownPhase.BRANCH_CHOICE:
@@ -309,41 +295,20 @@ func _on_choice_selected(index: int) -> void:
 
 
 func _start_equipping() -> void:
-	_equip_handler = TownEquipmentHandler.new()
-	_equip_handler.narration_requested.connect(_on_equip_narration)
-	_equip_handler.choices_requested.connect(_on_equip_choices)
-	_equip_handler.upgrade_complete.connect(_on_equip_upgrade_complete)
-	_equip_handler.phase_finished.connect(_on_equip_finished)
 	_phase = TownPhase.EQUIPPING
-	_equip_sub_phase = "slot"
-	_equip_handler.start(GameState.party, GameState.current_story_id)
-
-
-func _on_equip_narration(lines: Array) -> void:
-	_dialogue.visible = true
-	_dialogue.show_text(lines)
-
-
-func _on_equip_choices(options: Array, header: String) -> void:
-	_dialogue.dismiss()
-	_upgrade_label.text = header
-	_upgrade_label.visible = true
-	_class_info_panel.visible = false
-	_choice_menu.show_choices(options)
-	_equip_sub_phase = _equip_handler.get_sub_phase()
-
-
-func _on_equip_upgrade_complete(_char_index: int, slot_name: String,
-		equip_name: String) -> void:
-	GameLog.info("Equipment: upgraded %s (%s)" % [equip_name, slot_name])
+	var handler := TownEquipmentHandler.new({
+		"party": GameState.party,
+		"story_id": GameState.current_story_id,
+	})
+	handler.phase_finished.connect(_on_equip_finished)
+	_active_handler = handler
+	add_child(handler)
 
 
 func _on_equip_finished() -> void:
-	_choice_menu.hide_menu()
-	_upgrade_label.visible = false
-	_equip_handler = null
-
-	# Check for ultimate selection before shop
+	if _active_handler:
+		_active_handler.queue_free()
+		_active_handler = null
 	_start_ultimate_select()
 
 
@@ -469,15 +434,6 @@ func _on_shop_opened_broadcast(items_json: String) -> void:
 func _on_shop_closed_broadcast() -> void:
 	if NetManager.is_multiplayer_active and NetManager.is_host:
 		_rpc_shop_closed.rpc()
-
-
-func _on_equip_choice_selected(index: int) -> void:
-	if _equip_handler == null:
-		return
-	if _equip_sub_phase == "slot":
-		_equip_handler.on_slot_selected(index)
-	else:
-		_equip_handler.on_upgrade_selected(index)
 
 
 func _check_branch_or_advance() -> void:
