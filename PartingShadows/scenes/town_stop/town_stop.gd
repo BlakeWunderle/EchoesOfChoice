@@ -17,9 +17,9 @@ const ItemDB := preload("res://scripts/data/item_db.gd")
 const ItemData := preload("res://scripts/data/item_data.gd")
 const TownEquipmentHandler := preload("res://scripts/ui/town_equipment_handler.gd")
 const TownUltimateHandler := preload("res://scripts/ui/town_ultimate_handler.gd")
-const PaginationControls := preload("res://scripts/ui/compendium/pagination_controls.gd")
+const TownShopHandler := preload("res://scripts/ui/town_shop_handler.gd")
 
-enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, EQUIPPING, ULTIMATE_SELECT, SHOPPING, DISCARD_FOR_SHOP, OUTRO_TEXT, BRANCH_CHOICE }
+enum TownPhase { INTRO_TEXT, UPGRADING, UPGRADE_REVEAL, EQUIPPING, ULTIMATE_SELECT, SHOPPING, OUTRO_TEXT, BRANCH_CHOICE }
 
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
@@ -35,16 +35,10 @@ var _player_indicator: Label
 var _phase: TownPhase = TownPhase.INTRO_TEXT
 var _upgrade_index: int = 0  ## Which party member is choosing
 var _upgrade_class_ids: Array[String] = []  ## Class IDs for current upgrade options (for panel)
-var _shop_items: Array = []  ## Current shop inventory [{item_id, price}]
-var _shop_page: int = 0
-const SHOP_PAGE_SIZE: int = 5
-var _gold_label: Label
-var _shop_pagination: PaginationControls
+var _active_handler: Control = null
 var _equip_handler: TownEquipmentHandler  ## Equipment upgrade phase handler
 var _equip_sub_phase: String = "slot"     ## "slot" or "upgrade"
 var _ult_handler: TownUltimateHandler    ## Ultimate ability selection handler
-var _pending_buy_id: String = ""
-var _pending_buy_price: int = 0
 
 
 func _ready() -> void:
@@ -54,21 +48,6 @@ func _ready() -> void:
 		NetManager.player_left.connect(_on_player_left)
 		NetManager.session_ended.connect(_on_session_ended)
 		NetManager.peer_scene_ready.connect(_on_peer_scene_ready)
-
-
-func _input(event: InputEvent) -> void:
-	if not _choice_menu.visible:
-		return
-	if _phase != TownPhase.SHOPPING and _phase != TownPhase.DISCARD_FOR_SHOP:
-		return
-	if NetManager.is_multiplayer_active and not NetManager.is_host:
-		return
-	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("cancel"):
-		if _phase == TownPhase.DISCARD_FOR_SHOP:
-			_on_discard_for_shop_selected(GameState.inventory.size())
-		else:
-			_finish_shopping()
-		get_viewport().set_input_as_handled()
 
 
 func _build_ui() -> void:
@@ -120,11 +99,6 @@ func _build_ui() -> void:
 	_choice_menu.choice_selected.connect(_on_choice_selected)
 	_choice_menu.option_focused.connect(_on_option_focused)
 	vbox.add_child(_choice_menu)
-
-	_shop_pagination = PaginationControls.new()
-	_shop_pagination.visible = false
-	_shop_pagination.page_changed.connect(_on_shop_page_changed)
-	vbox.add_child(_shop_pagination)
 
 	_ready_gate = ReadyGate.new()
 	_ready_gate.visible = false
@@ -206,8 +180,6 @@ func _on_text_finished() -> void:
 				_show_ready_gate(_do_equip_narration_advance)
 			TownPhase.ULTIMATE_SELECT:
 				_show_ready_gate(_do_ult_narration_advance)
-			TownPhase.SHOPPING:
-				_show_ready_gate(_do_shop_menu_open)
 			TownPhase.OUTRO_TEXT:
 				_show_ready_gate(_do_outro_advance)
 		return
@@ -225,8 +197,6 @@ func _do_text_advance() -> void:
 			_do_equip_narration_advance()
 		TownPhase.ULTIMATE_SELECT:
 			_do_ult_narration_advance()
-		TownPhase.SHOPPING:
-			_do_shop_menu_open()
 		TownPhase.OUTRO_TEXT:
 			_do_outro_advance()
 
@@ -412,10 +382,6 @@ func _on_choice_selected(index: int) -> void:
 			_on_equip_choice_selected(index)
 		TownPhase.ULTIMATE_SELECT:
 			_on_ult_choice_selected(index)
-		TownPhase.SHOPPING:
-			_on_shop_selected(index)
-		TownPhase.DISCARD_FOR_SHOP:
-			_on_discard_for_shop_selected(index)
 		TownPhase.BRANCH_CHOICE:
 			_on_branch_selected(index)
 
@@ -430,10 +396,6 @@ func _on_option_focused(index: int) -> void:
 				_class_info_panel.visible = false
 		else:
 			_class_info_panel.visible = false
-		# Sync focus to mirror viewers
-		if NetManager.is_multiplayer_active:
-			_rpc_mirror_focus.rpc(index)
-	elif _phase == TownPhase.SHOPPING:
 		# Sync focus to mirror viewers
 		if NetManager.is_multiplayer_active:
 			_rpc_mirror_focus.rpc(index)
@@ -583,11 +545,10 @@ func _on_ult_finished() -> void:
 
 
 func _check_shop_or_advance() -> void:
-	# Check for shop before outro
 	var battle = GameState.current_battle
-	_shop_items = ShopDB.get_shop_items(battle.battle_id)
-	if not _shop_items.is_empty() and GameState.inventory.gold > 0:
-		_start_shopping()
+	var shop_items: Array = ShopDB.get_shop_items(battle.battle_id)
+	if not shop_items.is_empty() and GameState.inventory.gold > 0:
+		_launch_shop(shop_items)
 		return
 
 	_show_outro_or_advance()
@@ -604,106 +565,50 @@ func _show_outro_or_advance() -> void:
 		_check_branch_or_advance()
 
 
-func _start_shopping() -> void:
+func _launch_shop(shop_items: Array) -> void:
 	_phase = TownPhase.SHOPPING
-	_shop_page = 0
+	var is_readonly: bool = NetManager.is_multiplayer_active and not NetManager.is_host
+	var handler := TownShopHandler.new({
+		"shop_items": shop_items,
+		"battle_id": GameState.current_battle.battle_id,
+		"is_host": NetManager.is_host if NetManager.is_multiplayer_active else true,
+		"is_multiplayer": NetManager.is_multiplayer_active,
+		"is_readonly": is_readonly,
+	})
+	handler.phase_finished.connect(_on_shop_finished)
+	handler.purchase_made.connect(_on_shop_purchase)
+	handler.discard_and_buy.connect(_on_shop_discard_and_buy)
+	handler.shop_opened_broadcast.connect(_on_shop_opened_broadcast)
+	handler.shop_closed_broadcast.connect(_on_shop_closed_broadcast)
+	_active_handler = handler
+	add_child(handler)
 
-	# Show shop narration if available
-	var battle = GameState.current_battle
-	var shop_text: Array[String] = ShopDB.get_shop_text(battle.battle_id)
-	if not shop_text.is_empty():
-		_dialogue.visible = true
-		_upgrade_label.visible = false
-		_dialogue.show_text(shop_text)
-		_pending_advance = _do_shop_menu_open
-		return
 
-	_do_shop_menu_open()
+func _on_shop_finished() -> void:
+	if _active_handler:
+		_active_handler.queue_free()
+		_active_handler = null
+	_show_outro_or_advance()
 
 
-func _do_shop_menu_open() -> void:
-	_dialogue.visible = false
-	_upgrade_label.text = "Shop"
-	_upgrade_label.visible = true
-
-	_tip_overlay.show_tip_once("first_shop",
-		"Spend gold earned from battle to buy items. " +
-		"Items can be used during battle as a turn action.\n\n" +
-		"Your inventory holds up to 5 items.")
-
-	# Online multiplayer: only host interacts, guests see read-only mirror
-	if NetManager.is_multiplayer_active and not NetManager.is_host:
-		_show_shop_menu_readonly()
-		return
-
+func _on_shop_purchase(item_id: String, price: int) -> void:
 	if NetManager.is_multiplayer_active and NetManager.is_host:
-		# Broadcast shop items to peers
-		var items_data: Array = []
-		for entry: Dictionary in _shop_items:
-			items_data.append({"item_id": entry.item_id, "price": entry.price})
-		_rpc_shop_opened.rpc(JSON.stringify(items_data))
-
-	_show_shop_menu()
+		_rpc_shop_purchase.rpc(item_id, price)
 
 
-func _show_shop_menu_readonly() -> void:
-	var options: Array[Dictionary] = []
-	for entry: Dictionary in _shop_items:
-		var item: ItemData = ItemDB.create_by_id(entry.item_id)
-		if item:
-			options.append({
-				"label": "%s - %dg" % [item.item_name, entry.price],
-				"description": item.get_use_description(),
-				"disabled": true,
-			})
-		else:
-			options.append({"label": entry.item_id, "disabled": true})
-	options.append({"label": "Done Shopping", "disabled": true})
-
-	var host_name: String = NetManager.get_fighter_owner_name(0)
-	_upgrade_label.text = "%s is shopping  |  Gold: %d  |  Items: %d/%d" % [
-		host_name, GameState.inventory.gold, GameState.inventory.size(), GameState.inventory.MAX_ITEMS]
-	_upgrade_label.visible = true
-	_choice_menu.show_choices(options)
-	_choice_menu.highlight_option(0)
+func _on_shop_discard_and_buy(discard_index: int, item_id: String, price: int) -> void:
+	if NetManager.is_multiplayer_active and NetManager.is_host:
+		_rpc_shop_discard_and_buy.rpc(discard_index, item_id, price)
 
 
-func _show_shop_menu() -> void:
-	var total: int = _shop_items.size()
-	var page_count: int = ceili(float(total) / SHOP_PAGE_SIZE)
-	if _shop_page >= page_count:
-		_shop_page = maxi(page_count - 1, 0)
-	var start: int = _shop_page * SHOP_PAGE_SIZE
-	var end: int = mini(start + SHOP_PAGE_SIZE, total)
+func _on_shop_opened_broadcast(items_json: String) -> void:
+	if NetManager.is_multiplayer_active and NetManager.is_host:
+		_rpc_shop_opened.rpc(items_json)
 
-	var options: Array[Dictionary] = []
-	for i: int in range(start, end):
-		var entry: Dictionary = _shop_items[i]
-		var item: ItemData = ItemDB.create_by_id(entry.item_id)
-		if item:
-			var affordable: String = "" if GameState.inventory.gold >= entry.price else " [not enough gold]"
-			options.append({
-				"label": "%s - %dg" % [item.item_name, entry.price],
-				"description": item.get_use_description() + affordable,
-			})
-		else:
-			options.append({"label": entry.item_id})
-	options.append({"label": "Done Shopping"})
 
-	_upgrade_label.text = "Shop  |  Gold: %d  |  Items: %d/%d" % [
-		GameState.inventory.gold, GameState.inventory.size(), GameState.inventory.MAX_ITEMS]
-	_upgrade_label.visible = true
-	_choice_menu.show_choices(options)
-
-	_shop_pagination.total_pages = page_count
-	_shop_pagination.current_page = _shop_page + 1
-	_shop_pagination.visible = page_count > 1
-
-	if page_count > 1:
-		var last_btn: Button = _choice_menu.get_last_button()
-		if last_btn:
-			last_btn.focus_neighbor_bottom = _shop_pagination.get_focus_target().get_path()
-			_shop_pagination.set_top_neighbor(last_btn)
+func _on_shop_closed_broadcast() -> void:
+	if NetManager.is_multiplayer_active and NetManager.is_host:
+		_rpc_shop_closed.rpc()
 
 
 func _on_equip_choice_selected(index: int) -> void:
@@ -713,105 +618,6 @@ func _on_equip_choice_selected(index: int) -> void:
 		_equip_handler.on_slot_selected(index)
 	else:
 		_equip_handler.on_upgrade_selected(index)
-
-
-func _on_shop_selected(index: int) -> void:
-	var start: int = _shop_page * SHOP_PAGE_SIZE
-	var end: int = mini(start + SHOP_PAGE_SIZE, _shop_items.size())
-	var items_on_page: int = end - start
-
-	# "Done Shopping" is the last option (after items)
-	if index >= items_on_page:
-		_finish_shopping()
-		return
-
-	var actual_index: int = start + index
-	var entry: Dictionary = _shop_items[actual_index]
-	var price: int = entry.price
-	if GameState.inventory.gold < price:
-		_show_shop_menu()
-		return
-	if GameState.inventory.is_full():
-		_pending_buy_id = entry.item_id
-		_pending_buy_price = price
-		_show_discard_for_shop()
-		return
-	GameState.inventory.spend_gold(price)
-	var item: ItemData = ItemDB.create_by_id(entry.item_id)
-	GameState.inventory.add_item(item)
-	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
-	GameLog.info("Shop: bought %s for %dg" % [item.item_name, price])
-	if NetManager.is_multiplayer_active and NetManager.is_host:
-		_rpc_shop_purchase.rpc(entry.item_id, price)
-	if GameState.inventory.gold <= 0:
-		_finish_shopping()
-		return
-	_show_shop_menu()
-
-
-func _on_shop_page_changed(new_page: int) -> void:
-	_shop_page = new_page - 1
-	_show_shop_menu()
-
-
-func _finish_shopping() -> void:
-	_choice_menu.hide_menu()
-	_upgrade_label.visible = false
-	_shop_pagination.visible = false
-	if _gold_label:
-		_gold_label.queue_free()
-		_gold_label = null
-	if NetManager.is_multiplayer_active and NetManager.is_host:
-		_rpc_shop_closed.rpc()
-	_show_outro_or_advance()
-
-
-func _show_discard_for_shop() -> void:
-	_phase = TownPhase.DISCARD_FOR_SHOP
-	var items: Array = GameState.inventory.get_items()
-	var options: Array[Dictionary] = []
-	for i: int in items.size():
-		var item: ItemData = items[i]
-		options.append({"label": item.item_name, "description": item.get_use_description()})
-	options.append({"label": "Cancel"})
-	_upgrade_label.text = "Inventory full -- discard an item to make room"
-	_upgrade_label.visible = true
-	_choice_menu.show_choices(options)
-
-
-func _on_discard_for_shop_selected(index: int) -> void:
-	var items: Array = GameState.inventory.get_items()
-	if index >= items.size():
-		_pending_buy_id = ""
-		_pending_buy_price = 0
-		_phase = TownPhase.SHOPPING
-		_show_shop_menu()
-		return
-
-	GameState.inventory.remove_at(index)
-	GameLog.info("Shop: discarded %s to make room" % items[index].item_name)
-
-	GameState.inventory.spend_gold(_pending_buy_price)
-	var item: ItemData = ItemDB.create_by_id(_pending_buy_id)
-	GameState.inventory.add_item(item)
-	SFXManager.play(SFXManager.Category.UI_CONFIRM, 0.5)
-	GameLog.info("Shop: bought %s for %dg" % [item.item_name, _pending_buy_price])
-
-	if NetManager.is_multiplayer_active and NetManager.is_host:
-		_rpc_shop_discard_and_buy.rpc(index, _pending_buy_id, _pending_buy_price)
-
-	_pending_buy_id = ""
-	_pending_buy_price = 0
-	_phase = TownPhase.SHOPPING
-
-	if GameState.inventory.gold <= 0:
-		_choice_menu.hide_menu()
-		_upgrade_label.visible = false
-		if NetManager.is_multiplayer_active and NetManager.is_host:
-			_rpc_shop_closed.rpc()
-		_show_outro_or_advance()
-		return
-	_show_shop_menu()
 
 
 func _check_branch_or_advance() -> void:
@@ -1053,8 +859,8 @@ func _rpc_shop_discard_and_buy(discard_index: int, item_id: String, price: int) 
 	var bought: ItemData = ItemDB.create_by_id(item_id)
 	if bought:
 		GameState.inventory.add_item(bought)
-	if _phase == TownPhase.SHOPPING:
-		_show_shop_menu_readonly()
+	if _active_handler and _active_handler.has_method("on_rpc_discard_and_buy"):
+		_active_handler.on_rpc_discard_and_buy(discard_index, item_id, price)
 
 
 ## Host -> All: Broadcast a shop purchase so peers update inventory + refresh mirror.
@@ -1064,29 +870,22 @@ func _rpc_shop_purchase(item_id: String, price: int) -> void:
 	var item: ItemData = ItemDB.create_by_id(item_id)
 	if item:
 		GameState.inventory.add_item(item)
-	# Refresh the read-only mirror display
-	if _phase == TownPhase.SHOPPING:
-		_show_shop_menu_readonly()
+	if _active_handler and _active_handler.has_method("on_rpc_purchase"):
+		_active_handler.on_rpc_purchase(item_id, price)
 
 
 ## Host -> All: Shop opened with inventory list (guest receives items to display).
 @rpc("authority", "call_remote", "reliable")
 func _rpc_shop_opened(items_json: String) -> void:
-	var parsed: Array = JSON.parse_string(items_json)
-	if parsed == null:
-		return
-	_shop_items.clear()
-	for entry in parsed:
-		_shop_items.append({"item_id": entry["item_id"], "price": int(entry["price"])})
-	_show_shop_menu_readonly()
+	if _active_handler and _active_handler.has_method("on_rpc_shop_opened"):
+		_active_handler.on_rpc_shop_opened(items_json)
 
 
 ## Host -> All: Shop closed, proceed to next phase.
 @rpc("authority", "call_remote", "reliable")
 func _rpc_shop_closed() -> void:
-	_choice_menu.hide_menu()
-	_upgrade_label.visible = false
-	_show_outro_or_advance()
+	if _active_handler and _active_handler.has_method("on_rpc_shop_closed"):
+		_active_handler.on_rpc_shop_closed()
 
 
 ## Any -> All: Sync which option the active player is focusing (for mirror viewers).
