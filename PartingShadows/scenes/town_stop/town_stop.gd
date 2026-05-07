@@ -1,11 +1,10 @@
 extends Control
 
-## Town stop scene. Shows narrative, per-character class upgrades, branch choices.
-## Flow: pre_battle_text → per-character upgrade picks → post_battle_text → branch/advance.
+## Town stop sequencer. Orchestrates phase handlers (upgrades, equipment, ultimates, shop)
+## between intro/outro narration and branch choices. Each phase is a full-screen overlay.
 
 const DialoguePanel := preload("res://scripts/ui/dialogue_panel.gd")
 const ChoiceMenu := preload("res://scripts/ui/choice_menu.gd")
-const ClassInfoPanel := preload("res://scripts/ui/class_info_panel.gd")
 const ReadyGate := preload("res://scripts/ui/ready_gate.gd")
 const VotePanel := preload("res://scripts/ui/vote_panel.gd")
 const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
@@ -28,9 +27,7 @@ var _pending_advance: Callable
 var _tip_overlay: TipOverlay
 var _waiting_overlay: WaitingOverlay
 var _upgrade_label: Label
-var _class_info_panel: Control
 var _scene_image: TextureRect
-var _player_indicator: Label
 var _phase: TownPhase = TownPhase.INTRO_TEXT
 var _active_handler: Control = null
 
@@ -104,39 +101,11 @@ func _build_ui() -> void:
 	_vote_panel.vote_cast.connect(_on_vote_cast)
 	vbox.add_child(_vote_panel)
 
-	# Class info panel (bottom half, used by equipment/ultimate phases until extracted)
-	var info_margin := MarginContainer.new()
-	info_margin.anchor_left = 0.0
-	info_margin.anchor_top = 0.5
-	info_margin.anchor_right = 1.0
-	info_margin.anchor_bottom = 1.0
-	info_margin.add_theme_constant_override("margin_left", 80)
-	info_margin.add_theme_constant_override("margin_right", 80)
-	info_margin.add_theme_constant_override("margin_top", 8)
-	info_margin.add_theme_constant_override("margin_bottom", 20)
-	add_child(info_margin)
-
-	_class_info_panel = ClassInfoPanel.new()
-	_class_info_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	info_margin.add_child(_class_info_panel)
-
 	_tip_overlay = TipOverlay.new()
 	add_child(_tip_overlay)
 
 	_waiting_overlay = WaitingOverlay.new()
 	add_child(_waiting_overlay)
-
-	_player_indicator = Label.new()
-	_player_indicator.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_player_indicator.add_theme_font_size_override("font_size", 22)
-	_player_indicator.add_theme_color_override("font_color", Color(0.3, 0.9, 0.5))
-	_player_indicator.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_player_indicator.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	_player_indicator.offset_left = -200
-	_player_indicator.offset_right = 200
-	_player_indicator.offset_top = 16
-	_player_indicator.visible = false
-	add_child(_player_indicator)
 
 
 func _start_town() -> void:
@@ -235,8 +204,6 @@ func _on_all_ready() -> void:
 		var cb := _pending_advance
 		_pending_advance = Callable()
 		cb.call_deferred()
-
-
 
 
 func _launch_upgrades() -> void:
@@ -550,8 +517,6 @@ func _rpc_branch_chosen(battle_id: String) -> void:
 func _rpc_advance_next(battle_id: String) -> void:
 	if not battle_id.is_empty():
 		GameState.advance_to_battle(battle_id)
-
-
 
 
 ## Any -> Host: Cast a vote for a branch choice.
