@@ -1253,11 +1253,15 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		use_ultimate(unit, best)
 		return
 
-	# Player units use score-based AI instead of priority system
-	if unit.is_user_controlled:
-		_execute_player_ai_turn(unit, targets, allies)
-		return
+	# Score-based AI for all smart units (T1/T2 enemies + player auto-battle)
+	_execute_score_ai_turn(unit, targets, allies)
 
+
+func _execute_old_priority_ai(unit: FighterData, targets: Array,
+		allies: Array) -> void:
+	# Legacy priority system preserved below but no longer called.
+	var _tu: String = unit.character_name if trace_mode else ""
+	var _tc: String = unit.character_type if trace_mode else ""
 	# -- Classify abilities --
 	var heal_abilities: Array[AbilityData] = []
 	var buff_abilities: Array[AbilityData] = []
@@ -1490,7 +1494,7 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		physical_attack(unit, target)
 
 
-func _execute_player_ai_turn(unit: FighterData, targets: Array,
+func _execute_score_ai_turn(unit: FighterData, targets: Array,
 		allies: Array) -> void:
 	var _tu: String = unit.character_name if trace_mode else ""
 	var _tc: String = unit.character_type if trace_mode else ""
@@ -1701,6 +1705,8 @@ func _execute_player_ai_turn(unit: FighterData, targets: Array,
 					var hp_frac: float = float(unit.health) / float(unit.max_health)
 					if hp_frac < 0.5:
 						t_score *= 1.3
+				if dmg >= float(t.health):
+					t_score *= 3.0
 				total += t_score
 			if total > best_score:
 				best_score = total
@@ -1717,8 +1723,9 @@ func _execute_player_ai_turn(unit: FighterData, targets: Array,
 					var hp_frac: float = float(unit.health) / float(unit.max_health)
 					if hp_frac < 0.5:
 						score *= 1.3
-				var t_hp_frac: float = float(t.health) / float(t.max_health)
-				if t_hp_frac < 0.25:
+				if dmg >= float(t.health):
+					score *= 3.0
+				elif float(t.health) / float(t.max_health) < 0.25:
 					score *= 1.2
 				if score > best_score:
 					best_score = score
@@ -1790,8 +1797,9 @@ func _execute_player_ai_turn(unit: FighterData, targets: Array,
 			maxi((unit.magic_attack - t.magic_defense) / 2, 0)))
 		var hit: float = (100.0 - float(t.dodge_chance)) / 100.0
 		var score: float = phys_dmg * hit
-		var t_hp_frac: float = float(t.health) / float(t.max_health)
-		if t_hp_frac < 0.25:
+		if phys_dmg >= float(t.health):
+			score *= 3.0
+		elif float(t.health) / float(t.max_health) < 0.25:
 			score *= 1.2
 		if score > best_score:
 			best_score = score
