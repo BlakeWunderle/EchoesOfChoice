@@ -1174,6 +1174,42 @@ func _stat_relevance(fighter: FighterData, stat: Enums.StatType,
 			return float(fighter.physical_attack + fighter.magic_attack)
 
 
+func _damage_magic_ratio(fighter: FighterData) -> float:
+	var phys: int = 1
+	var magic: int = 0
+	for a: AbilityData in fighter.abilities:
+		if not a.use_on_enemy or a.impacted_turns > 0:
+			continue
+		match a.modified_stat:
+			Enums.StatType.PHYSICAL_ATTACK:
+				phys += 1
+			Enums.StatType.MAGIC_ATTACK:
+				magic += 1
+			Enums.StatType.MIXED_ATTACK:
+				phys += 1; magic += 1
+	return float(magic) / float(maxi(1, phys + magic))
+
+
+func _team_damage_magic_ratio(fighters: Array) -> float:
+	var total: float = 0.0
+	var count: int = 0
+	for f: FighterData in fighters:
+		if f.health > 0:
+			total += _damage_magic_ratio(f)
+			count += 1
+	return total / float(maxi(1, count))
+
+
+func _dmg_type_relevance(stat: Enums.StatType, magic_ratio: float) -> float:
+	match stat:
+		Enums.StatType.PHYSICAL_DEFENSE, Enums.StatType.PHYSICAL_ATTACK:
+			return 1.0 - magic_ratio
+		Enums.StatType.MAGIC_DEFENSE, Enums.StatType.MAGIC_ATTACK:
+			return magic_ratio
+		_:
+			return 1.0
+
+
 func _find_min_health(targets: Array) -> FighterData:
 	if targets.is_empty():
 		return null
@@ -1526,6 +1562,13 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 		else:
 			buff_abilities.append(a)
 
+	var enemy_magic_ratio: float = _team_damage_magic_ratio(targets)
+	var ally_magic_ratio: float = _team_damage_magic_ratio(allies)
+	var alive_allies: int = 0
+	for _a: FighterData in allies:
+		if _a.health > 0:
+			alive_allies += 1
+
 	var best_score: float = -1.0
 	var best_type: String = ""
 	var best_ability: AbilityData = null
@@ -1615,8 +1658,11 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 					continue
 				var delta: int = _compute_buff_delta(ally, buff.modified_stat, buff.modifier)
 				var s: float = float(delta) * float(buff.impacted_turns)
-				if is_defense:
+				if is_offense:
+					s *= _dmg_type_relevance(buff.modified_stat, _damage_magic_ratio(ally))
+				elif is_defense:
 					s *= float(targets.size()) / maxf(1.0, float(allies.size()))
+					s *= _dmg_type_relevance(buff.modified_stat, enemy_magic_ratio)
 				elif is_speed:
 					s *= 0.5
 				total += s
@@ -1631,8 +1677,11 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 					continue
 				var delta: int = _compute_buff_delta(ally, buff.modified_stat, buff.modifier)
 				var score: float = float(delta) * float(buff.impacted_turns)
-				if is_defense:
+				if is_offense:
+					score *= _dmg_type_relevance(buff.modified_stat, _damage_magic_ratio(ally))
+				elif is_defense:
 					score *= float(targets.size()) / maxf(1.0, float(allies.size()))
+					score *= _dmg_type_relevance(buff.modified_stat, enemy_magic_ratio)
 				elif is_speed:
 					score *= 0.5
 				if score > best_score:
@@ -1668,11 +1717,21 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 						best_target = t
 			continue
 
+		var db_is_def: bool = debuff.modified_stat in defense_stats
+		var db_is_off: bool = debuff.modified_stat in offense_stats
+		var db_is_spd: bool = debuff.modified_stat == Enums.StatType.SPEED
 		if debuff.target_all:
 			var total: float = 0.0
 			for t: FighterData in targets:
 				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
 				var s: float = float(delta) * float(debuff.impacted_turns)
+				if db_is_def:
+					s *= _dmg_type_relevance(debuff.modified_stat, ally_magic_ratio)
+					s *= sqrt(float(alive_allies))
+				elif db_is_off:
+					s *= _dmg_type_relevance(debuff.modified_stat, _damage_magic_ratio(t))
+				elif db_is_spd:
+					s *= 0.5
 				total += s
 			if total > best_score:
 				best_score = total
@@ -1683,6 +1742,13 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 			for t: FighterData in targets:
 				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
 				var score: float = float(delta) * float(debuff.impacted_turns)
+				if db_is_def:
+					score *= _dmg_type_relevance(debuff.modified_stat, ally_magic_ratio)
+					score *= sqrt(float(alive_allies))
+				elif db_is_off:
+					score *= _dmg_type_relevance(debuff.modified_stat, _damage_magic_ratio(t))
+				elif db_is_spd:
+					score *= 0.5
 				if score > best_score:
 					best_score = score
 					best_type = "DEBUFF"
@@ -1821,14 +1887,20 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 						best_target = ally
 			Enums.ItemEffect.BUFF:
 				if item.target_ally:
-					var delta: int = _compute_buff_delta(unit, item.stat_type, item.magnitude)
+					var ib_is_off: bool = item.stat_type in offense_stats
+					var ib_is_def: bool = item.stat_type in defense_stats
 					if item.target_all:
 						var total: float = 0.0
 						for ally: FighterData in allies:
 							if ally.health <= 0:
 								continue
 							var d: int = _compute_buff_delta(ally, item.stat_type, item.magnitude)
-							total += float(d) * float(item.duration)
+							var s: float = float(d) * float(item.duration)
+							if ib_is_off:
+								s *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(ally))
+							elif ib_is_def:
+								s *= _dmg_type_relevance(item.stat_type, enemy_magic_ratio)
+							total += s
 						if total > best_score:
 							best_score = total
 							best_type = "ITEM"
@@ -1840,6 +1912,10 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 								continue
 							var d: int = _compute_buff_delta(ally, item.stat_type, item.magnitude)
 							var score: float = float(d) * float(item.duration)
+							if ib_is_off:
+								score *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(ally))
+							elif ib_is_def:
+								score *= _dmg_type_relevance(item.stat_type, enemy_magic_ratio)
 							if score > best_score:
 								best_score = score
 								best_type = "ITEM"
@@ -1852,7 +1928,10 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 							var d: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
 							var s: float = float(d) * float(item.duration)
 							if item.stat_type in defense_stats:
-								s *= float(allies.size())
+								s *= _dmg_type_relevance(item.stat_type, ally_magic_ratio)
+								s *= sqrt(float(alive_allies))
+							elif item.stat_type in offense_stats:
+								s *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(t))
 							total += s
 						if total > best_score:
 							best_score = total
@@ -1864,7 +1943,10 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 							var d: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
 							var score: float = float(d) * float(item.duration)
 							if item.stat_type in defense_stats:
-								score *= float(allies.size())
+								score *= _dmg_type_relevance(item.stat_type, ally_magic_ratio)
+								score *= sqrt(float(alive_allies))
+							elif item.stat_type in offense_stats:
+								score *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(t))
 							if score > best_score:
 								best_score = score
 								best_type = "ITEM"

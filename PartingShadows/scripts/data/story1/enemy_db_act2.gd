@@ -234,7 +234,7 @@ static func create_android(n: String) -> FighterData:
 	f.health = EH.fixed(140, 155); f.max_health = f.health
 	f.mana = EH.fixed(12, 15); f.max_mana = f.mana
 	f.physical_attack = EH.fixed(30, 36); f.physical_defense = EH.fixed(20, 24)
-	f.magic_attack = EH.fixed(31, 35); f.magic_defense = EH.fixed(11, 15)
+	f.magic_attack = EH.fixed(32, 36); f.magic_defense = EH.fixed(11, 15)
 	f.speed = EH.fixed(35, 41)
 	f.crit_chance = 14; f.crit_damage = 2; f.dodge_chance = 5
 	f.abilities = [EAB.circuit_burst(), EAB.firewall(), EAB.overdrive()]
@@ -245,7 +245,7 @@ static func create_machinist(n: String) -> FighterData:
 	var f := EH.base(n, "Machinist", 6)
 	f.health = EH.fixed(140, 153); f.max_health = f.health
 	f.mana = EH.fixed(11, 14); f.max_mana = f.mana
-	f.physical_attack = EH.fixed(36, 42); f.physical_defense = EH.fixed(19, 23)
+	f.physical_attack = EH.fixed(37, 43); f.physical_defense = EH.fixed(19, 23)
 	f.magic_attack = EH.fixed(26, 30); f.magic_defense = EH.fixed(11, 15)
 	f.speed = EH.fixed(33, 39)
 	f.crit_chance = 13; f.crit_damage = 2; f.dodge_chance = 5

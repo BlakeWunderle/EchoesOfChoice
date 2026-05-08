@@ -63,7 +63,7 @@ static func create_wolf(n: String, lvl: int = 2) -> FighterData:
 	var f := EH.base(n, "Wolf", lvl)
 	f.health = EH.es(52, 61, 3, 5, lvl, 2); f.max_health = f.health
 	f.mana = EH.es(4, 6, 1, 2, lvl, 2); f.max_mana = f.mana
-	f.physical_attack = EH.es(21, 24, 2, 3, lvl, 2)
+	f.physical_attack = EH.es(22, 25, 2, 3, lvl, 2)
 	f.physical_defense = EH.es(7, 10, 1, 2, lvl, 2)
 	f.magic_attack = EH.es(5, 7, 0, 1, lvl, 2)
 	f.magic_defense = EH.es(7, 10, 1, 2, lvl, 2)
