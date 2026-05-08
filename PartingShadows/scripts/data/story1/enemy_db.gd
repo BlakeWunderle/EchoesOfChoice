@@ -16,10 +16,10 @@ static func create_thug(n: String, lvl: int = 1) -> FighterData:
 	var f := EH.base(n, "Thug", lvl)
 	f.health = EH.es(50, 58, 3, 6, lvl, 1); f.max_health = f.health
 	f.mana = EH.es(2, 5, 1, 2, lvl, 1); f.max_mana = f.mana
-	f.physical_attack = EH.es(18, 21, 1, 3, lvl, 1)
-	f.physical_defense = EH.es(8, 11, 1, 2, lvl, 1)
+	f.physical_attack = EH.es(19, 22, 1, 3, lvl, 1)
+	f.physical_defense = EH.es(9, 12, 1, 2, lvl, 1)
 	f.magic_attack = EH.es(6, 9, 0, 2, lvl, 1)
-	f.magic_defense = EH.es(9, 12, 1, 2, lvl, 1)
+	f.magic_defense = EH.es(7, 10, 1, 2, lvl, 1)
 	f.speed = EH.es(20, 26, 1, 2, lvl, 1)
 	f.crit_chance = 7; f.crit_damage = 1; f.dodge_chance = 3
 	f.abilities = [AbilityDB.haymaker()]
@@ -47,9 +47,9 @@ static func create_pickpocket(n: String, lvl: int = 1) -> FighterData:
 	f.physical_attack = EH.es(15, 18, 1, 3, lvl, 1)
 	f.physical_defense = EH.es(5, 7, 0, 2, lvl, 1)
 	f.magic_attack = EH.es(5, 7, 0, 1, lvl, 1)
-	f.magic_defense = EH.es(6, 9, 0, 2, lvl, 1)
+	f.magic_defense = EH.es(4, 7, 0, 2, lvl, 1)
 	f.speed = EH.es(22, 28, 2, 3, lvl, 1)
-	f.crit_chance = 11; f.crit_damage = 1; f.dodge_chance = 6
+	f.crit_chance = 11; f.crit_damage = 1; f.dodge_chance = 8
 	f.abilities = [AbilityDB.quick_stab(), AbilityDB.pilfer()]
 	f.flavor_text = "Nimble thieves who strike fast and vanish into the crowd."
 	return f
@@ -92,9 +92,9 @@ static func create_thornviper(n: String, lvl: int = 2) -> FighterData:
 	f.health = EH.es(35, 42, 2, 4, lvl, 2); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 2); f.max_mana = f.mana
 	f.physical_attack = EH.es(17, 20, 1, 2, lvl, 2)
-	f.physical_defense = EH.es(5, 8, 0, 1, lvl, 2)
+	f.physical_defense = EH.es(7, 10, 0, 1, lvl, 2)
 	f.magic_attack = EH.es(17, 20, 1, 2, lvl, 2)
-	f.magic_defense = EH.es(7, 10, 1, 2, lvl, 2)
+	f.magic_defense = EH.es(5, 8, 1, 2, lvl, 2)
 	f.speed = EH.es(26, 31, 2, 3, lvl, 2)
 	f.crit_chance = 9; f.crit_damage = 1; f.dodge_chance = 13
 	f.abilities = [EAB.fang_strike(), EAB.venom()]

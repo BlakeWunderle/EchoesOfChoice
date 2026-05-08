@@ -16,12 +16,12 @@ static func create_dream_wisp(n: String, lvl: int = 1) -> FighterData:
 	var f := EH.base(n, "Dream Wisp", lvl)
 	f.health = EH.es(32, 42, 2, 5, lvl, 1); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 2, lvl, 1); f.max_mana = f.mana
-	f.physical_attack = EH.es(12, 16, 0, 2, lvl, 1)
+	f.physical_attack = EH.es(13, 17, 0, 2, lvl, 1)
 	f.physical_defense = EH.es(6, 9, 0, 1, lvl, 1)
-	f.magic_attack = EH.es(17, 20, 1, 3, lvl, 1)
-	f.magic_defense = EH.es(10, 14, 1, 2, lvl, 1)
+	f.magic_attack = EH.es(18, 21, 1, 3, lvl, 1)
+	f.magic_defense = EH.es(6, 9, 1, 2, lvl, 1)
 	f.speed = EH.es(25, 30, 1, 3, lvl, 1)
-	f.crit_chance = 6; f.crit_damage = 1; f.dodge_chance = 4
+	f.crit_chance = 6; f.crit_damage = 1; f.dodge_chance = 12
 	f.abilities = [EAB.shimmer_bolt(), EAB.daze()]
 	f.flavor_text = "A flickering mote of dream-light that drifts through the sleeping mind. Its glow entrances the unwary before striking with bursts of raw thought."
 	return f
@@ -31,12 +31,12 @@ static func create_phantasm(n: String, lvl: int = 1) -> FighterData:
 	var f := EH.base(n, "Phantasm", lvl)
 	f.health = EH.es(37, 48, 2, 5, lvl, 1); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 1, lvl, 1); f.max_mana = f.mana
-	f.physical_attack = EH.es(18, 21, 1, 2, lvl, 1)
+	f.physical_attack = EH.es(19, 22, 1, 2, lvl, 1)
 	f.physical_defense = EH.es(7, 10, 0, 1, lvl, 1)
-	f.magic_attack = EH.es(18, 21, 1, 2, lvl, 1)
-	f.magic_defense = EH.es(9, 13, 1, 2, lvl, 1)
+	f.magic_attack = EH.es(19, 22, 1, 2, lvl, 1)
+	f.magic_defense = EH.es(7, 10, 1, 2, lvl, 1)
 	f.speed = EH.es(23, 29, 1, 3, lvl, 1)
-	f.crit_chance = 6; f.crit_damage = 1; f.dodge_chance = 7
+	f.crit_chance = 6; f.crit_damage = 1; f.dodge_chance = 13
 	f.abilities = [EAB.phase_strike(), EAB.unnerve()]
 	f.flavor_text = "A translucent figure that flickers between presence and absence. It strikes from angles that should not exist, leaving a cold dread in its wake."
 	return f
@@ -50,9 +50,9 @@ static func create_shade_moth(n: String, lvl: int = 1) -> FighterData:
 	f.physical_attack = EH.es(14, 17, 1, 2, lvl, 1)
 	f.physical_defense = EH.es(5, 9, 0, 1, lvl, 1)
 	f.magic_attack = EH.es(12, 15, 0, 2, lvl, 1)
-	f.magic_defense = EH.es(7, 10, 0, 1, lvl, 1)
+	f.magic_defense = EH.es(5, 8, 0, 1, lvl, 1)
 	f.speed = EH.es(30, 36, 1, 3, lvl, 1)
-	f.crit_chance = 8; f.crit_damage = 1; f.dodge_chance = 9
+	f.crit_chance = 8; f.crit_damage = 1; f.dodge_chance = 14
 	f.abilities = [EAB.dust_wing(), EAB.flit()]
 	f.flavor_text = "A dark-winged insect born from forgotten memories. Its scales scatter a soporific dust that clouds the senses."
 	return f
@@ -111,9 +111,9 @@ static func create_fog_wraith(n: String, lvl: int = 2) -> FighterData:
 	f.physical_attack = EH.es(11, 14, 0, 2, lvl, 2)
 	f.physical_defense = EH.es(5, 8, 0, 1, lvl, 2)
 	f.magic_attack = EH.es(21, 25, 1, 3, lvl, 2)
-	f.magic_defense = EH.es(10, 15, 1, 2, lvl, 2)
+	f.magic_defense = EH.es(5, 8, 1, 2, lvl, 2)
 	f.speed = EH.es(25, 30, 1, 3, lvl, 2)
-	f.crit_chance = 5; f.crit_damage = 1; f.dodge_chance = 7
+	f.crit_chance = 5; f.crit_damage = 1; f.dodge_chance = 10
 	f.abilities = [EAB.mist_tendril(), EAB.chill_fog()]
 	f.flavor_text = "A wisp of sentient fog that coils through the dream garden. It chills everything it touches, feeding on the warmth of living thought."
 	return f
