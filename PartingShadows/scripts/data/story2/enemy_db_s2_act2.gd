@@ -15,7 +15,7 @@ static func create_driftwood_bandit(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Driftwood Bandit", lvl)
 	f.health = EH.es(196, 226, 4, 7, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 2, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(30, 43, 2, 3, lvl, 5)
+	f.physical_attack = EH.es(29, 42, 2, 3, lvl, 5)
 	f.physical_defense = EH.es(17, 21, 1, 2, lvl, 5)
 	f.magic_attack = EH.es(4, 7, 0, 1, lvl, 5)
 	f.magic_defense = EH.es(12, 16, 1, 2, lvl, 5)
@@ -30,11 +30,11 @@ static func create_saltrunner_smuggler(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Saltrunner Smuggler", lvl)
 	f.health = EH.es(142, 164, 3, 5, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(26, 38, 2, 3, lvl, 5)
+	f.physical_attack = EH.es(30, 42, 2, 3, lvl, 5)
 	f.physical_defense = EH.es(15, 18, 1, 2, lvl, 5)
 	f.magic_attack = EH.es(6, 9, 0, 1, lvl, 5)
 	f.magic_defense = EH.es(9, 12, 1, 2, lvl, 5)
-	f.speed = EH.es(27, 37, 2, 3, lvl, 5)
+	f.speed = EH.es(28, 38, 2, 3, lvl, 5)
 	f.crit_chance = 21; f.crit_damage = 2; f.dodge_chance = 23
 	f.abilities = [EAB.throwing_knife(), EAB.salt_blind()]
 	f.flavor_text = "A quick-handed smuggler who runs contraband through the coastal caves. They fight dirty and never hesitate to blind their foes with salt."
@@ -43,10 +43,10 @@ static func create_saltrunner_smuggler(n: String, lvl: int = 5) -> FighterData:
 
 static func create_tide_warden(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Tide Warden", lvl)
-	f.health = EH.es(210, 238, 4, 7, lvl, 5); f.max_health = f.health
+	f.health = EH.es(200, 228, 4, 7, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(24, 41, 2, 3, lvl, 5)
-	f.physical_defense = EH.es(27, 32, 1, 3, lvl, 5)
+	f.physical_attack = EH.es(28, 45, 2, 3, lvl, 5)
+	f.physical_defense = EH.es(25, 30, 1, 3, lvl, 5)
 	f.magic_attack = EH.es(6, 11, 0, 1, lvl, 5)
 	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 5)
 	f.speed = EH.es(22, 31, 1, 2, lvl, 5)
@@ -62,7 +62,7 @@ static func create_tideside_channeler(n: String, lvl: int = 5) -> FighterData:
 	f.mana = EH.es(8, 11, 1, 2, lvl, 5); f.max_mana = f.mana
 	f.physical_attack = EH.es(6, 9, 0, 1, lvl, 5)
 	f.physical_defense = EH.es(10, 14, 1, 2, lvl, 5)
-	f.magic_attack = EH.es(34, 40, 2, 3, lvl, 5)
+	f.magic_attack = EH.es(33, 39, 2, 3, lvl, 5)
 	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 5)
 	f.speed = EH.es(30, 36, 2, 3, lvl, 5)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 16
@@ -77,9 +77,9 @@ static func create_reef_shaman(n: String, lvl: int = 5) -> FighterData:
 	f.mana = EH.es(10, 13, 1, 2, lvl, 5); f.max_mana = f.mana
 	f.physical_attack = EH.es(5, 8, 0, 1, lvl, 5)
 	f.physical_defense = EH.es(13, 17, 1, 2, lvl, 5)
-	f.magic_attack = EH.es(33, 39, 2, 3, lvl, 5)
+	f.magic_attack = EH.es(37, 43, 2, 3, lvl, 5)
 	f.magic_defense = EH.es(14, 18, 1, 2, lvl, 5)
-	f.speed = EH.es(28, 34, 2, 3, lvl, 5)
+	f.speed = EH.es(29, 35, 2, 3, lvl, 5)
 	f.crit_chance = 14; f.crit_damage = 2; f.dodge_chance = 14
 	f.abilities = [EAB.coral_blast(), EAB.coral_barrage()]
 	f.flavor_text = "A hermit who communes with the living reef. Coral answers their call, erupting as both blade and storm."
@@ -88,11 +88,11 @@ static func create_reef_shaman(n: String, lvl: int = 5) -> FighterData:
 
 static func create_blighted_gull(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Blighted Gull", lvl)
-	f.health = EH.es(113, 134, 3, 5, lvl, 5); f.max_health = f.health
+	f.health = EH.es(105, 125, 3, 5, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 2, lvl, 5); f.max_mana = f.mana
 	f.physical_attack = EH.es(8, 11, 0, 2, lvl, 5)
 	f.physical_defense = EH.es(9, 12, 0, 1, lvl, 5)
-	f.magic_attack = EH.es(22, 29, 1, 3, lvl, 5)
+	f.magic_attack = EH.es(25, 32, 1, 3, lvl, 5)
 	f.magic_defense = EH.es(11, 14, 1, 2, lvl, 5)
 	f.speed = EH.es(30, 37, 2, 3, lvl, 5)
 	f.crit_chance = 15; f.crit_damage = 1; f.dodge_chance = 23
@@ -103,10 +103,10 @@ static func create_blighted_gull(n: String, lvl: int = 5) -> FighterData:
 
 static func create_shore_crawler(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Shore Crawler", lvl)
-	f.health = EH.es(157, 180, 4, 7, lvl, 5); f.max_health = f.health
+	f.health = EH.es(148, 170, 4, 7, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 1, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(34, 43, 2, 4, lvl, 5)
-	f.physical_defense = EH.es(21, 26, 1, 3, lvl, 5)
+	f.physical_attack = EH.es(37, 46, 2, 4, lvl, 5)
+	f.physical_defense = EH.es(19, 24, 1, 3, lvl, 5)
 	f.magic_attack = EH.es(4, 7, 0, 1, lvl, 5)
 	f.magic_defense = EH.es(14, 18, 1, 2, lvl, 5)
 	f.speed = EH.es(18, 25, 1, 2, lvl, 5)
@@ -120,9 +120,9 @@ static func create_warped_hound(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Warped Hound", lvl)
 	f.health = EH.es(131, 152, 3, 5, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(32, 41, 2, 4, lvl, 5)
+	f.physical_attack = EH.es(35, 44, 2, 4, lvl, 5)
 	f.physical_defense = EH.es(14, 18, 1, 2, lvl, 5)
-	f.magic_attack = EH.es(22, 29, 2, 3, lvl, 5)
+	f.magic_attack = EH.es(25, 32, 2, 3, lvl, 5)
 	f.magic_defense = EH.es(9, 12, 0, 1, lvl, 5)
 	f.speed = EH.es(29, 36, 2, 3, lvl, 5)
 	f.crit_chance = 22; f.crit_damage = 2; f.dodge_chance = 20

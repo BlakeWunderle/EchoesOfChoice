@@ -141,13 +141,13 @@ static func create_thorn_dreamer(n: String, lvl: int = 2) -> FighterData:
 # Prog 3 enemies (DreamReturn only, decoupled from DreamNightmare)
 static func create_nightmare_hound(n: String, lvl: int = 4) -> FighterData:
 	var f := EH.base(n, "Nightmare Hound", lvl)
-	f.health = EH.es(118, 139, 4, 7, lvl, 4); f.max_health = f.health
+	f.health = EH.es(100, 120, 4, 7, lvl, 4); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 1, lvl, 4); f.max_mana = f.mana
-	f.physical_attack = EH.es(25, 30, 1, 3, lvl, 4)
-	f.physical_defense = EH.es(16, 19, 1, 2, lvl, 4)
+	f.physical_attack = EH.es(26, 31, 1, 3, lvl, 4)
+	f.physical_defense = EH.es(13, 16, 1, 2, lvl, 4)
 	f.magic_attack = EH.es(10, 13, 0, 2, lvl, 4)
 	f.magic_defense = EH.es(9, 12, 1, 2, lvl, 4)
-	f.speed = EH.es(28, 33, 1, 3, lvl, 4)
+	f.speed = EH.es(26, 31, 1, 3, lvl, 4)
 	f.crit_chance = 10; f.crit_damage = 1; f.dodge_chance = 10
 	f.abilities = [EAB.savage_bite(), EAB.howl()]
 	f.flavor_text = "A slavering beast shaped from primal terror, with eyes like smoldering coals. Its howl reverberates through the dreamscape and shakes the courage of all who hear it."
@@ -156,13 +156,13 @@ static func create_nightmare_hound(n: String, lvl: int = 4) -> FighterData:
 
 static func create_dream_weaver(n: String, lvl: int = 4) -> FighterData:
 	var f := EH.base(n, "Dream Weaver", lvl)
-	f.health = EH.es(112, 134, 3, 6, lvl, 4); f.max_health = f.health
+	f.health = EH.es(95, 115, 3, 6, lvl, 4); f.max_health = f.health
 	f.mana = EH.es(8, 11, 1, 2, lvl, 4); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 13, 0, 2, lvl, 4)
 	f.physical_defense = EH.es(7, 10, 1, 2, lvl, 4)
-	f.magic_attack = EH.es(24, 29, 1, 3, lvl, 4)
-	f.magic_defense = EH.es(19, 22, 1, 2, lvl, 4)
-	f.speed = EH.es(26, 31, 1, 2, lvl, 4)
+	f.magic_attack = EH.es(25, 30, 1, 3, lvl, 4)
+	f.magic_defense = EH.es(15, 18, 1, 2, lvl, 4)
+	f.speed = EH.es(24, 29, 1, 2, lvl, 4)
 	f.crit_chance = 11; f.crit_damage = 1; f.dodge_chance = 9
 	f.abilities = [EAB.thread_bolt(), EAB.woven_ward()]
 	f.flavor_text = "A robed figure that pulls shimmering threads from the fabric of dreams. It weaves protective wards and hurls bolts of concentrated dream-stuff at intruders."
@@ -171,13 +171,13 @@ static func create_dream_weaver(n: String, lvl: int = 4) -> FighterData:
 
 static func create_hollow_echo(n: String, lvl: int = 4) -> FighterData:
 	var f := EH.base(n, "Hollow Echo", lvl)
-	f.health = EH.es(90, 107, 3, 5, lvl, 4); f.max_health = f.health
+	f.health = EH.es(83, 98, 3, 5, lvl, 4); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 2, lvl, 4); f.max_mana = f.mana
-	f.physical_attack = EH.es(23, 27, 1, 3, lvl, 4)
-	f.physical_defense = EH.es(15, 18, 1, 2, lvl, 4)
+	f.physical_attack = EH.es(24, 28, 1, 3, lvl, 4)
+	f.physical_defense = EH.es(12, 15, 1, 2, lvl, 4)
 	f.magic_attack = EH.es(10, 13, 0, 2, lvl, 4)
 	f.magic_defense = EH.es(9, 12, 1, 2, lvl, 4)
-	f.speed = EH.es(25, 30, 1, 2, lvl, 4)
+	f.speed = EH.es(24, 29, 1, 2, lvl, 4)
 	f.crit_chance = 11; f.crit_damage = 1; f.dodge_chance = 10
 	f.abilities = [EAB.echo_drain(), EAB.dissonance()]
 	f.flavor_text = "The empty husk of a dreamer who never woke. It repeats fragments of stolen voices and drains vitality from those who listen too closely."
@@ -189,7 +189,7 @@ static func create_somnolent_serpent(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Somnolent Serpent", lvl)
 	f.health = EH.es(200, 232, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(35, 40, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(36, 41, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(24, 28, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(17, 21, 1, 2, lvl, 8)
 	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 8)
@@ -204,7 +204,7 @@ static func create_twilight_stalker(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Twilight Stalker", lvl)
 	f.health = EH.es(192, 224, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 1, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(36, 41, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(37, 42, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(17, 21, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(14, 17, 0, 2, lvl, 8)
 	f.magic_defense = EH.es(16, 19, 1, 2, lvl, 8)
@@ -221,7 +221,7 @@ static func create_waking_terror(n: String, lvl: int = 8) -> FighterData:
 	f.mana = EH.es(8, 11, 1, 2, lvl, 8); f.max_mana = f.mana
 	f.physical_attack = EH.es(16, 19, 0, 2, lvl, 8)
 	f.physical_defense = EH.es(14, 18, 1, 2, lvl, 8)
-	f.magic_attack = EH.es(35, 40, 1, 3, lvl, 8)
+	f.magic_attack = EH.es(36, 41, 1, 3, lvl, 8)
 	f.magic_defense = EH.es(24, 28, 1, 2, lvl, 8)
 	f.speed = EH.es(30, 35, 1, 2, lvl, 8)
 	f.crit_chance = 24; f.crit_damage = 1; f.dodge_chance = 12
@@ -281,11 +281,11 @@ static func create_the_nightmare(n: String, lvl: int = 9) -> FighterData:
 	var f := EH.base(n, "The Nightmare", lvl)
 	f.health = EH.es(555, 640, 5, 9, lvl, 9); f.max_health = f.health
 	f.mana = EH.es(17, 19, 1, 2, lvl, 9); f.max_mana = f.mana
-	f.physical_attack = EH.es(42, 47, 2, 3, lvl, 9)
-	f.physical_defense = EH.es(23, 28, 2, 3, lvl, 9)
-	f.magic_attack = EH.es(34, 39, 2, 3, lvl, 9)
-	f.magic_defense = EH.es(23, 28, 2, 3, lvl, 9)
-	f.speed = EH.es(35, 40, 2, 3, lvl, 9)
+	f.physical_attack = EH.es(38, 43, 2, 3, lvl, 9)
+	f.physical_defense = EH.es(16, 21, 2, 3, lvl, 9)
+	f.magic_attack = EH.es(31, 36, 2, 3, lvl, 9)
+	f.magic_defense = EH.es(16, 21, 2, 3, lvl, 9)
+	f.speed = EH.es(32, 37, 2, 3, lvl, 9)
 	f.crit_chance = 21; f.crit_damage = 3; f.dodge_chance = 15
 	f.abilities = [EAB.nightmare_crush(), EAB.dream_rend(), EAB.dread_aura()]
 	f.flavor_text = "The collective dread of an entire town given form and will. It is the dark heart of the shared dream, a shape that shifts with every fear it consumes."
@@ -295,13 +295,13 @@ static func create_the_nightmare(n: String, lvl: int = 9) -> FighterData:
 # Prog 8 boss minion (physical guardian)
 static func create_nightmare_guard(n: String, lvl: int = 9) -> FighterData:
 	var f := EH.base(n, "Nightmare Guard", lvl)
-	f.health = EH.es(143, 172, 4, 7, lvl, 9); f.max_health = f.health
+	f.health = EH.es(115, 140, 4, 7, lvl, 9); f.max_health = f.health
 	f.mana = EH.es(9, 11, 1, 1, lvl, 9); f.max_mana = f.mana
-	f.physical_attack = EH.es(31, 37, 1, 3, lvl, 9)
-	f.physical_defense = EH.es(21, 25, 1, 2, lvl, 9)
+	f.physical_attack = EH.es(27, 33, 1, 3, lvl, 9)
+	f.physical_defense = EH.es(16, 20, 1, 2, lvl, 9)
 	f.magic_attack = EH.es(10, 14, 0, 2, lvl, 9)
 	f.magic_defense = EH.es(13, 17, 1, 2, lvl, 9)
-	f.speed = EH.es(31, 36, 1, 3, lvl, 9)
+	f.speed = EH.es(29, 34, 1, 3, lvl, 9)
 	f.crit_chance = 19; f.crit_damage = 2; f.dodge_chance = 17
 	f.abilities = [EAB.dread_fang(), EAB.guardian_howl()]
 	f.flavor_text = "A corrupted sentinel twisted by the Nightmare's will. Once a dream's protector, it now guards the heart of terror with savage devotion."
@@ -311,13 +311,13 @@ static func create_nightmare_guard(n: String, lvl: int = 9) -> FighterData:
 # Prog 8 boss minion (magic drainer)
 static func create_void_echo(n: String, lvl: int = 9) -> FighterData:
 	var f := EH.base(n, "Void Echo", lvl)
-	f.health = EH.es(116, 139, 3, 6, lvl, 9); f.max_health = f.health
+	f.health = EH.es(90, 112, 3, 6, lvl, 9); f.max_health = f.health
 	f.mana = EH.es(11, 14, 1, 2, lvl, 9); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 14, 0, 2, lvl, 9)
 	f.physical_defense = EH.es(12, 16, 1, 2, lvl, 9)
-	f.magic_attack = EH.es(28, 34, 1, 3, lvl, 9)
-	f.magic_defense = EH.es(20, 24, 1, 2, lvl, 9)
-	f.speed = EH.es(28, 33, 1, 2, lvl, 9)
+	f.magic_attack = EH.es(24, 30, 1, 3, lvl, 9)
+	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 9)
+	f.speed = EH.es(26, 31, 1, 2, lvl, 9)
 	f.crit_chance = 21; f.crit_damage = 1; f.dodge_chance = 17
 	f.abilities = [EAB.void_echo_drain(), EAB.hollow_wail()]
 	f.flavor_text = "The psychic residue left by the Nightmare's passage through the dreamscape. It repeats fragments of devoured thoughts and feeds on the vitality of the living."
