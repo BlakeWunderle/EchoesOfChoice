@@ -934,17 +934,8 @@ func execute_ai_turn(unit: FighterData, targets: Array,
 		allies: Array) -> void:
 	if targets.is_empty():
 		return
-	# Player auto-battle always uses full smart AI; enemies use difficulty setting
-	_eff_diff = 2 if unit.is_user_controlled else difficulty_level
-	if _eff_diff > 0:
-		_execute_smart_ai_turn(unit, targets, allies)
-		return
-
-	# Priority 0: Use ultimate if charged (player auto-battle only at this diff)
-	if unit.ultimate and unit.ultimate_charge >= unit.ultimate.charge_cost:
-		var best: FighterData = _pick_ultimate_target(unit, targets, allies)
-		use_ultimate(unit, best)
-		return
+	_execute_smart_ai_turn(unit, targets, allies)
+	return
 
 	var affordable: Array[AbilityData] = []
 	var heal_abilities: Array[AbilityData] = []
