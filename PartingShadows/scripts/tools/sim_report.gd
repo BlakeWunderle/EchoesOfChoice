@@ -70,6 +70,8 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 		"equip_stats": _build_equip_json(result),
 		"ult_stats": _build_ult_json(result),
 	}
+	if result.has("action_counts"):
+		entry["action_counts"] = result["action_counts"]
 	if result.has("player_item"):
 		entry["player_item"] = result["player_item"]
 		entry["item_usage"] = result.get("item_usage", {})

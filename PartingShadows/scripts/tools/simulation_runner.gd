@@ -216,6 +216,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 	var stalemate_count := 0
 	var item_uses := 0
 	var party_size := 3
+	var agg_action_counts := {"player": {}, "enemy": {}}
 
 	for pi in parties.size():
 		var party_def: Dictionary = parties[pi]
@@ -250,6 +251,10 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 					print("    %s" % line)
 				print()
 			item_uses += engine.player_items_used
+			for side: String in ["player", "enemy"]:
+				var src: Dictionary = engine.action_counts.get(side, {})
+				for act: String in src:
+					agg_action_counts[side][act] = agg_action_counts[side].get(act, 0) + src[act]
 			turn_all_sum += br.all_actions
 			turn_player_sum += br.player_actions
 			turn_min = mini(turn_min, br.all_actions)
@@ -376,6 +381,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			},
 		},
 	}
+	result["action_counts"] = agg_action_counts
 	if player_item_id != "":
 		result["player_item"] = player_item_id
 		result["item_usage"] = {
@@ -417,6 +423,7 @@ static func print_stage_result(result: Dictionary) -> void:
 			ts.min_all_actions, ts.max_all_actions, stale_str])
 	print_combo_extremes(result)
 	print_class_breakdown(result)
+	print_action_breakdown(result)
 	print_equipment_breakdown(result)
 	print_ultimate_breakdown(result)
 	print_charge_analysis(result)
@@ -560,6 +567,32 @@ static func get_equipment_breakdown(result: Dictionary) -> Dictionary:
 		slot_entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 			return a.win_rate > b.win_rate)
 	return slots
+
+
+static func print_action_breakdown(result: Dictionary) -> void:
+	var ac: Dictionary = result.get("action_counts", {})
+	if ac.is_empty():
+		return
+	var order := ["PHYS_ATK", "ABILITY", "AOE", "HEAL", "BUFF", "DEBUFF", "TAUNT", "BLOCK", "REST", "ITEM"]
+	for side: String in ["player", "enemy"]:
+		var counts: Dictionary = ac.get(side, {})
+		if counts.is_empty():
+			continue
+		var total := 0
+		for v: int in counts.values():
+			total += v
+		if total == 0:
+			continue
+		print("\n  ACTION BREAKDOWN (%s, %d total):" % [side.to_upper(), total])
+		for act: String in order:
+			var c: int = counts.get(act, 0)
+			if c == 0:
+				continue
+			print("    %-12s %6d  %5.1f%%" % [act, c, float(c) / total * 100.0])
+		for act: String in counts:
+			if act not in order:
+				var c: int = counts[act]
+				print("    %-12s %6d  %5.1f%%" % [act, c, float(c) / total * 100.0])
 
 
 static func print_equipment_breakdown(result: Dictionary) -> void:

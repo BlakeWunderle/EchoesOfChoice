@@ -225,6 +225,7 @@ func _init() -> void:
 					var note: String = "** WEAK **" if e.win_rate < warn_thr else ""
 					print("    %-22s %9.1f%% %8d  %s" % [
 						e["class"], e.win_rate * 100, e.count, note])
+			SR.print_action_breakdown(s)
 			SR.print_equipment_breakdown(s)
 			SR.print_ultimate_breakdown(s)
 			SR.print_charge_analysis(s)
@@ -719,6 +720,16 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 			"total_battles": item_battles,
 			"use_rate": float(item_uses) / item_battles if item_battles > 0 else 0.0,
 		}
+
+	## Merge action counts.
+	var agg_ac := {"player": {}, "enemy": {}}
+	for partial: Dictionary in partials:
+		var pac: Dictionary = partial.get("action_counts", {})
+		for side: String in ["player", "enemy"]:
+			var src: Dictionary = pac.get(side, {})
+			for act: String in src:
+				agg_ac[side][act] = agg_ac[side].get(act, 0) + int(src[act])
+	merged["action_counts"] = agg_ac
 
 	## Recalculate overall_win_rate as average of combo win_rates (matches simulate_stage).
 	var total_wr := 0.0

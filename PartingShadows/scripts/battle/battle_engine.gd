@@ -27,6 +27,7 @@ var _eff_diff: int = 1  ## Effective difficulty for current turn (player always 
 var sim_stats: Dictionary = {}  ## Per-fighter combat stats (sim mode only)
 var trace_log: Array[String] = []  ## Per-action trace when trace_mode is on
 var trace_mode: bool = false
+var action_counts: Dictionary = {}  ## Action type tallies per side (sim mode)
 var _acting_units: Array = []
 
 
@@ -51,6 +52,7 @@ func start_battle_sim(party: Array, enemy_list: Array) -> void:
 	for f: FighterData in enemies:
 		f.reset_for_battle()
 	sim_stats.clear()
+	action_counts = {"player": {}, "enemy": {}}
 	for f: FighterData in units:
 		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0, ultimates_used = 0, charge_gained = 0}
 	for f: FighterData in enemies:
@@ -919,6 +921,15 @@ func _trace(msg: String) -> void:
 		trace_log.append(msg)
 
 
+func _count_action(unit: FighterData, action_type: String) -> void:
+	if not sim_mode:
+		return
+	var side: String = "player" if unit in units else "enemy"
+	var bucket: Dictionary = action_counts.get(side, {})
+	bucket[action_type] = bucket.get(action_type, 0) + 1
+	action_counts[side] = bucket
+
+
 func execute_ai_turn(unit: FighterData, targets: Array,
 		allies: Array) -> void:
 	if targets.is_empty():
@@ -1666,14 +1677,11 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 						best_target = t
 			continue
 
-		var is_def_debuff: bool = debuff.modified_stat in defense_stats
 		if debuff.target_all:
 			var total: float = 0.0
 			for t: FighterData in targets:
 				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
 				var s: float = float(delta) * float(debuff.impacted_turns)
-				if is_def_debuff:
-					s *= float(allies.size())
 				total += s
 			if total > best_score:
 				best_score = total
@@ -1684,8 +1692,6 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 			for t: FighterData in targets:
 				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
 				var score: float = float(delta) * float(debuff.impacted_turns)
-				if is_def_debuff:
-					score *= float(allies.size())
 				if score > best_score:
 					best_score = score
 					best_type = "DEBUFF"
@@ -1947,12 +1953,22 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 		best_target = null
 
 	# -- Score physical attack on each target (fallback) --
+	var mp_from_hit: int = maxi(1, floori(unit.magic_attack / 7))
+	var phys_mp_value: float = 0.0
+	if unit.mana < cheapest_cost and unit.mana + mp_from_hit >= cheapest_cost:
+		var cheapest_ev: float = 0.0
+		for a: AbilityData in unit.abilities:
+			if a.mana_cost == cheapest_cost and a.use_on_enemy and a.impacted_turns == 0:
+				for t: FighterData in targets:
+					var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, a)))
+					cheapest_ev = maxf(cheapest_ev, dmg)
+		phys_mp_value = cheapest_ev * 0.5
 	for t: FighterData in targets:
 		var phys_dmg: float = float(maxi(
 			maxi(unit.physical_attack - t.physical_defense, 0),
 			maxi((unit.magic_attack - t.magic_defense) / 2, 0)))
 		var hit: float = (100.0 - float(t.dodge_chance)) / 100.0
-		var score: float = phys_dmg * hit
+		var score: float = (phys_dmg + phys_mp_value) * hit
 		if phys_dmg >= float(t.health):
 			score *= 3.0
 		elif float(t.health) / float(t.max_health) < 0.25:
@@ -1964,6 +1980,7 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 			best_target = t
 
 	# -- Execute best action --
+	_count_action(unit, best_type if best_type != "" else "PHYS_ATK")
 	match best_type:
 		"HEAL":
 			unit.mana -= best_ability.mana_cost
