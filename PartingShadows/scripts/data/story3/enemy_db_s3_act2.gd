@@ -16,7 +16,7 @@ static func create_thread_lurker(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Thread Lurker", lvl)
 	f.health = EH.es(95, 112, 3, 5, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 1, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(30, 34, 1, 3, lvl, 5)
+	f.physical_attack = EH.es(31, 35, 1, 3, lvl, 5)
 	f.physical_defense = EH.es(13, 16, 1, 2, lvl, 5)
 	f.magic_attack = EH.es(10, 13, 0, 2, lvl, 5)
 	f.magic_defense = EH.es(12, 15, 1, 2, lvl, 5)
@@ -180,7 +180,7 @@ static func create_dread_tendril(n: String, lvl: int = 7) -> FighterData:
 	f.mana = EH.es(10, 13, 1, 2, lvl, 7); f.max_mana = f.mana
 	f.physical_attack = EH.es(12, 15, 0, 2, lvl, 7)
 	f.physical_defense = EH.es(11, 14, 1, 2, lvl, 7)
-	f.magic_attack = EH.es(30, 35, 1, 3, lvl, 7)
+	f.magic_attack = EH.es(31, 36, 1, 3, lvl, 7)
 	f.magic_defense = EH.es(19, 22, 1, 2, lvl, 7)
 	f.speed = EH.es(29, 34, 1, 2, lvl, 7)
 	f.crit_chance = 21; f.crit_damage = 1; f.dodge_chance = 15
@@ -193,7 +193,7 @@ static func create_faded_voice(n: String, lvl: int = 7) -> FighterData:
 	var f := EH.base(n, "Faded Voice", lvl)
 	f.health = EH.es(170, 200, 3, 5, lvl, 7); f.max_health = f.health
 	f.mana = EH.es(9, 11, 1, 2, lvl, 7); f.max_mana = f.mana
-	f.physical_attack = EH.es(26, 31, 1, 3, lvl, 7)
+	f.physical_attack = EH.es(27, 32, 1, 3, lvl, 7)
 	f.physical_defense = EH.es(10, 13, 1, 2, lvl, 7)
 	f.magic_attack = EH.es(14, 17, 0, 2, lvl, 7)
 	f.magic_defense = EH.es(18, 21, 1, 2, lvl, 7)

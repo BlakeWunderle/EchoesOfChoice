@@ -210,7 +210,7 @@ static func create_harlequin(n: String) -> FighterData:
 	f.health = EH.fixed(135, 152); f.max_health = f.health
 	f.mana = EH.fixed(12, 15); f.max_mana = f.mana
 	f.physical_attack = EH.fixed(20, 24); f.physical_defense = EH.fixed(11, 15)
-	f.magic_attack = EH.fixed(39, 45); f.magic_defense = EH.fixed(13, 17)
+	f.magic_attack = EH.fixed(40, 46); f.magic_defense = EH.fixed(13, 17)
 	f.speed = EH.fixed(30, 35)
 	f.crit_chance = 12; f.crit_damage = 2; f.dodge_chance = 19
 	f.abilities = [EAB.pantomime_wall(), EAB.prop_drop(), EAB.mime_trap()]
@@ -222,7 +222,7 @@ static func create_chanteuse(n: String) -> FighterData:
 	f.health = EH.fixed(137, 153); f.max_health = f.health
 	f.mana = EH.fixed(14, 17); f.max_mana = f.mana
 	f.physical_attack = EH.fixed(20, 25); f.physical_defense = EH.fixed(13, 17)
-	f.magic_attack = EH.fixed(37, 42); f.magic_defense = EH.fixed(18, 23)
+	f.magic_attack = EH.fixed(38, 43); f.magic_defense = EH.fixed(18, 23)
 	f.speed = EH.fixed(36, 42)
 	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 12
 	f.abilities = [EAB.aria(), EAB.crescendo(), EAB.cadence()]

@@ -45,7 +45,7 @@ static func create_tide_warden(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Tide Warden", lvl)
 	f.health = EH.es(200, 228, 4, 7, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(29, 46, 2, 3, lvl, 5)
+	f.physical_attack = EH.es(30, 47, 2, 3, lvl, 5)
 	f.physical_defense = EH.es(25, 30, 1, 3, lvl, 5)
 	f.magic_attack = EH.es(6, 11, 0, 1, lvl, 5)
 	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 5)
