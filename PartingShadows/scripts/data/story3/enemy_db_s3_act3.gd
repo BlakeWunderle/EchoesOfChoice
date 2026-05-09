@@ -70,7 +70,7 @@ static func create_cult_shade(n: String, lvl: int = 12) -> FighterData:
 	f.mana = EH.es(36, 44, 1, 2, lvl, 12); f.max_mana = f.mana
 	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 12)
 	f.physical_defense = EH.es(23, 29, 1, 3, lvl, 12)
-	f.magic_attack = EH.es(96, 106, 3, 5, lvl, 12)
+	f.magic_attack = EH.es(99, 109, 3, 5, lvl, 12)
 	f.magic_defense = EH.es(38, 45, 2, 3, lvl, 12)
 	f.speed = EH.es(40, 46, 2, 3, lvl, 12)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
@@ -206,11 +206,11 @@ static func create_sanctum_guardian(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Sanctum Guardian", lvl)
 	f.health = EH.es(590, 662, 6, 9, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(38, 46, 1, 2, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(96, 107, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(107, 118, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(44, 53, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(95, 106, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(106, 117, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(44, 53, 2, 3, lvl, 14)
-	f.speed = EH.es(36, 42, 2, 3, lvl, 14)
+	f.speed = EH.es(43, 49, 2, 3, lvl, 14)
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.loom_slam(), EAB.thread_storm(), EAB.guardians_veil()]
 	f.flavor_text = "The final ward of the dream sanctum, a colossal being of interwoven threads and crystallized will. It fights with the combined resolve of every cultist who has prayed at the loom."
