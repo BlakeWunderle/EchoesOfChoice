@@ -33,7 +33,7 @@ static func riposte() -> AbilityData:
 # Ranger
 static func pierce() -> AbilityData:
 	return _make("Pierce", "A precise arrow that finds the gap.",
-		Enums.StatType.PHYSICAL_ATTACK, 7, 0, true, 3, false, 0, 0.0)
+		Enums.StatType.PHYSICAL_ATTACK, 6, 0, true, 3, false, 0, 0.0)
 
 static func double_arrow() -> AbilityData:
 	return _make("Double Arrow", "Two arrows fly in rapid succession.",
@@ -148,28 +148,30 @@ static func inner_peace() -> AbilityData:
 # Invoker
 static func elemental_barrage() -> AbilityData:
 	return _make("Elemental Barrage", "A volley of elemental bolts rains down on all enemies.",
-		Enums.StatType.MAGIC_ATTACK, 5, 0, true, 5, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 6, 0, true, 5, true, 0, 0.0)
 
 static func elemental_surge() -> AbilityData:
 	return _make("Elemental Surge", "Raw elemental power unleashed.",
-		Enums.StatType.MAGIC_ATTACK, 7, 0, true, 5, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 7, 0, true, 4, false, 0, 0.0)
 
 static func elemental_focus() -> AbilityData:
 	return _make("Elemental Focus", "Attune to the elements for greater magical power.",
-		Enums.StatType.MAGIC_ATTACK, 9, 2, false, 3, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 11, 2, false, 3, false, 0, 0.0)
 
 # Acolyte
 static func cure() -> AbilityData:
-	return _make("Cure", "Mend wounds with holy light.",
-		Enums.StatType.HEALTH, 6, 0, false, 6, false, 0, 0.0)
+	var a := _make("Cure", "Mend wounds with holy light.",
+		Enums.StatType.HEALTH, 8, 0, false, 6, false, 0, 0.0)
+	a.heal_threshold = 0.45
+	return a
 
 static func protect() -> AbilityData:
 	return _make("Protect", "A ward of light shields an ally.",
-		Enums.StatType.DEFENSE, 8, 2, false, 3, false, 0, 0.0)
+		Enums.StatType.DEFENSE, 10, 2, false, 3, false, 0, 0.0)
 
 static func radiance() -> AbilityData:
 	return _make("Radiance", "A flash of searing light.",
-		Enums.StatType.MAGIC_ATTACK, 4, 0, true, 3, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 6, 0, true, 3, false, 0, 0.0)
 
 # =============================================================================
 # Mage tree:T2
@@ -275,7 +277,7 @@ static func melody() -> AbilityData:
 
 static func encourage() -> AbilityData:
 	return _make("Encourage", "Inspiring words that bolster attack.",
-		Enums.StatType.ATTACK, 11, 2, false, 3, false, 0, 0.0)
+		Enums.StatType.ATTACK, 7, 2, false, 4, false, 0, 0.0)
 
 # Dervish
 static func mesmerize() -> AbilityData:
@@ -297,7 +299,7 @@ static func oration() -> AbilityData:
 
 static func rebuke() -> AbilityData:
 	return _make("Rebuke", "Harsh words that slow the mind.",
-		Enums.StatType.SPEED, 7, 2, true, 3, false, 0, 0.0)
+		Enums.StatType.SPEED, 7, 2, true, 4, false, 0, 0.0)
 
 # =============================================================================
 # Entertainer tree:T2

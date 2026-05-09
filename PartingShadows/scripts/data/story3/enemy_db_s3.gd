@@ -189,7 +189,7 @@ static func create_somnolent_serpent(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Somnolent Serpent", lvl)
 	f.health = EH.es(200, 232, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(36, 41, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(37, 42, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(24, 28, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(17, 21, 1, 2, lvl, 8)
 	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 8)
@@ -204,7 +204,7 @@ static func create_twilight_stalker(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Twilight Stalker", lvl)
 	f.health = EH.es(192, 224, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 1, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(37, 42, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(38, 43, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(17, 21, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(14, 17, 0, 2, lvl, 8)
 	f.magic_defense = EH.es(16, 19, 1, 2, lvl, 8)
@@ -221,7 +221,7 @@ static func create_waking_terror(n: String, lvl: int = 8) -> FighterData:
 	f.mana = EH.es(8, 11, 1, 2, lvl, 8); f.max_mana = f.mana
 	f.physical_attack = EH.es(16, 19, 0, 2, lvl, 8)
 	f.physical_defense = EH.es(14, 18, 1, 2, lvl, 8)
-	f.magic_attack = EH.es(36, 41, 1, 3, lvl, 8)
+	f.magic_attack = EH.es(37, 42, 1, 3, lvl, 8)
 	f.magic_defense = EH.es(24, 28, 1, 2, lvl, 8)
 	f.speed = EH.es(30, 35, 1, 2, lvl, 8)
 	f.crit_chance = 24; f.crit_damage = 1; f.dodge_chance = 12
@@ -235,7 +235,7 @@ static func create_dusk_sentinel(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Dusk Sentinel", lvl)
 	f.health = EH.es(220, 256, 4, 7, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(8, 11, 1, 1, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(35, 40, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(37, 42, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(24, 28, 1, 3, lvl, 8)
 	f.magic_attack = EH.es(12, 15, 0, 1, lvl, 8)
 	f.magic_defense = EH.es(14, 18, 1, 2, lvl, 8)
@@ -265,9 +265,9 @@ static func create_clock_specter(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Clock Specter", lvl)
 	f.health = EH.es(180, 220, 4, 6, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 2, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(26, 31, 1, 3, lvl, 8)
+	f.physical_attack = EH.es(27, 32, 1, 3, lvl, 8)
 	f.physical_defense = EH.es(13, 17, 1, 2, lvl, 8)
-	f.magic_attack = EH.es(34, 39, 1, 3, lvl, 8)
+	f.magic_attack = EH.es(36, 41, 1, 3, lvl, 8)
 	f.magic_defense = EH.es(22, 26, 1, 2, lvl, 8)
 	f.speed = EH.es(36, 41, 1, 3, lvl, 8)
 	f.crit_chance = 30; f.crit_damage = 2; f.dodge_chance = 12
@@ -281,7 +281,7 @@ static func create_the_nightmare(n: String, lvl: int = 9) -> FighterData:
 	var f := EH.base(n, "The Nightmare", lvl)
 	f.health = EH.es(555, 640, 5, 9, lvl, 9); f.max_health = f.health
 	f.mana = EH.es(17, 19, 1, 2, lvl, 9); f.max_mana = f.mana
-	f.physical_attack = EH.es(39, 44, 2, 3, lvl, 9)
+	f.physical_attack = EH.es(40, 45, 2, 3, lvl, 9)
 	f.physical_defense = EH.es(16, 21, 2, 3, lvl, 9)
 	f.magic_attack = EH.es(32, 37, 2, 3, lvl, 9)
 	f.magic_defense = EH.es(16, 21, 2, 3, lvl, 9)
@@ -315,7 +315,7 @@ static func create_void_echo(n: String, lvl: int = 9) -> FighterData:
 	f.mana = EH.es(11, 14, 1, 2, lvl, 9); f.max_mana = f.mana
 	f.physical_attack = EH.es(10, 14, 0, 2, lvl, 9)
 	f.physical_defense = EH.es(12, 16, 1, 2, lvl, 9)
-	f.magic_attack = EH.es(24, 30, 1, 3, lvl, 9)
+	f.magic_attack = EH.es(25, 31, 1, 3, lvl, 9)
 	f.magic_defense = EH.es(15, 19, 1, 2, lvl, 9)
 	f.speed = EH.es(26, 31, 1, 2, lvl, 9)
 	f.crit_chance = 21; f.crit_damage = 1; f.dodge_chance = 17

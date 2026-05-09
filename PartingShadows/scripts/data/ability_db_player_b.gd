@@ -24,7 +24,7 @@ static func magical_tinkering() -> AbilityData:
 
 static func volatile_flask() -> AbilityData:
 	return _make("Volatile Flask", "A bubbling concoction hurled at the enemy.",
-		Enums.StatType.MAGIC_ATTACK, 6, 0, true, 4, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 7, 0, true, 4, false, 0, 0.0)
 
 
 static func healing_draught() -> AbilityData:
@@ -179,12 +179,12 @@ static func spirit_bolt() -> AbilityData:
 
 static func ancestral_curse() -> AbilityData:
 	return _make("Ancestral Curse", "Invoke the wrath of forgotten spirits upon all foes.",
-		Enums.StatType.ATTACK, 11, 2, true, 4, true, 0, 0.0)
+		Enums.StatType.ATTACK, 9, 2, true, 5, true, 0, 0.0)
 
 
 static func spirit_veil() -> AbilityData:
 	return _make("Spirit Veil", "Spirits weave a protective ward against magic.",
-		Enums.StatType.MAGIC_DEFENSE, 11, 2, false, 3, false, 0, 0.0)
+		Enums.StatType.MAGIC_DEFENSE, 9, 2, false, 3, false, 0, 0.0)
 
 # Beastcaller
 static func feral_strike() -> AbilityData:
