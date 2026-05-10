@@ -23,7 +23,7 @@ static func create_cult_acolyte(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(38, 46, 1, 2, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 15)
 	f.physical_defense = EH.es(38, 47, 2, 3, lvl, 15)
-	f.magic_attack = EH.es(143, 157, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(144, 158, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(47, 57, 2, 4, lvl, 15)
 	f.speed = EH.es(36, 43, 2, 3, lvl, 15)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 25
@@ -37,7 +37,7 @@ static func create_cult_enforcer(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "Cult Enforcer", lvl)
 	f.health = EH.es(664, 751, 6, 9, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(127, 142, 3, 5, lvl, 15)
+	f.physical_attack = EH.es(128, 143, 3, 5, lvl, 15)
 	f.physical_defense = EH.es(59, 67, 2, 4, lvl, 15)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 15)
 	f.magic_defense = EH.es(37, 45, 2, 3, lvl, 15)
@@ -154,7 +154,7 @@ static func create_dread_tailor(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "DreadTailor", lvl)
 	f.health = EH.es(460, 530, 5, 8, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(113, 126, 3, 5, lvl, 15)
+	f.physical_attack = EH.es(114, 127, 3, 5, lvl, 15)
 	f.physical_defense = EH.es(31, 39, 1, 3, lvl, 15)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 15)
 	f.magic_defense = EH.es(51, 59, 2, 3, lvl, 15)

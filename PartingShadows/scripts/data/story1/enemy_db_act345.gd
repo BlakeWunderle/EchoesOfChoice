@@ -212,7 +212,7 @@ static func create_sigil_wretch(n: String, lvl: int = 13) -> FighterData:
 	f.mana = EH.es(42, 50, 3, 4, lvl, 13); f.max_mana = f.mana
 	f.physical_attack = EH.es(25, 28, 0, 2, lvl, 13)
 	f.physical_defense = EH.es(28, 35, 1, 3, lvl, 13)
-	f.magic_attack = EH.es(79, 87, 4, 6, lvl, 13)
+	f.magic_attack = EH.es(80, 88, 4, 6, lvl, 13)
 	f.magic_defense = EH.es(41, 47, 2, 4, lvl, 13)
 	f.speed = EH.es(52, 59, 3, 5, lvl, 13)
 	f.crit_chance = 17; f.crit_damage = 5; f.dodge_chance = 17
@@ -224,7 +224,7 @@ static func create_tunnel_lurker(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Tunnel Lurker", lvl)
 	f.health = EH.es(390, 440, 8, 11, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(35, 42, 2, 3, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(84, 92, 4, 6, lvl, 13)
+	f.physical_attack = EH.es(85, 93, 4, 6, lvl, 13)
 	f.physical_defense = EH.es(38, 44, 2, 4, lvl, 13)
 	f.magic_attack = EH.es(26, 32, 1, 2, lvl, 13)
 	f.magic_defense = EH.es(40, 46, 2, 3, lvl, 13)
@@ -239,9 +239,9 @@ static func create_stranger_final(n: String, lvl: int = 15) -> FighterData:
 	f.class_id = "StrangerFinal"
 	f.health = EH.es(870, 960, 12, 16, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(75, 85, 4, 5, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(85, 93, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(87, 95, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(58, 66, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(89, 99, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(91, 101, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(61, 69, 3, 5, lvl, 15)
 	f.speed = EH.es(75, 82, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 6; f.dodge_chance = 20

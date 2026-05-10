@@ -87,7 +87,7 @@ static func create_tunnel_sentinel(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Tunnel Sentinel", lvl)
 	f.health = EH.es(498, 569, 6, 9, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(116, 129, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(117, 130, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(56, 65, 2, 4, lvl, 14)
 	f.magic_attack = EH.es(23, 27, 0, 1, lvl, 14)
 	f.magic_defense = EH.es(36, 44, 2, 3, lvl, 14)
@@ -104,7 +104,7 @@ static func create_thread_sniper(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(36, 44, 1, 2, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(25, 29, 0, 2, lvl, 14)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(119, 131, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(120, 132, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(42, 50, 2, 4, lvl, 14)
 	f.speed = EH.es(38, 44, 2, 3, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -119,7 +119,7 @@ static func create_pale_devotee(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(36, 44, 1, 2, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(25, 29, 0, 2, lvl, 14)
 	f.physical_defense = EH.es(31, 39, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(114, 126, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(115, 127, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(49, 58, 2, 4, lvl, 14)
 	f.speed = EH.es(34, 40, 2, 3, lvl, 14)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 17
