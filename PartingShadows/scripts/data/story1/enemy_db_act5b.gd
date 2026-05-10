@@ -114,11 +114,11 @@ static func create_stranger_undone(n: String, lvl: int = 15) -> FighterData:
 	f.class_id = "StrangerUndone"
 	f.health = EH.es(810, 900, 10, 14, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(70, 80, 4, 5, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(78, 88, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(79, 89, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(55, 64, 2, 4, lvl, 15)
-	f.magic_attack = EH.es(88, 98, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(89, 99, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(58, 67, 2, 4, lvl, 15)
-	f.speed = EH.es(79, 89, 3, 5, lvl, 15)
+	f.speed = EH.es(80, 90, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 7; f.dodge_chance = 20
 	f.abilities = [EAB.shadow_remnant_strike(), EAB.void_drain(), EAB.crumbling_shield(), EAB.final_echo(), EAB.desperation()]
 	f.flavor_text = "The Stranger, stripped of ritual power, smaller and more human than ever before. Desperate, fast, and unpredictable."

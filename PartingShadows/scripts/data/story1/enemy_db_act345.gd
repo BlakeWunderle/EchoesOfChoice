@@ -17,7 +17,7 @@ static func create_royal_guard(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Royal Guard", lvl)
 	f.health = EH.es(320, 360, 7, 10, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(42, 50, 3, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(56, 63, 3, 4, lvl, 10)
+	f.physical_attack = EH.es(57, 64, 3, 4, lvl, 10)
 	f.physical_defense = EH.es(37, 43, 3, 4, lvl, 10)
 	f.magic_attack = EH.es(12, 16, 0, 2, lvl, 10)
 	f.magic_defense = EH.es(33, 40, 2, 3, lvl, 10)
@@ -31,7 +31,7 @@ static func create_guard_sergeant(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Guard Sergeant", lvl)
 	f.health = EH.es(310, 350, 7, 10, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(42, 50, 3, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(58, 65, 3, 5, lvl, 10)
+	f.physical_attack = EH.es(59, 66, 3, 5, lvl, 10)
 	f.physical_defense = EH.es(24, 31, 2, 3, lvl, 10)
 	f.magic_attack = EH.es(14, 18, 0, 2, lvl, 10)
 	f.magic_defense = EH.es(27, 33, 1, 2, lvl, 10)
@@ -45,7 +45,7 @@ static func create_guard_archer(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Guard Archer", lvl)
 	f.health = EH.es(255, 295, 6, 9, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(42, 50, 3, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(58, 65, 3, 4, lvl, 10)
+	f.physical_attack = EH.es(59, 66, 3, 4, lvl, 10)
 	f.physical_defense = EH.es(18, 24, 1, 3, lvl, 10)
 	f.magic_attack = EH.es(12, 16, 0, 2, lvl, 10)
 	f.magic_defense = EH.es(25, 33, 1, 3, lvl, 10)
@@ -59,11 +59,11 @@ static func create_stranger(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Stranger", lvl)
 	f.health = EH.es(650, 725, 12, 17, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(60, 70, 3, 4, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(69, 77, 3, 5, lvl, 11)
+	f.physical_attack = EH.es(70, 78, 3, 5, lvl, 11)
 	f.physical_defense = EH.es(41, 48, 2, 4, lvl, 11)
-	f.magic_attack = EH.es(72, 82, 3, 5, lvl, 11)
+	f.magic_attack = EH.es(73, 83, 3, 5, lvl, 11)
 	f.magic_defense = EH.es(45, 52, 2, 4, lvl, 11)
-	f.speed = EH.es(57, 63, 2, 4, lvl, 11)
+	f.speed = EH.es(58, 64, 2, 4, lvl, 11)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 17
 	f.abilities = [EABL.shadow_strike(), EABL.dark_pulse(), EABL.void_shield(), EABL.drain(), EABL.soul_siphon()]
 	f.flavor_text = "A cloaked figure radiating dark power. His true nature remains hidden beneath layers of shadow."
