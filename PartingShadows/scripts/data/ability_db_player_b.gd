@@ -66,7 +66,7 @@ static func probability() -> AbilityData:
 # Alchemist
 static func transmute() -> AbilityData:
 	return _make("Transmute", "Transform matter into pure energy.",
-		Enums.StatType.MAGIC_ATTACK, 18, 0, true, 8, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 20, 0, true, 8, false, 0, 0.0)
 
 static func corrosive_acid() -> AbilityData:
 	return _make("Acid Blast", "A corrosive wave of acid that sears all enemies.",
@@ -75,7 +75,7 @@ static func corrosive_acid() -> AbilityData:
 static func elixir() -> AbilityData:
 	var a := _make("Elixir", "A carefully brewed healing potion.",
 		Enums.StatType.HEALTH, 18, 0, false, 9, false, 0, 0.0)
-	a.heal_threshold = 0.25
+	a.heal_threshold = 0.35
 	return a
 
 # Bombardier
@@ -219,17 +219,17 @@ static func poison_sting() -> AbilityData:
 # Grove Keeper
 static func natures_mend() -> AbilityData:
 	var a := _make("Nature's Mend", "Channel the forest's restorative power to heal an ally's wounds.",
-		Enums.StatType.HEALTH, 16, 0, false, 9, false, 0, 0.0)
+		Enums.StatType.HEALTH, 18, 0, false, 9, false, 0, 0.0)
 	a.heal_threshold = 0.35
 	return a
 
 static func thorn_burst() -> AbilityData:
 	return _make("Thorn Burst", "A violent eruption of razor-sharp thorns.",
-		Enums.StatType.MAGIC_ATTACK, 17, 0, true, 8, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 19, 0, true, 8, false, 0, 0.0)
 
 static func vine_wall() -> AbilityData:
 	return _make("Vine Wall", "A living wall of thorned vines shields all allies.",
-		Enums.StatType.DEFENSE, 12, 2, false, 6, true, 0, 0.0)
+		Enums.StatType.DEFENSE, 12, 3, false, 6, true, 0, 0.0)
 
 # Witch Doctor
 static func voodoo_bolt() -> AbilityData:
@@ -327,7 +327,7 @@ static func spell_ward() -> AbilityData:
 
 static func iron_fist() -> AbilityData:
 	return _make("Iron Fist", "A devastating blow that shatters defenses.",
-		Enums.StatType.MIXED_ATTACK, 18, 0, true, 8, false, 0, 0.0)
+		Enums.StatType.MIXED_ATTACK, 20, 0, true, 8, false, 0, 0.0)
 
 static func ironclad_challenge() -> AbilityData:
 	return _make("Ironclad Challenge", "Issue a thunderous challenge that forces enemies to attack you.",

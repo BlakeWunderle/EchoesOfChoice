@@ -308,35 +308,37 @@ static func rebuke() -> AbilityData:
 # Warcrier
 static func battle_cry() -> AbilityData:
 	return _make("Battle Cry", "A thunderous shout that devastates.",
-		Enums.StatType.MIXED_ATTACK, 16, 0, true, 8, false, 0, 0.0)
+		Enums.StatType.MIXED_ATTACK, 18, 0, true, 8, false, 0, 0.0)
 
 static func war_chant() -> AbilityData:
 	return _make("War Chant", "A fierce war chant that ignites an ally's fighting spirit.",
 		Enums.StatType.ATTACK, 16, 2, false, 5, false, 0, 0.0)
 
 static func rally_cry() -> AbilityData:
-	return _make("Rally Cry", "A rallying shout that mends wounds.",
-		Enums.StatType.MIXED_ATTACK, 9, 0, false, 9, false, 0, 0.0)
+	var a := _make("Rally Cry", "A rallying shout that mends wounds.",
+		Enums.StatType.HEALTH, 14, 0, false, 9, false, 0, 0.0)
+	a.heal_threshold = 0.35
+	return a
 
 # Minstrel
 static func dissonance() -> AbilityData:
 	return _make("Dissonance", "A grating chord that saps the will to fight.",
-		Enums.StatType.ATTACK, 7, 2, true, 5, false, 0, 0.0)
+		Enums.StatType.ATTACK, 10, 2, true, 5, false, 0, 0.0)
 
 static func ballad() -> AbilityData:
 	return _make("Ballad", "A sorrowful melody turned weapon.",
-		Enums.StatType.MAGIC_ATTACK, 10, 0, true, 7, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 16, 0, true, 7, false, 0, 0.0)
 
 static func serenade() -> AbilityData:
 	var a := _make("Serenade", "A soothing song that mends wounds.",
-		Enums.StatType.HEALTH, 8, 0, false, 9, false, 0, 0.0)
+		Enums.StatType.HEALTH, 14, 0, false, 9, false, 0, 0.0)
 	a.heal_threshold = 0.35
 	return a
 
 # Illusionist
 static func phantom_strike() -> AbilityData:
 	return _make("Phantom Strike", "An illusory blade that feels all too real.",
-		Enums.StatType.MIXED_ATTACK, 16, 0, true, 8, false, 0, 0.0)
+		Enums.StatType.MIXED_ATTACK, 18, 0, true, 8, false, 0, 0.0)
 
 static func mirage() -> AbilityData:
 	return _make("Mirage", "Bend light around all allies, making them harder to hit.",
@@ -344,7 +346,7 @@ static func mirage() -> AbilityData:
 
 static func bewilderment() -> AbilityData:
 	return _make("Bewilderment", "A dazzling burst of illusions that strikes all enemies.",
-		Enums.StatType.MAGIC_ATTACK, 5, 0, true, 10, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 10, true, 0, 0.0)
 
 # Mime
 static func invisible_wall() -> AbilityData:

@@ -20,7 +20,7 @@ static func upgrade_to_blighter(f: FighterData) -> void:
 
 static func upgrade_to_grove_keeper(f: FighterData) -> void:
 	f.class_id = "GroveKeeper"; f.character_type = "Grove Keeper"
-	f.health += 18; f.max_health += 18; f.mana += 2; f.max_mana += 2
+	f.health += 20; f.max_health += 20; f.mana += 2; f.max_mana += 2
 	f.physical_attack += 2; f.physical_defense += 5; f.magic_attack += 16; f.magic_defense += 5
 	f.speed += 3; f.crit_chance += 2; f.crit_damage += 2; f.dodge_chance += 4
 	f.abilities = [PAB_B.thorn_burst(), PAB_B.natures_mend(), PAB_B.vine_wall()]
@@ -38,9 +38,9 @@ static func _lu_blighter(f: FighterData) -> void:
 
 static func _lu_grove_keeper(f: FighterData) -> void:
 	f.level += 1
-	var hp := randi_range(11, 13); f.health += hp; f.max_health += hp
+	var hp := randi_range(13, 15); f.health += hp; f.max_health += hp
 	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
-	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(3, 4)
+	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(4, 5)
 	f.magic_attack += randi_range(6, 8); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 3)
 	f.crit_chance += randi_range(0, 1)
