@@ -749,6 +749,12 @@ func _show_equipment() -> void:
 	_main_vbox.visible = false
 	_pause_title.visible = false
 	_pause_sep.visible = false
+	_panel_expanded = true
+	_center_panel.set_anchors_preset(Control.PRESET_CENTER)
+	_center_panel.offset_left = -240.0
+	_center_panel.offset_top = -320.0
+	_center_panel.offset_right = 240.0
+	_center_panel.offset_bottom = 320.0
 
 	for child: Node in _equipment_vbox.get_children():
 		child.queue_free()

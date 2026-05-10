@@ -219,38 +219,46 @@ func _wire_list_focus(enabled: Array[Button]) -> void:
 
 
 func _wire_grid_focus(enabled: Array[Button]) -> void:
-	## Wire 2-column grid navigation: up/down between rows, left/right between columns.
+	## Wire 2-column grid navigation using original grid positions so disabled
+	## buttons don't shift the column/row math.
 	var cols: int = 2
-	for i: int in enabled.size():
-		var btn: Button = enabled[i]
-		var col: int = i % cols
+	var total: int = _buttons.size()
+	var rows: int = ceili(float(total) / cols)
 
-		# Left/right within row
-		if col > 0:
-			btn.focus_neighbor_left = enabled[i - 1].get_path()
-		elif enabled.size() > 1:
-			btn.focus_neighbor_left = enabled[mini(i + 1, enabled.size() - 1)].get_path()
+	var enabled_set: Dictionary = {}
+	for btn: Button in enabled:
+		enabled_set[_buttons.find(btn)] = btn
 
-		if col < cols - 1 and i + 1 < enabled.size():
-			btn.focus_neighbor_right = enabled[i + 1].get_path()
-		elif col == cols - 1 or i + 1 >= enabled.size():
-			btn.focus_neighbor_right = enabled[i - col].get_path()
+	for idx: int in enabled_set:
+		var btn: Button = enabled_set[idx]
+		var col: int = idx % cols
+		var row: int = idx / cols
 
-		# Up/down between rows
-		var up_idx: int = i - cols
-		if up_idx >= 0:
-			btn.focus_neighbor_top = enabled[up_idx].get_path()
-		else:
-			var last_row_start: int = (enabled.size() - 1) / cols * cols
-			var wrap_idx: int = mini(last_row_start + col, enabled.size() - 1)
-			btn.focus_neighbor_top = enabled[wrap_idx].get_path()
+		var partner_idx: int = idx + (1 if col == 0 else -1)
+		var partner: Button = enabled_set.get(partner_idx)
+		var target: Button = partner if partner else btn
+		btn.focus_neighbor_left = target.get_path()
+		btn.focus_neighbor_right = target.get_path()
 
-		var down_idx: int = i + cols
-		if down_idx < enabled.size():
-			btn.focus_neighbor_bottom = enabled[down_idx].get_path()
-		else:
-			var wrap_idx: int = mini(col, enabled.size() - 1)
-			btn.focus_neighbor_bottom = enabled[wrap_idx].get_path()
+		btn.focus_neighbor_top = _find_col_neighbor(
+			enabled_set, col, row, -1, rows, cols, total).get_path()
+		btn.focus_neighbor_bottom = _find_col_neighbor(
+			enabled_set, col, row, 1, rows, cols, total).get_path()
+
+
+func _find_col_neighbor(enabled_set: Dictionary, col: int, start_row: int,
+		direction: int, rows: int, cols: int, total: int) -> Button:
+	var r: int = start_row
+	for _i: int in rows - 1:
+		r += direction
+		if r < 0:
+			r = rows - 1
+		elif r >= rows:
+			r = 0
+		var idx: int = r * cols + col
+		if idx < total and idx in enabled_set:
+			return enabled_set[idx]
+	return enabled_set[start_row * cols + col]
 
 
 # =============================================================================
