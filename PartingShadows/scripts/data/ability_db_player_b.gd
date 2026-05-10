@@ -120,7 +120,7 @@ static func eclipse() -> AbilityData:
 # Automaton
 static func servo_strike() -> AbilityData:
 	return _make("Servo Strike", "A pneumatic piston blow from mechanical limbs.",
-		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 7, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 16, 0, true, 7, false, 0, 0.0)
 
 static func discharge() -> AbilityData:
 	return _make("Discharge", "Release a burst of stored energy that arcs through all enemies.",
@@ -128,8 +128,8 @@ static func discharge() -> AbilityData:
 
 static func self_repair() -> AbilityData:
 	var a := _make("Self-Repair", "Reroute power to internal repair systems.",
-		Enums.StatType.HEALTH, 5, 0, false, 8, false, 0, 0.0)
-	a.heal_threshold = 0.25
+		Enums.StatType.HEALTH, 8, 0, false, 8, false, 0, 0.0)
+	a.heal_threshold = 0.35
 	return a
 
 # Technomancer
@@ -247,15 +247,15 @@ static func creeping_rot() -> AbilityData:
 # Spiritwalker
 static func spirit_shield() -> AbilityData:
 	return _make("Spirit Shield", "Ancestral spirits protect an ally.",
-		Enums.StatType.DEFENSE, 4, 2, false, 5, false, 0, 0.0)
+		Enums.StatType.DEFENSE, 10, 3, false, 5, false, 0, 0.0)
 
 static func soul_strike() -> AbilityData:
 	return _make("Soul Strike", "A burst of spirit energy tears through the veil.",
-		Enums.StatType.MAGIC_ATTACK, 7, 0, true, 7, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 7, false, 0, 0.0)
 
 static func spirit_mend() -> AbilityData:
 	var a := _make("Spirit Mend", "Healing energy from the spirit world.",
-		Enums.StatType.HEALTH, 3, 0, false, 9, false, 0, 0.0)
+		Enums.StatType.HEALTH, 8, 0, false, 9, false, 0, 0.0)
 	a.heal_threshold = 0.35
 	return a
 
@@ -275,7 +275,7 @@ static func aerial_strike() -> AbilityData:
 # Shapeshifter
 static func savage_maul() -> AbilityData:
 	return _make("Savage Maul", "Transform and maul the enemy.",
-		Enums.StatType.MIXED_ATTACK, 24, 0, true, 9, false, 0, 0.4)
+		Enums.StatType.MIXED_ATTACK, 20, 0, true, 9, false, 0, 0.4)
 
 static func frenzy() -> AbilityData:
 	return _make("Frenzy", "Enter a bestial rage.",
@@ -283,7 +283,7 @@ static func frenzy() -> AbilityData:
 
 static func rampage() -> AbilityData:
 	return _make("Rampage", "Unleash the beast within, tearing through all enemies with primal fury.",
-		Enums.StatType.MIXED_ATTACK, 20, 0, true, 11, true, 0, 0.0)
+		Enums.StatType.MIXED_ATTACK, 16, 0, true, 11, true, 0, 0.0)
 
 
 # =============================================================================

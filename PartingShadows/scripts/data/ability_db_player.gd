@@ -199,11 +199,11 @@ static func purify() -> AbilityData:
 
 static func tsunami() -> AbilityData:
 	return _make("Tsunami", "A towering wave crashes down on all enemies.",
-		Enums.StatType.MAGIC_ATTACK, 10, 0, true, 10, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 14, 0, true, 10, true, 0, 0.0)
 
 static func water_whip() -> AbilityData:
 	return _make("Water Whip", "A lash of pressurized water tears into a single foe.",
-		Enums.StatType.MAGIC_ATTACK, 11, 0, true, 7, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 15, 0, true, 7, false, 0, 0.0)
 
 # Tempest
 static func hurricane() -> AbilityData:
@@ -355,7 +355,7 @@ static func invisible_wall() -> AbilityData:
 
 static func anvil() -> AbilityData:
 	return _make("Anvil", "Drop something very heavy. From nowhere.",
-		Enums.StatType.MIXED_ATTACK, 21, 0, true, 9, false, 0, 0.0)
+		Enums.StatType.MIXED_ATTACK, 18, 0, true, 9, false, 0, 0.0)
 
 static func invisible_box() -> AbilityData:
 	return _make("Invisible Box", "Trap the enemy in an unseen prison.",
