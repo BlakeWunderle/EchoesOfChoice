@@ -33,7 +33,7 @@ static func _lu_warcrier(f: FighterData) -> void:
 	var hp := randi_range(13, 15); f.health += hp; f.max_health += hp
 	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(5, 7); f.physical_defense += randi_range(3, 4)
-	f.magic_attack += randi_range(3, 5); f.magic_defense += randi_range(3, 4)
+	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 3)
 	f.dodge_chance += randi_range(0, 1)
 	f.crit_chance += randi_range(1, 2)
@@ -86,7 +86,7 @@ static func _lu_mime(f: FighterData) -> void:
 	f.physical_attack += randi_range(4, 5); f.physical_defense += randi_range(4, 5)
 	f.magic_attack += randi_range(8, 9); f.magic_defense += randi_range(5, 7)
 	f.speed += randi_range(2, 3)
-	f.dodge_chance += randi_range(3, 4)
+	f.dodge_chance += randi_range(2, 3)
 	f.crit_chance += randi_range(0, 1)
 
 

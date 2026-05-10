@@ -251,11 +251,11 @@ static func spirit_shield() -> AbilityData:
 
 static func soul_strike() -> AbilityData:
 	return _make("Soul Strike", "A burst of spirit energy tears through the veil.",
-		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 7, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 16, 0, true, 7, false, 0, 0.0)
 
 static func spirit_mend() -> AbilityData:
 	var a := _make("Spirit Mend", "Healing energy from the spirit world.",
-		Enums.StatType.HEALTH, 8, 0, false, 9, false, 0, 0.0)
+		Enums.StatType.HEALTH, 12, 0, false, 9, false, 0, 0.0)
 	a.heal_threshold = 0.35
 	return a
 
@@ -349,7 +349,7 @@ static func spell_counter() -> AbilityData:
 # Trailblazer
 static func blaze_trail() -> AbilityData:
 	return _make("Blaze Trail", "Charge forward with reckless, blazing speed.",
-		Enums.StatType.MIXED_ATTACK, 14, 0, true, 9, false, 0, 0.4)
+		Enums.StatType.MIXED_ATTACK, 14, 0, true, 9, false, 0, 0.3)
 
 static func ambush() -> AbilityData:
 	return _make("Ambush", "Strike from an unexpected angle, hitting all foes.",

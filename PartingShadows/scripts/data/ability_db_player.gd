@@ -346,7 +346,7 @@ static func mirage() -> AbilityData:
 
 static func bewilderment() -> AbilityData:
 	return _make("Bewilderment", "A dazzling burst of illusions that strikes all enemies.",
-		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 10, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 16, 0, true, 10, true, 0, 0.0)
 
 # Mime
 static func invisible_wall() -> AbilityData:
@@ -355,7 +355,7 @@ static func invisible_wall() -> AbilityData:
 
 static func anvil() -> AbilityData:
 	return _make("Anvil", "Drop something very heavy. From nowhere.",
-		Enums.StatType.MIXED_ATTACK, 18, 0, true, 9, false, 0, 0.0)
+		Enums.StatType.MIXED_ATTACK, 16, 0, true, 9, false, 0, 0.0)
 
 static func invisible_box() -> AbilityData:
 	return _make("Invisible Box", "Trap the enemy in an unseen prison.",
