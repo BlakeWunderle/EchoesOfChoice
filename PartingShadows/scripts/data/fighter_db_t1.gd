@@ -181,8 +181,8 @@ static func upgrade_to_artificer(f: FighterData) -> void:
 	f.abilities = [PAB_B.volatile_flask(), PAB_B.magical_tinkering(), PAB_B.healing_draught()]
 	f.upgrade_items = ["Potion", "Hammer"]
 
-static func upgrade_to_cosmologist(f: FighterData) -> void:
-	f.class_id = "Cosmologist"; f.character_type = "Philosopher"
+static func upgrade_to_philosopher(f: FighterData) -> void:
+	f.class_id = "Philosopher"; f.character_type = "Philosopher"
 	f.health += 3; f.max_health += 3; f.mana += 2; f.max_mana += 2
 	f.physical_attack += 1; f.physical_defense += 1; f.magic_attack += 4; f.magic_defense += 1
 	f.speed += 4; f.crit_chance += 1; f.crit_damage += 1; f.dodge_chance += 1
@@ -207,7 +207,7 @@ static func _lu_artificer(f: FighterData) -> void:
 	f.crit_chance += randi_range(0, 1)
 	f.dodge_chance += randi_range(0, 1)
 
-static func _lu_cosmologist(f: FighterData) -> void:
+static func _lu_philosopher(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(8, 10); f.health += hp; f.max_health += hp
 	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
@@ -343,7 +343,7 @@ static func level_up(f: FighterData) -> bool:
 		"Dervish": _lu_dervish(f)
 		"Orator": _lu_orator(f)
 		"Artificer": _lu_artificer(f)
-		"Cosmologist": _lu_cosmologist(f)
+		"Philosopher": _lu_philosopher(f)
 		"Arithmancer": _lu_arithmancer(f)
 		"Herbalist": _lu_herbalist(f)
 		"Shaman": _lu_shaman(f)

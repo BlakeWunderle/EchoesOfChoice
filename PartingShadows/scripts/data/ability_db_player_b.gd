@@ -33,7 +33,7 @@ static func healing_draught() -> AbilityData:
 	a.heal_threshold = 0.25
 	return a
 
-# Cosmologist (Philosopher)
+# Philosopher
 static func time_warp() -> AbilityData:
 	return _make("Time Warp", "Bend time to hasten an ally.",
 		Enums.StatType.SPEED, 9, 2, false, 3, false, 0, 0.0)

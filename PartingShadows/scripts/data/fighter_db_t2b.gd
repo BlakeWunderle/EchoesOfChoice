@@ -173,7 +173,7 @@ static func _lu_bombardier(f: FighterData) -> void:
 
 
 # =============================================================================
-# Tinker tree:Cosmologist branch
+# Tinker tree:Philosopher branch
 # =============================================================================
 
 static func upgrade_to_chronomancer(f: FighterData) -> void:

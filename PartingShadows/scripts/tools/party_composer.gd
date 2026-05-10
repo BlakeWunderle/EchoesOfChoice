@@ -34,7 +34,7 @@ const T2_UPGRADES := {
 	"Dervish": ["Light", "Paint"],
 	"Orator": ["Pen", "Medal"],
 	"Artificer": ["Potion", "Hammer"],
-	"Cosmologist": ["TimeMachine", "Telescope"],
+	"Philosopher": ["TimeMachine", "Telescope"],
 	"Arithmancer": ["ClockworkCore", "Computer"],
 	"Herbalist": ["Venom", "Seedling"],
 	"Shaman": ["Shrunkenhead", "SpiritOrb"],

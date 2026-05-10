@@ -331,7 +331,7 @@ static func _t1_to_t0() -> Dictionary:
 		"Duelist": "Squire", "Ranger": "Squire", "MartialArtist": "Squire",
 		"Invoker": "Mage", "Acolyte": "Mage",
 		"Bard": "Entertainer", "Dervish": "Entertainer", "Orator": "Entertainer",
-		"Artificer": "Tinker", "Cosmologist": "Tinker", "Arithmancer": "Tinker",
+		"Artificer": "Tinker", "Philosopher": "Tinker", "Arithmancer": "Tinker",
 		"Herbalist": "Wildling", "Shaman": "Wildling", "Beastcaller": "Wildling",
 		"Sentinel": "Wanderer", "Pathfinder": "Wanderer",
 	}
@@ -348,7 +348,7 @@ static func _t2_to_t1() -> Dictionary:
 		"Illusionist": "Dervish", "Mime": "Dervish",
 		"Laureate": "Orator", "Elegist": "Orator",
 		"Alchemist": "Artificer", "Bombardier": "Artificer",
-		"Chronomancer": "Cosmologist", "Astronomer": "Cosmologist",
+		"Chronomancer": "Philosopher", "Astronomer": "Philosopher",
 		"Automaton": "Arithmancer", "Technomancer": "Arithmancer",
 		"Blighter": "Herbalist", "GroveKeeper": "Herbalist",
 		"WitchDoctor": "Shaman", "Spiritwalker": "Shaman",

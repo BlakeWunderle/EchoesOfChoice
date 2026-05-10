@@ -233,7 +233,7 @@ static func get_default_upgrade_items(class_id: String) -> Array[String]:
 		"Dervish": return ["Light", "Paint"]
 		"Orator": return ["Medal", "Pen"]
 		"Artificer": return ["Potion", "Hammer"]
-		"Cosmologist": return ["TimeMachine", "Telescope"]
+		"Philosopher": return ["TimeMachine", "Telescope"]
 		"Arithmancer": return ["ClockworkCore", "Computer"]
 		"Herbalist": return ["Venom", "Seedling"]
 		"Shaman": return ["Shrunkenhead", "SpiritOrb"]
@@ -274,7 +274,7 @@ static func upgrade_class(fighter: FighterData, item: String) -> bool:
 		"Entertainer:Slippers": T1.upgrade_to_dervish(fighter)
 		"Entertainer:Scroll": T1.upgrade_to_orator(fighter)
 		"Tinker:Crystal": T1.upgrade_to_artificer(fighter)
-		"Tinker:Textbook": T1.upgrade_to_cosmologist(fighter)
+		"Tinker:Textbook": T1.upgrade_to_philosopher(fighter)
 		"Tinker:Abacus": T1.upgrade_to_arithmancer(fighter)
 		"Wildling:Herbs": T1.upgrade_to_herbalist(fighter)
 		"Wildling:Totem": T1.upgrade_to_shaman(fighter)
@@ -305,8 +305,8 @@ static func upgrade_class(fighter: FighterData, item: String) -> bool:
 		# T1 → T2 (Tinker tree)
 		"Artificer:Potion": T2B.upgrade_to_alchemist(fighter)
 		"Artificer:Hammer": T2B.upgrade_to_bombardier(fighter)
-		"Cosmologist:TimeMachine": T2B.upgrade_to_chronomancer(fighter)
-		"Cosmologist:Telescope": T2B.upgrade_to_astronomer(fighter)
+		"Philosopher:TimeMachine": T2B.upgrade_to_chronomancer(fighter)
+		"Philosopher:Telescope": T2B.upgrade_to_astronomer(fighter)
 		"Arithmancer:ClockworkCore": T2B.upgrade_to_automaton(fighter)
 		"Arithmancer:Computer": T2B.upgrade_to_technomancer(fighter)
 		# T1 → T2 (Wildling tree)

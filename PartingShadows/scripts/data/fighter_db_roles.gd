@@ -31,9 +31,9 @@ static func get_roles(class_id: String) -> Array:
 		"Dervish": return [Enums.Role.DPS]
 		"Orator": return [Enums.Role.SUPPORT]
 		# T1: Tinker
-		"Artificer": return [Enums.Role.SUPPORT, Enums.Role.FIGHTER]
-		"Cosmologist": return [Enums.Role.CASTER]
-		"Arithmancer": return [Enums.Role.FIGHTER]
+		"Artificer": return [Enums.Role.CASTER, Enums.Role.SUPPORT]
+		"Philosopher": return [Enums.Role.CASTER, Enums.Role.SUPPORT]
+		"Arithmancer": return [Enums.Role.CASTER]
 		# T1: Wildling
 		"Herbalist": return [Enums.Role.SUPPORT, Enums.Role.HYBRID]
 		"Shaman": return [Enums.Role.CASTER]
@@ -112,7 +112,7 @@ static func get_subtypes(class_id: String) -> Array:
 		"Orator": return [Enums.Subtype.BUFFER, Enums.Subtype.DEBUFFER]
 		# T1: Tinker
 		"Artificer": return [Enums.Subtype.HEALER]
-		"Cosmologist": return [Enums.Subtype.DEBUFFER]
+		"Philosopher": return [Enums.Subtype.DEBUFFER]
 		"Arithmancer": return []
 		# T1: Wildling
 		"Herbalist": return [Enums.Subtype.HEALER, Enums.Subtype.DOT]
@@ -190,7 +190,7 @@ static func get_damage_type(class_id: String) -> Enums.DamageType:
 		"Orator": return Enums.DamageType.MIXED
 		# T1: Tinker
 		"Artificer": return Enums.DamageType.MIXED
-		"Cosmologist": return Enums.DamageType.MAGICAL
+		"Philosopher": return Enums.DamageType.MAGICAL
 		"Arithmancer": return Enums.DamageType.MAGICAL
 		# T1: Wildling
 		"Herbalist": return Enums.DamageType.MAGICAL
@@ -268,7 +268,7 @@ static func get_defense_type(class_id: String) -> Enums.DamageType:
 		"Orator": return Enums.DamageType.MIXED
 		# T1: Tinker
 		"Artificer": return Enums.DamageType.PHYSICAL
-		"Cosmologist": return Enums.DamageType.MIXED
+		"Philosopher": return Enums.DamageType.MIXED
 		"Arithmancer": return Enums.DamageType.MIXED
 		# T1: Wildling
 		"Herbalist": return Enums.DamageType.PHYSICAL
@@ -380,7 +380,7 @@ const _ALL_CLASS_IDS: Array[String] = [
 	"Duelist", "Ranger", "MartialArtist",
 	"Invoker", "Acolyte",
 	"Bard", "Dervish", "Orator",
-	"Artificer", "Cosmologist", "Arithmancer",
+	"Artificer", "Philosopher", "Arithmancer",
 	"Herbalist", "Shaman", "Beastcaller",
 	"Sentinel", "Pathfinder",
 	"Cavalry", "Dragoon", "Mercenary", "Hunter", "Ninja", "Monk",
