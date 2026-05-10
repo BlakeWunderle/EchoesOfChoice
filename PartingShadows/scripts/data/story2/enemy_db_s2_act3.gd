@@ -208,9 +208,9 @@ static func create_fading_wisp(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Fading Wisp", lvl)
 	f.health = EH.es(286, 326, 3, 6, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(62, 69, 2, 3, lvl, 10)
+	f.physical_attack = EH.es(61, 68, 2, 3, lvl, 10)
 	f.physical_defense = EH.es(25, 31, 1, 3, lvl, 10)
-	f.magic_attack = EH.es(65, 74, 2, 3, lvl, 10)
+	f.magic_attack = EH.es(64, 73, 2, 3, lvl, 10)
 	f.magic_defense = EH.es(36, 43, 2, 3, lvl, 10)
 	f.speed = EH.es(41, 47, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
@@ -223,7 +223,7 @@ static func create_dim_guardian(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Dim Guardian", lvl)
 	f.health = EH.es(315, 363, 3, 5, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(21, 30, 3, 3, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(82, 92, 2, 4, lvl, 10)
+	f.physical_attack = EH.es(80, 90, 2, 4, lvl, 10)
 	f.physical_defense = EH.es(33, 39, 1, 3, lvl, 10)
 	f.magic_attack = EH.es(16, 20, 0, 1, lvl, 10)
 	f.magic_defense = EH.es(29, 35, 1, 3, lvl, 10)
@@ -243,7 +243,7 @@ static func create_ward_construct(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Ward Construct", lvl)
 	f.health = EH.es(427, 493, 5, 7, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(21, 30, 3, 3, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(114, 128, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(116, 130, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(57, 66, 2, 4, lvl, 12)
 	f.magic_attack = EH.es(20, 24, 0, 1, lvl, 12)
 	f.magic_defense = EH.es(46, 54, 2, 3, lvl, 12)
@@ -260,7 +260,7 @@ static func create_null_phantom(n: String, lvl: int = 12) -> FighterData:
 	f.mana = EH.es(40, 46, 2, 4, lvl, 12); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 26, 0, 2, lvl, 12)
 	f.physical_defense = EH.es(29, 36, 1, 3, lvl, 12)
-	f.magic_attack = EH.es(93, 104, 3, 5, lvl, 12)
+	f.magic_attack = EH.es(94, 105, 3, 5, lvl, 12)
 	f.magic_defense = EH.es(51, 60, 2, 4, lvl, 12)
 	f.speed = EH.es(42, 49, 2, 3, lvl, 12)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
@@ -273,9 +273,9 @@ static func create_threshold_echo(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Threshold Echo", lvl)
 	f.health = EH.es(348, 398, 4, 6, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(32, 40, 2, 4, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(82, 93, 2, 4, lvl, 12)
+	f.physical_attack = EH.es(83, 94, 2, 4, lvl, 12)
 	f.physical_defense = EH.es(35, 44, 2, 3, lvl, 12)
-	f.magic_attack = EH.es(80, 91, 2, 4, lvl, 12)
+	f.magic_attack = EH.es(81, 92, 2, 4, lvl, 12)
 	f.magic_defense = EH.es(35, 44, 2, 3, lvl, 12)
 	f.speed = EH.es(43, 50, 2, 3, lvl, 12)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 20

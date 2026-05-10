@@ -62,7 +62,7 @@ static func create_oblivion_shade(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(34, 40, 2, 4, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(30, 38, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(21, 30, 1, 3, lvl, 14)
-	f.magic_attack = EH.es(109, 123, 3, 4, lvl, 14)
+	f.magic_attack = EH.es(113, 127, 3, 4, lvl, 14)
 	f.magic_defense = EH.es(45, 54, 2, 4, lvl, 14)
 	f.speed = EH.es(51, 58, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 4; f.dodge_chance = 25
@@ -77,7 +77,7 @@ static func create_memory_reaper(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(38, 46, 2, 4, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(30, 38, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(28, 37, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(123, 138, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(127, 142, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(52, 60, 2, 4, lvl, 14)
 	f.speed = EH.es(43, 50, 2, 3, lvl, 14)
 	f.crit_chance = 20; f.crit_damage = 4; f.dodge_chance = 17
@@ -94,7 +94,7 @@ static func create_void_iris(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(38, 48, 1, 3, lvl, 14)
 	f.magic_attack = EH.es(118, 132, 3, 4, lvl, 14)
 	f.magic_defense = EH.es(65, 75, 2, 4, lvl, 14)
-	f.speed = EH.es(65, 72, 2, 4, lvl, 14)
+	f.speed = EH.es(63, 70, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EABL.void_lash(), EABL.refraction_link(), EABL.dispel_will(), EABL.null_mending()]
 	f.flavor_text = "A fragment of the Eye itself, torn loose and given independent hunger. It amplifies its master's power and scatters void light across all who stand before the Eye."
@@ -105,7 +105,7 @@ static func create_thoughtform_knight(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Thoughtform Knight", lvl)
 	f.health = EH.es(542, 616, 6, 8, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(42, 51, 3, 4, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(135, 151, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(137, 153, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(64, 75, 3, 5, lvl, 14)
 	f.magic_attack = EH.es(26, 33, 1, 2, lvl, 14)
 	f.magic_defense = EH.es(52, 61, 2, 4, lvl, 14)
@@ -128,7 +128,7 @@ static func create_the_iris(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(61, 72, 3, 5, lvl, 15)
 	f.magic_attack = EH.es(155, 171, 4, 7, lvl, 15)
 	f.magic_defense = EH.es(77, 87, 3, 5, lvl, 15)
-	f.speed = EH.es(59, 65, 1, 3, lvl, 15)
+	f.speed = EH.es(57, 63, 1, 3, lvl, 15)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EABL.prismatic_blast(), EABL.refraction_beam(), EABL.crystalline_ward(), EABL.oppressive_gaze(), EABL.memory_erosion()]
 	f.flavor_text = "The Eye's outer defense, a blazing lens of concentrated perception. Light bends and shatters around it in prismatic fury."
@@ -139,7 +139,7 @@ static func create_the_lidless_eye(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "The Lidless Eye", lvl)
 	f.health = EH.es(857, 974, 8, 11, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(86, 98, 4, 6, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(171, 189, 5, 8, lvl, 15)
+	f.physical_attack = EH.es(174, 192, 5, 8, lvl, 15)
 	f.physical_defense = EH.es(64, 76, 3, 5, lvl, 15)
 	f.magic_attack = EH.es(62, 72, 1, 3, lvl, 15)
 	f.magic_defense = EH.es(82, 96, 4, 6, lvl, 15)

@@ -20,9 +20,9 @@ static func create_abyssal_dreamer(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(38, 46, 1, 2, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 15)
 	f.physical_defense = EH.es(28, 36, 2, 3, lvl, 15)
-	f.magic_attack = EH.es(127, 138, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(134, 145, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(46, 53, 2, 4, lvl, 15)
-	f.speed = EH.es(41, 47, 2, 3, lvl, 15)
+	f.speed = EH.es(44, 50, 2, 3, lvl, 15)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EAB.void_pulse(), EAB.deep_slumber()]
 	f.flavor_text = "A figure that drifts through the deepest layers of the dream, where light never reaches. Its void pulses drag victims into a slumber from which few return."
@@ -33,11 +33,11 @@ static func create_thread_devourer(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "Thread Devourer", lvl)
 	f.health = EH.es(430, 489, 5, 8, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(34, 40, 2, 3, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(103, 114, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(108, 119, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(39, 46, 2, 3, lvl, 15)
-	f.magic_attack = EH.es(107, 118, 2, 4, lvl, 15)
+	f.magic_attack = EH.es(112, 123, 2, 4, lvl, 15)
 	f.magic_defense = EH.es(35, 41, 2, 3, lvl, 15)
-	f.speed = EH.es(41, 47, 2, 3, lvl, 15)
+	f.speed = EH.es(43, 49, 2, 3, lvl, 15)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EAB.thread_bite(), EAB.unravel_ward()]
 	f.flavor_text = "A ravenous creature that feeds on dream-threads themselves, growing stronger with each strand it consumes. It tears apart protective wards with savage hunger."
@@ -48,7 +48,7 @@ static func create_slumbering_colossus(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "Slumbering Colossus", lvl)
 	f.health = EH.es(526, 592, 6, 9, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(108, 120, 3, 5, lvl, 15)
+	f.physical_attack = EH.es(113, 125, 3, 5, lvl, 15)
 	f.physical_defense = EH.es(57, 65, 2, 4, lvl, 15)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 15)
 	f.magic_defense = EH.es(35, 43, 2, 3, lvl, 15)
@@ -70,9 +70,9 @@ static func create_dream_priest(n: String, lvl: int = 16) -> FighterData:
 	f.mana = EH.es(44, 54, 1, 2, lvl, 16); f.max_mana = f.mana
 	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 16)
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 16)
-	f.magic_attack = EH.es(101, 114, 3, 5, lvl, 16)
+	f.magic_attack = EH.es(109, 122, 3, 5, lvl, 16)
 	f.magic_defense = EH.es(62, 72, 2, 4, lvl, 16)
-	f.speed = EH.es(51, 57, 2, 3, lvl, 16)
+	f.speed = EH.es(54, 60, 2, 3, lvl, 16)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.dream_suture(), EAB.condemning_light()]
 	f.flavor_text = "A cult priest who projects their consciousness into the dream to intercept intruders. Their sacred sutures mend wounded allies while condemning light punishes the faithless."
@@ -82,8 +82,8 @@ static func create_dream_priest(n: String, lvl: int = 16) -> FighterData:
 static func create_astral_enforcer(n: String, lvl: int = 16) -> FighterData:
 	var f := EH.base(n, "Astral Enforcer", lvl)
 	f.health = EH.es(480, 552, 6, 9, lvl, 16); f.max_health = f.health
-	f.mana = EH.es(39, 48, 1, 1, lvl, 16); f.max_mana = f.mana
-	f.physical_attack = EH.es(141, 157, 3, 6, lvl, 16)
+	f.mana = EH.es(45, 54, 1, 1, lvl, 16); f.max_mana = f.mana
+	f.physical_attack = EH.es(150, 166, 3, 6, lvl, 16)
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 16)
 	f.magic_attack = EH.es(16, 20, 0, 1, lvl, 16)
 	f.magic_defense = EH.es(28, 36, 2, 3, lvl, 16)
@@ -114,7 +114,7 @@ static func create_oneiric_guardian(n: String, lvl: int = 16) -> FighterData:
 	var f := EH.base(n, "Oneiric Guardian", lvl)
 	f.health = EH.es(576, 659, 7, 10, lvl, 16); f.max_health = f.health
 	f.mana = EH.es(30, 39, 1, 1, lvl, 16); f.max_mana = f.mana
-	f.physical_attack = EH.es(82, 92, 2, 4, lvl, 16)
+	f.physical_attack = EH.es(90, 100, 2, 4, lvl, 16)
 	f.physical_defense = EH.es(68, 78, 2, 4, lvl, 16)
 	f.magic_attack = EH.es(16, 20, 0, 1, lvl, 16)
 	f.magic_defense = EH.es(30, 36, 2, 3, lvl, 16)
@@ -136,9 +136,9 @@ static func create_memory_eater(n: String, lvl: int = 17) -> FighterData:
 	f.mana = EH.es(40, 48, 1, 2, lvl, 17); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 26, 0, 2, lvl, 17)
 	f.physical_defense = EH.es(37, 45, 2, 4, lvl, 17)
-	f.magic_attack = EH.es(140, 154, 3, 6, lvl, 17)
+	f.magic_attack = EH.es(141, 155, 3, 6, lvl, 17)
 	f.magic_defense = EH.es(58, 66, 2, 4, lvl, 17)
-	f.speed = EH.es(40, 46, 2, 3, lvl, 17)
+	f.speed = EH.es(41, 47, 2, 3, lvl, 17)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 25
 	f.abilities = [EAB.devour_memory(), EAB.amnesia_fog()]
 	f.flavor_text = "A predator that feeds on memories, leaving its victims hollow and disoriented. It breathes a fog of amnesia that strips away skills, names, and the will to resist."
@@ -149,7 +149,7 @@ static func create_nightmare_sentinel(n: String, lvl: int = 17) -> FighterData:
 	var f := EH.base(n, "Nightmare Sentinel", lvl)
 	f.health = EH.es(539, 618, 6, 9, lvl, 17); f.max_health = f.health
 	f.mana = EH.es(33, 42, 1, 2, lvl, 17); f.max_mana = f.mana
-	f.physical_attack = EH.es(132, 146, 3, 5, lvl, 17)
+	f.physical_attack = EH.es(133, 147, 3, 5, lvl, 17)
 	f.physical_defense = EH.es(66, 74, 2, 4, lvl, 17)
 	f.magic_attack = EH.es(20, 24, 0, 1, lvl, 17)
 	f.magic_defense = EH.es(41, 50, 2, 3, lvl, 17)
@@ -164,9 +164,9 @@ static func create_anchor_chain(n: String, lvl: int = 17) -> FighterData:
 	var f := EH.base(n, "Anchor Chain", lvl)
 	f.health = EH.es(502, 576, 6, 9, lvl, 17); f.max_health = f.health
 	f.mana = EH.es(34, 42, 2, 3, lvl, 17); f.max_mana = f.mana
-	f.physical_attack = EH.es(111, 123, 3, 5, lvl, 17)
+	f.physical_attack = EH.es(113, 125, 3, 5, lvl, 17)
 	f.physical_defense = EH.es(59, 67, 2, 4, lvl, 17)
-	f.magic_attack = EH.es(126, 139, 3, 5, lvl, 17)
+	f.magic_attack = EH.es(128, 141, 3, 5, lvl, 17)
 	f.magic_defense = EH.es(59, 67, 2, 4, lvl, 17)
 	f.speed = EH.es(31, 37, 2, 3, lvl, 17)
 	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 17
