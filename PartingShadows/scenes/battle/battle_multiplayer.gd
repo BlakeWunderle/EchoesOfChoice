@@ -5,6 +5,7 @@ extends RefCounted
 ## @rpc annotations must stay on battle.gd (Node in tree); this class
 ## holds the actual implementation that those thin wrappers delegate to.
 
+const Enums := preload("res://scripts/data/enums.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityData := preload("res://scripts/data/ability_data.gd")
 const ItemData := preload("res://scripts/data/item_data.gd")
@@ -150,6 +151,15 @@ func broadcast_state_sync() -> void:
 
 
 func serialize_fighter_combat(f: FighterData) -> Dictionary:
+	var mods: Array = []
+	for mod: Dictionary in f.modified_stats:
+		mods.append({
+			"stat": mod["stat"] as int,
+			"modifier": mod["modifier"],
+			"turns": mod["turns"],
+			"is_negative": mod["is_negative"],
+			"damage_per_turn": mod.get("damage_per_turn", 0),
+		})
 	return {
 		"hp": f.health,
 		"max_hp": f.max_health,
@@ -164,6 +174,7 @@ func serialize_fighter_combat(f: FighterData) -> Dictionary:
 		"crit": f.crit_chance,
 		"dodge": f.dodge_chance,
 		"ult_charge": f.ultimate_charge,
+		"mods": mods,
 	}
 
 
@@ -181,6 +192,16 @@ func apply_fighter_combat(f: FighterData, data: Dictionary) -> void:
 	f.crit_chance = data.get("crit", f.crit_chance)
 	f.dodge_chance = data.get("dodge", f.dodge_chance)
 	f.ultimate_charge = data.get("ult_charge", f.ultimate_charge)
+	var mods: Array = data.get("mods", [])
+	f.modified_stats.clear()
+	for mod in mods:
+		f.modified_stats.append({
+			"stat": mod["stat"] as Enums.StatType,
+			"modifier": int(mod["modifier"]),
+			"turns": int(mod["turns"]),
+			"is_negative": bool(mod["is_negative"]),
+			"damage_per_turn": int(mod.get("damage_per_turn", 0)),
+		})
 
 
 # =============================================================================
