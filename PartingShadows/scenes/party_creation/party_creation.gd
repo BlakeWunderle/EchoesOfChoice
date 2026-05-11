@@ -8,6 +8,7 @@ const NameInput := preload("res://scripts/ui/name_input.gd")
 const ChoiceMenu := preload("res://scripts/ui/choice_menu.gd")
 const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
 const WaitingOverlay := preload("res://scripts/ui/waiting_overlay.gd")
+const ReadyGate := preload("res://scripts/ui/ready_gate.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const FighterDB := preload("res://scripts/data/fighter_db.gd")
 const ClassInfoPanel := preload("res://scripts/ui/class_info_panel.gd")
@@ -60,6 +61,8 @@ var _portrait_back_btn: Button
 var _player_indicator: Label
 var _equip_label: Label
 var _class_info_panel: ClassInfoPanel
+var _ready_gate: ReadyGate
+var _pending_advance: Callable
 
 
 func _is_s2() -> bool:
@@ -91,6 +94,7 @@ func _ready() -> void:
 	if NetManager.is_multiplayer_active:
 		NetManager.player_left.connect(_on_player_left)
 		NetManager.session_ended.connect(_on_session_ended)
+		NetManager.peer_scene_ready.connect(_on_peer_scene_ready)
 		_tip_overlay.show_tip_once("multiplayer_intro",
 			"In multiplayer, each player controls their own party " +
 			"members. Everyone must confirm Ready before the game " +
@@ -163,6 +167,11 @@ func _build_ui() -> void:
 	_choice_menu.option_focused.connect(_on_class_option_focused)
 	_choice_menu.visible = false
 	_vbox.add_child(_choice_menu)
+
+	_ready_gate = ReadyGate.new()
+	_ready_gate.visible = false
+	_ready_gate.all_ready.connect(_on_all_ready)
+	_vbox.add_child(_ready_gate)
 
 	# Portrait preview (shown during portrait selection)
 	_portrait_container = HBoxContainer.new()
@@ -355,11 +364,26 @@ func _set_state(new_state: State) -> void:
 		match _state:
 			State.NAME_1, State.NAME_2, State.NAME_3:
 				_name_input.show_mirror(_get_name_prompt())
+			State.CLASS_1, State.CLASS_2, State.CLASS_3:
+				if _is_s2():
+					_show_dialogue(["Something stirs. A reflex. A memory buried in muscle and bone. What comes naturally?"])
+				elif _is_s3():
+					_show_dialogue(["'And what do you do for a living?' the innkeeper asks, refilling their cup."])
+				else:
+					_show_dialogue(["What is your calling?"])
+			State.PORTRAIT_1, State.PORTRAIT_2, State.PORTRAIT_3:
+				var owner_name: String = NetManager.get_fighter_owner_name(char_idx)
+				_waiting_overlay.show_waiting(owner_name)
+			State.EQUIP_INTRO_1, State.EQUIP_INTRO_2, State.EQUIP_INTRO_3:
+				var ci: int = _state_to_char_index(_state)
+				_show_dialogue(PCText.get_equip_text(GameState.current_story_id, ci))
 		return
 
 	match _state:
 		State.INTRO:
 			_show_dialogue(PCText.get_intro_text(GameState.current_story_id))
+			if NetManager.is_multiplayer_active:
+				_open_gate_early(_do_shared_advance)
 		State.NAME_1, State.NAME_2, State.NAME_3:
 			_name_input.show_prompt(_get_name_prompt())
 		State.CLASS_1, State.CLASS_2, State.CLASS_3:
@@ -384,12 +408,20 @@ func _set_state(new_state: State) -> void:
 			var fighter: FighterData = _party.back()
 			_show_dialogue(["%s the %s joins the party!" % [
 				fighter.character_name, fighter.character_type]])
+			if NetManager.is_multiplayer_active:
+				_open_gate_early(_do_shared_advance)
 		State.BRIDGE_1:
 			_show_dialogue(PCText.get_bridge_1_text(GameState.current_story_id))
+			if NetManager.is_multiplayer_active:
+				_open_gate_early(_do_shared_advance)
 		State.BRIDGE_2:
 			_show_dialogue(PCText.get_bridge_2_text(GameState.current_story_id))
+			if NetManager.is_multiplayer_active:
+				_open_gate_early(_do_shared_advance)
 		State.OUTRO:
 			_show_dialogue(PCText.get_outro_text(GameState.current_story_id))
+			if NetManager.is_multiplayer_active:
+				_open_gate_early(_do_shared_advance)
 		State.DONE:
 			_finish()
 
@@ -399,17 +431,19 @@ func _show_dialogue(lines: Array) -> void:
 
 
 func _on_text_finished() -> void:
-	# In multiplayer, only the host advances dialogue states.
-	# Exception: guests can advance CLASS dialogue for their own characters
-	# so they see the class choice menu locally.
-	if NetManager.is_multiplayer_active and not NetManager.is_host:
-		var is_own_input: bool = (
-			_state in [State.CLASS_1, State.CLASS_2, State.CLASS_3,
-				State.EQUIP_INTRO_1, State.EQUIP_INTRO_2, State.EQUIP_INTRO_3]
-			and _is_my_character_state()
-		)
-		if not is_own_input:
+	if NetManager.is_multiplayer_active:
+		# Shared dialogue: both players mark ready, gate callback advances
+		if _state in [State.INTRO, State.CONFIRM_1, State.CONFIRM_2, State.CONFIRM_3,
+				State.BRIDGE_1, State.BRIDGE_2, State.OUTRO]:
+			_mark_self_ready()
 			return
+
+		# Per-character dialogue (CLASS/EQUIP_INTRO)
+		if _state in [State.CLASS_1, State.CLASS_2, State.CLASS_3,
+				State.EQUIP_INTRO_1, State.EQUIP_INTRO_2, State.EQUIP_INTRO_3]:
+			if not _is_my_character_state():
+				return  # Remote viewer: wait for mirror RPC from active player
+			# Own character: fall through to show choices
 
 	match _state:
 		State.INTRO:
@@ -455,31 +489,38 @@ func _on_name_entered(player_name: String) -> void:
 	_current_name = player_name
 	_name_input.visible = false
 
+	var greeting: String = ""
 	match _state:
 		State.NAME_1:
 			if _is_s2():
-				_show_dialogue(["'%s.' The name feels right. But nothing else does." % player_name])
+				greeting = "'%s.' The name feels right. But nothing else does." % player_name
 			elif _is_s3():
-				_show_dialogue(["'%s.' A firm handshake. The firelight catches old scars on their knuckles." % player_name])
+				greeting = "'%s.' A firm handshake. The firelight catches old scars on their knuckles." % player_name
 			else:
-				_show_dialogue(["'Greetings, %s. You look like someone who can handle themselves.'" % player_name])
+				greeting = "'Greetings, %s. You look like someone who can handle themselves.'" % player_name
+			_show_dialogue([greeting])
 			_state = State.CLASS_1
 		State.NAME_2:
 			if _is_s2():
-				_show_dialogue(["'%s.' Another name reclaimed from the dark." % player_name])
+				greeting = "'%s.' Another name reclaimed from the dark." % player_name
 			elif _is_s3():
-				_show_dialogue(["'%s.' They pull up a chair without being invited. Road dust on their boots." % player_name])
+				greeting = "'%s.' They pull up a chair without being invited. Road dust on their boots." % player_name
 			else:
-				_show_dialogue(["'Greetings, %s. Good, we'll need the help.'" % player_name])
+				greeting = "'Greetings, %s. Good, we'll need the help.'" % player_name
+			_show_dialogue([greeting])
 			_state = State.CLASS_2
 		State.NAME_3:
 			if _is_s2():
-				_show_dialogue(["'%s.' Three names. Three strangers. It's a start." % player_name])
+				greeting = "'%s.' Three names. Three strangers. It's a start." % player_name
 			elif _is_s3():
-				_show_dialogue(["'%s.' Three travelers at one table. The innkeeper smiles as if she expected it." % player_name])
+				greeting = "'%s.' Three travelers at one table. The innkeeper smiles as if she expected it." % player_name
 			else:
-				_show_dialogue(["'Greetings, %s. That makes three. That should be enough.'" % player_name])
+				greeting = "'Greetings, %s. That makes three. That should be enough.'" % player_name
+			_show_dialogue([greeting])
 			_state = State.CLASS_3
+
+	if NetManager.is_multiplayer_active and not greeting.is_empty():
+		_rpc_name_greeting.rpc(greeting)
 
 
 func _on_class_selected(index: int) -> void:
@@ -730,6 +771,47 @@ func _do_finish() -> void:
 
 
 # =============================================================================
+# Multiplayer ready gate
+# =============================================================================
+
+func _open_gate_early(callback: Callable) -> void:
+	if not NetManager.is_multiplayer_active:
+		return
+	_pending_advance = callback
+	_ready_gate.start_online(NetManager.get_connected_peer_count())
+
+
+func _mark_self_ready() -> void:
+	var my_idx: int = NetManager.get_my_peer_index()
+	_ready_gate.mark_ready(my_idx)
+	NetManager.notify_scene_ready(my_idx)
+
+
+func _on_peer_scene_ready(player_index: int) -> void:
+	_ready_gate.mark_ready(player_index)
+
+
+func _on_all_ready() -> void:
+	if _pending_advance.is_valid():
+		var cb := _pending_advance
+		_pending_advance = Callable()
+		cb.call_deferred()
+
+
+func _do_shared_advance() -> void:
+	if NetManager.is_multiplayer_active and not NetManager.is_host:
+		return
+	match _state:
+		State.INTRO: _mp_set_state(State.NAME_1)
+		State.CONFIRM_1: _mp_set_state(State.BRIDGE_1)
+		State.CONFIRM_2: _mp_set_state(State.BRIDGE_2)
+		State.CONFIRM_3: _mp_set_state(State.OUTRO)
+		State.BRIDGE_1: _mp_set_state(State.NAME_2)
+		State.BRIDGE_2: _mp_set_state(State.NAME_3)
+		State.OUTRO: _mp_set_state(State.DONE)
+
+
+# =============================================================================
 # Multiplayer disconnect
 # =============================================================================
 
@@ -770,6 +852,14 @@ func _mp_set_state(new_state: State) -> void:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_sync_state(state_value: int) -> void:
 	_set_state(state_value as State)
+
+
+## Any -> All: Broadcast name greeting text so both players see it.
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_name_greeting(greeting: String) -> void:
+	_name_input.visible = false
+	_waiting_overlay.hide_waiting()
+	_show_dialogue([greeting])
 
 
 ## Guest -> Host: Submit a created character.
