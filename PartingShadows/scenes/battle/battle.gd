@@ -261,6 +261,7 @@ func _tick_loop() -> void:
 			if not _turn_queue.is_empty() and _turn_queue[0] == actor:
 				_turn_queue.pop_front()
 			_display_turn_order()
+			_broadcast_turn_update()
 
 			_engine.reset_modified_stat(actor)
 			await _drain_messages()
@@ -353,6 +354,7 @@ func _tick_loop() -> void:
 		_engine.reset_turns()
 		_compute_turn_order()
 		_display_turn_order()
+		_broadcast_turn_update()
 
 
 func _is_ability_available(fighter: FighterData, ability: AbilityData) -> bool:
@@ -1151,6 +1153,32 @@ func _highlight_active_card(fighter: FighterData) -> void:
 	_display.highlight_active_card(fighter)
 
 
+func _broadcast_turn_update() -> void:
+	if not NetManager.is_multiplayer_active or not NetManager.is_host:
+		return
+	var active_idx: int = -1
+	var active_is_enemy: bool = false
+	if _current_actor:
+		active_idx = _all_enemies.find(_current_actor)
+		if active_idx >= 0:
+			active_is_enemy = true
+		else:
+			active_idx = _all_party.find(_current_actor)
+	_rpc_turn_update.rpc(active_idx, active_is_enemy, _build_turn_order_text())
+
+
+func _build_turn_order_text() -> String:
+	var parts: Array[String] = []
+	if _current_actor != null:
+		parts.append("[color=lime]%s[/color]" % _current_actor.character_name)
+	for f: FighterData in _turn_queue:
+		if _engine.units.has(f):
+			parts.append("[color=cyan]%s[/color]" % f.character_name)
+		else:
+			parts.append("[color=salmon]%s[/color]" % f.character_name)
+	return "[color=gray]Turn Order:[/color]  " + "  >  ".join(parts)
+
+
 # =============================================================================
 # Multiplayer RPCs (logic delegated to battle_multiplayer.gd)
 # =============================================================================
@@ -1211,6 +1239,20 @@ func _rpc_combat_event(target_idx: int, is_enemy: bool, amount: int, event_type:
 			target = _all_party[target_idx]
 	if target:
 		_display.on_combat_event(target, amount, event_type)
+
+@rpc("authority", "call_remote", "reliable")
+func _rpc_turn_update(active_idx: int, active_is_enemy: bool, turn_text: String) -> void:
+	var fighter: FighterData = null
+	if active_idx >= 0:
+		if active_is_enemy:
+			if active_idx < _all_enemies.size():
+				fighter = _all_enemies[active_idx]
+		else:
+			if active_idx < _all_party.size():
+				fighter = _all_party[active_idx]
+	_highlight_active_card(fighter)
+	_turn_order_label.clear()
+	_turn_order_label.append_text(turn_text)
 
 func _on_peer_left_mid_battle(peer_id: int, player_name: String) -> void:
 	_mp.on_peer_left_mid_battle(peer_id, player_name)
