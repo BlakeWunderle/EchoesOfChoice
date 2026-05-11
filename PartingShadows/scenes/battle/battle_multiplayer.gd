@@ -282,15 +282,15 @@ func handle_battle_ended(won: bool, stats_data: Array = []) -> void:
 		SFXManager.play(SFXManager.Category.UI_FANFARE)
 		await _battle.get_tree().create_timer(1.0).timeout
 		await _battle._show_battle_summary()
-		# Display loot drops received from host
+		_battle._pre_open_summary_gate()
 		if _battle._pending_loot_items.size() > 0 or _battle._pending_loot_gold > 0:
 			GameState.inventory.add_gold(_battle._pending_loot_gold)
 			await _battle._display.show_loot_drops(
 				_battle._pending_loot_items, _battle._pending_loot_gold)
 			_battle._pending_loot_items.clear()
 			_battle._pending_loot_gold = 0
+		await _battle._wait_post_loot_ready()
 		GameState.advance_to_post_battle()
-		SceneManager.change_scene("res://scenes/narrative/narrative.tscn", 0.4, true)
 	else:
 		await _battle.get_tree().create_timer(2.0).timeout
 		GameState.go_to_ending(false)

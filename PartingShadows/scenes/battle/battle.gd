@@ -1039,10 +1039,16 @@ func _end_battle() -> void:
 		_display.show_victory_flash()
 		await get_tree().create_timer(2.0, false).timeout
 		await _show_battle_summary()
+		if NetManager.is_multiplayer_active:
+			_pre_open_summary_gate()
 		if loot_items.size() > 0 or loot_gold > 0:
 			GameState.inventory.add_gold(loot_gold)
 			await _display.show_loot_drops(loot_items, loot_gold)
+		if NetManager.is_multiplayer_active:
+			await _wait_post_loot_ready()
 		GameState.advance_to_post_battle()
+		if NetManager.is_multiplayer_active and NetManager.is_host:
+			NetManager.change_scene_for_peers("res://scenes/narrative/narrative.tscn")
 		SceneManager.change_scene("res://scenes/narrative/narrative.tscn", 0.4, true)
 	else:
 		GameLog.info("Battle lost: %s" % GameState.current_battle_id)
@@ -1090,8 +1096,10 @@ func _wait_summary_ready() -> void:
 	_summary_gate.mark_ready(my_idx)
 	NetManager.notify_scene_ready(my_idx)
 	GameLog.info("Summary gate: marked self ready (idx=%d, is_host=%s)" % [my_idx, NetManager.is_host])
-	# Guests don't wait — host will send change_scene_for_peers
 	if not NetManager.is_host:
+		var g: ReadyGate = _summary_gate
+		_summary_gate = null
+		g.queue_free()
 		return
 	# If all players were already ready, gate hid itself — skip await
 	if not _summary_gate.visible:
@@ -1115,6 +1123,30 @@ func _on_summary_peer_ready(player_index: int) -> void:
 	else:
 		if player_index not in _pending_summary_ready:
 			_pending_summary_ready.append(player_index)
+
+
+func _wait_post_loot_ready() -> void:
+	var my_idx: int = NetManager.get_my_peer_index()
+	_summary_gate.mark_ready(my_idx)
+	NetManager.notify_scene_ready(my_idx)
+	GameLog.info("Post-loot gate: marked self ready (idx=%d, is_host=%s)" % [my_idx, NetManager.is_host])
+	if not NetManager.is_host:
+		var g: ReadyGate = _summary_gate
+		_summary_gate = null
+		g.queue_free()
+		return
+	if not _summary_gate.visible:
+		GameLog.info("Post-loot gate: all ready immediately")
+		var g: ReadyGate = _summary_gate
+		_summary_gate = null
+		g.queue_free()
+		return
+	GameLog.info("Post-loot gate: host waiting for peers")
+	await _summary_gate.all_ready
+	GameLog.info("Post-loot gate: all ready")
+	var g2: ReadyGate = _summary_gate
+	_summary_gate = null
+	g2.queue_free()
 
 
 func _on_fighter_died(fighter: FighterData) -> void:
