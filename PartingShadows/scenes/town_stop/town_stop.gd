@@ -259,8 +259,11 @@ func _start_equipping() -> void:
 	var handler := TownEquipmentHandler.new({
 		"party": GameState.party,
 		"story_id": GameState.current_story_id,
+		"is_multiplayer": NetManager.is_multiplayer_active,
+		"is_host": NetManager.is_host if NetManager.is_multiplayer_active else true,
 	})
 	handler.phase_finished.connect(_on_equip_finished)
+	handler.rpc_requested.connect(_forward_equip_rpc)
 	_active_handler = handler
 	add_child(handler)
 
@@ -270,6 +273,32 @@ func _on_equip_finished() -> void:
 		_active_handler.queue_free()
 		_active_handler = null
 	_start_ultimate_select()
+
+
+func _forward_equip_rpc(method: String, args: Array) -> void:
+	_do_forward_equip_rpc.call_deferred(method, args)
+
+
+func _do_forward_equip_rpc(method: String, args: Array) -> void:
+	match method:
+		"begin_equipping":
+			_rpc_begin_equipping.rpc()
+		"show_equip_mirror":
+			_rpc_show_equip_mirror.rpc(args[0], args[1])
+		"request_equip_slot":
+			_rpc_request_equip_slot.rpc_id(args[0], args[1], args[2])
+		"submit_equip_slot":
+			_rpc_submit_equip_slot.rpc_id(1, args[0], args[1])
+		"show_equip_upgrade_mirror":
+			_rpc_show_equip_upgrade_mirror.rpc(args[0], args[1])
+		"request_equip_upgrade":
+			_rpc_request_equip_upgrade.rpc_id(args[0], args[1], args[2])
+		"submit_equip_upgrade":
+			_rpc_submit_equip_upgrade.rpc_id(1, args[0], args[1])
+		"equip_applied":
+			_rpc_equip_applied.rpc(args[0], args[1])
+		"mirror_equip_focus":
+			_rpc_mirror_focus.rpc(args[0])
 
 
 func _start_ultimate_select() -> void:
@@ -591,6 +620,66 @@ func _rpc_shop_opened(items_json: String) -> void:
 func _rpc_shop_closed() -> void:
 	if _active_handler and _active_handler.has_method("on_rpc_shop_closed"):
 		_active_handler.on_rpc_shop_closed()
+
+
+## Host -> All: Begin equipment upgrade phase.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_begin_equipping() -> void:
+	if not _active_handler:
+		_start_equipping()
+
+
+## Host -> All: Show equipment slots as read-only mirror.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_show_equip_mirror(party_index: int, char_name: String) -> void:
+	if _active_handler and _active_handler.has_method("on_rpc_show_equip_mirror"):
+		_active_handler.on_rpc_show_equip_mirror(party_index, char_name)
+
+
+## Host -> Guest: Request the owning player to pick an equipment slot.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_request_equip_slot(party_index: int, char_name: String) -> void:
+	if _active_handler and _active_handler.has_method("on_rpc_request_equip_slot"):
+		_active_handler.on_rpc_request_equip_slot(party_index, char_name)
+
+
+## Guest -> Host: Submit chosen equipment slot.
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_submit_equip_slot(party_index: int, slot_index: int) -> void:
+	if not NetManager.is_host:
+		return
+	if _active_handler and _active_handler.has_method("on_rpc_submit_equip_slot"):
+		_active_handler.on_rpc_submit_equip_slot(party_index, slot_index)
+
+
+## Host -> All: Show upgrade options as read-only mirror after slot selected.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_show_equip_upgrade_mirror(party_index: int, slot_name: String) -> void:
+	if _active_handler and _active_handler.has_method("on_rpc_show_equip_upgrade_mirror"):
+		_active_handler.on_rpc_show_equip_upgrade_mirror(party_index, slot_name)
+
+
+## Host -> Guest: Request the owning player to pick an upgrade.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_request_equip_upgrade(party_index: int, slot_name: String) -> void:
+	if _active_handler and _active_handler.has_method("on_rpc_request_equip_upgrade"):
+		_active_handler.on_rpc_request_equip_upgrade(party_index, slot_name)
+
+
+## Guest -> Host: Submit chosen equipment upgrade.
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_submit_equip_upgrade(party_index: int, choice_id: String) -> void:
+	if not NetManager.is_host:
+		return
+	if _active_handler and _active_handler.has_method("on_rpc_submit_equip_upgrade"):
+		_active_handler.on_rpc_submit_equip_upgrade(party_index, choice_id)
+
+
+## Host -> All: Broadcast equipment upgrade result so all peers update.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_equip_applied(party_index: int, choice_id: String) -> void:
+	if _active_handler and _active_handler.has_method("on_rpc_equip_applied"):
+		_active_handler.on_rpc_equip_applied(party_index, choice_id)
 
 
 ## Host -> All: Begin ultimate selection phase.
