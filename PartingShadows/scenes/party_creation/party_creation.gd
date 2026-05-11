@@ -832,6 +832,7 @@ func _rpc_party_finalized(party_data: Array) -> void:
 func _rpc_show_class_mirror(char_idx: int, owner_name: String) -> void:
 	if NetManager.is_my_fighter(char_idx):
 		return  # I'm the one choosing, ignore mirror
+	_name_input.visible = false
 	_waiting_overlay.hide_waiting()
 	_dialogue.visible = false
 	var mirror_options: Array[Dictionary] = []
@@ -861,6 +862,8 @@ func _rpc_show_equip_mirror(char_idx: int, owner_name: String,
 		slot_type: String) -> void:
 	if NetManager.is_my_fighter(char_idx):
 		return
+	_name_input.visible = false
+	_class_info_panel.visible = false
 	_waiting_overlay.hide_waiting()
 	_dialogue.visible = false
 	var choices: Array[Dictionary]
