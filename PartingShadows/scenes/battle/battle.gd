@@ -1011,16 +1011,14 @@ func _end_battle() -> void:
 		loot_items = loot.items
 		loot_gold = loot.gold
 
-	# Broadcast battle end to guests
+	# Broadcast battle end to guests (include loot in same RPC to avoid race)
 	if NetManager.is_multiplayer_active and NetManager.is_host:
 		_broadcast_state_sync()
 		var stats_data: Array = _serialize_battle_stats()
-		_rpc_battle_ended.rpc(won, stats_data)
-		if won and (loot_items.size() > 0 or loot_gold > 0):
-			var item_ids: Array = []
-			for item: ItemData in loot_items:
-				item_ids.append(item.item_id)
-			_rpc_loot_dropped.rpc(item_ids, loot_gold)
+		var item_ids: Array = []
+		for item: ItemData in loot_items:
+			item_ids.append(item.item_id)
+		_rpc_battle_ended.rpc(won, stats_data, item_ids, loot_gold)
 
 	if won:
 		GameLog.info("Battle won: %s" % GameState.current_battle_id)
@@ -1174,7 +1172,8 @@ func _rpc_submit_action(action: Dictionary) -> void:
 	_mp.handle_submit_action(action)
 
 @rpc("authority", "call_remote", "reliable")
-func _rpc_battle_ended(won: bool, stats_data: Array = []) -> void:
+func _rpc_battle_ended(won: bool, stats_data: Array = [], item_ids: Array = [], loot_gold: int = 0) -> void:
+	_mp.handle_loot_dropped(item_ids, loot_gold)
 	_mp.handle_battle_ended(won, stats_data)
 
 
@@ -1195,11 +1194,6 @@ func _serialize_battle_stats() -> Array:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_combat_log(text: String) -> void:
 	_mp.handle_combat_log(text)
-
-@rpc("authority", "call_remote", "reliable")
-func _rpc_loot_dropped(item_ids: Array, gold: int) -> void:
-	_mp.handle_loot_dropped(item_ids, gold)
-
 
 func _on_peer_left_mid_battle(peer_id: int, player_name: String) -> void:
 	_mp.on_peer_left_mid_battle(peer_id, player_name)
