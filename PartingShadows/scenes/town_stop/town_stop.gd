@@ -277,8 +277,11 @@ func _start_ultimate_select() -> void:
 	var handler := TownUltimateHandler.new({
 		"party": GameState.party,
 		"battle_id": GameState.current_battle.battle_id,
+		"is_multiplayer": NetManager.is_multiplayer_active,
+		"is_host": NetManager.is_host if NetManager.is_multiplayer_active else true,
 	})
 	handler.phase_finished.connect(_on_ult_finished)
+	handler.rpc_requested.connect(_forward_ultimate_rpc)
 	_active_handler = handler
 	add_child(handler)
 
@@ -288,6 +291,26 @@ func _on_ult_finished() -> void:
 		_active_handler.queue_free()
 		_active_handler = null
 	_check_shop_or_advance()
+
+
+func _forward_ultimate_rpc(method: String, args: Array) -> void:
+	_do_forward_ultimate_rpc.call_deferred(method, args)
+
+
+func _do_forward_ultimate_rpc(method: String, args: Array) -> void:
+	match method:
+		"begin_ultimates":
+			_rpc_begin_ultimates.rpc()
+		"show_mirror":
+			_rpc_show_ultimate_mirror.rpc(args[0], args[1], args[2])
+		"request_ultimate":
+			_rpc_request_ultimate.rpc_id(args[0], args[1], args[2], args[3])
+		"submit_ultimate":
+			_rpc_submit_ultimate.rpc_id(1, args[0], args[1])
+		"ultimate_applied":
+			_rpc_ultimate_applied.rpc(args[0], args[1])
+		"mirror_focus":
+			_rpc_mirror_focus.rpc(args[0])
 
 
 func _check_shop_or_advance() -> void:
@@ -568,6 +591,45 @@ func _rpc_shop_opened(items_json: String) -> void:
 func _rpc_shop_closed() -> void:
 	if _active_handler and _active_handler.has_method("on_rpc_shop_closed"):
 		_active_handler.on_rpc_shop_closed()
+
+
+## Host -> All: Begin ultimate selection phase.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_begin_ultimates() -> void:
+	if not _active_handler:
+		_start_ultimate_select()
+
+
+## Host -> All: Show ultimate options as read-only mirror for non-owning peers.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_show_ultimate_mirror(party_index: int, char_name: String,
+		char_class: String) -> void:
+	if _active_handler and _active_handler.has_method("on_rpc_show_ultimate_mirror"):
+		_active_handler.on_rpc_show_ultimate_mirror(party_index, char_name, char_class)
+
+
+## Host -> Guest: Request the owning player to choose an ultimate.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_request_ultimate(party_index: int, char_name: String,
+		char_class: String) -> void:
+	if _active_handler and _active_handler.has_method("on_rpc_request_ultimate"):
+		_active_handler.on_rpc_request_ultimate(party_index, char_name, char_class)
+
+
+## Guest -> Host: Submit chosen ultimate.
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_submit_ultimate(party_index: int, ultimate_id: String) -> void:
+	if not NetManager.is_host:
+		return
+	if _active_handler and _active_handler.has_method("on_rpc_submit_ultimate"):
+		_active_handler.on_rpc_submit_ultimate(party_index, ultimate_id)
+
+
+## Host -> All: Broadcast ultimate result so all peers update their party.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_ultimate_applied(party_index: int, ultimate_id: String) -> void:
+	if _active_handler and _active_handler.has_method("on_rpc_ultimate_applied"):
+		_active_handler.on_rpc_ultimate_applied(party_index, ultimate_id)
 
 
 ## Any -> All: Sync which option the active player is focusing (for mirror viewers).

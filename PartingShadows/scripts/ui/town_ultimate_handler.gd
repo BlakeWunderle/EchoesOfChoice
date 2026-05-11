@@ -6,12 +6,15 @@ class_name TownUltimateHandler extends Control
 
 const DialoguePanel := preload("res://scripts/ui/dialogue_panel.gd")
 const ChoiceMenu := preload("res://scripts/ui/choice_menu.gd")
+const UltimateInfoPanel := preload("res://scripts/ui/ultimate_info_panel.gd")
 const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
 const ReadyGate := preload("res://scripts/ui/ready_gate.gd")
+const WaitingOverlay := preload("res://scripts/ui/waiting_overlay.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
 signal phase_finished
+signal rpc_requested(method: String, args: Array)
 
 const _ULTIMATE_STOPS: Array[String] = [
 	"TunnelCampStop",           # Story 1: post-Depths, barkeep's runner
@@ -22,6 +25,8 @@ const _ULTIMATE_STOPS: Array[String] = [
 	"S3_C_LirasConfession",     # Story 3 Path C
 ]
 
+var _is_multiplayer: bool = false
+var _is_host: bool = true
 var _party: Array = []
 var _battle_id: String = ""
 var _char_index: int = 0
@@ -29,9 +34,11 @@ var _ult_options: Array = []
 
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
+var _ultimate_info_panel: UltimateInfoPanel
 var _header_label: Label
 var _tip_overlay: TipOverlay
 var _ready_gate: ReadyGate
+var _waiting_overlay: WaitingOverlay
 var _player_indicator: Label
 
 
@@ -39,6 +46,8 @@ func _init(params: Dictionary) -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_party = params.get("party", [])
 	_battle_id = params.get("battle_id", "")
+	_is_multiplayer = params.get("is_multiplayer", false)
+	_is_host = params.get("is_host", true)
 
 
 func _ready() -> void:
@@ -47,21 +56,21 @@ func _ready() -> void:
 
 
 func _build_ui() -> void:
-	var margin := MarginContainer.new()
-	margin.anchor_left = 0.0
-	margin.anchor_top = 0.0
-	margin.anchor_right = 1.0
-	margin.anchor_bottom = 0.5
-	margin.clip_contents = true
-	margin.add_theme_constant_override("margin_left", 80)
-	margin.add_theme_constant_override("margin_right", 80)
-	margin.add_theme_constant_override("margin_top", 60)
-	margin.add_theme_constant_override("margin_bottom", 20)
-	add_child(margin)
+	var top_margin := MarginContainer.new()
+	top_margin.anchor_left = 0.0
+	top_margin.anchor_top = 0.0
+	top_margin.anchor_right = 1.0
+	top_margin.anchor_bottom = 0.5
+	top_margin.clip_contents = true
+	top_margin.add_theme_constant_override("margin_left", 80)
+	top_margin.add_theme_constant_override("margin_right", 80)
+	top_margin.add_theme_constant_override("margin_top", 60)
+	top_margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(top_margin)
 
 	var vbox := VBoxContainer.new()
 	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	margin.add_child(vbox)
+	top_margin.add_child(vbox)
 
 	_dialogue = DialoguePanel.new()
 	_dialogue.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -78,6 +87,7 @@ func _build_ui() -> void:
 	_choice_menu = ChoiceMenu.new()
 	_choice_menu.visible = false
 	_choice_menu.choice_selected.connect(_on_choice_selected)
+	_choice_menu.option_focused.connect(_on_option_focused)
 	vbox.add_child(_choice_menu)
 
 	_ready_gate = ReadyGate.new()
@@ -85,8 +95,26 @@ func _build_ui() -> void:
 	_ready_gate.all_ready.connect(_on_all_ready)
 	vbox.add_child(_ready_gate)
 
+	var info_margin := MarginContainer.new()
+	info_margin.anchor_left = 0.0
+	info_margin.anchor_top = 0.5
+	info_margin.anchor_right = 1.0
+	info_margin.anchor_bottom = 1.0
+	info_margin.add_theme_constant_override("margin_left", 80)
+	info_margin.add_theme_constant_override("margin_right", 80)
+	info_margin.add_theme_constant_override("margin_top", 8)
+	info_margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(info_margin)
+
+	_ultimate_info_panel = UltimateInfoPanel.new()
+	_ultimate_info_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	info_margin.add_child(_ultimate_info_panel)
+
 	_tip_overlay = TipOverlay.new()
 	add_child(_tip_overlay)
+
+	_waiting_overlay = WaitingOverlay.new()
+	add_child(_waiting_overlay)
 
 	_player_indicator = Label.new()
 	_player_indicator.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -106,6 +134,8 @@ func _start() -> void:
 	if _battle_id not in _ULTIMATE_STOPS or not _any_eligible():
 		phase_finished.emit()
 		return
+	if _is_multiplayer and _is_host:
+		rpc_requested.emit("begin_ultimates", [])
 	_dialogue.visible = true
 	_dialogue.show_text(_get_narration_text())
 
@@ -123,21 +153,49 @@ func _on_all_ready() -> void:
 	_show_ultimate_selection()
 
 
+func _on_option_focused(index: int) -> void:
+	if index >= 0 and index < _ult_options.size():
+		_ultimate_info_panel.show_ultimate(_ult_options[index])
+	else:
+		_ultimate_info_panel.visible = false
+	if _is_multiplayer:
+		rpc_requested.emit("mirror_focus", [index])
+
+
 func _on_choice_selected(index: int) -> void:
 	if index < 0 or index >= _ult_options.size():
 		return
 
-	var fighter: FighterData = _party[_char_index]
-	var chosen: RefCounted = _ult_options[index]
-	fighter.ultimate = chosen
-	fighter.ultimate_charge = 0
-	GameLog.info("Ultimate: selected %s" % chosen.ultimate_name)
+	_ultimate_info_panel.visible = false
 
 	if LocalCoop.is_active:
 		LocalCoop.clear_active_player()
 		_player_indicator.visible = false
 
-	_char_index += 1
+	if _is_multiplayer and not _is_host:
+		var chosen: RefCounted = _ult_options[index]
+		rpc_requested.emit("submit_ultimate", [_char_index, chosen.ultimate_id])
+		_choice_menu.hide_menu()
+		_header_label.visible = false
+		return
+
+	_apply_ultimate(_char_index, _ult_options[index])
+
+
+func _apply_ultimate(party_index: int, chosen: RefCounted) -> void:
+	var fighter: FighterData = _party[party_index]
+	fighter.ultimate = chosen
+	fighter.ultimate_charge = 0
+	GameLog.info("Ultimate: selected %s" % chosen.ultimate_name)
+
+	if _is_multiplayer and _is_host:
+		rpc_requested.emit("ultimate_applied", [party_index, chosen.ultimate_id])
+
+	if LocalCoop.is_active:
+		LocalCoop.clear_active_player()
+		_player_indicator.visible = false
+
+	_char_index = party_index + 1
 	_show_ultimate_selection()
 
 
@@ -163,6 +221,8 @@ func _is_eligible(fighter: FighterData) -> bool:
 
 
 func _show_ultimate_selection() -> void:
+	_waiting_overlay.hide_waiting()
+
 	while _char_index < _party.size():
 		var fighter: FighterData = _party[_char_index]
 		if _is_eligible(fighter):
@@ -173,6 +233,7 @@ func _show_ultimate_selection() -> void:
 		_choice_menu.hide_menu()
 		_header_label.visible = false
 		_player_indicator.visible = false
+		_ultimate_info_panel.visible = false
 		phase_finished.emit()
 		return
 
@@ -185,17 +246,110 @@ func _show_ultimate_selection() -> void:
 		_player_indicator.text = "Player %d" % (owner + 1)
 		_player_indicator.visible = true
 
+	var options: Array[Dictionary] = _format_options()
+
+	if _is_multiplayer:
+		if _is_host:
+			rpc_requested.emit("show_mirror", [
+				_char_index, fighter.character_name, fighter.character_type])
+			if NetManager.is_my_fighter(_char_index):
+				_header_label.text = "Choose an ultimate for %s the %s:" % [
+					fighter.character_name, fighter.character_type]
+				_header_label.visible = true
+				_choice_menu.show_choices(options)
+			else:
+				var owner_name: String = NetManager.get_fighter_owner_name(_char_index)
+				_header_label.visible = false
+				_choice_menu.visible = false
+				_waiting_overlay.show_waiting(owner_name)
+				var owner_peer: int = NetManager.get_fighter_owner_peer(_char_index)
+				rpc_requested.emit("request_ultimate", [
+					owner_peer, _char_index, fighter.character_name,
+					fighter.character_type])
+		else:
+			_header_label.visible = false
+			_choice_menu.visible = false
+		return
+
+	_header_label.text = "Choose an ultimate for %s the %s:" % [
+		fighter.character_name, fighter.character_type]
+	_header_label.visible = true
+	_choice_menu.show_choices(options)
+
+
+func _format_options() -> Array[Dictionary]:
 	var options: Array[Dictionary] = []
 	for ult: RefCounted in _ult_options:
 		options.append({
 			"label": ult.ultimate_name,
 			"description": ult.description,
 		})
+	return options
 
-	_header_label.text = "Choose an ultimate for %s the %s:" % [
-		fighter.character_name, fighter.character_type]
+
+# =========================================================================
+# Inbound RPC methods (called by town_stop RPC forwarders)
+# =========================================================================
+
+func on_peer_scene_ready(player_index: int) -> void:
+	_ready_gate.mark_ready(player_index)
+
+
+func on_rpc_show_ultimate_mirror(party_index: int, char_name: String,
+		char_class: String) -> void:
+	if NetManager.is_my_fighter(party_index):
+		return
+	_char_index = party_index
+	_waiting_overlay.hide_waiting()
+	_header_label.text = "Choosing ultimate for %s the %s:" % [char_name, char_class]
 	_header_label.visible = true
+	var fighter: FighterData = _party[party_index]
+	_ult_options = UltimateDB.get_ultimates_for_class(fighter.class_id)
+	var options: Array[Dictionary] = _format_options()
+	for opt: Dictionary in options:
+		opt["disabled"] = true
 	_choice_menu.show_choices(options)
+	_choice_menu.highlight_option(0)
+	if not _ult_options.is_empty():
+		_ultimate_info_panel.show_ultimate(_ult_options[0])
+
+
+func on_rpc_request_ultimate(party_index: int, char_name: String,
+		char_class: String) -> void:
+	_char_index = party_index
+	_waiting_overlay.hide_waiting()
+	_header_label.text = "Choose an ultimate for %s the %s:" % [char_name, char_class]
+	_header_label.visible = true
+	var fighter: FighterData = _party[party_index]
+	_ult_options = UltimateDB.get_ultimates_for_class(fighter.class_id)
+	_choice_menu.show_choices(_format_options())
+
+
+func on_rpc_submit_ultimate(party_index: int, ultimate_id: String) -> void:
+	if not _is_host:
+		return
+	var ult: RefCounted = UltimateDB.get_ultimate_by_id(ultimate_id)
+	if ult:
+		_apply_ultimate(party_index, ult)
+
+
+func on_rpc_ultimate_applied(party_index: int, ultimate_id: String) -> void:
+	var ult: RefCounted = UltimateDB.get_ultimate_by_id(ultimate_id)
+	if ult:
+		var fighter: FighterData = _party[party_index]
+		fighter.ultimate = ult
+		fighter.ultimate_charge = 0
+		GameLog.info("Ultimate (sync): %s -> %s" % [fighter.character_name, ult.ultimate_name])
+	_char_index = party_index + 1
+	_show_ultimate_selection()
+
+
+func on_rpc_mirror_focus(index: int) -> void:
+	_choice_menu.highlight_option(index)
+	if index >= 0 and index < _ult_options.size():
+		_ultimate_info_panel.show_ultimate(_ult_options[index])
+	else:
+		_ultimate_info_panel.visible = false
 
 
 func _get_narration_text() -> Array[String]:
