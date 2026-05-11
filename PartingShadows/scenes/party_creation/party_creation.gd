@@ -148,6 +148,7 @@ func _build_ui() -> void:
 
 	_name_input = NameInput.new()
 	_name_input.name_entered.connect(_on_name_entered)
+	_name_input.text_changed.connect(_on_name_text_changed)
 	_name_input.visible = false
 	_vbox.add_child(_name_input)
 
@@ -302,6 +303,23 @@ func _is_my_character_state() -> bool:
 	return NetManager.is_my_fighter(idx)
 
 
+func _get_name_prompt() -> String:
+	match _state:
+		State.NAME_1:
+			if _is_s2(): return "A leather bracelet on this one's wrist. Letters are stamped into it..."
+			elif _is_s3(): return "The traveler nearest the fire raises a cup. 'Long road? I'm...'"
+			else: return "'What is your name, young warrior?'"
+		State.NAME_2:
+			if _is_s2(): return "Scratched into the back of a belt buckle, barely legible..."
+			elif _is_s3(): return "The second traveler leans forward. 'Name's...'"
+			else: return "'And what is your name?'"
+		State.NAME_3:
+			if _is_s2(): return "Stitched into the collar of a torn cloak..."
+			elif _is_s3(): return "The third traveler nods a greeting. 'Call me...'"
+			else: return "'And you? What is your name?'"
+	return ""
+
+
 func _set_state(new_state: State) -> void:
 	_state = new_state
 	_dialogue.visible = false
@@ -334,35 +352,16 @@ func _set_state(new_state: State) -> void:
 	)
 
 	if is_remote_input:
-		# Show waiting overlay instead of input UI
-		var owner_name: String = NetManager.get_fighter_owner_name(char_idx)
-		_waiting_overlay.show_waiting(owner_name)
+		match _state:
+			State.NAME_1, State.NAME_2, State.NAME_3:
+				_name_input.show_mirror(_get_name_prompt())
 		return
 
 	match _state:
 		State.INTRO:
 			_show_dialogue(PCText.get_intro_text(GameState.current_story_id))
-		State.NAME_1:
-			if _is_s2():
-				_name_input.show_prompt("A leather bracelet on this one's wrist. Letters are stamped into it...")
-			elif _is_s3():
-				_name_input.show_prompt("The traveler nearest the fire raises a cup. 'Long road? I'm...'")
-			else:
-				_name_input.show_prompt("'What is your name, young warrior?'")
-		State.NAME_2:
-			if _is_s2():
-				_name_input.show_prompt("Scratched into the back of a belt buckle, barely legible...")
-			elif _is_s3():
-				_name_input.show_prompt("The second traveler leans forward. 'Name's...'")
-			else:
-				_name_input.show_prompt("'And what is your name?'")
-		State.NAME_3:
-			if _is_s2():
-				_name_input.show_prompt("Stitched into the collar of a torn cloak...")
-			elif _is_s3():
-				_name_input.show_prompt("The third traveler nods a greeting. 'Call me...'")
-			else:
-				_name_input.show_prompt("'And you? What is your name?'")
+		State.NAME_1, State.NAME_2, State.NAME_3:
+			_name_input.show_prompt(_get_name_prompt())
 		State.CLASS_1, State.CLASS_2, State.CLASS_3:
 			if _is_s2():
 				_show_dialogue(["Something stirs. A reflex. A memory buried in muscle and bone. What comes naturally?"])
@@ -499,9 +498,16 @@ func _on_class_selected(index: int) -> void:
 		State.CLASS_3: _set_state(State.PORTRAIT_3)
 
 
+func _on_name_text_changed(text: String) -> void:
+	if NetManager.is_multiplayer_active and _is_my_character_state():
+		_rpc_name_text.rpc(text)
+
+
 func _on_class_option_focused(index: int) -> void:
 	if _is_equip_state():
-		return  # No info panel preview for equipment choices
+		if _is_my_character_state() and NetManager.is_multiplayer_active:
+			_rpc_equip_focus.rpc(index)
+		return
 	if _state not in [State.CLASS_1, State.CLASS_2, State.CLASS_3]:
 		return
 	if index < 0 or index >= _class_ids.size():
@@ -868,6 +874,18 @@ func _rpc_show_equip_mirror(char_idx: int, owner_name: String,
 		mirror_options.append({"label": c.label, "description": c.description, "disabled": true})
 	_choice_menu.show_choices(mirror_options)
 	_choice_menu.highlight_option(0)
+
+
+## Active player -> All: Mirror name text as it's typed.
+@rpc("any_peer", "call_remote", "unreliable_ordered")
+func _rpc_name_text(text: String) -> void:
+	_name_input.set_mirror_text(text)
+
+
+## Active player -> All: Sync which equipment option is focused.
+@rpc("any_peer", "call_remote", "reliable")
+func _rpc_equip_focus(index: int) -> void:
+	_choice_menu.highlight_option(index)
 
 
 ## Host -> All: Equipment choice was applied.
