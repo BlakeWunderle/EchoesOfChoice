@@ -290,9 +290,7 @@ func handle_battle_ended(won: bool, stats_data: Array = []) -> void:
 			_battle._pending_loot_items.clear()
 			_battle._pending_loot_gold = 0
 		GameState.advance_to_post_battle()
-		# Guest doesn't change scene - host sends change_scene_for_peers after
-		# its own summary gate resolves. Guest's ready signal was already sent
-		# inside _show_battle_summary() -> _wait_summary_ready().
+		SceneManager.change_scene("res://scenes/narrative/narrative.tscn", 0.4, true)
 	else:
 		await _battle.get_tree().create_timer(2.0).timeout
 		GameState.go_to_ending(false)

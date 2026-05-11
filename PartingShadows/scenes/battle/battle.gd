@@ -959,6 +959,13 @@ func _on_combat_message(text: String) -> void:
 
 func _on_combat_event(target: FighterData, amount: int, event_type: String) -> void:
 	_display.on_combat_event(target, amount, event_type)
+	if NetManager.is_multiplayer_active and NetManager.is_host:
+		var idx: int = _all_enemies.find(target)
+		var is_enemy: bool = idx >= 0
+		if not is_enemy:
+			idx = _all_party.find(target)
+		if idx >= 0:
+			_rpc_combat_event.rpc(idx, is_enemy, amount, event_type)
 
 
 func _find_card_for_fighter(fighter: FighterData) -> PortraitCard:
@@ -1034,8 +1041,6 @@ func _end_battle() -> void:
 			GameState.inventory.add_gold(loot_gold)
 			await _display.show_loot_drops(loot_items, loot_gold)
 		GameState.advance_to_post_battle()
-		if NetManager.is_multiplayer_active and NetManager.is_host:
-			NetManager.change_scene_for_peers("res://scenes/narrative/narrative.tscn")
 		SceneManager.change_scene("res://scenes/narrative/narrative.tscn", 0.4, true)
 	else:
 		GameLog.info("Battle lost: %s" % GameState.current_battle_id)
@@ -1194,6 +1199,18 @@ func _serialize_battle_stats() -> Array:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_combat_log(text: String) -> void:
 	_mp.handle_combat_log(text)
+
+@rpc("authority", "call_remote", "reliable")
+func _rpc_combat_event(target_idx: int, is_enemy: bool, amount: int, event_type: String) -> void:
+	var target: FighterData
+	if is_enemy:
+		if target_idx < _all_enemies.size():
+			target = _all_enemies[target_idx]
+	else:
+		if target_idx < _all_party.size():
+			target = _all_party[target_idx]
+	if target:
+		_display.on_combat_event(target, amount, event_type)
 
 func _on_peer_left_mid_battle(peer_id: int, player_name: String) -> void:
 	_mp.on_peer_left_mid_battle(peer_id, player_name)
