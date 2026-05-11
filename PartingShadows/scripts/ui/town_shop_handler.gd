@@ -39,6 +39,7 @@ var _header_label: Label
 var _pagination: PaginationControls
 var _tip_overlay: TipOverlay
 var _ready_gate: ReadyGate
+var _pending_advance: Callable
 
 
 func _init(params: Dictionary) -> void:
@@ -111,9 +112,8 @@ func _start() -> void:
 		_phase = ShopPhase.NARRATION
 		_dialogue.visible = true
 		_dialogue.show_text(shop_text)
-		if _is_multiplayer:
-			_ready_gate.visible = true
-			_ready_gate.reset(NetManager.target_player_count if NetManager.is_multiplayer_active else 1)
+		if _is_multiplayer and NetManager.is_multiplayer_active:
+			_open_gate_early(_open_menu)
 		return
 
 	_open_menu()
@@ -121,19 +121,38 @@ func _start() -> void:
 
 func _on_text_finished() -> void:
 	if _is_multiplayer and NetManager.is_multiplayer_active:
-		_ready_gate.mark_ready(multiplayer.get_unique_id())
+		_mark_self_ready()
 		return
 	if LocalCoop.is_active:
-		_ready_gate.visible = true
-		_ready_gate.reset(LocalCoop.player_count)
-		_ready_gate.mark_ready(1)
+		_ready_gate.start_local(LocalCoop.player_count)
 		return
 	_open_menu()
 
 
 func _on_all_ready() -> void:
-	_ready_gate.visible = false
-	_open_menu()
+	if _pending_advance.is_valid():
+		var cb := _pending_advance
+		_pending_advance = Callable()
+		cb.call_deferred()
+	else:
+		_open_menu()
+
+
+func _open_gate_early(callback: Callable) -> void:
+	if not _is_multiplayer or not NetManager.is_multiplayer_active:
+		return
+	_pending_advance = callback
+	_ready_gate.start_online(NetManager.get_connected_peer_count())
+
+
+func _mark_self_ready() -> void:
+	var my_idx: int = NetManager.get_my_peer_index()
+	_ready_gate.mark_ready(my_idx)
+	NetManager.notify_scene_ready(my_idx)
+
+
+func on_peer_scene_ready(player_index: int) -> void:
+	_ready_gate.mark_ready(player_index)
 
 
 func _open_menu() -> void:

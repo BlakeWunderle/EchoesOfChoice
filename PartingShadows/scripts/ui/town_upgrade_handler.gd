@@ -269,9 +269,10 @@ func _on_text_finished() -> void:
 
 
 func _do_reveal_advance() -> void:
+	_dialogue.visible = false
+	_revealing = false
 	if _is_multiplayer and not _is_host:
 		return
-	_dialogue.visible = false
 	_upgrade_index += 1
 	if _is_multiplayer:
 		rpc_requested.emit("advance_upgrade", [_upgrade_index])
