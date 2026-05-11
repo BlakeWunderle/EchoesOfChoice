@@ -284,6 +284,9 @@ func _on_defeat_choice(index: int) -> void:
 			var target: String = "res://scenes/town_stop/town_stop.tscn" \
 				if GameState.game_phase == GameState.GamePhase.TOWN_STOP \
 				else "res://scenes/narrative/narrative.tscn"
+			if NetManager.is_multiplayer_active and NetManager.is_host:
+				NetManager.broadcast_game_state()
+				NetManager.change_scene_for_peers(target)
 			SceneManager.change_scene(target)
 			return
 	_return_to_menu()
