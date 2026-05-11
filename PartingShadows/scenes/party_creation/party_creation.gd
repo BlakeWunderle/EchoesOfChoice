@@ -676,9 +676,9 @@ func _on_equip_selected(index: int) -> void:
 
 func _advance_equip_state() -> void:
 	match _state:
-		State.EQUIP_WEAPON_1: _mp_set_state(State.EQUIP_ARMOR_1)
-		State.EQUIP_WEAPON_2: _mp_set_state(State.EQUIP_ARMOR_2)
-		State.EQUIP_WEAPON_3: _mp_set_state(State.EQUIP_ARMOR_3)
+		State.EQUIP_INTRO_1, State.EQUIP_WEAPON_1: _mp_set_state(State.EQUIP_ARMOR_1)
+		State.EQUIP_INTRO_2, State.EQUIP_WEAPON_2: _mp_set_state(State.EQUIP_ARMOR_2)
+		State.EQUIP_INTRO_3, State.EQUIP_WEAPON_3: _mp_set_state(State.EQUIP_ARMOR_3)
 		State.EQUIP_ARMOR_1: _mp_set_state(State.EQUIP_BOOTS_1)
 		State.EQUIP_ARMOR_2: _mp_set_state(State.EQUIP_BOOTS_2)
 		State.EQUIP_ARMOR_3: _mp_set_state(State.EQUIP_BOOTS_3)
