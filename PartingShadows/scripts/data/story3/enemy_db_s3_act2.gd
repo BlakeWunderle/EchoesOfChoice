@@ -163,7 +163,7 @@ static func create_shadow_pursuer(n: String, lvl: int = 7) -> FighterData:
 	var f := EH.base(n, "Shadow Pursuer", lvl)
 	f.health = EH.es(200, 235, 3, 7, lvl, 7); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 1, lvl, 7); f.max_mana = f.mana
-	f.physical_attack = EH.es(35, 40, 1, 3, lvl, 7)
+	f.physical_attack = EH.es(36, 41, 1, 3, lvl, 7)
 	f.physical_defense = EH.es(15, 18, 1, 2, lvl, 7)
 	f.magic_attack = EH.es(12, 15, 0, 2, lvl, 7)
 	f.magic_defense = EH.es(14, 17, 1, 2, lvl, 7)
@@ -180,7 +180,7 @@ static func create_dread_tendril(n: String, lvl: int = 7) -> FighterData:
 	f.mana = EH.es(10, 13, 1, 2, lvl, 7); f.max_mana = f.mana
 	f.physical_attack = EH.es(12, 15, 0, 2, lvl, 7)
 	f.physical_defense = EH.es(11, 14, 1, 2, lvl, 7)
-	f.magic_attack = EH.es(31, 36, 1, 3, lvl, 7)
+	f.magic_attack = EH.es(32, 37, 1, 3, lvl, 7)
 	f.magic_defense = EH.es(19, 22, 1, 2, lvl, 7)
 	f.speed = EH.es(29, 34, 1, 2, lvl, 7)
 	f.crit_chance = 21; f.crit_damage = 1; f.dodge_chance = 15

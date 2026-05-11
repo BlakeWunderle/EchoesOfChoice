@@ -122,7 +122,7 @@ static func create_hound(n: String, lvl: int = 2) -> FighterData:
 	f.mana = EH.es(5, 7, 1, 2, lvl, 2); f.max_mana = f.mana
 	f.physical_attack = EH.es(11, 14, 0, 2, lvl, 2)
 	f.physical_defense = EH.es(7, 10, 1, 2, lvl, 2)
-	f.magic_attack = EH.es(20, 26, 2, 3, lvl, 2)
+	f.magic_attack = EH.es(21, 27, 2, 3, lvl, 2)
 	f.magic_defense = EH.es(8, 11, 1, 2, lvl, 2)
 	f.speed = EH.es(26, 31, 2, 3, lvl, 2)
 	f.crit_chance = 9; f.crit_damage = 1; f.dodge_chance = 11
@@ -134,7 +134,7 @@ static func create_bandit(n: String, lvl: int = 3) -> FighterData:
 	var f := EH.base(n, "Bandit", lvl)
 	f.health = EH.es(60, 72, 4, 7, lvl, 3); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 2, lvl, 3); f.max_mana = f.mana
-	f.physical_attack = EH.es(26, 33, 2, 3, lvl, 3)
+	f.physical_attack = EH.es(27, 34, 2, 3, lvl, 3)
 	f.physical_defense = EH.es(12, 15, 1, 2, lvl, 3)
 	f.magic_attack = EH.es(7, 10, 0, 2, lvl, 3)
 	f.magic_defense = EH.es(5, 9, 1, 2, lvl, 3)
