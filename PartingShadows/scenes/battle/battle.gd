@@ -57,10 +57,14 @@ var _auto_battle: bool = false
 var _auto_battle_unlocked: bool = false
 var _summary_waiting: bool = false
 var _loot_waiting: bool = false
-var _summary_gate: ReadyGate = null  ## ReadyGate for multiplayer summary sync
-var _pending_summary_ready: Array[int] = []  ## Buffer for RPCs arriving before gate exists
-var _pending_loot_items: Array = []  ## Loot items from host (multiplayer guest)
-var _pending_loot_gold: int = 0  ## Loot gold from host (multiplayer guest)
+var _summary_gate: ReadyGate = null
+var _loot_gate: ReadyGate = null
+var _pending_summary_ready: Array[int] = []
+var _pending_loot_ready: Array[int] = []
+var _summary_phase_done: bool = false
+var _combat_event_queue: Array[Dictionary] = []
+var _pending_loot_items: Array = []
+var _pending_loot_gold: int = 0
 var _auto_button: Button
 var _display: BattleDisplay
 var _mp: BattleMultiplayer
@@ -104,7 +108,7 @@ func _ready() -> void:
 	_mp = BattleMultiplayer_C.new(self)
 	_build_ui()
 	if NetManager.is_multiplayer_active:
-		NetManager.peer_scene_ready.connect(_on_summary_peer_ready)
+		NetManager.peer_scene_ready.connect(_on_peer_ready_received)
 	_start_battle()
 
 
@@ -261,7 +265,6 @@ func _tick_loop() -> void:
 			if not _turn_queue.is_empty() and _turn_queue[0] == actor:
 				_turn_queue.pop_front()
 			_display_turn_order()
-			_broadcast_turn_update()
 
 			_engine.reset_modified_stat(actor)
 			await _drain_messages()
@@ -354,7 +357,6 @@ func _tick_loop() -> void:
 		_engine.reset_turns()
 		_compute_turn_order()
 		_display_turn_order()
-		_broadcast_turn_update()
 
 
 func _is_ability_available(fighter: FighterData, ability: AbilityData) -> bool:
@@ -967,7 +969,10 @@ func _on_combat_event(target: FighterData, amount: int, event_type: String) -> v
 		if not is_enemy:
 			idx = _all_party.find(target)
 		if idx >= 0:
-			_rpc_combat_event.rpc(idx, is_enemy, amount, event_type)
+			_combat_event_queue.append({
+				"idx": idx, "is_enemy": is_enemy,
+				"amount": amount, "type": event_type
+			})
 
 
 func _find_card_for_fighter(fighter: FighterData) -> PortraitCard:
@@ -1039,13 +1044,13 @@ func _end_battle() -> void:
 		_display.show_victory_flash()
 		await get_tree().create_timer(2.0, false).timeout
 		await _show_battle_summary()
-		if NetManager.is_multiplayer_active:
-			_pre_open_summary_gate()
 		if loot_items.size() > 0 or loot_gold > 0:
+			if NetManager.is_multiplayer_active:
+				_pre_open_loot_gate()
 			GameState.inventory.add_gold(loot_gold)
 			await _display.show_loot_drops(loot_items, loot_gold)
-		if NetManager.is_multiplayer_active:
-			await _wait_post_loot_ready()
+			if NetManager.is_multiplayer_active:
+				await _wait_loot_ready()
 		GameState.advance_to_post_battle()
 		if NetManager.is_multiplayer_active and NetManager.is_host:
 			NetManager.change_scene_for_peers("res://scenes/narrative/narrative.tscn")
@@ -1062,13 +1067,12 @@ func _end_battle() -> void:
 
 
 func _show_battle_summary() -> void:
-	# Pre-open the ready gate so incoming signals are captured while summary displays
 	if NetManager.is_multiplayer_active:
 		_pre_open_summary_gate()
 	await _display.show_battle_summary()
-	# In online multiplayer, mark self ready and (host only) wait for all
 	if NetManager.is_multiplayer_active:
 		await _wait_summary_ready()
+		_summary_phase_done = true
 
 
 ## Pre-open the summary ready gate so signals arriving while the summary
@@ -1116,36 +1120,49 @@ func _wait_summary_ready() -> void:
 	g2.queue_free()
 
 
-func _on_summary_peer_ready(player_index: int) -> void:
-	GameLog.info("Summary gate: peer_scene_ready(%d), gate_exists=%s" % [player_index, _summary_gate != null])
-	if _summary_gate:
+func _on_peer_ready_received(player_index: int) -> void:
+	if _loot_gate:
+		_loot_gate.mark_ready(player_index)
+	elif _summary_gate:
 		_summary_gate.mark_ready(player_index)
+	elif _summary_phase_done:
+		if player_index not in _pending_loot_ready:
+			_pending_loot_ready.append(player_index)
 	else:
 		if player_index not in _pending_summary_ready:
 			_pending_summary_ready.append(player_index)
 
 
-func _wait_post_loot_ready() -> void:
+func _pre_open_loot_gate() -> void:
+	var gate := ReadyGate.new()
+	gate.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	gate.offset_top = -40
+	gate.offset_bottom = -10
+	add_child(gate)
+	_loot_gate = gate
+	gate.start_online(NetManager.get_connected_peer_count())
+	for idx: int in _pending_loot_ready:
+		gate.mark_ready(idx)
+	_pending_loot_ready.clear()
+
+
+func _wait_loot_ready() -> void:
 	var my_idx: int = NetManager.get_my_peer_index()
-	_summary_gate.mark_ready(my_idx)
+	_loot_gate.mark_ready(my_idx)
 	NetManager.notify_scene_ready(my_idx)
-	GameLog.info("Post-loot gate: marked self ready (idx=%d, is_host=%s)" % [my_idx, NetManager.is_host])
 	if not NetManager.is_host:
-		var g: ReadyGate = _summary_gate
-		_summary_gate = null
+		var g: ReadyGate = _loot_gate
+		_loot_gate = null
 		g.queue_free()
 		return
-	if not _summary_gate.visible:
-		GameLog.info("Post-loot gate: all ready immediately")
-		var g: ReadyGate = _summary_gate
-		_summary_gate = null
+	if not _loot_gate.visible:
+		var g: ReadyGate = _loot_gate
+		_loot_gate = null
 		g.queue_free()
 		return
-	GameLog.info("Post-loot gate: host waiting for peers")
-	await _summary_gate.all_ready
-	GameLog.info("Post-loot gate: all ready")
-	var g2: ReadyGate = _summary_gate
-	_summary_gate = null
+	await _loot_gate.all_ready
+	var g2: ReadyGate = _loot_gate
+	_loot_gate = null
 	g2.queue_free()
 
 
@@ -1185,20 +1202,6 @@ func _highlight_active_card(fighter: FighterData) -> void:
 	_display.highlight_active_card(fighter)
 
 
-func _broadcast_turn_update() -> void:
-	if not NetManager.is_multiplayer_active or not NetManager.is_host:
-		return
-	var active_idx: int = -1
-	var active_is_enemy: bool = false
-	if _current_actor:
-		active_idx = _all_enemies.find(_current_actor)
-		if active_idx >= 0:
-			active_is_enemy = true
-		else:
-			active_idx = _all_party.find(_current_actor)
-	_rpc_turn_update.rpc(active_idx, active_is_enemy, _build_turn_order_text())
-
-
 func _build_turn_order_text() -> String:
 	var parts: Array[String] = []
 	if _current_actor != null:
@@ -1225,8 +1228,11 @@ func _broadcast_state_sync() -> void:
 	_mp.broadcast_state_sync()
 
 @rpc("authority", "call_remote", "reliable")
-func _rpc_state_sync(party_state: Array, enemy_state: Array, alive_party: Array, alive_enemies: Array, log_lines: Array) -> void:
-	_mp.handle_state_sync(party_state, enemy_state, alive_party, alive_enemies, log_lines)
+func _rpc_state_sync(party_state: Array, enemy_state: Array, alive_party: Array,
+		alive_enemies: Array, log_lines: Array, combat_events: Array = [],
+		active_idx: int = -1, active_is_enemy: bool = false, turn_text: String = "") -> void:
+	_mp.handle_state_sync(party_state, enemy_state, alive_party, alive_enemies,
+		log_lines, combat_events, active_idx, active_is_enemy, turn_text)
 
 @rpc("authority", "call_remote", "reliable")
 func _rpc_request_action(actor_party_idx: int) -> void:
@@ -1259,32 +1265,6 @@ func _serialize_battle_stats() -> Array:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_combat_log(text: String) -> void:
 	_mp.handle_combat_log(text)
-
-@rpc("authority", "call_remote", "reliable")
-func _rpc_combat_event(target_idx: int, is_enemy: bool, amount: int, event_type: String) -> void:
-	var target: FighterData
-	if is_enemy:
-		if target_idx < _all_enemies.size():
-			target = _all_enemies[target_idx]
-	else:
-		if target_idx < _all_party.size():
-			target = _all_party[target_idx]
-	if target:
-		_display.on_combat_event(target, amount, event_type)
-
-@rpc("authority", "call_remote", "reliable")
-func _rpc_turn_update(active_idx: int, active_is_enemy: bool, turn_text: String) -> void:
-	var fighter: FighterData = null
-	if active_idx >= 0:
-		if active_is_enemy:
-			if active_idx < _all_enemies.size():
-				fighter = _all_enemies[active_idx]
-		else:
-			if active_idx < _all_party.size():
-				fighter = _all_party[active_idx]
-	_highlight_active_card(fighter)
-	_turn_order_label.clear()
-	_turn_order_label.append_text(turn_text)
 
 func _on_peer_left_mid_battle(peer_id: int, player_name: String) -> void:
 	_mp.on_peer_left_mid_battle(peer_id, player_name)
