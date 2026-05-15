@@ -48,12 +48,12 @@ func _build_ui() -> void:
 	top_margin.anchor_left = 0.0
 	top_margin.anchor_top = 0.0
 	top_margin.anchor_right = 1.0
-	top_margin.anchor_bottom = 0.5
+	top_margin.anchor_bottom = 0.55
 	top_margin.clip_contents = true
 	top_margin.add_theme_constant_override("margin_left", 80)
 	top_margin.add_theme_constant_override("margin_right", 80)
-	top_margin.add_theme_constant_override("margin_top", 60)
-	top_margin.add_theme_constant_override("margin_bottom", 20)
+	top_margin.add_theme_constant_override("margin_top", 40)
+	top_margin.add_theme_constant_override("margin_bottom", 10)
 	add_child(top_margin)
 
 	var vbox := VBoxContainer.new()
@@ -85,7 +85,7 @@ func _build_ui() -> void:
 
 	var info_margin := MarginContainer.new()
 	info_margin.anchor_left = 0.0
-	info_margin.anchor_top = 0.5
+	info_margin.anchor_top = 0.55
 	info_margin.anchor_right = 1.0
 	info_margin.anchor_bottom = 1.0
 	info_margin.add_theme_constant_override("margin_left", 80)
