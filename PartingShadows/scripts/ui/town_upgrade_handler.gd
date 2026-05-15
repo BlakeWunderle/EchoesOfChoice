@@ -44,59 +44,44 @@ func _ready() -> void:
 
 
 func _build_ui() -> void:
-	var top_margin := MarginContainer.new()
-	top_margin.anchor_left = 0.0
-	top_margin.anchor_top = 0.0
-	top_margin.anchor_right = 1.0
-	top_margin.anchor_bottom = 0.55
-	top_margin.clip_contents = true
-	top_margin.add_theme_constant_override("margin_left", 80)
-	top_margin.add_theme_constant_override("margin_right", 80)
-	top_margin.add_theme_constant_override("margin_top", 40)
-	top_margin.add_theme_constant_override("margin_bottom", 10)
-	add_child(top_margin)
+	var outer_margin := MarginContainer.new()
+	outer_margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	outer_margin.add_theme_constant_override("margin_left", 80)
+	outer_margin.add_theme_constant_override("margin_right", 80)
+	outer_margin.add_theme_constant_override("margin_top", 40)
+	outer_margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(outer_margin)
 
-	var vbox := VBoxContainer.new()
-	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	top_margin.add_child(vbox)
+	var root_vbox := VBoxContainer.new()
+	root_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_vbox.add_theme_constant_override("separation", 8)
+	outer_margin.add_child(root_vbox)
 
 	_dialogue = DialoguePanel.new()
-	_dialogue.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_dialogue.all_text_finished.connect(_on_text_finished)
 	_dialogue.visible = false
-	vbox.add_child(_dialogue)
+	root_vbox.add_child(_dialogue)
 
 	_header_label = Label.new()
 	_header_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_header_label.add_theme_font_size_override("font_size", 28)
 	_header_label.visible = false
-	vbox.add_child(_header_label)
+	root_vbox.add_child(_header_label)
 
 	_choice_menu = ChoiceMenu.new()
 	_choice_menu.visible = false
 	_choice_menu.choice_selected.connect(_on_choice_selected)
 	_choice_menu.option_focused.connect(_on_option_focused)
-	vbox.add_child(_choice_menu)
+	root_vbox.add_child(_choice_menu)
 
 	_ready_gate = ReadyGate.new()
 	_ready_gate.visible = false
 	_ready_gate.all_ready.connect(_on_all_ready)
-	vbox.add_child(_ready_gate)
-
-	var info_margin := MarginContainer.new()
-	info_margin.anchor_left = 0.0
-	info_margin.anchor_top = 0.55
-	info_margin.anchor_right = 1.0
-	info_margin.anchor_bottom = 1.0
-	info_margin.add_theme_constant_override("margin_left", 80)
-	info_margin.add_theme_constant_override("margin_right", 80)
-	info_margin.add_theme_constant_override("margin_top", 8)
-	info_margin.add_theme_constant_override("margin_bottom", 20)
-	add_child(info_margin)
+	root_vbox.add_child(_ready_gate)
 
 	_class_info_panel = ClassInfoPanel.new()
-	_class_info_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	info_margin.add_child(_class_info_panel)
+	_class_info_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_vbox.add_child(_class_info_panel)
 
 	_tip_overlay = TipOverlay.new()
 	add_child(_tip_overlay)
