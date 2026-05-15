@@ -129,7 +129,11 @@ func _build_ui() -> void:
 	add_child(overlay)
 
 	var outer_margin := MarginContainer.new()
-	outer_margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	outer_margin.anchor_left = 0.0
+	outer_margin.anchor_top = 0.0
+	outer_margin.anchor_right = 1.0
+	outer_margin.anchor_bottom = 0.5
+	outer_margin.clip_contents = true
 	outer_margin.add_theme_constant_override("margin_left", 80)
 	outer_margin.add_theme_constant_override("margin_right", 80)
 	outer_margin.add_theme_constant_override("margin_top", 40)

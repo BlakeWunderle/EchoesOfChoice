@@ -50,6 +50,7 @@ func _build_ui() -> void:
 	margin.anchor_top = 0.0
 	margin.anchor_right = 1.0
 	margin.anchor_bottom = 0.5
+	margin.clip_contents = true
 	margin.add_theme_constant_override("margin_left", 80)
 	margin.add_theme_constant_override("margin_right", 80)
 	margin.add_theme_constant_override("margin_top", 60)
