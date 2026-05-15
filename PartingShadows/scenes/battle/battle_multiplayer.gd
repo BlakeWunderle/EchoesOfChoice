@@ -332,7 +332,6 @@ func handle_battle_ended(won: bool, stats_data: Array = []) -> void:
 		await _battle._show_battle_summary()
 		if _battle._pending_loot_items.size() > 0 or _battle._pending_loot_gold > 0:
 			_battle._pre_open_loot_gate()
-			GameState.inventory.add_gold(_battle._pending_loot_gold)
 			await _battle._display.show_loot_drops(
 				_battle._pending_loot_items, _battle._pending_loot_gold)
 			_battle._pending_loot_items.clear()
@@ -361,6 +360,7 @@ func _apply_battle_stats(stats_data: Array) -> void:
 ## Host -> All: Loot drops after battle.
 func handle_loot_dropped(item_ids: Array, gold: int) -> void:
 	_battle._pending_loot_gold = gold
+	GameState.inventory.add_gold(gold)
 	_battle._pending_loot_items.clear()
 	for id: String in item_ids:
 		var item: ItemData = ItemData.from_save_id(id)

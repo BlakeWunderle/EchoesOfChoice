@@ -502,12 +502,16 @@ func _on_fighter_pick_confirmed(_slot_owners: Dictionary) -> void:
 	var party_data: Array[Dictionary] = []
 	for fighter: FighterData in GameState.party:
 		party_data.append(fighter.to_save_data())
+	var inv_data: Dictionary = GameState.inventory.to_save_data()
 	# Set up game state on all peers (call_local)
 	_rpc_load_party_and_start.rpc(party_data, GameState.current_battle_id,
-		GameState.current_story_id, slot_data, NetManager.target_player_count)
+		GameState.current_story_id, slot_data, NetManager.target_player_count, inv_data)
 	# Scene change routed through NetManager autoload for reliable delivery
-	NetManager.change_scene_for_peers("res://scenes/narrative/narrative.tscn")
-	SceneManager.change_scene("res://scenes/narrative/narrative.tscn")
+	var target: String = "res://scenes/town_stop/town_stop.tscn" \
+		if GameState.game_phase == GameState.GamePhase.TOWN_STOP \
+		else "res://scenes/narrative/narrative.tscn"
+	NetManager.change_scene_for_peers(target)
+	SceneManager.change_scene(target)
 
 
 func _on_fighter_pick_cancelled() -> void:
@@ -519,7 +523,7 @@ func _on_fighter_pick_cancelled() -> void:
 
 @rpc("authority", "call_local", "reliable")
 func _rpc_load_party_and_start(party_data: Array, battle_id: String, story_id: String,
-		slot_data: Dictionary, p_count: int) -> void:
+		slot_data: Dictionary, p_count: int, inv_data: Dictionary = {}) -> void:
 	NetManager.apply_slot_data(slot_data, p_count)
 	if not NetManager.is_host:
 		# Guest: reconstruct party from host data
@@ -529,6 +533,8 @@ func _rpc_load_party_and_start(party_data: Array, battle_id: String, story_id: S
 			fighter.apply_save_data(data)
 			fighter.abilities = FighterDB.get_abilities_for_class(fighter.class_id)
 			GameState.party.append(fighter)
+		if not inv_data.is_empty():
+			GameState.inventory.apply_save_data(inv_data)
 		GameState.current_story_id = story_id
 		GameState.advance_to_battle(battle_id)
 	# Scene change is routed through NetManager separately (not here)

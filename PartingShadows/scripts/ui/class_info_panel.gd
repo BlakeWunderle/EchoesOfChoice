@@ -10,6 +10,7 @@ const Enums := preload("res://scripts/data/enums.gd")
 var _vbox: VBoxContainer
 var _name_label: Label
 var _role_label: Label
+var _stats_label: Label
 var _flavor_label: Label
 var _abilities_container: VBoxContainer
 
@@ -46,6 +47,13 @@ func _ready() -> void:
 	_role_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	header.add_child(_role_label)
 
+	_stats_label = Label.new()
+	_stats_label.add_theme_font_size_override("font_size", maxi(SettingsManager.font_size - 2, 14))
+	_stats_label.add_theme_color_override("font_color", Color(0.6, 0.85, 0.6))
+	_stats_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_stats_label.visible = false
+	_vbox.add_child(_stats_label)
+
 	_flavor_label = Label.new()
 	_flavor_label.add_theme_font_size_override("font_size", maxi(SettingsManager.font_size - 2, 14))
 	_flavor_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.8))
@@ -66,7 +74,7 @@ func _ready() -> void:
 	_vbox.add_child(_abilities_container)
 
 
-func show_class(class_id: String, show_name: bool = true) -> void:
+func show_class(class_id: String, show_name: bool = true, deltas: Dictionary = {}) -> void:
 	# Clear previous abilities
 	for child: Node in _abilities_container.get_children():
 		child.queue_free()
@@ -76,6 +84,17 @@ func show_class(class_id: String, show_name: bool = true) -> void:
 		_name_label.text = FighterDB.get_display_name(class_id)
 	else:
 		_name_label.text = "???"
+
+	# Stat deltas
+	if not deltas.is_empty():
+		var parts: Array[String] = []
+		for key: String in deltas:
+			var diff: int = deltas[key]
+			parts.append("%s%d %s" % ["+" if diff > 0 else "", diff, key])
+		_stats_label.text = ", ".join(parts)
+		_stats_label.visible = true
+	else:
+		_stats_label.visible = false
 
 	# Roles
 	var roles: Array = FighterDBRoles.get_roles(class_id)

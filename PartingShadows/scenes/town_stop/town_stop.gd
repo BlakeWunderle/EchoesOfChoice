@@ -30,6 +30,7 @@ var _upgrade_label: Label
 var _scene_image: TextureRect
 var _phase: TownPhase = TownPhase.INTRO_TEXT
 var _active_handler: Control = null
+var _buffered_peer_ready: Array[int] = []
 
 
 func _ready() -> void:
@@ -195,8 +196,18 @@ func _mark_self_ready() -> void:
 func _on_peer_scene_ready(player_index: int) -> void:
 	if _active_handler and _active_handler.has_method("on_peer_scene_ready"):
 		_active_handler.on_peer_scene_ready(player_index)
-	else:
+	elif _ready_gate.visible:
 		_ready_gate.mark_ready(player_index)
+	else:
+		if player_index not in _buffered_peer_ready:
+			_buffered_peer_ready.append(player_index)
+
+
+func _drain_buffered_ready() -> void:
+	if _active_handler and _active_handler.has_method("on_peer_scene_ready"):
+		for idx: int in _buffered_peer_ready:
+			_active_handler.on_peer_scene_ready(idx)
+	_buffered_peer_ready.clear()
 
 
 func _on_all_ready() -> void:
@@ -207,8 +218,11 @@ func _on_all_ready() -> void:
 
 
 func _launch_upgrades() -> void:
+	if _active_handler:
+		return
 	_phase = TownPhase.UPGRADING
 	_dialogue.visible = false
+	_ready_gate.visible = false
 	var handler := TownUpgradeHandler.new({
 		"is_multiplayer": NetManager.is_multiplayer_active,
 		"is_host": NetManager.is_host if NetManager.is_multiplayer_active else true,
@@ -217,6 +231,7 @@ func _launch_upgrades() -> void:
 	handler.rpc_requested.connect(_forward_upgrade_rpc)
 	_active_handler = handler
 	add_child(handler)
+	_drain_buffered_ready.call_deferred()
 
 
 func _on_upgrades_finished() -> void:
@@ -255,6 +270,8 @@ func _on_choice_selected(index: int) -> void:
 
 
 func _start_equipping() -> void:
+	if _active_handler:
+		return
 	_phase = TownPhase.EQUIPPING
 	var handler := TownEquipmentHandler.new({
 		"party": GameState.party,
@@ -266,6 +283,7 @@ func _start_equipping() -> void:
 	handler.rpc_requested.connect(_forward_equip_rpc)
 	_active_handler = handler
 	add_child(handler)
+	_drain_buffered_ready.call_deferred()
 
 
 func _on_equip_finished() -> void:
@@ -290,18 +308,20 @@ func _do_forward_equip_rpc(method: String, args: Array) -> void:
 		"submit_equip_slot":
 			_rpc_submit_equip_slot.rpc_id(1, args[0], args[1])
 		"show_equip_upgrade_mirror":
-			_rpc_show_equip_upgrade_mirror.rpc(args[0], args[1])
+			_rpc_show_equip_upgrade_mirror.rpc(args[0], args[1], args[2])
 		"request_equip_upgrade":
-			_rpc_request_equip_upgrade.rpc_id(args[0], args[1], args[2])
+			_rpc_request_equip_upgrade.rpc_id(args[0], args[1], args[2], args[3])
 		"submit_equip_upgrade":
 			_rpc_submit_equip_upgrade.rpc_id(1, args[0], args[1])
 		"equip_applied":
-			_rpc_equip_applied.rpc(args[0], args[1])
+			_rpc_equip_applied.rpc(args[0], args[1], args[2])
 		"mirror_equip_focus":
 			_rpc_mirror_focus.rpc(args[0])
 
 
 func _start_ultimate_select() -> void:
+	if _active_handler:
+		return
 	_phase = TownPhase.ULTIMATE_SELECT
 	var handler := TownUltimateHandler.new({
 		"party": GameState.party,
@@ -313,6 +333,7 @@ func _start_ultimate_select() -> void:
 	handler.rpc_requested.connect(_forward_ultimate_rpc)
 	_active_handler = handler
 	add_child(handler)
+	_drain_buffered_ready.call_deferred()
 
 
 func _on_ult_finished() -> void:
@@ -343,13 +364,28 @@ func _do_forward_ultimate_rpc(method: String, args: Array) -> void:
 
 
 func _check_shop_or_advance() -> void:
+	if NetManager.is_multiplayer_active and not NetManager.is_host:
+		return
+
 	var battle = GameState.current_battle
 	var shop_items: Array = ShopDB.get_shop_items(battle.battle_id)
 	if not shop_items.is_empty() and GameState.inventory.gold > 0:
+		if NetManager.is_multiplayer_active:
+			_send_begin_shop.call_deferred()
 		_launch_shop(shop_items)
 		return
 
+	if NetManager.is_multiplayer_active:
+		_send_skip_shop.call_deferred()
 	_show_outro_or_advance()
+
+
+func _send_begin_shop() -> void:
+	_rpc_begin_shop.rpc(GameState.inventory.gold)
+
+
+func _send_skip_shop() -> void:
+	_rpc_skip_shop.rpc()
 
 
 func _show_outro_or_advance() -> void:
@@ -364,6 +400,8 @@ func _show_outro_or_advance() -> void:
 
 
 func _launch_shop(shop_items: Array) -> void:
+	if _active_handler:
+		return
 	_phase = TownPhase.SHOPPING
 	var is_readonly: bool = NetManager.is_multiplayer_active and not NetManager.is_host
 	var handler := TownShopHandler.new({
@@ -380,6 +418,7 @@ func _launch_shop(shop_items: Array) -> void:
 	handler.shop_closed_broadcast.connect(_on_shop_closed_broadcast)
 	_active_handler = handler
 	add_child(handler)
+	_drain_buffered_ready.call_deferred()
 
 
 func _on_shop_finished() -> void:
@@ -622,6 +661,22 @@ func _rpc_shop_closed() -> void:
 		_active_handler.on_rpc_shop_closed()
 
 
+## Host -> All: Begin shop phase with synced gold.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_begin_shop(gold: int) -> void:
+	GameState.inventory.gold = gold
+	if not _active_handler:
+		var battle = GameState.current_battle
+		var shop_items: Array = ShopDB.get_shop_items(battle.battle_id)
+		_launch_shop(shop_items)
+
+
+## Host -> All: No shop, proceed to outro/advance.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_skip_shop() -> void:
+	_show_outro_or_advance()
+
+
 ## Host -> All: Begin equipment upgrade phase.
 @rpc("authority", "call_remote", "reliable")
 func _rpc_begin_equipping() -> void:
@@ -654,16 +709,18 @@ func _rpc_submit_equip_slot(party_index: int, slot_index: int) -> void:
 
 ## Host -> All: Show upgrade options as read-only mirror after slot selected.
 @rpc("authority", "call_remote", "reliable")
-func _rpc_show_equip_upgrade_mirror(party_index: int, slot_name: String) -> void:
+func _rpc_show_equip_upgrade_mirror(party_index: int, slot_name: String,
+		equip_idx: int) -> void:
 	if _active_handler and _active_handler.has_method("on_rpc_show_equip_upgrade_mirror"):
-		_active_handler.on_rpc_show_equip_upgrade_mirror(party_index, slot_name)
+		_active_handler.on_rpc_show_equip_upgrade_mirror(party_index, slot_name, equip_idx)
 
 
 ## Host -> Guest: Request the owning player to pick an upgrade.
 @rpc("authority", "call_remote", "reliable")
-func _rpc_request_equip_upgrade(party_index: int, slot_name: String) -> void:
+func _rpc_request_equip_upgrade(party_index: int, slot_name: String,
+		equip_idx: int) -> void:
 	if _active_handler and _active_handler.has_method("on_rpc_request_equip_upgrade"):
-		_active_handler.on_rpc_request_equip_upgrade(party_index, slot_name)
+		_active_handler.on_rpc_request_equip_upgrade(party_index, slot_name, equip_idx)
 
 
 ## Guest -> Host: Submit chosen equipment upgrade.
@@ -677,9 +734,10 @@ func _rpc_submit_equip_upgrade(party_index: int, choice_id: String) -> void:
 
 ## Host -> All: Broadcast equipment upgrade result so all peers update.
 @rpc("authority", "call_remote", "reliable")
-func _rpc_equip_applied(party_index: int, choice_id: String) -> void:
+func _rpc_equip_applied(party_index: int, choice_id: String,
+		equip_idx: int) -> void:
 	if _active_handler and _active_handler.has_method("on_rpc_equip_applied"):
-		_active_handler.on_rpc_equip_applied(party_index, choice_id)
+		_active_handler.on_rpc_equip_applied(party_index, choice_id, equip_idx)
 
 
 ## Host -> All: Begin ultimate selection phase.

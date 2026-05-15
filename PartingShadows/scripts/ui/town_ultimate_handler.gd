@@ -56,59 +56,45 @@ func _ready() -> void:
 
 
 func _build_ui() -> void:
-	var top_margin := MarginContainer.new()
-	top_margin.anchor_left = 0.0
-	top_margin.anchor_top = 0.0
-	top_margin.anchor_right = 1.0
-	top_margin.anchor_bottom = 0.5
-	top_margin.clip_contents = true
-	top_margin.add_theme_constant_override("margin_left", 80)
-	top_margin.add_theme_constant_override("margin_right", 80)
-	top_margin.add_theme_constant_override("margin_top", 60)
-	top_margin.add_theme_constant_override("margin_bottom", 20)
-	add_child(top_margin)
+	var outer_margin := MarginContainer.new()
+	outer_margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	outer_margin.add_theme_constant_override("margin_left", 80)
+	outer_margin.add_theme_constant_override("margin_right", 80)
+	outer_margin.add_theme_constant_override("margin_top", 40)
+	outer_margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(outer_margin)
 
-	var vbox := VBoxContainer.new()
-	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	top_margin.add_child(vbox)
+	var root_vbox := VBoxContainer.new()
+	root_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root_vbox.add_theme_constant_override("separation", 8)
+	outer_margin.add_child(root_vbox)
 
 	_dialogue = DialoguePanel.new()
-	_dialogue.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_dialogue.all_text_finished.connect(_on_text_finished)
 	_dialogue.visible = false
-	vbox.add_child(_dialogue)
+	root_vbox.add_child(_dialogue)
+	_dialogue.size_flags_vertical = 0
+	_dialogue.custom_minimum_size.y = 250
 
 	_header_label = Label.new()
 	_header_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_header_label.add_theme_font_size_override("font_size", 28)
 	_header_label.visible = false
-	vbox.add_child(_header_label)
+	root_vbox.add_child(_header_label)
 
 	_choice_menu = ChoiceMenu.new()
 	_choice_menu.visible = false
 	_choice_menu.choice_selected.connect(_on_choice_selected)
 	_choice_menu.option_focused.connect(_on_option_focused)
-	vbox.add_child(_choice_menu)
+	root_vbox.add_child(_choice_menu)
 
 	_ready_gate = ReadyGate.new()
 	_ready_gate.visible = false
 	_ready_gate.all_ready.connect(_on_all_ready)
-	vbox.add_child(_ready_gate)
-
-	var info_margin := MarginContainer.new()
-	info_margin.anchor_left = 0.0
-	info_margin.anchor_top = 0.5
-	info_margin.anchor_right = 1.0
-	info_margin.anchor_bottom = 1.0
-	info_margin.add_theme_constant_override("margin_left", 80)
-	info_margin.add_theme_constant_override("margin_right", 80)
-	info_margin.add_theme_constant_override("margin_top", 8)
-	info_margin.add_theme_constant_override("margin_bottom", 20)
-	add_child(info_margin)
+	root_vbox.add_child(_ready_gate)
 
 	_ultimate_info_panel = UltimateInfoPanel.new()
-	_ultimate_info_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	info_margin.add_child(_ultimate_info_panel)
+	root_vbox.add_child(_ultimate_info_panel)
 
 	_tip_overlay = TipOverlay.new()
 	add_child(_tip_overlay)
@@ -258,10 +244,16 @@ func _show_ultimate_selection() -> void:
 				_header_label.visible = true
 				_choice_menu.show_choices(options)
 			else:
-				var owner_name: String = NetManager.get_fighter_owner_name(_char_index)
-				_header_label.visible = false
-				_choice_menu.visible = false
-				_waiting_overlay.show_waiting(owner_name)
+				_header_label.text = "Choosing ultimate for %s the %s:" % [
+					fighter.character_name, fighter.character_type]
+				_header_label.visible = true
+				var mirror_opts: Array[Dictionary] = _format_options()
+				for opt: Dictionary in mirror_opts:
+					opt["disabled"] = true
+				_choice_menu.show_choices(mirror_opts)
+				_choice_menu.highlight_option(0)
+				if not _ult_options.is_empty():
+					_ultimate_info_panel.show_ultimate(_ult_options[0])
 				var owner_peer: int = NetManager.get_fighter_owner_peer(_char_index)
 				rpc_requested.emit("request_ultimate", [
 					owner_peer, _char_index, fighter.character_name,

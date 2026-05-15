@@ -24,6 +24,7 @@ var _char_index: int = 0
 var _upgrade_options: Array[Dictionary] = []
 var _upgrade_option_ids: Array[String] = []
 var _selected_equip: EquipmentData = null
+var _selected_equip_idx: int = -1
 var _equip_slot_indices: Array[int] = []
 var _sub_phase: String = "slot"
 
@@ -206,10 +207,13 @@ func _show_slot_selection() -> void:
 				_header_label.visible = true
 				_choice_menu.show_choices(options)
 			else:
-				var owner_name: String = NetManager.get_fighter_owner_name(_char_index)
-				_header_label.visible = false
-				_choice_menu.visible = false
-				_waiting_overlay.show_waiting(owner_name)
+				_header_label.text = "Choosing equipment for %s:" % fighter.character_name
+				_header_label.visible = true
+				var mirror_opts: Array[Dictionary] = _format_slot_options(fighter)
+				for opt: Dictionary in mirror_opts:
+					opt["disabled"] = true
+				_choice_menu.show_choices(mirror_opts)
+				_choice_menu.highlight_option(0)
 				var owner_peer: int = NetManager.get_fighter_owner_peer(_char_index)
 				rpc_requested.emit("request_equip_slot", [
 					owner_peer, _char_index, fighter.character_name])
@@ -245,6 +249,7 @@ func _on_slot_selected(index: int) -> void:
 	var fighter: FighterData = _party[_char_index]
 	var equip_idx: int = _equip_slot_indices[index]
 	_selected_equip = fighter.equipment[equip_idx]
+	_selected_equip_idx = equip_idx
 
 	if _selected_equip.upgrade_level >= 1:
 		return
@@ -259,7 +264,7 @@ func _on_slot_selected(index: int) -> void:
 
 	if _is_multiplayer and _is_host:
 		rpc_requested.emit("show_equip_upgrade_mirror", [
-			_char_index, _selected_equip.get_slot_name()])
+			_char_index, _selected_equip.get_slot_name(), _selected_equip_idx])
 
 
 func _show_upgrade_choices() -> void:
@@ -307,7 +312,7 @@ func _apply_equip_upgrade(party_index: int, choice_id: String) -> void:
 	GameLog.info("Equipment: upgraded %s (%s)" % [_selected_equip.display_name, slot_name])
 
 	if _is_multiplayer and _is_host:
-		rpc_requested.emit("equip_applied", [party_index, choice_id])
+		rpc_requested.emit("equip_applied", [party_index, choice_id, _selected_equip_idx])
 
 	if LocalCoop.is_active:
 		LocalCoop.clear_active_player()
@@ -315,6 +320,7 @@ func _apply_equip_upgrade(party_index: int, choice_id: String) -> void:
 
 	_char_index = party_index + 1
 	_selected_equip = null
+	_selected_equip_idx = -1
 	_show_slot_selection()
 
 
@@ -386,29 +392,37 @@ func on_rpc_submit_equip_slot(party_index: int, slot_index: int) -> void:
 		return
 	var equip_idx: int = _equip_slot_indices[slot_index]
 	_selected_equip = fighter.equipment[equip_idx]
+	_selected_equip_idx = equip_idx
 	if _selected_equip.upgrade_level >= 1:
 		return
 	var slot_name: String = _selected_equip.get_slot_name()
-	rpc_requested.emit("show_equip_upgrade_mirror", [party_index, slot_name])
+	rpc_requested.emit("show_equip_upgrade_mirror", [party_index, slot_name, equip_idx])
 	if NetManager.is_my_fighter(party_index):
 		_show_upgrade_choices()
 	else:
-		_header_label.visible = false
-		_choice_menu.visible = false
-		var owner_name: String = NetManager.get_fighter_owner_name(party_index)
-		_waiting_overlay.show_waiting(owner_name)
+		_sub_phase = "upgrade"
+		var upgrade_opts: Array[Dictionary] = EquipmentDB.get_upgrade_options(_selected_equip)
+		_upgrade_option_ids.clear()
+		var mirror_opts: Array[Dictionary] = []
+		for opt: Dictionary in upgrade_opts:
+			_upgrade_option_ids.append(opt.id)
+			mirror_opts.append({"label": opt.label, "description": opt.description, "disabled": true})
+		_header_label.text = "Choosing %s:" % slot_name
+		_header_label.visible = true
+		_choice_menu.show_choices(mirror_opts)
+		_choice_menu.highlight_option(0)
 		var owner_peer: int = NetManager.get_fighter_owner_peer(party_index)
 		rpc_requested.emit("request_equip_upgrade", [
-			owner_peer, party_index, slot_name])
+			owner_peer, party_index, slot_name, equip_idx])
 
 
-func on_rpc_show_equip_upgrade_mirror(party_index: int, slot_name: String) -> void:
+func on_rpc_show_equip_upgrade_mirror(party_index: int, slot_name: String,
+		equip_idx: int) -> void:
 	_sub_phase = "upgrade"
 	var fighter: FighterData = _party[party_index]
-	for equip: EquipmentData in fighter.equipment:
-		if equip.upgrade_level < 1:
-			_selected_equip = equip
-			break
+	if equip_idx >= 0 and equip_idx < fighter.equipment.size():
+		_selected_equip = fighter.equipment[equip_idx]
+		_selected_equip_idx = equip_idx
 	if _selected_equip == null:
 		return
 	var options: Array[Dictionary] = []
@@ -423,13 +437,13 @@ func on_rpc_show_equip_upgrade_mirror(party_index: int, slot_name: String) -> vo
 	_choice_menu.highlight_option(0)
 
 
-func on_rpc_request_equip_upgrade(party_index: int, slot_name: String) -> void:
+func on_rpc_request_equip_upgrade(party_index: int, slot_name: String,
+		equip_idx: int) -> void:
 	_char_index = party_index
 	var fighter: FighterData = _party[party_index]
-	for equip: EquipmentData in fighter.equipment:
-		if equip.upgrade_level < 1:
-			_selected_equip = equip
-			break
+	if equip_idx >= 0 and equip_idx < fighter.equipment.size():
+		_selected_equip = fighter.equipment[equip_idx]
+		_selected_equip_idx = equip_idx
 	if _selected_equip == null:
 		return
 	_show_upgrade_choices()
@@ -439,21 +453,16 @@ func on_rpc_submit_equip_upgrade(party_index: int, choice_id: String) -> void:
 	if not _is_host:
 		return
 	_char_index = party_index
-	var fighter: FighterData = _party[party_index]
-	for equip: EquipmentData in fighter.equipment:
-		if equip.upgrade_level < 1:
-			_selected_equip = equip
-			break
 	_apply_equip_upgrade(party_index, choice_id)
 
 
-func on_rpc_equip_applied(party_index: int, choice_id: String) -> void:
+func on_rpc_equip_applied(party_index: int, choice_id: String,
+		equip_idx: int) -> void:
 	var fighter: FighterData = _party[party_index]
-	for equip: EquipmentData in fighter.equipment:
-		if equip.upgrade_level < 1:
-			EquipmentDB.apply_upgrade(equip, fighter, choice_id)
-			GameLog.info("Equipment (sync): upgraded %s" % equip.display_name)
-			break
+	if equip_idx >= 0 and equip_idx < fighter.equipment.size():
+		var equip: EquipmentData = fighter.equipment[equip_idx]
+		EquipmentDB.apply_upgrade(equip, fighter, choice_id)
+		GameLog.info("Equipment (sync): upgraded %s" % equip.display_name)
 	_char_index = party_index + 1
 	_show_slot_selection()
 

@@ -19,6 +19,7 @@ var _is_multiplayer: bool = false
 var _is_host: bool = true
 var _upgrade_index: int = 0
 var _upgrade_class_ids: Array[String] = []
+var _upgrade_deltas: Array[Dictionary] = []
 var _revealing: bool = false
 
 var _dialogue: DialoguePanel
@@ -61,6 +62,8 @@ func _build_ui() -> void:
 	_dialogue.all_text_finished.connect(_on_text_finished)
 	_dialogue.visible = false
 	root_vbox.add_child(_dialogue)
+	_dialogue.size_flags_vertical = 0
+	_dialogue.custom_minimum_size.y = 200
 
 	_header_label = Label.new()
 	_header_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -80,7 +83,6 @@ func _build_ui() -> void:
 	root_vbox.add_child(_ready_gate)
 
 	_class_info_panel = ClassInfoPanel.new()
-	_class_info_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root_vbox.add_child(_class_info_panel)
 
 	_tip_overlay = TipOverlay.new()
@@ -153,10 +155,17 @@ func _show_next_upgrade() -> void:
 				var options: Array[Dictionary] = _format_upgrade_options(fighter)
 				_choice_menu.show_choices(options)
 			else:
-				var owner_name: String = NetManager.get_fighter_owner_name(_upgrade_index)
-				_header_label.visible = false
-				_choice_menu.visible = false
-				_waiting_overlay.show_waiting(owner_name)
+				_header_label.text = "Choosing upgrade for %s the %s:" % [
+					fighter.character_name, fighter.character_type]
+				_header_label.visible = true
+				var mirror_opts: Array[Dictionary] = _format_upgrade_options(fighter)
+				for opt: Dictionary in mirror_opts:
+					opt["disabled"] = true
+				_choice_menu.show_choices(mirror_opts)
+				_choice_menu.highlight_option(0)
+				if not _upgrade_class_ids.is_empty() and not _upgrade_class_ids[0].is_empty():
+					var deltas: Dictionary = _upgrade_deltas[0] if not _upgrade_deltas.is_empty() else {}
+					_class_info_panel.show_class(_upgrade_class_ids[0], true, deltas)
 				var owner_peer: int = NetManager.get_fighter_owner_peer(_upgrade_index)
 				rpc_requested.emit("request_upgrade", [
 					owner_peer, _upgrade_index, fighter.character_name,
@@ -176,21 +185,17 @@ func _show_next_upgrade() -> void:
 func _format_upgrade_options(fighter: FighterData) -> Array[Dictionary]:
 	var options: Array[Dictionary] = []
 	_upgrade_class_ids.clear()
+	_upgrade_deltas.clear()
 	for item: String in fighter.upgrade_items:
 		var preview: Dictionary = FighterDB.preview_upgrade(fighter, item)
 		if preview.is_empty():
 			options.append({"label": item})
 			_upgrade_class_ids.append("")
+			_upgrade_deltas.append({})
 			continue
 		_upgrade_class_ids.append(preview.get("new_class_id", ""))
-		var parts: Array[String] = []
-		for key: String in preview["deltas"]:
-			var diff: int = preview["deltas"][key]
-			parts.append("%s%d %s" % ["+" if diff > 0 else "", diff, key])
-		var desc: String = preview["new_class"]
-		if not parts.is_empty():
-			desc += "  |  " + ", ".join(parts)
-		options.append({"label": item, "description": desc})
+		_upgrade_deltas.append(preview.get("deltas", {}))
+		options.append({"label": item})
 	return options
 
 
@@ -232,6 +237,7 @@ func _apply_upgrade(party_index: int, item: String) -> void:
 func _show_reveal(old_name: String, item: String, new_class: String) -> void:
 	_choice_menu.hide_menu()
 	_header_label.visible = false
+	_class_info_panel.visible = false
 	_waiting_overlay.hide_waiting()
 	_revealing = true
 	_dialogue.visible = true
@@ -268,7 +274,10 @@ func _on_option_focused(index: int) -> void:
 	if index >= 0 and index < _upgrade_class_ids.size():
 		var class_id: String = _upgrade_class_ids[index]
 		if not class_id.is_empty():
-			_class_info_panel.show_class(class_id)
+			var deltas: Dictionary = {}
+			if index < _upgrade_deltas.size():
+				deltas = _upgrade_deltas[index]
+			_class_info_panel.show_class(class_id, true, deltas)
 		else:
 			_class_info_panel.visible = false
 	else:
@@ -362,7 +371,8 @@ func on_rpc_show_upgrade_mirror(party_index: int, char_name: String, char_class:
 	_choice_menu.show_choices(options)
 	_choice_menu.highlight_option(0)
 	if not _upgrade_class_ids.is_empty() and not _upgrade_class_ids[0].is_empty():
-		_class_info_panel.show_class(_upgrade_class_ids[0])
+		var deltas: Dictionary = _upgrade_deltas[0] if not _upgrade_deltas.is_empty() else {}
+		_class_info_panel.show_class(_upgrade_class_ids[0], true, deltas)
 
 
 func on_rpc_submit_upgrade(party_index: int, item: String) -> void:
@@ -385,6 +395,7 @@ func on_rpc_mirror_focus(index: int) -> void:
 	if index >= 0 and index < _upgrade_class_ids.size():
 		var class_id: String = _upgrade_class_ids[index]
 		if not class_id.is_empty():
-			_class_info_panel.show_class(class_id)
+			var deltas: Dictionary = _upgrade_deltas[index] if index < _upgrade_deltas.size() else {}
+			_class_info_panel.show_class(class_id, true, deltas)
 		else:
 			_class_info_panel.visible = false

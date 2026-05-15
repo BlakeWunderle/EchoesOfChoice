@@ -128,24 +128,20 @@ func _build_ui() -> void:
 	overlay.color = Color(0, 0, 0, 0.55)
 	add_child(overlay)
 
-	var margin := MarginContainer.new()
-	margin.anchor_left = 0.0
-	margin.anchor_top = 0.0
-	margin.anchor_right = 1.0
-	margin.anchor_bottom = 0.5
-	margin.clip_contents = true
-	margin.add_theme_constant_override("margin_left", 80)
-	margin.add_theme_constant_override("margin_right", 80)
-	margin.add_theme_constant_override("margin_top", 60)
-	margin.add_theme_constant_override("margin_bottom", 20)
-	add_child(margin)
+	var outer_margin := MarginContainer.new()
+	outer_margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	outer_margin.add_theme_constant_override("margin_left", 80)
+	outer_margin.add_theme_constant_override("margin_right", 80)
+	outer_margin.add_theme_constant_override("margin_top", 40)
+	outer_margin.add_theme_constant_override("margin_bottom", 20)
+	add_child(outer_margin)
 
 	_vbox = VBoxContainer.new()
-	_vbox.add_theme_constant_override("separation", 16)
-	margin.add_child(_vbox)
+	_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_vbox.add_theme_constant_override("separation", 8)
+	outer_margin.add_child(_vbox)
 
 	_dialogue = DialoguePanel.new()
-	_dialogue.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_dialogue.all_text_finished.connect(_on_text_finished)
 	_dialogue.visible = false
 	_vbox.add_child(_dialogue)
@@ -253,21 +249,8 @@ func _build_ui() -> void:
 	_portrait_back_btn.add_theme_stylebox_override("focus", _back_focus_sb)
 	_vbox.add_child(_portrait_back_btn)
 
-	# Class info panel (bottom half, shown during class selection)
-	var info_margin := MarginContainer.new()
-	info_margin.anchor_left = 0.0
-	info_margin.anchor_top = 0.5
-	info_margin.anchor_right = 1.0
-	info_margin.anchor_bottom = 1.0
-	info_margin.add_theme_constant_override("margin_left", 80)
-	info_margin.add_theme_constant_override("margin_right", 80)
-	info_margin.add_theme_constant_override("margin_top", 8)
-	info_margin.add_theme_constant_override("margin_bottom", 20)
-	add_child(info_margin)
-
 	_class_info_panel = ClassInfoPanel.new()
-	_class_info_panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	info_margin.add_child(_class_info_panel)
+	_vbox.add_child(_class_info_panel)
 
 	_tip_overlay = TipOverlay.new()
 	add_child(_tip_overlay)

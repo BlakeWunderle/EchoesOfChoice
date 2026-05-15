@@ -179,7 +179,18 @@ func focus_first() -> void:
 func highlight_option(index: int) -> void:
 	for i: int in _buttons.size():
 		if _buttons[i].disabled:
-			_buttons[i].modulate.a = 0.85 if i == index else 0.5
+			if i == index:
+				_buttons[i].modulate.a = 1.0
+				var hl_sb := StyleBoxFlat.new()
+				hl_sb.bg_color = Color(0.2, 0.2, 0.3, 0.9)
+				hl_sb.border_color = Color(0.2, 0.9, 0.8, 0.8)
+				hl_sb.set_border_width_all(2)
+				hl_sb.set_corner_radius_all(4)
+				hl_sb.set_content_margin_all(6)
+				_buttons[i].add_theme_stylebox_override("disabled", hl_sb)
+			else:
+				_buttons[i].modulate.a = 0.4
+				_buttons[i].remove_theme_stylebox_override("disabled")
 
 
 func get_last_button() -> Button:
