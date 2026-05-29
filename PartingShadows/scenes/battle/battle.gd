@@ -140,6 +140,11 @@ func _is_mp_guest() -> bool:
 func _start_battle() -> void:
 	_engine = BattleEngine.new()
 	# Difficulty setting: Story=-40% HP/-25% ATK, Normal=unchanged, Hard=+15% ATK/+10% SPD
+	var _FighterDB := preload("res://scripts/data/fighter_db.gd")
+	var max_tier: int = 0
+	for f: FighterData in GameState.party:
+		max_tier = maxi(max_tier, _FighterDB.get_class_tier(f.class_id))
+	_engine.difficulty_level = max_tier
 	var player_diff: int = SettingsManager.difficulty
 	if player_diff == 0:
 		for enemy: FighterData in battle.enemies:
