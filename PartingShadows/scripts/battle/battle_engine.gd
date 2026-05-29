@@ -22,8 +22,8 @@ var player_shared_items: Array = []  ## Shared player item pool for sim testing
 var player_items_used: int = 0  ## Counter for sim tracking
 
 var sim_mode: bool = false  ## Skip signal emissions for headless simulation
-var difficulty_level: int = 1  ## 0=easy, 1=normal, 2=hard. Set by caller.
-var _eff_diff: int = 1  ## Effective difficulty for current turn (player always 2)
+var difficulty_level: int = 1  ## Vestigial; AI is unified (score-based for all units).
+var _eff_diff: int = 1  ## Vestigial; only referenced in unused legacy AI path.
 var sim_stats: Dictionary = {}  ## Per-fighter combat stats (sim mode only)
 var trace_log: Array[String] = []  ## Per-action trace when trace_mode is on
 var trace_mode: bool = false
