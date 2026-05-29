@@ -14,6 +14,7 @@ var _master_slider: HSlider
 var _master_label: Label
 var _text_speed_btn: OptionButton
 var _battle_speed_btn: OptionButton
+var _difficulty_btn: OptionButton
 var _font_size_btn: OptionButton
 var _display_mode_btn: OptionButton
 var _resolution_btn: OptionButton
@@ -29,6 +30,8 @@ const TEXT_SPEEDS: Array[float] = [0.04, 0.02, 0.01, 0.0]
 const TEXT_SPEED_LABELS: Array[String] = ["Slow", "Normal", "Fast", "Instant"]
 const BATTLE_SPEEDS: Array[float] = [1.8, 1.2, 0.6]
 const BATTLE_SPEED_LABELS: Array[String] = ["Slow", "Normal", "Fast"]
+const DIFFICULTY_VALUES: Array[int] = [0, 1, 2]
+const DIFFICULTY_LABELS: Array[String] = ["Story", "Normal", "Hard"]
 const FONT_SIZES: Array[int] = [14, 18, 22, 26]
 const FONT_SIZE_LABELS: Array[String] = ["Small", "Normal", "Large", "Extra Large"]
 const DISPLAY_MODES: Array[String] = ["fullscreen", "borderless", "windowed"]
@@ -108,6 +111,11 @@ func _build_ui() -> void:
 	_battle_speed_btn = OptionButton.new()
 	_add_dropdown_row(inner, "Battle Speed", _battle_speed_btn, BATTLE_SPEED_LABELS)
 	_battle_speed_btn.item_selected.connect(_on_battle_speed_selected)
+
+	# Difficulty
+	_difficulty_btn = OptionButton.new()
+	_add_dropdown_row(inner, "Difficulty", _difficulty_btn, DIFFICULTY_LABELS)
+	_difficulty_btn.item_selected.connect(_on_difficulty_selected)
 
 	# Font Size
 	_font_size_btn = OptionButton.new()
@@ -298,6 +306,7 @@ func _sync_from_settings() -> void:
 
 	_text_speed_btn.select(_find_index(TEXT_SPEEDS, SettingsManager.text_speed, 1))
 	_battle_speed_btn.select(_find_index(BATTLE_SPEEDS, SettingsManager.combat_pause, 1))
+	_difficulty_btn.select(_find_index_int(DIFFICULTY_VALUES, SettingsManager.difficulty, 1))
 	_font_size_btn.select(_find_index_int(FONT_SIZES, SettingsManager.font_size, 1))
 
 	_display_mode_btn.select(_find_index_str(DISPLAY_MODES, SettingsManager.display_mode, 0))
@@ -354,6 +363,10 @@ func _on_text_speed_selected(index: int) -> void:
 
 func _on_battle_speed_selected(index: int) -> void:
 	SettingsManager.combat_pause = BATTLE_SPEEDS[index]
+
+
+func _on_difficulty_selected(index: int) -> void:
+	SettingsManager.difficulty = DIFFICULTY_VALUES[index]
 
 
 func _on_font_size_selected(index: int) -> void:

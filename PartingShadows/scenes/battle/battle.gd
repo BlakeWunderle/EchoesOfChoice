@@ -144,7 +144,18 @@ func _start_battle() -> void:
 	var max_tier: int = 0
 	for f: FighterData in GameState.party:
 		max_tier = maxi(max_tier, _FighterDB.get_class_tier(f.class_id))
-	_engine.difficulty_level = max_tier
+	var player_diff: int = SettingsManager.difficulty
+	if player_diff == 0:
+		_engine.difficulty_level = 0
+		for enemy: FighterData in battle.enemies:
+			enemy.max_health = maxi(1, int(enemy.max_health * 0.6))
+			enemy.health = enemy.max_health
+			enemy.physical_attack = maxi(1, int(enemy.physical_attack * 0.75))
+			enemy.magic_attack = maxi(1, int(enemy.magic_attack * 0.75))
+	elif player_diff == 2:
+		_engine.difficulty_level = 2
+	else:
+		_engine.difficulty_level = max_tier
 	_engine.combat_message.connect(_on_combat_message)
 	_engine.combat_event.connect(_on_combat_event)
 	_engine.fighter_died.connect(_on_fighter_died)

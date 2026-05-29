@@ -596,6 +596,8 @@ func _modify_stats(fighter: FighterData, stat: Enums.StatType,
 
 func reset_modified_stat(fighter: FighterData) -> void:
 	var to_remove: Array[int] = []
+	var total_dot_damage: int = 0
+	var total_hot_heal: int = 0
 
 	for i: int in fighter.modified_stats.size():
 		var mod: Dictionary = fighter.modified_stats[i]
@@ -606,8 +608,7 @@ func reset_modified_stat(fighter: FighterData) -> void:
 				if sim_mode:
 					sim_stats[fighter].dmg_taken += mod["damage_per_turn"]
 				else:
-					combat_message.emit("[color=#cc4dcc]%s takes %d damage from a lingering effect.[/color]" % [
-						fighter.character_name, mod["damage_per_turn"]])
+					total_dot_damage += mod["damage_per_turn"]
 					combat_event.emit(fighter, mod["damage_per_turn"], "damage")
 			else:
 				var heal: int = mini(mod["damage_per_turn"],
@@ -616,8 +617,7 @@ func reset_modified_stat(fighter: FighterData) -> void:
 				if sim_mode:
 					sim_stats[fighter].heals += heal
 				else:
-					combat_message.emit("[color=#4dff66]%s recovers %d health from a lingering effect.[/color]" % [
-						fighter.character_name, heal])
+					total_hot_heal += heal
 					combat_event.emit(fighter, heal, "heal")
 
 		if mod["turns"] == 0:
@@ -626,6 +626,14 @@ func reset_modified_stat(fighter: FighterData) -> void:
 			to_remove.append(i)
 		else:
 			mod["turns"] -= 1
+
+	if not sim_mode:
+		if total_dot_damage > 0:
+			combat_message.emit("[color=#cc4dcc]%s takes %d damage from lingering effects.[/color]" % [
+				fighter.character_name, total_dot_damage])
+		if total_hot_heal > 0:
+			combat_message.emit("[color=#4dff66]%s recovers %d health from lingering effects.[/color]" % [
+				fighter.character_name, total_hot_heal])
 
 	for offset: int in to_remove.size():
 		fighter.modified_stats.remove_at(to_remove[offset] - offset)

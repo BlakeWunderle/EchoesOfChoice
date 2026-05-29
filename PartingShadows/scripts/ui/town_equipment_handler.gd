@@ -155,6 +155,17 @@ func _on_choice_selected(index: int) -> void:
 		_on_upgrade_selected(index)
 
 
+func _input(event: InputEvent) -> void:
+	if not _choice_menu.visible:
+		return
+	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("cancel"):
+		if _sub_phase == "upgrade":
+			_sub_phase = "slot"
+			SFXManager.play(SFXManager.Category.UI_SELECT, 0.2)
+			_show_slot_selection()
+			get_viewport().set_input_as_handled()
+
+
 func _on_option_focused(index: int) -> void:
 	if _is_multiplayer:
 		rpc_requested.emit("mirror_equip_focus", [index])
