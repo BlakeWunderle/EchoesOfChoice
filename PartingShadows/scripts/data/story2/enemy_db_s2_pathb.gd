@@ -15,7 +15,7 @@ static func create_fractured_scholar(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Fractured Scholar", lvl)
 	f.health = EH.es(598, 678, 4, 6, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(34, 40, 2, 4, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(101, 112, 2, 4, lvl, 13)
+	f.physical_attack = EH.es(105, 116, 2, 4, lvl, 13)
 	f.physical_defense = EH.es(43, 52, 2, 3, lvl, 13)
 	f.magic_attack = EH.es(90, 102, 2, 4, lvl, 13)
 	f.magic_defense = EH.es(47, 55, 2, 3, lvl, 13)
@@ -30,7 +30,7 @@ static func create_archive_sentinel(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Archive Sentinel", lvl)
 	f.health = EH.es(546, 617, 4, 6, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(30, 39, 3, 4, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(102, 114, 3, 5, lvl, 13)
+	f.physical_attack = EH.es(106, 118, 3, 5, lvl, 13)
 	f.physical_defense = EH.es(53, 62, 2, 4, lvl, 13)
 	f.magic_attack = EH.es(23, 27, 0, 2, lvl, 13)
 	f.magic_defense = EH.es(46, 54, 2, 3, lvl, 13)
@@ -198,9 +198,9 @@ static func create_the_unblinking_eye(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(92, 106, 4, 6, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(36, 44, 1, 3, lvl, 15)
 	f.physical_defense = EH.es(56, 66, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(152, 170, 5, 8, lvl, 15)
+	f.magic_attack = EH.es(162, 180, 5, 8, lvl, 15)
 	f.magic_defense = EH.es(70, 79, 4, 6, lvl, 15)
-	f.speed = EH.es(64, 70, 2, 4, lvl, 15)
+	f.speed = EH.es(68, 74, 2, 4, lvl, 15)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 17
 	f.abilities = [EAB.gaze_of_annihilation(), EAB.memory_maelstrom(), EAB.ancient_fury(), EAB.devour_identity(), EAB.unblinking_focus()]
 	f.flavor_text = "The Eye of Oblivion at full, terrible power. Not weakened by sacrifice, not diminished by poison. It sees everything and forgets nothing."
@@ -217,7 +217,7 @@ static func create_perception_tendril(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(34, 40, 2, 4, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 26, 1, 2, lvl, 15)
 	f.physical_defense = EH.es(18, 24, 1, 2, lvl, 15)
-	f.magic_attack = EH.es(52, 60, 2, 3, lvl, 15)
+	f.magic_attack = EH.es(57, 65, 2, 3, lvl, 15)
 	f.magic_defense = EH.es(35, 42, 2, 3, lvl, 15)
 	f.speed = EH.es(59, 66, 2, 4, lvl, 15)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 8
@@ -236,7 +236,7 @@ static func create_void_lens(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(34, 40, 2, 4, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 28, 1, 2, lvl, 15)
 	f.physical_defense = EH.es(16, 22, 1, 2, lvl, 15)
-	f.magic_attack = EH.es(58, 67, 2, 3, lvl, 15)
+	f.magic_attack = EH.es(63, 72, 2, 3, lvl, 15)
 	f.magic_defense = EH.es(32, 40, 2, 3, lvl, 15)
 	f.speed = EH.es(64, 71, 3, 4, lvl, 15)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 8

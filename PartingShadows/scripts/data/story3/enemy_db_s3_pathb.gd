@@ -17,7 +17,7 @@ static func create_cellar_sentinel(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Cellar Sentinel", lvl)
 	f.health = EH.es(453, 518, 5, 8, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(88, 99, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(89, 100, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(47, 55, 2, 4, lvl, 12)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 12)
 	f.magic_defense = EH.es(30, 36, 2, 3, lvl, 12)
@@ -32,7 +32,7 @@ static func create_bound_stalker(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Bound Stalker", lvl)
 	f.health = EH.es(340, 391, 4, 7, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(79, 89, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(80, 90, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 12)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 12)
 	f.magic_defense = EH.es(30, 36, 2, 3, lvl, 12)
@@ -139,7 +139,7 @@ static func create_thread_ritualist(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(38, 46, 1, 2, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(21, 25, 0, 2, lvl, 14)
 	f.physical_defense = EH.es(42, 51, 2, 4, lvl, 14)
-	f.magic_attack = EH.es(131, 144, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(127, 140, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(48, 58, 2, 4, lvl, 14)
 	f.speed = EH.es(38, 44, 2, 3, lvl, 14)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 17
@@ -152,7 +152,7 @@ static func create_passage_guardian(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Passage Guardian", lvl)
 	f.health = EH.es(549, 628, 6, 9, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(130, 145, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(126, 141, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(63, 71, 2, 4, lvl, 14)
 	f.magic_attack = EH.es(19, 23, 0, 1, lvl, 14)
 	f.magic_defense = EH.es(39, 49, 2, 3, lvl, 14)
@@ -169,7 +169,7 @@ static func create_warding_shadow(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(36, 44, 1, 2, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(21, 25, 0, 2, lvl, 14)
 	f.physical_defense = EH.es(31, 38, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(122, 135, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(119, 132, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(49, 59, 2, 4, lvl, 14)
 	f.speed = EH.es(39, 45, 2, 3, lvl, 14)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 20

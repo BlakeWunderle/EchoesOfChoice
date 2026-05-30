@@ -92,7 +92,7 @@ static func create_void_iris(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(34, 40, 2, 4, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(29, 37, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(38, 48, 1, 3, lvl, 14)
-	f.magic_attack = EH.es(119, 133, 3, 4, lvl, 14)
+	f.magic_attack = EH.es(121, 135, 3, 4, lvl, 14)
 	f.magic_defense = EH.es(65, 75, 2, 4, lvl, 14)
 	f.speed = EH.es(63, 70, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -126,7 +126,7 @@ static func create_the_iris(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(60, 70, 4, 6, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(36, 45, 1, 3, lvl, 15)
 	f.physical_defense = EH.es(61, 72, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(156, 172, 4, 7, lvl, 15)
+	f.magic_attack = EH.es(158, 174, 4, 7, lvl, 15)
 	f.magic_defense = EH.es(77, 87, 3, 5, lvl, 15)
 	f.speed = EH.es(57, 63, 1, 3, lvl, 15)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17

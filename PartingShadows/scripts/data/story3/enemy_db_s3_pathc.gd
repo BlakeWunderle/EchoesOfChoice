@@ -70,7 +70,7 @@ static func create_dream_priest(n: String, lvl: int = 16) -> FighterData:
 	f.mana = EH.es(44, 54, 1, 2, lvl, 16); f.max_mana = f.mana
 	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 16)
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 16)
-	f.magic_attack = EH.es(109, 122, 3, 5, lvl, 16)
+	f.magic_attack = EH.es(102, 115, 3, 5, lvl, 16)
 	f.magic_defense = EH.es(62, 72, 2, 4, lvl, 16)
 	f.speed = EH.es(54, 60, 2, 3, lvl, 16)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
@@ -83,7 +83,7 @@ static func create_astral_enforcer(n: String, lvl: int = 16) -> FighterData:
 	var f := EH.base(n, "Astral Enforcer", lvl)
 	f.health = EH.es(480, 552, 6, 9, lvl, 16); f.max_health = f.health
 	f.mana = EH.es(45, 54, 1, 1, lvl, 16); f.max_mana = f.mana
-	f.physical_attack = EH.es(150, 166, 3, 6, lvl, 16)
+	f.physical_attack = EH.es(143, 159, 3, 6, lvl, 16)
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 16)
 	f.magic_attack = EH.es(16, 20, 0, 1, lvl, 16)
 	f.magic_defense = EH.es(28, 36, 2, 3, lvl, 16)
@@ -114,7 +114,7 @@ static func create_oneiric_guardian(n: String, lvl: int = 16) -> FighterData:
 	var f := EH.base(n, "Oneiric Guardian", lvl)
 	f.health = EH.es(576, 659, 7, 10, lvl, 16); f.max_health = f.health
 	f.mana = EH.es(30, 39, 1, 1, lvl, 16); f.max_mana = f.mana
-	f.physical_attack = EH.es(90, 100, 2, 4, lvl, 16)
+	f.physical_attack = EH.es(85, 95, 2, 4, lvl, 16)
 	f.physical_defense = EH.es(68, 78, 2, 4, lvl, 16)
 	f.magic_attack = EH.es(16, 20, 0, 1, lvl, 16)
 	f.magic_defense = EH.es(30, 36, 2, 3, lvl, 16)
@@ -136,7 +136,7 @@ static func create_memory_eater(n: String, lvl: int = 17) -> FighterData:
 	f.mana = EH.es(40, 48, 1, 2, lvl, 17); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 26, 0, 2, lvl, 17)
 	f.physical_defense = EH.es(37, 45, 2, 4, lvl, 17)
-	f.magic_attack = EH.es(141, 155, 3, 6, lvl, 17)
+	f.magic_attack = EH.es(138, 152, 3, 6, lvl, 17)
 	f.magic_defense = EH.es(58, 66, 2, 4, lvl, 17)
 	f.speed = EH.es(41, 47, 2, 3, lvl, 17)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 25
@@ -149,7 +149,7 @@ static func create_nightmare_sentinel(n: String, lvl: int = 17) -> FighterData:
 	var f := EH.base(n, "Nightmare Sentinel", lvl)
 	f.health = EH.es(539, 618, 6, 9, lvl, 17); f.max_health = f.health
 	f.mana = EH.es(33, 42, 1, 2, lvl, 17); f.max_mana = f.mana
-	f.physical_attack = EH.es(133, 147, 3, 5, lvl, 17)
+	f.physical_attack = EH.es(130, 144, 3, 5, lvl, 17)
 	f.physical_defense = EH.es(66, 74, 2, 4, lvl, 17)
 	f.magic_attack = EH.es(20, 24, 0, 1, lvl, 17)
 	f.magic_defense = EH.es(41, 50, 2, 3, lvl, 17)
@@ -164,9 +164,9 @@ static func create_anchor_chain(n: String, lvl: int = 17) -> FighterData:
 	var f := EH.base(n, "Anchor Chain", lvl)
 	f.health = EH.es(502, 576, 6, 9, lvl, 17); f.max_health = f.health
 	f.mana = EH.es(34, 42, 2, 3, lvl, 17); f.max_mana = f.mana
-	f.physical_attack = EH.es(113, 125, 3, 5, lvl, 17)
+	f.physical_attack = EH.es(111, 123, 3, 5, lvl, 17)
 	f.physical_defense = EH.es(59, 67, 2, 4, lvl, 17)
-	f.magic_attack = EH.es(128, 141, 3, 5, lvl, 17)
+	f.magic_attack = EH.es(126, 139, 3, 5, lvl, 17)
 	f.magic_defense = EH.es(59, 67, 2, 4, lvl, 17)
 	f.speed = EH.es(31, 37, 2, 3, lvl, 17)
 	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 17

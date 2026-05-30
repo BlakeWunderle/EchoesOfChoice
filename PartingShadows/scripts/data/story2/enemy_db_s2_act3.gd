@@ -175,9 +175,9 @@ static func create_the_warden(n: String, lvl: int = 13) -> FighterData:
 	f.mana = EH.es(36, 44, 2, 4, lvl, 13); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 13)
 	f.physical_defense = EH.es(38, 44, 2, 3, lvl, 13)
-	f.magic_attack = EH.es(107, 119, 3, 5, lvl, 13)
+	f.magic_attack = EH.es(117, 129, 3, 5, lvl, 13)
 	f.magic_defense = EH.es(47, 53, 2, 4, lvl, 13)
-	f.speed = EH.es(47, 53, 2, 3, lvl, 13)
+	f.speed = EH.es(51, 57, 2, 3, lvl, 13)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EABL.sanctum_judgment(), EABL.barrier_of_ages(), EABL.decree_of_exile(), EABL.memory_verdict(), EABL.dispel_will()]
 	f.flavor_text = "The sanctum's supreme guardian, an entity of crystallized law and ancient purpose. It judges all who enter and finds them wanting."
@@ -188,11 +188,11 @@ static func create_fractured_protector(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Fractured Protector", lvl)
 	f.health = EH.es(831, 937, 7, 11, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(34, 40, 2, 4, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(92, 102, 2, 4, lvl, 13)
+	f.physical_attack = EH.es(100, 110, 2, 4, lvl, 13)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 13)
-	f.magic_attack = EH.es(80, 91, 2, 4, lvl, 13)
+	f.magic_attack = EH.es(87, 98, 2, 4, lvl, 13)
 	f.magic_defense = EH.es(35, 41, 2, 3, lvl, 13)
-	f.speed = EH.es(49, 55, 2, 3, lvl, 13)
+	f.speed = EH.es(53, 59, 2, 3, lvl, 13)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EABL.corrupted_mending(), EABL.eye_infused_strike(), EABL.drowned_light(), EABL.memory_fracture(), EABL.fractured_blessing()]
 	f.flavor_text = "Once a noble defender of the memory sanctum, now cracked and unstable. Her healing magic has been inverted by the Eye's corruption, burning instead of mending, taking instead of giving."

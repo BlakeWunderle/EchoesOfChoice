@@ -59,11 +59,11 @@ static func create_stranger(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Stranger", lvl)
 	f.health = EH.es(650, 725, 12, 17, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(60, 70, 3, 4, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(70, 78, 3, 5, lvl, 11)
+	f.physical_attack = EH.es(83, 91, 3, 5, lvl, 11)
 	f.physical_defense = EH.es(41, 48, 2, 4, lvl, 11)
-	f.magic_attack = EH.es(73, 83, 3, 5, lvl, 11)
+	f.magic_attack = EH.es(87, 97, 3, 5, lvl, 11)
 	f.magic_defense = EH.es(45, 52, 2, 4, lvl, 11)
-	f.speed = EH.es(58, 64, 2, 4, lvl, 11)
+	f.speed = EH.es(68, 74, 2, 4, lvl, 11)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 17
 	f.abilities = [EABL.shadow_strike(), EABL.dark_pulse(), EABL.void_shield(), EABL.drain(), EABL.soul_siphon()]
 	f.flavor_text = "A cloaked figure radiating dark power. His true nature remains hidden beneath layers of shadow."
@@ -80,7 +80,7 @@ static func create_lich(n: String, lvl: int = 12) -> FighterData:
 	f.mana = EH.es(45, 52, 3, 4, lvl, 12); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 26, 0, 2, lvl, 12)
 	f.physical_defense = EH.es(24, 29, 2, 3, lvl, 12)
-	f.magic_attack = EH.es(82, 90, 4, 6, lvl, 12)
+	f.magic_attack = EH.es(77, 85, 4, 6, lvl, 12)
 	f.magic_defense = EH.es(47, 56, 3, 5, lvl, 12)
 	f.speed = EH.es(45, 51, 2, 4, lvl, 12)
 	f.crit_chance = 17; f.crit_damage = 4; f.dodge_chance = 10
@@ -92,7 +92,7 @@ static func create_ghast(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Ghast", lvl)
 	f.health = EH.es(350, 400, 7, 10, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(30, 36, 2, 3, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(79, 86, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(74, 81, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(40, 46, 2, 4, lvl, 12)
 	f.magic_attack = EH.es(26, 32, 1, 2, lvl, 12)
 	f.magic_defense = EH.es(24, 29, 1, 3, lvl, 12)
@@ -182,7 +182,7 @@ static func create_dark_knight(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Dark Knight", lvl)
 	f.health = EH.es(528, 584, 7, 10, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(18, 23, 2, 3, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(94, 102, 4, 6, lvl, 14)
+	f.physical_attack = EH.es(91, 99, 4, 6, lvl, 14)
 	f.physical_defense = EH.es(40, 49, 3, 5, lvl, 14)
 	f.magic_attack = EH.es(51, 60, 2, 4, lvl, 14)
 	f.magic_defense = EH.es(40, 48, 2, 4, lvl, 14)
@@ -198,7 +198,7 @@ static func create_fell_hound(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(18, 23, 2, 3, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(30, 35, 1, 3, lvl, 14)
 	f.physical_defense = EH.es(27, 34, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(82, 91, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(79, 88, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(38, 44, 2, 4, lvl, 14)
 	f.speed = EH.es(56, 62, 3, 5, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 5; f.dodge_chance = 25
@@ -239,11 +239,11 @@ static func create_stranger_final(n: String, lvl: int = 15) -> FighterData:
 	f.class_id = "StrangerFinal"
 	f.health = EH.es(870, 960, 12, 16, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(75, 85, 4, 5, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(87, 95, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(101, 109, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(58, 66, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(93, 103, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(108, 118, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(61, 69, 3, 5, lvl, 15)
-	f.speed = EH.es(75, 82, 3, 5, lvl, 15)
+	f.speed = EH.es(85, 92, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 6; f.dodge_chance = 20
 	f.abilities = [EABL.shadow_blast(), EABL.siphon(), EABL.dark_veil(), EABL.unmake(), EABL.entropy()]
 	f.flavor_text = "The Stranger revealed in full, terrible power. Reality itself bends around him as he prepares to unmake everything."

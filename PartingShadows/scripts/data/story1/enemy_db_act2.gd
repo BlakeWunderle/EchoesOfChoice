@@ -45,7 +45,7 @@ static func create_troll(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Troll", lvl)
 	f.health = EH.es(170, 195, 6, 10, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(16, 19, 1, 2, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(40, 49, 2, 3, lvl, 5)
+	f.physical_attack = EH.es(38, 47, 2, 3, lvl, 5)
 	f.physical_defense = EH.es(12, 16, 1, 3, lvl, 5)
 	f.magic_attack = EH.es(5, 9, 0, 1, lvl, 5)
 	f.magic_defense = EH.es(10, 14, 1, 2, lvl, 5)
@@ -61,7 +61,7 @@ static func create_harpy(n: String, lvl: int = 5) -> FighterData:
 	f.mana = EH.es(10, 13, 1, 2, lvl, 5); f.max_mana = f.mana
 	f.physical_attack = EH.es(18, 24, 2, 3, lvl, 5)
 	f.physical_defense = EH.es(11, 15, 1, 2, lvl, 5)
-	f.magic_attack = EH.es(31, 37, 2, 3, lvl, 5)
+	f.magic_attack = EH.es(29, 35, 2, 3, lvl, 5)
 	f.magic_defense = EH.es(14, 18, 1, 2, lvl, 5)
 	f.speed = EH.es(31, 39, 2, 3, lvl, 5)
 	f.crit_chance = 16; f.crit_damage = 2; f.dodge_chance = 20
@@ -75,7 +75,7 @@ static func create_witch(n: String, lvl: int = 4) -> FighterData:
 	f.mana = EH.es(14, 20, 2, 4, lvl, 4); f.max_mana = f.mana
 	f.physical_attack = EH.es(16, 21, 1, 2, lvl, 4)
 	f.physical_defense = EH.es(8, 12, 1, 2, lvl, 4)
-	f.magic_attack = EH.es(31, 40, 3, 6, lvl, 4)
+	f.magic_attack = EH.es(35, 44, 3, 6, lvl, 4)
 	f.magic_defense = EH.es(18, 26, 2, 4, lvl, 4)
 	f.speed = EH.es(26, 32, 1, 2, lvl, 4)
 	f.crit_chance = 13; f.crit_damage = 2; f.dodge_chance = 10
@@ -89,7 +89,7 @@ static func create_wisp(n: String, lvl: int = 4) -> FighterData:
 	f.mana = EH.es(10, 17, 1, 3, lvl, 4); f.max_mana = f.mana
 	f.physical_attack = EH.es(13, 18, 1, 2, lvl, 4)
 	f.physical_defense = EH.es(6, 10, 1, 2, lvl, 4)
-	f.magic_attack = EH.es(31, 37, 3, 5, lvl, 4)
+	f.magic_attack = EH.es(35, 41, 3, 5, lvl, 4)
 	f.magic_defense = EH.es(14, 20, 1, 3, lvl, 4)
 	f.speed = EH.es(28, 38, 2, 3, lvl, 4)
 	f.crit_chance = 10; f.crit_damage = 1; f.dodge_chance = 11
@@ -101,7 +101,7 @@ static func create_treant(n: String, lvl: int = 4) -> FighterData:
 	var f := EH.base(n, "Treant", lvl)
 	f.health = EH.es(80, 100, 3, 8, lvl, 4); f.max_health = f.health
 	f.mana = EH.es(14, 23, 1, 3, lvl, 4); f.max_mana = f.mana
-	f.physical_attack = EH.es(25, 30, 2, 4, lvl, 4)
+	f.physical_attack = EH.es(29, 34, 2, 4, lvl, 4)
 	f.physical_defense = EH.es(7, 12, 1, 2, lvl, 4)
 	f.magic_attack = EH.es(13, 19, 1, 2, lvl, 4)
 	f.magic_defense = EH.es(15, 21, 1, 2, lvl, 4)
@@ -117,7 +117,7 @@ static func create_siren(n: String, lvl: int = 4) -> FighterData:
 	f.mana = EH.es(12, 21, 1, 3, lvl, 3); f.max_mana = f.mana
 	f.physical_attack = EH.es(15, 22, 1, 3, lvl, 4)
 	f.physical_defense = EH.es(11, 18, 1, 3, lvl, 4)
-	f.magic_attack = EH.es(29, 42, 3, 6, lvl, 4)
+	f.magic_attack = EH.es(32, 45, 3, 6, lvl, 4)
 	f.magic_defense = EH.es(16, 25, 2, 4, lvl, 4)
 	f.speed = EH.es(25, 32, 1, 2, lvl, 3)
 	f.crit_chance = 11; f.crit_damage = 2; f.dodge_chance = 11
@@ -129,7 +129,7 @@ static func create_merfolk(n: String, lvl: int = 4) -> FighterData:
 	var f := EH.base(n, "Merfolk", lvl)
 	f.health = EH.es(106, 127, 4, 7, lvl, 4); f.max_health = f.health
 	f.mana = EH.es(7, 10, 1, 2, lvl, 4); f.max_mana = f.mana
-	f.physical_attack = EH.es(27, 33, 2, 3, lvl, 4)
+	f.physical_attack = EH.es(30, 36, 2, 3, lvl, 4)
 	f.physical_defense = EH.es(11, 16, 1, 2, lvl, 4)
 	f.magic_attack = EH.es(21, 27, 2, 3, lvl, 4)
 	f.magic_defense = EH.es(13, 17, 1, 2, lvl, 4)
@@ -198,7 +198,7 @@ static func create_ringmaster(n: String) -> FighterData:
 	f.health = EH.fixed(128, 144); f.max_health = f.health
 	f.mana = EH.fixed(12, 15); f.max_mana = f.mana
 	f.physical_attack = EH.fixed(26, 32); f.physical_defense = EH.fixed(12, 16)
-	f.magic_attack = EH.fixed(35, 39); f.magic_defense = EH.fixed(12, 16)
+	f.magic_attack = EH.fixed(38, 42); f.magic_defense = EH.fixed(12, 16)
 	f.speed = EH.fixed(32, 37)
 	f.crit_chance = 11; f.crit_damage = 2; f.dodge_chance = 20
 	f.abilities = [EAB.whip_crack(), EAB.showstopper(), EAB.center_ring()]
@@ -210,7 +210,7 @@ static func create_harlequin(n: String) -> FighterData:
 	f.health = EH.fixed(135, 152); f.max_health = f.health
 	f.mana = EH.fixed(12, 15); f.max_mana = f.mana
 	f.physical_attack = EH.fixed(20, 24); f.physical_defense = EH.fixed(11, 15)
-	f.magic_attack = EH.fixed(41, 47); f.magic_defense = EH.fixed(13, 17)
+	f.magic_attack = EH.fixed(44, 50); f.magic_defense = EH.fixed(13, 17)
 	f.speed = EH.fixed(30, 35)
 	f.crit_chance = 12; f.crit_damage = 2; f.dodge_chance = 19
 	f.abilities = [EAB.pantomime_wall(), EAB.prop_drop(), EAB.mime_trap()]
@@ -222,7 +222,7 @@ static func create_chanteuse(n: String) -> FighterData:
 	f.health = EH.fixed(137, 153); f.max_health = f.health
 	f.mana = EH.fixed(14, 17); f.max_mana = f.mana
 	f.physical_attack = EH.fixed(20, 25); f.physical_defense = EH.fixed(13, 17)
-	f.magic_attack = EH.fixed(38, 43); f.magic_defense = EH.fixed(18, 23)
+	f.magic_attack = EH.fixed(41, 46); f.magic_defense = EH.fixed(18, 23)
 	f.speed = EH.fixed(36, 42)
 	f.crit_chance = 20; f.crit_damage = 2; f.dodge_chance = 12
 	f.abilities = [EAB.aria(), EAB.crescendo(), EAB.cadence()]

@@ -139,7 +139,7 @@ static func create_blackwater_captain(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Blackwater Captain", lvl)
 	f.health = EH.es(288, 329, 6, 9, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(24, 33, 2, 3, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(54, 61, 3, 5, lvl, 8)
+	f.physical_attack = EH.es(57, 64, 3, 5, lvl, 8)
 	f.physical_defense = EH.es(39, 45, 2, 3, lvl, 8)
 	f.magic_attack = EH.es(14, 17, 0, 1, lvl, 8)
 	f.magic_defense = EH.es(19, 24, 1, 2, lvl, 8)
@@ -156,7 +156,7 @@ static func create_corsair_hexer(n: String, lvl: int = 8) -> FighterData:
 	f.mana = EH.es(22, 26, 2, 3, lvl, 8); f.max_mana = f.mana
 	f.physical_attack = EH.es(16, 19, 0, 2, lvl, 8)
 	f.physical_defense = EH.es(15, 19, 1, 2, lvl, 8)
-	f.magic_attack = EH.es(50, 57, 3, 5, lvl, 8)
+	f.magic_attack = EH.es(53, 60, 3, 5, lvl, 8)
 	f.magic_defense = EH.es(34, 40, 2, 3, lvl, 8)
 	f.speed = EH.es(36, 43, 2, 3, lvl, 8)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
@@ -169,7 +169,7 @@ static func create_bilge_rat(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Bilge Rat", lvl)
 	f.health = EH.es(188, 214, 4, 6, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(21, 27, 2, 3, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(48, 54, 2, 3, lvl, 8)
+	f.physical_attack = EH.es(51, 57, 2, 3, lvl, 8)
 	f.physical_defense = EH.es(14, 19, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(15, 18, 0, 1, lvl, 8)
 	f.magic_defense = EH.es(12, 17, 1, 2, lvl, 8)
@@ -216,7 +216,7 @@ static func create_tidecaller_revenant(n: String, lvl: int = 10) -> FighterData:
 	f.mana = EH.es(28, 34, 2, 3, lvl, 10); f.max_mana = f.mana
 	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 10)
 	f.physical_defense = EH.es(31, 37, 2, 3, lvl, 10)
-	f.magic_attack = EH.es(86, 94, 4, 6, lvl, 10)
+	f.magic_attack = EH.es(94, 102, 4, 6, lvl, 10)
 	f.magic_defense = EH.es(43, 50, 3, 5, lvl, 10)
 	f.speed = EH.es(45, 51, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -231,7 +231,7 @@ static func create_salt_phantom(n: String, lvl: int = 9) -> FighterData:
 	f.mana = EH.es(20, 24, 2, 3, lvl, 9); f.max_mana = f.mana
 	f.physical_attack = EH.es(17, 20, 0, 2, lvl, 9)
 	f.physical_defense = EH.es(18, 23, 1, 2, lvl, 9)
-	f.magic_attack = EH.es(70, 77, 3, 5, lvl, 9)
+	f.magic_attack = EH.es(77, 84, 3, 5, lvl, 9)
 	f.magic_defense = EH.es(32, 39, 2, 4, lvl, 9)
 	f.speed = EH.es(43, 49, 2, 3, lvl, 9)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 25
