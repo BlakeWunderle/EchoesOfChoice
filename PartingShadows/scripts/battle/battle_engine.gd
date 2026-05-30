@@ -1577,6 +1577,10 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 		if _a.health > 0:
 			alive_allies += 1
 
+	var buff_outnumber_mult: float = minf(1.5,
+		1.0 + maxf(0.0, float(targets.size() - allies.size())) * 0.25)
+
+	var candidates: Array[Dictionary] = []
 	var best_score: float = -1.0
 	var best_type: String = ""
 	var best_ability: AbilityData = null
@@ -1610,11 +1614,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 							s2 *= 2.0
 						total += s2
 				score = total
-			if score > best_score:
-				best_score = score
-				best_type = "HEAL"
-				best_ability = heal
-				best_target = ally
+			if score > 1.0:
+				candidates.append({"score": score, "type": "HEAL",
+					"ability": heal, "target": ally, "item_idx": -1})
+				if score > best_score:
+					best_score = score
+					best_type = "HEAL"
+					best_ability = heal
+					best_target = ally
 
 	# -- Score buffs --
 	var offense_stats: Array = [
@@ -1648,11 +1655,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 								s2 *= 2.0
 							total += s2
 					score = total
-				if score > best_score:
-					best_score = score
-					best_type = "BUFF"
-					best_ability = buff
-					best_target = ally
+				if score > 1.0:
+					candidates.append({"score": score, "type": "BUFF",
+						"ability": buff, "target": ally, "item_idx": -1})
+					if score > best_score:
+						best_score = score
+						best_type = "BUFF"
+						best_ability = buff
+						best_target = ally
 			continue
 
 		var is_offense: bool = buff.modified_stat in offense_stats
@@ -1669,16 +1679,21 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 				if is_offense:
 					s *= _dmg_type_relevance(buff.modified_stat, _damage_magic_ratio(ally))
 				elif is_defense:
-					s *= float(targets.size()) / maxf(1.0, float(allies.size()))
+					s *= buff_outnumber_mult
 					s *= _dmg_type_relevance(buff.modified_stat, enemy_magic_ratio)
 				elif is_speed:
 					s *= 0.5
+				if _has_modifier(ally, buff.modified_stat, false):
+					s *= 0.25
 				total += s
-			if total > best_score:
-				best_score = total
-				best_type = "BUFF"
-				best_ability = buff
-				best_target = allies[0]
+			if total > 1.0:
+				candidates.append({"score": total, "type": "BUFF",
+					"ability": buff, "target": allies[0], "item_idx": -1})
+				if total > best_score:
+					best_score = total
+					best_type = "BUFF"
+					best_ability = buff
+					best_target = allies[0]
 		else:
 			for ally: FighterData in allies:
 				if ally.health <= 0:
@@ -1688,15 +1703,20 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 				if is_offense:
 					score *= _dmg_type_relevance(buff.modified_stat, _damage_magic_ratio(ally))
 				elif is_defense:
-					score *= float(targets.size()) / maxf(1.0, float(allies.size()))
+					score *= buff_outnumber_mult
 					score *= _dmg_type_relevance(buff.modified_stat, enemy_magic_ratio)
 				elif is_speed:
 					score *= 0.5
-				if score > best_score:
-					best_score = score
-					best_type = "BUFF"
-					best_ability = buff
-					best_target = ally
+				if _has_modifier(ally, buff.modified_stat, false):
+					score *= 0.25
+				if score > 1.0:
+					candidates.append({"score": score, "type": "BUFF",
+						"ability": buff, "target": ally, "item_idx": -1})
+					if score > best_score:
+						best_score = score
+						best_type = "BUFF"
+						best_ability = buff
+						best_target = ally
 
 	# -- Score debuffs --
 	for debuff: AbilityData in debuff_abilities:
@@ -1708,21 +1728,27 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 					var dot_flat: int = maxi(1, floori(
 						float(t.max_health) * float(debuff.damage_per_turn) / 100.0))
 					total += float(dot_flat * debuff.impacted_turns)
-				if total > best_score:
-					best_score = total
-					best_type = "DEBUFF"
-					best_ability = debuff
-					best_target = targets[0]
+				if total > 1.0:
+					candidates.append({"score": total, "type": "DEBUFF",
+						"ability": debuff, "target": targets[0], "item_idx": -1})
+					if total > best_score:
+						best_score = total
+						best_type = "DEBUFF"
+						best_ability = debuff
+						best_target = targets[0]
 			else:
 				for t: FighterData in targets:
 					var dot_flat: int = maxi(1, floori(
 						float(t.max_health) * float(debuff.damage_per_turn) / 100.0))
 					var score: float = float(dot_flat * debuff.impacted_turns)
-					if score > best_score:
-						best_score = score
-						best_type = "DEBUFF"
-						best_ability = debuff
-						best_target = t
+					if score > 1.0:
+						candidates.append({"score": score, "type": "DEBUFF",
+							"ability": debuff, "target": t, "item_idx": -1})
+						if score > best_score:
+							best_score = score
+							best_type = "DEBUFF"
+							best_ability = debuff
+							best_target = t
 			continue
 
 		var db_is_def: bool = debuff.modified_stat in defense_stats
@@ -1741,11 +1767,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 				elif db_is_spd:
 					s *= 0.5
 				total += s
-			if total > best_score:
-				best_score = total
-				best_type = "DEBUFF"
-				best_ability = debuff
-				best_target = targets[0]
+			if total > 1.0:
+				candidates.append({"score": total, "type": "DEBUFF",
+					"ability": debuff, "target": targets[0], "item_idx": -1})
+				if total > best_score:
+					best_score = total
+					best_type = "DEBUFF"
+					best_ability = debuff
+					best_target = targets[0]
 		else:
 			for t: FighterData in targets:
 				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
@@ -1757,11 +1786,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 					score *= _dmg_type_relevance(debuff.modified_stat, _damage_magic_ratio(t))
 				elif db_is_spd:
 					score *= 0.5
-				if score > best_score:
-					best_score = score
-					best_type = "DEBUFF"
-					best_ability = debuff
-					best_target = t
+				if score > 1.0:
+					candidates.append({"score": score, "type": "DEBUFF",
+						"ability": debuff, "target": t, "item_idx": -1})
+					if score > best_score:
+						best_score = score
+						best_type = "DEBUFF"
+						best_ability = debuff
+						best_target = t
 
 	# -- Score offensive abilities --
 	for ability: AbilityData in offensive_abilities:
@@ -1780,11 +1812,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 				if dmg >= float(t.health):
 					t_score *= 3.0
 				total += t_score
-			if total > best_score:
-				best_score = total
-				best_type = "AOE"
-				best_ability = ability
-				best_target = targets[0]
+			if total > 1.0:
+				candidates.append({"score": total, "type": "AOE",
+					"ability": ability, "target": targets[0], "item_idx": -1})
+				if total > best_score:
+					best_score = total
+					best_type = "AOE"
+					best_ability = ability
+					best_target = targets[0]
 		else:
 			for t: FighterData in targets:
 				var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, ability)))
@@ -1799,11 +1834,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 					score *= 3.0
 				elif float(t.health) / float(t.max_health) < 0.25:
 					score *= 1.2
-				if score > best_score:
-					best_score = score
-					best_type = "ABILITY"
-					best_ability = ability
-					best_target = t
+				if score > 1.0:
+					candidates.append({"score": score, "type": "ABILITY",
+						"ability": ability, "target": t, "item_idx": -1})
+					if score > best_score:
+						best_score = score
+						best_type = "ABILITY"
+						best_ability = ability
+						best_target = t
 
 	# -- Score taunt --
 	if taunt_ability != null and not _has_modifier(unit, Enums.StatType.TAUNT, false):
@@ -1811,11 +1849,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 		var off_total: float = float(unit.physical_attack + unit.magic_attack)
 		var tank_ratio: float = def_total / (def_total + off_total)
 		var score: float = tank_ratio * 30.0
-		if score > best_score:
-			best_score = score
-			best_type = "TAUNT"
-			best_ability = taunt_ability
-			best_target = unit
+		if score > 1.0:
+			candidates.append({"score": score, "type": "TAUNT",
+				"ability": taunt_ability, "target": unit, "item_idx": -1})
+			if score > best_score:
+				best_score = score
+				best_type = "TAUNT"
+				best_ability = taunt_ability
+				best_target = unit
 
 	# -- Score items --
 	var item_pool: Array = player_shared_items if unit in units else enemy_shared_items
@@ -1846,11 +1887,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 									s2 *= 2.0
 								total += s2
 						score = total
-					if score > best_score:
-						best_score = score
-						best_type = "ITEM"
-						best_item_idx = idx
-						best_target = ally
+					if score > 1.0:
+						candidates.append({"score": score, "type": "ITEM",
+							"ability": null, "target": ally, "item_idx": idx})
+						if score > best_score:
+							best_score = score
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = ally
 			Enums.ItemEffect.HEAL_MP:
 				if not item.target_ally:
 					continue
@@ -1870,11 +1914,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 								for t: FighterData in targets:
 									best_ev = maxf(best_ev, float(maxi(0, _calc_ability_damage(ally, t, a))))
 						score = best_ev * 0.5
-					if score > best_score:
-						best_score = score
-						best_type = "ITEM"
-						best_item_idx = idx
-						best_target = ally
+					if score > 1.0:
+						candidates.append({"score": score, "type": "ITEM",
+							"ability": null, "target": ally, "item_idx": idx})
+						if score > best_score:
+							best_score = score
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = ally
 			Enums.ItemEffect.CURE_DEBUFF:
 				if not item.target_ally:
 					continue
@@ -1888,11 +1935,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 					if debuff_count == 0:
 						continue
 					var score: float = float(debuff_count) * 15.0
-					if score > best_score:
-						best_score = score
-						best_type = "ITEM"
-						best_item_idx = idx
-						best_target = ally
+					if score > 1.0:
+						candidates.append({"score": score, "type": "ITEM",
+							"ability": null, "target": ally, "item_idx": idx})
+						if score > best_score:
+							best_score = score
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = ally
 			Enums.ItemEffect.BUFF:
 				if item.target_ally:
 					var ib_is_off: bool = item.stat_type in offense_stats
@@ -1909,11 +1959,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 							elif ib_is_def:
 								s *= _dmg_type_relevance(item.stat_type, enemy_magic_ratio)
 							total += s
-						if total > best_score:
-							best_score = total
-							best_type = "ITEM"
-							best_item_idx = idx
-							best_target = allies[0] if not allies.is_empty() else unit
+						if total > 1.0:
+							candidates.append({"score": total, "type": "ITEM",
+								"ability": null, "target": allies[0] if not allies.is_empty() else unit, "item_idx": idx})
+							if total > best_score:
+								best_score = total
+								best_type = "ITEM"
+								best_item_idx = idx
+								best_target = allies[0] if not allies.is_empty() else unit
 					else:
 						for ally: FighterData in allies:
 							if ally.health <= 0:
@@ -1924,11 +1977,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 								score *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(ally))
 							elif ib_is_def:
 								score *= _dmg_type_relevance(item.stat_type, enemy_magic_ratio)
-							if score > best_score:
-								best_score = score
-								best_type = "ITEM"
-								best_item_idx = idx
-								best_target = ally
+							if score > 1.0:
+								candidates.append({"score": score, "type": "ITEM",
+									"ability": null, "target": ally, "item_idx": idx})
+								if score > best_score:
+									best_score = score
+									best_type = "ITEM"
+									best_item_idx = idx
+									best_target = ally
 				else:
 					if item.target_all:
 						var total: float = 0.0
@@ -1941,11 +1997,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 							elif item.stat_type in offense_stats:
 								s *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(t))
 							total += s
-						if total > best_score:
-							best_score = total
-							best_type = "ITEM"
-							best_item_idx = idx
-							best_target = targets[0] if not targets.is_empty() else null
+						if total > 1.0:
+							candidates.append({"score": total, "type": "ITEM",
+								"ability": null, "target": targets[0] if not targets.is_empty() else null, "item_idx": idx})
+							if total > best_score:
+								best_score = total
+								best_type = "ITEM"
+								best_item_idx = idx
+								best_target = targets[0] if not targets.is_empty() else null
 					else:
 						for t: FighterData in targets:
 							var d: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
@@ -1955,11 +2014,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 								score *= sqrt(float(alive_allies))
 							elif item.stat_type in offense_stats:
 								score *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(t))
-							if score > best_score:
-								best_score = score
-								best_type = "ITEM"
-								best_item_idx = idx
-								best_target = t
+							if score > 1.0:
+								candidates.append({"score": score, "type": "ITEM",
+									"ability": null, "target": t, "item_idx": idx})
+								if score > best_score:
+									best_score = score
+									best_type = "ITEM"
+									best_item_idx = idx
+									best_target = t
 			Enums.ItemEffect.DAMAGE:
 				if item.target_ally:
 					continue
@@ -1970,11 +2032,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 						if item.magnitude >= t.health:
 							score *= 3.0
 						total += score
-					if total > best_score:
-						best_score = total
-						best_type = "ITEM"
-						best_item_idx = idx
-						best_target = targets[0] if not targets.is_empty() else null
+					if total > 1.0:
+						candidates.append({"score": total, "type": "ITEM",
+							"ability": null, "target": targets[0] if not targets.is_empty() else null, "item_idx": idx})
+						if total > best_score:
+							best_score = total
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = targets[0] if not targets.is_empty() else null
 				else:
 					for t: FighterData in targets:
 						var score: float = float(item.magnitude)
@@ -1982,11 +2047,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 							score *= 3.0
 						elif float(t.health) / float(t.max_health) < 0.25:
 							score *= 1.2
-						if score > best_score:
-							best_score = score
-							best_type = "ITEM"
-							best_item_idx = idx
-							best_target = t
+						if score > 1.0:
+							candidates.append({"score": score, "type": "ITEM",
+								"ability": null, "target": t, "item_idx": idx})
+							if score > best_score:
+								best_score = score
+								best_type = "ITEM"
+								best_item_idx = idx
+								best_target = t
 
 	# -- Score block --
 	if unit.mana < cheapest_cost:
@@ -2004,11 +2072,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 		var avg_boost: float = (phys_boost + mag_boost) / 2.0
 		var attacks_on_me: float = float(targets.size()) / maxf(1.0, float(allies.size()))
 		var block_value: float = avg_boost * attacks_on_me + float(mp_from_block)
-		if block_value > best_atk_ev and block_value > best_score:
-			best_score = block_value
-			best_type = "BLOCK"
-			best_ability = null
-			best_target = null
+		if block_value > best_atk_ev and block_value > 1.0:
+			candidates.append({"score": block_value, "type": "BLOCK",
+				"ability": null, "target": null, "item_idx": -1})
+			if block_value > best_score:
+				best_score = block_value
+				best_type = "BLOCK"
+				best_ability = null
+				best_target = null
 
 	# -- Score rest --
 	var hp_pct: float = float(unit.health) / float(unit.max_health)
@@ -2027,11 +2098,14 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 	var rest_score: float = hp_value + mp_value
 	if hp_pct < 0.3:
 		rest_score *= 1.5
-	if rest_score > best_score:
-		best_score = rest_score
-		best_type = "REST"
-		best_ability = null
-		best_target = null
+	if rest_score > 1.0:
+		candidates.append({"score": rest_score, "type": "REST",
+			"ability": null, "target": null, "item_idx": -1})
+		if rest_score > best_score:
+			best_score = rest_score
+			best_type = "REST"
+			best_ability = null
+			best_target = null
 
 	# -- Score physical attack on each target (fallback) --
 	var mp_from_hit: int = maxi(1, floori(unit.magic_attack / 7))
@@ -2054,13 +2128,33 @@ func _execute_score_ai_turn(unit: FighterData, targets: Array,
 			score *= 3.0
 		elif float(t.health) / float(t.max_health) < 0.25:
 			score *= 1.2
-		if score > best_score:
-			best_score = score
-			best_type = "PHYS_ATK"
-			best_ability = null
-			best_target = t
+		if score > 1.0:
+			candidates.append({"score": score, "type": "PHYS_ATK",
+				"ability": null, "target": t, "item_idx": -1})
+			if score > best_score:
+				best_score = score
+				best_type = "PHYS_ATK"
+				best_ability = null
+				best_target = t
 
-	# -- Execute best action --
+	# -- Weighted random selection from candidates --
+	if candidates.size() > 1:
+		var total_weight: float = 0.0
+		for c: Dictionary in candidates:
+			total_weight += c.score
+		var roll: float = randf() * total_weight
+		var running: float = 0.0
+		for c: Dictionary in candidates:
+			running += c.score
+			if roll <= running:
+				best_type = c.type
+				best_ability = c.ability
+				best_target = c.target
+				best_item_idx = c.item_idx
+				best_score = c.score
+				break
+
+	# -- Execute chosen action --
 	_count_action(unit, best_type if best_type != "" else "PHYS_ATK")
 	match best_type:
 		"HEAL":
