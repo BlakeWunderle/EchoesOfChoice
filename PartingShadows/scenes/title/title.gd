@@ -9,6 +9,7 @@ const SettingsPanel := preload("res://scripts/ui/settings_panel.gd")
 const ConfirmDialog := preload("res://scripts/ui/confirm_dialog.gd")
 const CompendiumPanelNew := preload("res://scripts/ui/compendium/compendium_panel.gd")
 const InputRemapPanel := preload("res://scripts/ui/input_remap_panel.gd")
+const _DemoConfig := preload("res://scripts/data/demo_config.gd")
 
 enum Mode { MAIN_MENU, PLAY_MODE, LOAD_SLOTS, SETTINGS, COMPENDIUM, KEY_BINDINGS }
 
@@ -89,6 +90,16 @@ func _build_ui() -> void:
 	_subtitle_label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 1.0))
 	_subtitle_label.modulate.a = 0.0
 	_vbox.add_child(_subtitle_label)
+
+	if _DemoConfig.is_demo():
+		var demo_label := Label.new()
+		demo_label.text = "DEMO"
+		demo_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		demo_label.add_theme_font_size_override("font_size", 18)
+		demo_label.add_theme_constant_override("outline_size", 2)
+		demo_label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 1.0))
+		demo_label.add_theme_color_override("font_color", Color(0.9, 0.7, 0.3, 0.9))
+		_vbox.add_child(demo_label)
 
 	# Spacer
 	var spacer := Control.new()
@@ -279,6 +290,8 @@ func _show_main_menu() -> void:
 	options.append({"label": "Settings"})
 	options.append({"label": "Compendium"})
 	options.append({"label": "Credits"})
+	if _DemoConfig.is_demo():
+		options.append({"label": "Wishlist on Steam"})
 	options.append({"label": "Quit"})
 
 	_menu.show_choices(options)
@@ -309,6 +322,8 @@ func _handle_main_choice(index: int) -> void:
 	labels.append("Settings")
 	labels.append("Compendium")
 	labels.append("Credits")
+	if _DemoConfig.is_demo():
+		labels.append("Wishlist on Steam")
 	labels.append("Quit")
 
 	if index < 0 or index >= labels.size():
@@ -331,6 +346,8 @@ func _handle_main_choice(index: int) -> void:
 			_show_compendium()
 		"Credits":
 			SceneManager.change_scene("res://scenes/credits/credits.tscn")
+		"Wishlist on Steam":
+			OS.shell_open("https://store.steampowered.com/app/4545380/Parting_Shadows/")
 		"Quit":
 			_confirm_dialog.confirmed.connect(_on_quit_confirmed, CONNECT_ONE_SHOT)
 			_confirm_dialog.show_confirm("Are you sure you want to quit?")
@@ -380,7 +397,7 @@ func _handle_play_mode_choice(index: int) -> void:
 		return
 	match index:
 		0:  # Single Player
-			if UnlockManager.is_unlocked("story_1_complete"):
+			if not _DemoConfig.is_demo() and UnlockManager.is_unlocked("story_1_complete"):
 				SceneManager.change_scene("res://scenes/story_select/story_select.tscn")
 			else:
 				GameState.start_new_game("story_1")

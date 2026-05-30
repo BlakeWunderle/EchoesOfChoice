@@ -3,6 +3,7 @@ extends Node
 ## Global game state that persists across scene transitions.
 
 const _BattleDB := preload("res://scripts/data/battle_db.gd")
+const _DemoConfig := preload("res://scripts/data/demo_config.gd")
 const _FighterDB := preload("res://scripts/data/fighter_db.gd")
 const _StoryDB := preload("res://scripts/data/story_db.gd")
 const _Inventory := preload("res://scripts/data/inventory.gd")
@@ -105,6 +106,9 @@ func upgrade_party_member(fighter: RefCounted, item: String) -> bool:
 
 
 func advance_to_next_battle() -> void:
+	if _DemoConfig.is_demo() and _DemoConfig.is_demo_final(current_battle_id):
+		game_phase = GamePhase.ENDING
+		return
 	if current_battle.next_battle_id.is_empty() or current_battle.is_final_battle:
 		game_phase = GamePhase.ENDING
 		return

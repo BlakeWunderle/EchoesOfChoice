@@ -11,6 +11,7 @@ const VotePanel := preload("res://scripts/ui/vote_panel.gd")
 const TipOverlay := preload("res://scripts/ui/tip_overlay.gd")
 const _StoryDB := preload("res://scripts/data/story_db.gd")
 const Endings := preload("res://scenes/narrative/narrative_endings.gd")
+const _DemoConfig := preload("res://scripts/data/demo_config.gd")
 
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
@@ -119,6 +120,13 @@ var _is_defeat: bool = false
 
 
 func _show_ending() -> void:
+	if _DemoConfig.is_demo():
+		_is_defeat = false
+		MusicManager.play_music("res://assets/audio/music/victory/SHORT Action #5 LOOP.wav")
+		var lines: Array[String] = Endings.get_demo_ending_text()
+		_dialogue.show_text(lines)
+		_open_gate_early(_do_advance_text)
+		return
 	var is_first_completion: bool = false
 	_is_defeat = not GameState.game_won
 	if GameState.game_won:
