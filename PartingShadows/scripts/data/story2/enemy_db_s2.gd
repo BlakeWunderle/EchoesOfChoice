@@ -249,7 +249,7 @@ static func create_cave_maw(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Cave Maw", lvl)
 	f.health = EH.es(134, 154, 5, 8, lvl, 3); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 2, lvl, 3); f.max_mana = f.mana
-	f.physical_attack = EH.es(28, 34, 2, 3, lvl, 3)
+	f.physical_attack = EH.es(27, 33, 2, 3, lvl, 3)
 	f.physical_defense = EH.es(15, 19, 1, 3, lvl, 3)
 	f.magic_attack = EH.es(5, 8, 0, 2, lvl, 3)
 	f.magic_defense = EH.es(11, 15, 1, 2, lvl, 3)
@@ -264,7 +264,7 @@ static func create_vein_leech(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Vein Leech", lvl)
 	f.health = EH.es(90, 105, 3, 5, lvl, 3); f.max_health = f.health
 	f.mana = EH.es(4, 7, 1, 2, lvl, 3); f.max_mana = f.mana
-	f.physical_attack = EH.es(28, 34, 2, 3, lvl, 3)
+	f.physical_attack = EH.es(27, 33, 2, 3, lvl, 3)
 	f.physical_defense = EH.es(9, 12, 1, 2, lvl, 3)
 	f.magic_attack = EH.es(6, 9, 0, 2, lvl, 3)
 	f.magic_defense = EH.es(8, 11, 1, 2, lvl, 3)
@@ -281,7 +281,7 @@ static func create_stone_moth(n: String, lvl: int = 5) -> FighterData:
 	f.mana = EH.es(7, 9, 1, 2, lvl, 3); f.max_mana = f.mana
 	f.physical_attack = EH.es(9, 12, 0, 2, lvl, 3)
 	f.physical_defense = EH.es(7, 10, 0, 1, lvl, 3)
-	f.magic_attack = EH.es(27, 33, 1, 3, lvl, 3)
+	f.magic_attack = EH.es(26, 32, 1, 3, lvl, 3)
 	f.magic_defense = EH.es(13, 17, 1, 2, lvl, 3)
 	f.speed = EH.es(26, 32, 2, 3, lvl, 3)
 	f.crit_chance = 9; f.crit_damage = 1; f.dodge_chance = 18

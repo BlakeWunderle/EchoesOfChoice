@@ -179,7 +179,7 @@ static func spirit_bolt() -> AbilityData:
 
 static func ancestral_curse() -> AbilityData:
 	return _make("Ancestral Curse", "Invoke the wrath of forgotten spirits upon all foes.",
-		Enums.StatType.ATTACK, 9, 2, true, 5, true, 0, 0.0)
+		Enums.StatType.ATTACK, 5, 2, true, 5, true, 0, 0.0)
 
 
 static func spirit_veil() -> AbilityData:

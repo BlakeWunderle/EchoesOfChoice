@@ -161,7 +161,7 @@ static func elemental_focus() -> AbilityData:
 # Acolyte
 static func cure() -> AbilityData:
 	var a := _make("Cure", "Mend wounds with holy light.",
-		Enums.StatType.HEALTH, 8, 0, false, 6, false, 0, 0.0)
+		Enums.StatType.HEALTH, 8, 0, false, 4, false, 0, 0.0)
 	a.heal_threshold = 0.45
 	return a
 
