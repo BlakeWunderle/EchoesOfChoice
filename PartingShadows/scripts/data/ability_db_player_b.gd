@@ -101,8 +101,8 @@ static func time_bomb() -> AbilityData:
 		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 7, false, 0, 0.0)
 
 static func time_freeze() -> AbilityData:
-	return _make("Time Freeze", "Stop the enemy in their tracks.",
-		Enums.StatType.SPEED, 9, 2, true, 6, false, 0, 0.0)
+	return _make("Time Freeze", "Stop all enemies in their tracks.",
+		Enums.StatType.SPEED, 10, 3, true, 6, true, 0, 0.0)
 
 # Astronomer
 static func starfall() -> AbilityData:

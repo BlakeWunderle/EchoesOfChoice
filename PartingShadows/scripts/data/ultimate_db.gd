@@ -181,7 +181,7 @@ static func monk_thousand_fists() -> UltimateData:
 		_make("Thousand Fists",
 			"Each blow carries the weight of a lifetime of discipline.",
 			Enums.StatType.MIXED_ATTACK, 42, 0, true, 0, false),
-		80)
+		65)
 
 static func monk_transcendence() -> UltimateData:
 	return _ult("monk_transcendence", "Transcendence",
@@ -219,7 +219,7 @@ static func tidecaller_maelstrom() -> UltimateData:
 		"Summon a crushing vortex of water to batter all enemies.",
 		_make("Maelstrom",
 			"The sea answers the call. A roaring spiral of water descends.",
-			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
+			Enums.StatType.MAGIC_ATTACK, 36, 0, true, 0, true),
 		55)
 
 static func tidecaller_deluge() -> UltimateData:
@@ -270,7 +270,7 @@ static func priest_holy_nova() -> UltimateData:
 		"Release a burst of sacred light that sears all enemies.",
 		_make("Holy Nova",
 			"Pure light erupts outward, burning every shadow it touches.",
-			Enums.StatType.MAGIC_ATTACK, 28, 0, true, 0, true),
+			Enums.StatType.MAGIC_ATTACK, 34, 0, true, 0, true),
 		60)
 
 static func priest_salvation() -> UltimateData:
@@ -416,7 +416,7 @@ static func alchemist_transmutation() -> UltimateData:
 		"Hurl a volatile concoction that erupts across all enemies.",
 		_make("Transmutation",
 			"Glass shatters. Fumes rise. The mixture burns through everything.",
-			Enums.StatType.MAGIC_ATTACK, 30, 0, true, 0, true),
+			Enums.StatType.MAGIC_ATTACK, 38, 0, true, 0, true),
 		50)
 
 static func alchemist_philosophers_stone() -> UltimateData:
@@ -682,7 +682,7 @@ static func survivalist_endurance_strike() -> UltimateData:
 		_make("Endurance Strike",
 			"Pain fuels power. Every wound dealt returns as strength.",
 			Enums.StatType.MIXED_ATTACK, 38, 0, true, 0, false, 0, 0.35),
-		80)
+		65)
 
 static func survivalist_will_to_live() -> UltimateData:
 	return _ult("survivalist_will_to_live", "Will to Live",
