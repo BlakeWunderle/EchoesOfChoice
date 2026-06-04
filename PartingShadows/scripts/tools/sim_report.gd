@@ -69,6 +69,7 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 		"diagnostics": SD.to_json(SD.analyze(result, stage)),
 		"equip_stats": _build_equip_json(result),
 		"ult_stats": _build_ult_json(result),
+		"ult_breakdown": SR.get_ultimate_breakdown(result),
 	}
 	if result.has("action_counts"):
 		entry["action_counts"] = result["action_counts"]
