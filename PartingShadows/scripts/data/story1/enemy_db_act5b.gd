@@ -15,7 +15,7 @@ static func create_sigil_colossus(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Sigil Colossus", lvl)
 	f.health = EH.es(580, 640, 7, 9, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 3, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(87, 95, 4, 6, lvl, 14)
+	f.physical_attack = EH.es(88, 96, 4, 6, lvl, 14)
 	f.physical_defense = EH.es(60, 70, 3, 5, lvl, 14)
 	f.magic_attack = EH.es(22, 27, 0, 2, lvl, 14)
 	f.magic_defense = EH.es(37, 45, 2, 4, lvl, 14)
@@ -32,7 +32,7 @@ static func create_ritual_conduit(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(45, 52, 3, 4, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 27, 0, 2, lvl, 14)
 	f.physical_defense = EH.es(31, 39, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(81, 89, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(82, 90, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(51, 59, 3, 5, lvl, 14)
 	f.speed = EH.es(54, 61, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 4; f.dodge_chance = 17
@@ -45,9 +45,9 @@ static func create_void_sentinel(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Void Sentinel", lvl)
 	f.health = EH.es(465, 525, 7, 10, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(38, 44, 3, 4, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(74, 82, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(75, 83, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(40, 48, 2, 4, lvl, 14)
-	f.magic_attack = EH.es(74, 81, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(75, 82, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(42, 49, 2, 4, lvl, 14)
 	f.speed = EH.es(54, 61, 2, 4, lvl, 14)
 	f.crit_chance = 20; f.crit_damage = 6; f.dodge_chance = 17
@@ -114,9 +114,9 @@ static func create_stranger_undone(n: String, lvl: int = 15) -> FighterData:
 	f.class_id = "StrangerUndone"
 	f.health = EH.es(810, 900, 10, 14, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(70, 80, 4, 5, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(96, 106, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(99, 109, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(55, 64, 2, 4, lvl, 15)
-	f.magic_attack = EH.es(107, 117, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(110, 120, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(58, 67, 2, 4, lvl, 15)
 	f.speed = EH.es(91, 101, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 7; f.dodge_chance = 20

@@ -23,7 +23,7 @@ static func create_cult_acolyte(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(38, 46, 1, 2, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 15)
 	f.physical_defense = EH.es(38, 47, 2, 3, lvl, 15)
-	f.magic_attack = EH.es(144, 158, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(142, 156, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(47, 57, 2, 4, lvl, 15)
 	f.speed = EH.es(36, 43, 2, 3, lvl, 15)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 25
@@ -37,7 +37,7 @@ static func create_cult_enforcer(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "Cult Enforcer", lvl)
 	f.health = EH.es(664, 751, 6, 9, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(128, 143, 3, 5, lvl, 15)
+	f.physical_attack = EH.es(126, 141, 3, 5, lvl, 15)
 	f.physical_defense = EH.es(59, 67, 2, 4, lvl, 15)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 15)
 	f.magic_defense = EH.es(37, 45, 2, 3, lvl, 15)
@@ -69,7 +69,7 @@ static func create_thread_guard(n: String, lvl: int = 16) -> FighterData:
 	var f := EH.base(n, "Thread Guard", lvl)
 	f.health = EH.es(384, 440, 5, 8, lvl, 16); f.max_health = f.health
 	f.mana = EH.es(42, 51, 1, 1, lvl, 16); f.max_mana = f.mana
-	f.physical_attack = EH.es(154, 172, 4, 6, lvl, 16)
+	f.physical_attack = EH.es(152, 170, 4, 6, lvl, 16)
 	f.physical_defense = EH.es(28, 36, 2, 3, lvl, 16)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 16)
 	f.magic_defense = EH.es(48, 56, 2, 4, lvl, 16)
@@ -85,8 +85,8 @@ static func create_dream_hound(n: String, lvl: int = 16) -> FighterData:
 	var f := EH.base(n, "Dream Hound", lvl)
 	f.health = EH.es(439, 498, 5, 8, lvl, 16); f.max_health = f.health
 	f.mana = EH.es(30, 39, 1, 1, lvl, 16); f.max_mana = f.mana
-	f.physical_attack = EH.es(106, 116, 2, 4, lvl, 16)
-	f.magic_attack = EH.es(105, 115, 2, 4, lvl, 16)
+	f.physical_attack = EH.es(104, 114, 2, 4, lvl, 16)
+	f.magic_attack = EH.es(103, 113, 2, 4, lvl, 16)
 	f.physical_defense = EH.es(50, 58, 2, 4, lvl, 16)
 	f.magic_defense = EH.es(28, 35, 2, 3, lvl, 16)
 	f.speed = EH.es(45, 51, 3, 4, lvl, 16)
@@ -119,7 +119,7 @@ static func create_cult_ritualist(n: String, lvl: int = 17) -> FighterData:
 	f.mana = EH.es(40, 48, 1, 2, lvl, 17); f.max_mana = f.mana
 	f.physical_attack = EH.es(23, 27, 0, 2, lvl, 17)
 	f.physical_defense = EH.es(44, 54, 2, 4, lvl, 17)
-	f.magic_attack = EH.es(134, 149, 3, 6, lvl, 17)
+	f.magic_attack = EH.es(133, 148, 3, 6, lvl, 17)
 	f.magic_defense = EH.es(56, 64, 2, 4, lvl, 17)
 	f.speed = EH.es(48, 54, 2, 3, lvl, 17)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -135,7 +135,7 @@ static func create_high_weaver(n: String, lvl: int = 17) -> FighterData:
 	f.mana = EH.es(44, 50, 2, 3, lvl, 17); f.max_mana = f.mana
 	f.physical_attack = EH.es(23, 27, 0, 2, lvl, 17)
 	f.physical_defense = EH.es(38, 46, 2, 3, lvl, 17)
-	f.magic_attack = EH.es(151, 168, 3, 6, lvl, 17)
+	f.magic_attack = EH.es(150, 167, 3, 6, lvl, 17)
 	f.magic_defense = EH.es(54, 62, 2, 4, lvl, 17)
 	f.speed = EH.es(39, 45, 2, 3, lvl, 17)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 20
@@ -154,7 +154,7 @@ static func create_dread_tailor(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "DreadTailor", lvl)
 	f.health = EH.es(460, 530, 5, 8, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(114, 127, 3, 5, lvl, 15)
+	f.physical_attack = EH.es(112, 125, 3, 5, lvl, 15)
 	f.physical_defense = EH.es(31, 39, 1, 3, lvl, 15)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 15)
 	f.magic_defense = EH.es(51, 59, 2, 3, lvl, 15)
@@ -188,7 +188,7 @@ static func create_loom_crusher(n: String, lvl: int = 17) -> FighterData:
 	var f := EH.base(n, "LoomCrusher", lvl)
 	f.health = EH.es(627, 722, 7, 10, lvl, 17); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 17); f.max_mana = f.mana
-	f.physical_attack = EH.es(134, 150, 4, 6, lvl, 17)
+	f.physical_attack = EH.es(133, 149, 4, 6, lvl, 17)
 	f.physical_defense = EH.es(47, 55, 2, 4, lvl, 17)
 	f.magic_attack = EH.es(21, 25, 0, 1, lvl, 17)
 	f.magic_defense = EH.es(75, 86, 3, 5, lvl, 17)
@@ -206,7 +206,7 @@ static func create_thread_stitcher(n: String, lvl: int = 16) -> FighterData:
 	f.mana = EH.es(40, 50, 1, 2, lvl, 16); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 16)
 	f.physical_defense = EH.es(45, 52, 2, 3, lvl, 16)
-	f.magic_attack = EH.es(104, 117, 3, 5, lvl, 16)
+	f.magic_attack = EH.es(102, 115, 3, 5, lvl, 16)
 	f.magic_defense = EH.es(52, 60, 2, 4, lvl, 16)
 	f.speed = EH.es(42, 48, 2, 3, lvl, 16)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
@@ -222,7 +222,7 @@ static func create_shadow_fragment(n: String, lvl: int = 18) -> FighterData:
 	f.mana = EH.es(36, 44, 1, 2, lvl, 18); f.max_mana = f.mana
 	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 18)
 	f.physical_defense = EH.es(31, 39, 2, 3, lvl, 18)
-	f.magic_attack = EH.es(129, 142, 3, 6, lvl, 18)
+	f.magic_attack = EH.es(132, 145, 3, 6, lvl, 18)
 	f.magic_defense = EH.es(51, 60, 2, 4, lvl, 18)
 	f.speed = EH.es(38, 44, 3, 4, lvl, 18)
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 30
@@ -236,9 +236,9 @@ static func create_the_threadmaster(n: String, lvl: int = 18) -> FighterData:
 	var f := EH.base(n, "The Threadmaster", lvl)
 	f.health = EH.es(1441, 1628, 16, 25, lvl, 18); f.max_health = f.health
 	f.mana = EH.es(50, 60, 2, 3, lvl, 18); f.max_mana = f.mana
-	f.physical_attack = EH.es(120, 133, 4, 6, lvl, 18)
+	f.physical_attack = EH.es(123, 136, 4, 6, lvl, 18)
 	f.physical_defense = EH.es(53, 61, 2, 4, lvl, 18)
-	f.magic_attack = EH.es(126, 141, 3, 5, lvl, 18)
+	f.magic_attack = EH.es(129, 144, 3, 5, lvl, 18)
 	f.magic_defense = EH.es(55, 63, 2, 4, lvl, 18)
 	f.speed = EH.es(46, 52, 3, 4, lvl, 18)
 	f.crit_chance = 25; f.crit_damage = 4; f.dodge_chance = 25

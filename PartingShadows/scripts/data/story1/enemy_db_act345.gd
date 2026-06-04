@@ -239,9 +239,9 @@ static func create_stranger_final(n: String, lvl: int = 15) -> FighterData:
 	f.class_id = "StrangerFinal"
 	f.health = EH.es(870, 960, 12, 16, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(75, 85, 4, 5, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(101, 109, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(103, 111, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(58, 66, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(108, 118, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(110, 120, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(61, 69, 3, 5, lvl, 15)
 	f.speed = EH.es(85, 92, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 6; f.dodge_chance = 20
