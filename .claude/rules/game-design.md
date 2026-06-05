@@ -25,9 +25,9 @@ The project is a visual RPG built in Godot 4 with GDScript at `PartingShadows/`.
 
 Player-selectable in Settings. Affects enemy stats, not AI (AI is unified score-based for all units).
 
-- **Story**: Enemy HP -40%, ATK (phys+mag) -25%. Shorter fights for story-focused players.
+- **Easy**: Enemy HP -10%, ATK (phys+mag) -15%, SPD -10%. Mirrors Hard in reverse.
 - **Normal**: No stat changes. Default.
-- **Hard**: Enemy ATK (phys+mag) +15%, SPD +10%. Harder across all fights including endgame.
+- **Hard**: Enemy HP +10%, ATK (phys+mag) +15%, SPD +10%. Harder across all fights including endgame.
 
 Stored in `SettingsManager.difficulty` (0/1/2), applied in `battle.gd _start_battle()` before `engine.start_battle()`.
 

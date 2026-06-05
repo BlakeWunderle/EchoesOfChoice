@@ -148,12 +148,15 @@ func _start_battle() -> void:
 	var player_diff: int = SettingsManager.difficulty
 	if player_diff == 0:
 		for enemy: FighterData in battle.enemies:
-			enemy.max_health = maxi(1, int(enemy.max_health * 0.6))
+			enemy.max_health = maxi(1, int(enemy.max_health * 0.90))
 			enemy.health = enemy.max_health
-			enemy.physical_attack = maxi(1, int(enemy.physical_attack * 0.75))
-			enemy.magic_attack = maxi(1, int(enemy.magic_attack * 0.75))
+			enemy.physical_attack = maxi(1, int(enemy.physical_attack * 0.85))
+			enemy.magic_attack = maxi(1, int(enemy.magic_attack * 0.85))
+			enemy.speed = maxi(1, int(enemy.speed * 0.90))
 	elif player_diff == 2:
 		for enemy: FighterData in battle.enemies:
+			enemy.max_health = maxi(1, int(enemy.max_health * 1.10))
+			enemy.health = enemy.max_health
 			enemy.physical_attack = maxi(1, int(enemy.physical_attack * 1.15))
 			enemy.magic_attack = maxi(1, int(enemy.magic_attack * 1.15))
 			enemy.speed = maxi(1, int(enemy.speed * 1.10))

@@ -33,7 +33,7 @@ const DEFAULT_FONT_SIZE := 24
 const DEFAULT_COLOR_BLIND_MODE := "normal"
 const DEFAULT_SCREEN_READER := false
 const DEFAULT_REDUCED_MOTION := false
-const DEFAULT_DIFFICULTY := 1  ## 0=Story, 1=Normal, 2=Hard
+const DEFAULT_DIFFICULTY := 1  ## 0=Easy, 1=Normal, 2=Hard
 
 # -- State -------------------------------------------------------------------
 
