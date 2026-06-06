@@ -94,7 +94,7 @@ static func upgrade_to_falconer(f: FighterData) -> void:
 	f.class_id = "Falconer"; f.character_type = "Falconer"
 	f.health += 12; f.max_health += 12; f.mana += 2; f.max_mana += 2
 	f.physical_attack += 17; f.physical_defense += 5; f.magic_attack += 2; f.magic_defense += 4
-	f.speed += 7; f.crit_chance += 5; f.crit_damage += 7; f.dodge_chance += 2
+	f.speed += 7; f.crit_chance += 5; f.crit_damage += 6; f.dodge_chance += 2
 	f.abilities = [PAB_B.falcon_strike(), PAB_B.rending_talon(), PAB_B.aerial_strike()]
 	f.upgrade_items = []
 

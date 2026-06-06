@@ -266,7 +266,7 @@ static func falcon_strike() -> AbilityData:
 
 static func rending_talon() -> AbilityData:
 	return _make("Rending Talon", "The falcon's talons tear through the enemy's guard, leaving them exposed.",
-		Enums.StatType.PHYSICAL_DEFENSE, 20, 3, true, 6, false, 0, 0.0)
+		Enums.StatType.PHYSICAL_DEFENSE, 15, 3, true, 6, false, 0, 0.0)
 
 static func aerial_strike() -> AbilityData:
 	return _make("Aerial Strike", "The falcon sweeps low, raking talons across all enemies.",

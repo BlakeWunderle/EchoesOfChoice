@@ -351,7 +351,7 @@ static func bewilderment() -> AbilityData:
 # Mime
 static func invisible_wall() -> AbilityData:
 	return _make("Invisible Wall", "Nothing can get through.",
-		Enums.StatType.DEFENSE, 14, 3, false, 7, true, 0, 0.0)
+		Enums.StatType.PHYSICAL_DEFENSE, 14, 3, false, 7, true, 0, 0.0)
 
 static func anvil() -> AbilityData:
 	return _make("Anvil", "Drop something very heavy. From nowhere.",

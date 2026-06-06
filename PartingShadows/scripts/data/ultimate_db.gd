@@ -24,8 +24,8 @@ static func _ult(id: String, ult_name: String, desc: String,
 static func get_ultimates_for_class(class_id: String) -> Array:
 	match class_id:
 		# Squire tree
-		"Cavalry": return [cavalry_thundering_charge(), cavalry_rallying_cry()]
-		"Dragoon": return [dragoon_cataclysm_dive(), dragoon_draconic_aegis()]
+		"Cavalry": return [cavalry_thundering_charge(), cavalry_commanders_standard()]
+		"Dragoon": return [dragoon_cataclysm_dive(), dragoon_dragon_scales()]
 		"Mercenary": return [mercenary_execution_shot(), mercenary_killzone()]
 		"Hunter": return [hunter_perfect_shot(), hunter_predators_domain()]
 		"Ninja": return [ninja_deaths_shadow(), ninja_vanishing_act()]
@@ -41,7 +41,7 @@ static func get_ultimates_for_class(class_id: String) -> Array:
 		"Warcrier": return [warcrier_earthshaker(), warcrier_battle_anthem()]
 		"Minstrel": return [minstrel_serenade_of_dawn(), minstrel_symphony_of_renewal()]
 		"Illusionist": return [illusionist_grand_illusion(), illusionist_mirror_image()]
-		"Mime": return [mime_perfect_copy(), mime_mimes_bulwark()]
+		"Mime": return [mime_perfect_copy(), mime_invisible_fortress()]
 		"Laureate": return [laureate_crowning_verse(), laureate_words_of_might()]
 		"Elegist": return [elegist_death_knell(), elegist_elegy_of_sorrow()]
 		# Tinker tree
@@ -49,7 +49,7 @@ static func get_ultimates_for_class(class_id: String) -> Array:
 		"Bombardier": return [bombardier_scorched_earth(), bombardier_precision_strike()]
 		"Chronomancer": return [chronomancer_time_stop(), chronomancer_temporal_acceleration()]
 		"Astronomer": return [astronomer_supernova(), astronomer_cosmic_alignment()]
-		"Automaton": return [automaton_overload(), automaton_iron_fortress()]
+		"Automaton": return [automaton_overload(), automaton_reinforced_plating()]
 		"Technomancer": return [technomancer_arc_lightning(), technomancer_power_surge()]
 		# Wildling tree
 		"Blighter": return [blighter_blight_storm(), blighter_withering_curse()]
@@ -57,7 +57,7 @@ static func get_ultimates_for_class(class_id: String) -> Array:
 		"WitchDoctor": return [witch_doctor_plague_voodoo(), witch_doctor_hex_storm()]
 		"Spiritwalker": return [spiritwalker_spirit_mend(), spiritwalker_ancestral_blessing()]
 		"Falconer": return [falconer_death_from_above(), falconer_raptor_storm()]
-		"Shapeshifter": return [shapeshifter_apex_predator(), shapeshifter_ironhide()]
+		"Shapeshifter": return [shapeshifter_apex_predator(), shapeshifter_beast_armor()]
 		# Wanderer tree
 		"Bulwark": return [bulwark_rampart_crush(), bulwark_unbreakable()]
 		"Aegis": return [aegis_counter_storm(), aegis_aegis_wall()]
@@ -98,11 +98,11 @@ static func cavalry_thundering_charge() -> UltimateData:
 			Enums.StatType.PHYSICAL_ATTACK, 30, 0, true, 0, true),
 		70)
 
-static func cavalry_rallying_cry() -> UltimateData:
-	return _ult("cavalry_rallying_cry", "Rallying Cry",
-		"Rally the party with a battle cry that sharpens blades and quickens feet.",
-		_make("Rallying Cry",
-			"A commanding shout rings across the field, steel sings in answer.",
+static func cavalry_commanders_standard() -> UltimateData:
+	return _ult("cavalry_commanders_standard", "Commander's Standard",
+		"Plant a battle standard that sharpens blades and quickens feet.",
+		_make("Commander's Standard",
+			"The banner rises. Every ally rallies to its call, steel singing in answer.",
 			Enums.StatType.ATTACK, 15, 3, false, 0, true),
 		65)
 
@@ -115,10 +115,10 @@ static func dragoon_cataclysm_dive() -> UltimateData:
 			Enums.StatType.MIXED_ATTACK, 35, 0, true, 0, true),
 		105)
 
-static func dragoon_draconic_aegis() -> UltimateData:
-	return _ult("dragoon_draconic_aegis", "Draconic Aegis",
+static func dragoon_dragon_scales() -> UltimateData:
+	return _ult("dragoon_dragon_scales", "Dragon Scales",
 		"Wrap the party in dragon-scale armor that turns aside all blows.",
-		_make("Draconic Aegis",
+		_make("Dragon Scales",
 			"Ancient scales shimmer into existence around each ally.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
 		75)
@@ -360,15 +360,15 @@ static func mime_perfect_copy() -> UltimateData:
 		"Mirror the battlefield's energy into a single devastating strike.",
 		_make("Perfect Copy",
 			"Every motion on the field is absorbed and released in one blow.",
-			Enums.StatType.MIXED_ATTACK, 42, 0, true, 0, false),
+			Enums.StatType.MIXED_ATTACK, 36, 0, true, 0, false),
 		75)
 
-static func mime_mimes_bulwark() -> UltimateData:
-	return _ult("mime_mimes_bulwark", "Mime's Bulwark",
-		"Mime an invisible wall that shields the entire party.",
-		_make("Mime's Bulwark",
+static func mime_invisible_fortress() -> UltimateData:
+	return _ult("mime_invisible_fortress", "Invisible Fortress",
+		"Mime an enormous fortress around the party that no attack can breach.",
+		_make("Invisible Fortress",
 			"Hands press against nothing. Yet no attack can pass through.",
-			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
+			Enums.StatType.DEFENSE, 16, 3, false, 0, true),
 		60)
 
 # Laureate -- Support / Buffer / AoE / Magical
@@ -450,7 +450,7 @@ static func chronomancer_time_stop() -> UltimateData:
 		"Freeze all enemies in time, slowing them to a crawl.",
 		_make("Time Stop",
 			"The clock stops. Every enemy hangs suspended in frozen time.",
-			Enums.StatType.SPEED, 16, 3, true, 0, true),
+			Enums.StatType.SPEED, 45, 3, true, 0, true),
 		55)
 
 static func chronomancer_temporal_acceleration() -> UltimateData:
@@ -458,7 +458,7 @@ static func chronomancer_temporal_acceleration() -> UltimateData:
 		"Accelerate time for the party, letting everyone act faster.",
 		_make("Temporal Acceleration",
 			"Time bends. Every ally moves in a blur of accelerated motion.",
-			Enums.StatType.SPEED, 16, 3, false, 0, true),
+			Enums.StatType.SPEED, 45, 3, false, 0, true),
 		55)
 
 # Astronomer -- Burst / Caster / Glass Cannon / AoE / Magical
@@ -487,10 +487,10 @@ static func automaton_overload() -> UltimateData:
 			Enums.StatType.MIXED_ATTACK, 44, 0, true, 0, false),
 		65)
 
-static func automaton_iron_fortress() -> UltimateData:
-	return _ult("automaton_iron_fortress", "Iron Fortress",
+static func automaton_reinforced_plating() -> UltimateData:
+	return _ult("automaton_reinforced_plating", "Reinforced Plating",
 		"Deploy armor plating that shields the entire party.",
-		_make("Iron Fortress",
+		_make("Reinforced Plating",
 			"Metal panels unfold and lock into place around every ally.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
 		60)
@@ -591,7 +591,7 @@ static func falconer_death_from_above() -> UltimateData:
 		"Command your raptor to dive with lethal precision on a single target.",
 		_make("Death From Above",
 			"The falcon screams and dives. Talons find their mark with terrible force.",
-			Enums.StatType.PHYSICAL_ATTACK, 45, 0, true, 0, false),
+			Enums.StatType.PHYSICAL_ATTACK, 38, 0, true, 0, false),
 		70)
 
 static func falconer_raptor_storm() -> UltimateData:
@@ -599,7 +599,7 @@ static func falconer_raptor_storm() -> UltimateData:
 		"Call a flock of raptors to assault all enemies.",
 		_make("Raptor Storm",
 			"The sky darkens with wings. Talons and beaks tear at every foe.",
-			Enums.StatType.PHYSICAL_ATTACK, 28, 0, true, 0, true),
+			Enums.StatType.PHYSICAL_ATTACK, 24, 0, true, 0, true),
 		70)
 
 # Shapeshifter -- Hybrid / Tank / Physical
@@ -611,10 +611,10 @@ static func shapeshifter_apex_predator() -> UltimateData:
 			Enums.StatType.PHYSICAL_ATTACK, 44, 0, true, 0, false),
 		80)
 
-static func shapeshifter_ironhide() -> UltimateData:
-	return _ult("shapeshifter_ironhide", "Ironhide",
+static func shapeshifter_beast_armor() -> UltimateData:
+	return _ult("shapeshifter_beast_armor", "Beast Armor",
 		"Shift into an armored form that protects the entire party.",
-		_make("Ironhide",
+		_make("Beast Armor",
 			"Thick scales spread across every ally. Nothing can pierce this hide.",
 			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
 		65)
