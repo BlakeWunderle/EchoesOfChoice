@@ -222,7 +222,7 @@ static func create_shadow_fragment(n: String, lvl: int = 18) -> FighterData:
 	f.mana = EH.es(36, 44, 1, 2, lvl, 18); f.max_mana = f.mana
 	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 18)
 	f.physical_defense = EH.es(31, 39, 2, 3, lvl, 18)
-	f.magic_attack = EH.es(132, 145, 3, 6, lvl, 18)
+	f.magic_attack = EH.es(134, 147, 3, 6, lvl, 18)
 	f.magic_defense = EH.es(51, 60, 2, 4, lvl, 18)
 	f.speed = EH.es(38, 44, 3, 4, lvl, 18)
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 30
@@ -236,9 +236,9 @@ static func create_the_threadmaster(n: String, lvl: int = 18) -> FighterData:
 	var f := EH.base(n, "The Threadmaster", lvl)
 	f.health = EH.es(1441, 1628, 16, 25, lvl, 18); f.max_health = f.health
 	f.mana = EH.es(50, 60, 2, 3, lvl, 18); f.max_mana = f.mana
-	f.physical_attack = EH.es(123, 136, 4, 6, lvl, 18)
+	f.physical_attack = EH.es(125, 138, 4, 6, lvl, 18)
 	f.physical_defense = EH.es(53, 61, 2, 4, lvl, 18)
-	f.magic_attack = EH.es(129, 144, 3, 5, lvl, 18)
+	f.magic_attack = EH.es(131, 146, 3, 5, lvl, 18)
 	f.magic_defense = EH.es(55, 63, 2, 4, lvl, 18)
 	f.speed = EH.es(46, 52, 3, 4, lvl, 18)
 	f.crit_chance = 25; f.crit_damage = 4; f.dodge_chance = 25

@@ -92,7 +92,7 @@ static func create_blighted_gull(n: String, lvl: int = 5) -> FighterData:
 	f.mana = EH.es(7, 10, 1, 2, lvl, 5); f.max_mana = f.mana
 	f.physical_attack = EH.es(8, 11, 0, 2, lvl, 5)
 	f.physical_defense = EH.es(9, 12, 0, 1, lvl, 5)
-	f.magic_attack = EH.es(28, 35, 1, 3, lvl, 5)
+	f.magic_attack = EH.es(29, 36, 1, 3, lvl, 5)
 	f.magic_defense = EH.es(11, 14, 1, 2, lvl, 5)
 	f.speed = EH.es(30, 37, 2, 3, lvl, 5)
 	f.crit_chance = 15; f.crit_damage = 1; f.dodge_chance = 23
@@ -186,7 +186,7 @@ static func create_abyssal_lurker(n: String, lvl: int = 9) -> FighterData:
 	f.mana = EH.es(28, 32, 2, 3, lvl, 9); f.max_mana = f.mana
 	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 9)
 	f.physical_defense = EH.es(30, 37, 2, 3, lvl, 9)
-	f.magic_attack = EH.es(60, 66, 3, 5, lvl, 9)
+	f.magic_attack = EH.es(61, 67, 3, 5, lvl, 9)
 	f.magic_defense = EH.es(28, 35, 2, 3, lvl, 9)
 	f.speed = EH.es(33, 40, 1, 3, lvl, 9)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -199,7 +199,7 @@ static func create_stormwrack_raptor(n: String, lvl: int = 8) -> FighterData:
 	var f := EH.base(n, "Stormwrack Raptor", lvl)
 	f.health = EH.es(213, 242, 5, 8, lvl, 8); f.max_health = f.health
 	f.mana = EH.es(33, 42, 2, 3, lvl, 8); f.max_mana = f.mana
-	f.physical_attack = EH.es(56, 63, 3, 5, lvl, 8)
+	f.physical_attack = EH.es(57, 64, 3, 5, lvl, 8)
 	f.physical_defense = EH.es(20, 25, 1, 2, lvl, 8)
 	f.magic_attack = EH.es(47, 53, 2, 4, lvl, 8)
 	f.magic_defense = EH.es(20, 25, 1, 2, lvl, 8)

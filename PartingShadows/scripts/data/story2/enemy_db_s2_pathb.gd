@@ -15,9 +15,9 @@ static func create_fractured_scholar(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Fractured Scholar", lvl)
 	f.health = EH.es(598, 678, 4, 6, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(34, 40, 2, 4, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(109, 120, 2, 4, lvl, 13)
+	f.physical_attack = EH.es(111, 122, 2, 4, lvl, 13)
 	f.physical_defense = EH.es(43, 52, 2, 3, lvl, 13)
-	f.magic_attack = EH.es(94, 106, 2, 4, lvl, 13)
+	f.magic_attack = EH.es(96, 108, 2, 4, lvl, 13)
 	f.magic_defense = EH.es(47, 55, 2, 3, lvl, 13)
 	f.speed = EH.es(51, 57, 2, 3, lvl, 13)
 	f.crit_chance = 20; f.crit_damage = 4; f.dodge_chance = 20
@@ -30,7 +30,7 @@ static func create_archive_sentinel(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Archive Sentinel", lvl)
 	f.health = EH.es(546, 617, 4, 6, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(30, 39, 3, 4, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(110, 122, 3, 5, lvl, 13)
+	f.physical_attack = EH.es(112, 124, 3, 5, lvl, 13)
 	f.physical_defense = EH.es(53, 62, 2, 4, lvl, 13)
 	f.magic_attack = EH.es(23, 27, 0, 2, lvl, 13)
 	f.magic_defense = EH.es(46, 54, 2, 3, lvl, 13)

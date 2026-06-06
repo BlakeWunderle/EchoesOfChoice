@@ -139,7 +139,7 @@ static func create_the_lidless_eye(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "The Lidless Eye", lvl)
 	f.health = EH.es(857, 974, 8, 11, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(86, 98, 4, 6, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(190, 208, 5, 8, lvl, 15)
+	f.physical_attack = EH.es(191, 209, 5, 8, lvl, 15)
 	f.physical_defense = EH.es(64, 76, 3, 5, lvl, 15)
 	f.magic_attack = EH.es(62, 72, 1, 3, lvl, 15)
 	f.magic_defense = EH.es(82, 96, 4, 6, lvl, 15)
