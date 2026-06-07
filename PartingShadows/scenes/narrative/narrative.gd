@@ -121,7 +121,24 @@ var _is_defeat: bool = false
 
 func _show_ending() -> void:
 	if _DemoConfig.is_demo():
-		_is_defeat = false
+		_is_defeat = not GameState.game_won
+		if _is_defeat:
+			MusicManager.play_music("res://assets/audio/music/game_over/Sad Despair 03.wav")
+			var defeat_lines: Array[String]
+			match GameState.current_story_id:
+				"story_2":
+					defeat_lines = Endings.get_ending_text_story_2(false, GameState.current_battle_id)
+				"story_3":
+					defeat_lines = Endings.get_ending_text_story_3(false, GameState.current_battle_id)
+				_:
+					defeat_lines = Endings.get_ending_text_story_1(false, GameState.current_battle_id)
+			defeat_lines.append("")
+			defeat_lines.append("Battles won: %d" % GameState.battles_won)
+			defeat_lines.append("")
+			defeat_lines.append("The full game is available now on Steam with three complete stories, branching paths, and dozens of class upgrades.")
+			_dialogue.show_text(defeat_lines)
+			_open_gate_early(_do_advance_text)
+			return
 		MusicManager.play_music("res://assets/audio/music/victory/SHORT Action #5 LOOP.wav")
 		var lines: Array[String] = Endings.get_demo_ending_text()
 		_dialogue.show_text(lines)
