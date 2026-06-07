@@ -672,11 +672,17 @@ func _on_portrait_clicked(index: int) -> void:
 # =============================================================================
 
 func _show_difficulty_selection() -> void:
-	if NetManager.is_multiplayer_active and not NetManager.is_host:
-		_waiting_overlay.show_waiting("host")
-		return
 	_equip_label.text = "Select Difficulty:"
 	_equip_label.visible = true
+	if NetManager.is_multiplayer_active and not NetManager.is_host:
+		var disabled_opts: Array[Dictionary] = []
+		for opt: Dictionary in DIFFICULTY_OPTIONS:
+			var d := opt.duplicate()
+			d["disabled"] = true
+			disabled_opts.append(d)
+		_choice_menu.show_choices(disabled_opts)
+		_choice_menu.highlight_option(1)
+		return
 	_choice_menu.show_choices(DIFFICULTY_OPTIONS)
 	_choice_menu.highlight_option(1)
 

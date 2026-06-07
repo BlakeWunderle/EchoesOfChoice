@@ -434,12 +434,12 @@ func broadcast_game_state() -> void:
 		party_data.append(fighter.to_save_data())
 	var inv_data: Dictionary = GameState.inventory.to_save_data()
 	_rpc_sync_game_state.rpc(party_data, GameState.current_battle_id,
-		GameState.current_story_id, inv_data)
+		GameState.current_story_id, inv_data, GameState.difficulty)
 
 
 @rpc("authority", "call_remote", "reliable")
 func _rpc_sync_game_state(party_data: Array, battle_id: String, story_id: String,
-		inv_data: Dictionary = {}) -> void:
+		inv_data: Dictionary = {}, difficulty: int = 1) -> void:
 	GameState.party.clear()
 	for data: Dictionary in party_data:
 		var fighter := FighterData.new()
@@ -448,6 +448,7 @@ func _rpc_sync_game_state(party_data: Array, battle_id: String, story_id: String
 		GameState.party.append(fighter)
 	if not inv_data.is_empty():
 		GameState.inventory.apply_save_data(inv_data)
+	GameState.difficulty = difficulty
 	GameState.current_story_id = story_id
 	GameState.advance_to_battle(battle_id)
 
