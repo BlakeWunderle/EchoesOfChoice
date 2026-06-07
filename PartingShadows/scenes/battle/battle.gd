@@ -139,13 +139,14 @@ func _is_mp_guest() -> bool:
 
 func _start_battle() -> void:
 	_engine = BattleEngine.new()
-	# Difficulty setting: Story=-40% HP/-25% ATK, Normal=unchanged, Hard=+15% ATK/+10% SPD
+	var battle: BattleData = GameState.current_battle
+	# Difficulty setting: Story=-10% HP/-15% ATK/-10% SPD, Normal=unchanged, Hard=+10% HP/+15% ATK/+10% SPD
 	var _FighterDB := preload("res://scripts/data/fighter_db.gd")
 	var max_tier: int = 0
 	for f: FighterData in GameState.party:
 		max_tier = maxi(max_tier, _FighterDB.get_class_tier(f.class_id))
 	_engine.difficulty_level = max_tier
-	var player_diff: int = SettingsManager.difficulty
+	var player_diff: int = GameState.difficulty
 	if player_diff == 0:
 		for enemy: FighterData in battle.enemies:
 			enemy.max_health = maxi(1, int(enemy.max_health * 0.90))
@@ -168,8 +169,6 @@ func _start_battle() -> void:
 
 	if NetManager.is_multiplayer_active and NetManager.is_host:
 		NetManager.player_left.connect(_on_peer_left_mid_battle)
-
-	var battle: BattleData = GameState.current_battle
 	_escape_hp_pct = battle.escape_hp_pct
 	_boss_escaped = false
 	if not battle.scene_image.is_empty() and ResourceLoader.exists(battle.scene_image):

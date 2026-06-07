@@ -23,13 +23,13 @@ The project is a visual RPG built in Godot 4 with GDScript at `PartingShadows/`.
 
 ## Difficulty Setting
 
-Player-selectable in Settings. Affects enemy stats, not AI (AI is unified score-based for all units).
+Selected per-run during party creation (before the narrative intro). Cannot be changed mid-game. Affects enemy stats, not AI (AI is unified score-based for all units).
 
 - **Easy**: Enemy HP -10%, ATK (phys+mag) -15%, SPD -10%. Mirrors Hard in reverse.
 - **Normal**: No stat changes. Default.
 - **Hard**: Enemy HP +10%, ATK (phys+mag) +15%, SPD +10%. Harder across all fights including endgame.
 
-Stored in `SettingsManager.difficulty` (0/1/2), applied in `battle.gd _start_battle()` before `engine.start_battle()`.
+Stored in `GameState.difficulty` (0/1/2), persisted in save files, applied in `battle.gd _start_battle()` before `engine.start_battle()`.
 
 ## Current Battle System
 

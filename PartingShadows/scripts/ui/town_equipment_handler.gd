@@ -31,6 +31,7 @@ var _sub_phase: String = "slot"
 var _dialogue: DialoguePanel
 var _choice_menu: ChoiceMenu
 var _header_label: Label
+var _back_btn: Button
 var _tip_overlay: TipOverlay
 var _ready_gate: ReadyGate
 var _waiting_overlay: WaitingOverlay
@@ -85,6 +86,21 @@ func _build_ui() -> void:
 	_choice_menu.choice_selected.connect(_on_choice_selected)
 	_choice_menu.option_focused.connect(_on_option_focused)
 	vbox.add_child(_choice_menu)
+
+	_back_btn = Button.new()
+	_back_btn.text = "Back"
+	_back_btn.custom_minimum_size = Vector2(200, 48)
+	_back_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_back_btn.focus_mode = Control.FOCUS_ALL
+	_back_btn.visible = false
+	_back_btn.pressed.connect(_on_back_pressed)
+	var focus_sb := StyleBoxFlat.new()
+	focus_sb.bg_color = Color(0.1, 0.16, 0.22, 0.45)
+	focus_sb.border_color = Color.WHITE
+	focus_sb.set_border_width_all(3)
+	focus_sb.set_corner_radius_all(6)
+	_back_btn.add_theme_stylebox_override("focus", focus_sb)
+	vbox.add_child(_back_btn)
 
 	_ready_gate = ReadyGate.new()
 	_ready_gate.visible = false
@@ -155,14 +171,39 @@ func _on_choice_selected(index: int) -> void:
 		_on_upgrade_selected(index)
 
 
+func _on_back_pressed() -> void:
+	_sub_phase = "slot"
+	_back_btn.visible = false
+	SFXManager.play(SFXManager.Category.UI_SELECT, 0.2)
+	_show_slot_selection()
+
+
+func _wire_back_focus() -> void:
+	await get_tree().process_frame
+	var last_btn: Button = null
+	for i: int in range(_choice_menu._buttons.size() - 1, -1, -1):
+		if not _choice_menu._buttons[i].disabled:
+			last_btn = _choice_menu._buttons[i]
+			break
+	var first_btn: Button = null
+	for btn: Button in _choice_menu._buttons:
+		if not btn.disabled:
+			first_btn = btn
+			break
+	if last_btn:
+		last_btn.focus_neighbor_bottom = _back_btn.get_path()
+	if first_btn:
+		first_btn.focus_neighbor_top = _back_btn.get_path()
+	_back_btn.focus_neighbor_top = last_btn.get_path() if last_btn else NodePath()
+	_back_btn.focus_neighbor_bottom = first_btn.get_path() if first_btn else NodePath()
+
+
 func _input(event: InputEvent) -> void:
 	if not _choice_menu.visible:
 		return
 	if event.is_action_pressed("ui_cancel") or event.is_action_pressed("cancel"):
 		if _sub_phase == "upgrade":
-			_sub_phase = "slot"
-			SFXManager.play(SFXManager.Category.UI_SELECT, 0.2)
-			_show_slot_selection()
+			_on_back_pressed()
 			get_viewport().set_input_as_handled()
 
 
@@ -183,6 +224,7 @@ func _any_upgradeable() -> bool:
 
 func _show_slot_selection() -> void:
 	_waiting_overlay.hide_waiting()
+	_back_btn.visible = false
 
 	while _char_index < _party.size():
 		var fighter: FighterData = _party[_char_index]
@@ -290,6 +332,8 @@ func _show_upgrade_choices() -> void:
 	_header_label.text = "Select %s:" % _selected_equip.get_slot_name()
 	_header_label.visible = true
 	_choice_menu.show_choices(options)
+	_back_btn.visible = true
+	_wire_back_focus()
 
 
 func _on_upgrade_selected(index: int) -> void:

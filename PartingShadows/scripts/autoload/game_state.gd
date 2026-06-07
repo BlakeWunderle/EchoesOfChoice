@@ -22,6 +22,7 @@ var game_won: bool = false
 var battles_won: int = 0
 var play_seconds: float = 0.0
 var current_story_id: String = "story_1"
+var difficulty: int = 1  ## 0=Easy, 1=Normal, 2=Hard (set during party creation)
 var inventory: RefCounted = _Inventory.new()  ## Party-shared items + gold
 
 
@@ -37,6 +38,7 @@ func start_new_game(story_id: String = "story_1") -> void:
 	game_won = false
 	battles_won = 0
 	play_seconds = 0.0
+	difficulty = 1
 	inventory = _Inventory.new()
 	_update_presence()
 

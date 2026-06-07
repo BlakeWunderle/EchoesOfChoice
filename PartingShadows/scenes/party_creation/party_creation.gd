@@ -17,7 +17,7 @@ const EquipmentDB := preload("res://scripts/data/equipment_db.gd")
 const EquipmentData := preload("res://scripts/data/equipment_data.gd")
 
 enum State {
-	INTRO, NAME_1, CLASS_1, PORTRAIT_1,
+	DIFFICULTY, INTRO, NAME_1, CLASS_1, PORTRAIT_1,
 	EQUIP_INTRO_1, EQUIP_WEAPON_1, EQUIP_ARMOR_1, EQUIP_BOOTS_1, CONFIRM_1,
 	BRIDGE_1, NAME_2, CLASS_2, PORTRAIT_2,
 	EQUIP_INTRO_2, EQUIP_WEAPON_2, EQUIP_ARMOR_2, EQUIP_BOOTS_2, CONFIRM_2,
@@ -25,6 +25,13 @@ enum State {
 	EQUIP_INTRO_3, EQUIP_WEAPON_3, EQUIP_ARMOR_3, EQUIP_BOOTS_3, CONFIRM_3,
 	OUTRO, DONE,
 }
+
+const DIFFICULTY_OPTIONS: Array[Dictionary] = [
+	{"label": "Easy", "description": "Enemy HP -10%, ATK -15%, SPD -10%"},
+	{"label": "Normal", "description": "Standard enemy stats"},
+	{"label": "Hard", "description": "Enemy HP +10%, ATK +15%, SPD +10%"},
+]
+const DIFFICULTY_VALUES: Array[int] = [0, 1, 2]
 
 const BASE_CLASS_OPTIONS: Array[Dictionary] = [
 	{"label": "Squire"},
@@ -60,6 +67,7 @@ var _portrait_btn_b: Button
 var _portrait_back_btn: Button
 var _player_indicator: Label
 var _equip_label: Label
+var _equip_back_btn: Button
 var _class_info_panel: ClassInfoPanel
 var _ready_gate: ReadyGate
 var _pending_advance: Callable
@@ -90,7 +98,7 @@ func _ready() -> void:
 	# Pre-assign co-op slots so device gating works during creation
 	if LocalCoop.is_active:
 		LocalCoop.assign_slots(3)
-	_set_state(State.INTRO)
+	_set_state(State.DIFFICULTY)
 	if NetManager.is_multiplayer_active:
 		NetManager.player_left.connect(_on_player_left)
 		NetManager.session_ended.connect(_on_session_ended)
@@ -167,6 +175,21 @@ func _build_ui() -> void:
 	_choice_menu.option_focused.connect(_on_class_option_focused)
 	_choice_menu.visible = false
 	_vbox.add_child(_choice_menu)
+
+	_equip_back_btn = Button.new()
+	_equip_back_btn.text = "Back"
+	_equip_back_btn.custom_minimum_size = Vector2(200, 48)
+	_equip_back_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_equip_back_btn.focus_mode = Control.FOCUS_ALL
+	_equip_back_btn.visible = false
+	_equip_back_btn.pressed.connect(_on_equip_back)
+	var _equip_back_focus_sb := StyleBoxFlat.new()
+	_equip_back_focus_sb.bg_color = Color(0.1, 0.16, 0.22, 0.45)
+	_equip_back_focus_sb.border_color = Color.WHITE
+	_equip_back_focus_sb.set_border_width_all(3)
+	_equip_back_focus_sb.set_corner_radius_all(6)
+	_equip_back_btn.add_theme_stylebox_override("focus", _equip_back_focus_sb)
+	_vbox.add_child(_equip_back_btn)
 
 	_ready_gate = ReadyGate.new()
 	_ready_gate.visible = false
@@ -321,6 +344,7 @@ func _set_state(new_state: State) -> void:
 	_dialogue.visible = false
 	_name_input.visible = false
 	_equip_label.visible = false
+	_equip_back_btn.visible = false
 	_choice_menu.visible = false
 	_portrait_container.visible = false
 	_portrait_back_btn.visible = false
@@ -367,6 +391,8 @@ func _set_state(new_state: State) -> void:
 		return
 
 	match _state:
+		State.DIFFICULTY:
+			_show_difficulty_selection()
 		State.INTRO:
 			_show_dialogue(PCText.get_intro_text(GameState.current_story_id))
 			if NetManager.is_multiplayer_active:
@@ -511,6 +537,10 @@ func _on_name_entered(player_name: String) -> void:
 
 
 func _on_class_selected(index: int) -> void:
+	# Route to difficulty handler
+	if _state == State.DIFFICULTY:
+		_on_difficulty_selected(index)
+		return
 	# Route to equipment handler if in an equipment state
 	if _is_equip_state():
 		_on_equip_selected(index)
@@ -576,6 +606,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _portrait_container.visible and event.is_action_pressed("ui_cancel"):
 		_on_portrait_back()
 		get_viewport().set_input_as_handled()
+		return
+	if _equip_back_btn.visible and event.is_action_pressed("ui_cancel"):
+		_on_equip_back()
+		get_viewport().set_input_as_handled()
 
 
 func _on_portrait_back() -> void:
@@ -634,6 +668,31 @@ func _on_portrait_clicked(index: int) -> void:
 
 
 # =============================================================================
+# Difficulty selection
+# =============================================================================
+
+func _show_difficulty_selection() -> void:
+	if NetManager.is_multiplayer_active and not NetManager.is_host:
+		_waiting_overlay.show_waiting("host")
+		return
+	_equip_label.text = "Select Difficulty:"
+	_equip_label.visible = true
+	_choice_menu.show_choices(DIFFICULTY_OPTIONS)
+	_choice_menu.highlight_option(1)
+
+
+func _on_difficulty_selected(index: int) -> void:
+	if index < 0 or index >= DIFFICULTY_VALUES.size():
+		return
+	_choice_menu.hide_menu()
+	_equip_label.visible = false
+	GameState.difficulty = DIFFICULTY_VALUES[index]
+	if NetManager.is_multiplayer_active:
+		_rpc_difficulty_set.rpc(DIFFICULTY_VALUES[index])
+	_mp_set_state(State.INTRO)
+
+
+# =============================================================================
 # Equipment selection
 # =============================================================================
 
@@ -664,6 +723,12 @@ func _show_equip_choices(slot_type: String) -> void:
 	_equip_label.text = header
 	_equip_label.visible = true
 	_choice_menu.show_choices(options)
+
+	var can_go_back: bool = _state not in [
+		State.EQUIP_WEAPON_1, State.EQUIP_WEAPON_2, State.EQUIP_WEAPON_3]
+	_equip_back_btn.visible = can_go_back
+	if can_go_back:
+		_wire_equip_back_focus()
 
 	if _state in [State.EQUIP_WEAPON_1, State.EQUIP_WEAPON_2, State.EQUIP_WEAPON_3]:
 		_tip_overlay.show_tip_once("first_equipment",
@@ -721,6 +786,51 @@ func _is_equip_state() -> bool:
 		State.EQUIP_WEAPON_2, State.EQUIP_ARMOR_2, State.EQUIP_BOOTS_2,
 		State.EQUIP_WEAPON_3, State.EQUIP_ARMOR_3, State.EQUIP_BOOTS_3,
 	]
+
+
+func _on_equip_back() -> void:
+	var fighter: FighterData = _party.back()
+	if fighter.equipment.size() > 0:
+		var last_equip: EquipmentData = fighter.equipment.pop_back()
+		for stat_name: String in last_equip.stat_bonuses:
+			var amount: int = last_equip.stat_bonuses[stat_name]
+			fighter.set(stat_name, fighter.get(stat_name) - amount)
+		if "max_health" in last_equip.stat_bonuses:
+			fighter.health = fighter.max_health
+		if "max_mana" in last_equip.stat_bonuses:
+			fighter.mana = fighter.max_mana
+
+	_choice_menu.hide_menu()
+	_equip_label.visible = false
+	_equip_back_btn.visible = false
+
+	match _state:
+		State.EQUIP_ARMOR_1: _set_state(State.EQUIP_WEAPON_1)
+		State.EQUIP_ARMOR_2: _set_state(State.EQUIP_WEAPON_2)
+		State.EQUIP_ARMOR_3: _set_state(State.EQUIP_WEAPON_3)
+		State.EQUIP_BOOTS_1: _set_state(State.EQUIP_ARMOR_1)
+		State.EQUIP_BOOTS_2: _set_state(State.EQUIP_ARMOR_2)
+		State.EQUIP_BOOTS_3: _set_state(State.EQUIP_ARMOR_3)
+
+
+func _wire_equip_back_focus() -> void:
+	await get_tree().process_frame
+	var last_btn: Button = null
+	for i: int in range(_choice_menu._buttons.size() - 1, -1, -1):
+		if not _choice_menu._buttons[i].disabled:
+			last_btn = _choice_menu._buttons[i]
+			break
+	var first_btn: Button = null
+	for btn: Button in _choice_menu._buttons:
+		if not btn.disabled:
+			first_btn = btn
+			break
+	if last_btn:
+		last_btn.focus_neighbor_bottom = _equip_back_btn.get_path()
+	if first_btn:
+		first_btn.focus_neighbor_top = _equip_back_btn.get_path()
+	_equip_back_btn.focus_neighbor_top = last_btn.get_path() if last_btn else NodePath()
+	_equip_back_btn.focus_neighbor_bottom = first_btn.get_path() if first_btn else NodePath()
 
 
 func _finish() -> void:
@@ -817,6 +927,7 @@ func _on_session_ended(reason: String) -> void:
 	_choice_menu.hide_menu()
 	_portrait_container.visible = false
 	_portrait_back_btn.visible = false
+	_equip_back_btn.visible = false
 	_waiting_overlay.hide_waiting()
 	_dialogue.visible = true
 	_dialogue.show_text([reason])
@@ -839,6 +950,12 @@ func _mp_set_state(new_state: State) -> void:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_sync_state(state_value: int) -> void:
 	_set_state(state_value as State)
+
+
+## Host -> All: Sync difficulty selection to peers.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_difficulty_set(level: int) -> void:
+	GameState.difficulty = level
 
 
 ## Any -> All: Broadcast name greeting text so both players see it.
