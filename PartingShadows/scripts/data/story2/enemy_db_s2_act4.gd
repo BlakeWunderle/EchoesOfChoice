@@ -17,7 +17,7 @@ static func create_pupil_leech(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(32, 40, 2, 4, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(25, 31, 1, 2, lvl, 14)
 	f.physical_defense = EH.es(48, 57, 2, 4, lvl, 14)
-	f.magic_attack = EH.es(120, 132, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(121, 133, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(46, 55, 2, 3, lvl, 14)
 	f.speed = EH.es(39, 46, 1, 3, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 10

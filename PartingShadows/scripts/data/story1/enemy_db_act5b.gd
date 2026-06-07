@@ -32,7 +32,7 @@ static func create_ritual_conduit(n: String, lvl: int = 14) -> FighterData:
 	f.mana = EH.es(45, 52, 3, 4, lvl, 14); f.max_mana = f.mana
 	f.physical_attack = EH.es(22, 27, 0, 2, lvl, 14)
 	f.physical_defense = EH.es(31, 39, 2, 3, lvl, 14)
-	f.magic_attack = EH.es(82, 90, 3, 5, lvl, 14)
+	f.magic_attack = EH.es(83, 91, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(51, 59, 3, 5, lvl, 14)
 	f.speed = EH.es(54, 61, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 4; f.dodge_chance = 17

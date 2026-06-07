@@ -20,7 +20,7 @@ static func create_abyssal_dreamer(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(38, 46, 1, 2, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 15)
 	f.physical_defense = EH.es(28, 36, 2, 3, lvl, 15)
-	f.magic_attack = EH.es(136, 147, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(137, 148, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(46, 53, 2, 4, lvl, 15)
 	f.speed = EH.es(44, 50, 2, 3, lvl, 15)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
