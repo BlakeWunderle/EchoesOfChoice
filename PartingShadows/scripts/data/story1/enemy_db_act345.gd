@@ -31,7 +31,7 @@ static func create_guard_sergeant(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Guard Sergeant", lvl)
 	f.health = EH.es(310, 350, 7, 10, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(42, 50, 3, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(59, 66, 3, 5, lvl, 10)
+	f.physical_attack = EH.es(60, 67, 3, 5, lvl, 10)
 	f.physical_defense = EH.es(24, 31, 2, 3, lvl, 10)
 	f.magic_attack = EH.es(14, 18, 0, 2, lvl, 10)
 	f.magic_defense = EH.es(27, 33, 1, 2, lvl, 10)
@@ -108,7 +108,7 @@ static func create_demon(n: String, lvl: int = 12) -> FighterData:
 	f.mana = EH.es(53, 61, 3, 4, lvl, 12); f.max_mana = f.mana
 	f.physical_attack = EH.es(32, 38, 1, 3, lvl, 12)
 	f.physical_defense = EH.es(22, 28, 1, 3, lvl, 12)
-	f.magic_attack = EH.es(88, 97, 4, 6, lvl, 12)
+	f.magic_attack = EH.es(90, 99, 4, 6, lvl, 12)
 	f.magic_defense = EH.es(38, 44, 2, 4, lvl, 12)
 	f.speed = EH.es(30, 36, 1, 3, lvl, 12)
 	f.crit_chance = 25; f.crit_damage = 5; f.dodge_chance = 17
@@ -120,9 +120,9 @@ static func create_corrupted_treant(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Corrupted Treant", lvl)
 	f.health = EH.es(440, 495, 8, 11, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 3, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(62, 70, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(63, 71, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(56, 62, 3, 5, lvl, 12)
-	f.magic_attack = EH.es(42, 50, 2, 4, lvl, 12)
+	f.magic_attack = EH.es(43, 51, 2, 4, lvl, 12)
 	f.magic_defense = EH.es(32, 39, 2, 4, lvl, 12)
 	f.speed = EH.es(36, 42, 1, 3, lvl, 12)
 	f.crit_chance = 10; f.crit_damage = 4; f.dodge_chance = 10
@@ -224,7 +224,7 @@ static func create_tunnel_lurker(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Tunnel Lurker", lvl)
 	f.health = EH.es(390, 440, 8, 11, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(35, 42, 2, 3, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(91, 99, 4, 6, lvl, 13)
+	f.physical_attack = EH.es(92, 100, 4, 6, lvl, 13)
 	f.physical_defense = EH.es(38, 44, 2, 4, lvl, 13)
 	f.magic_attack = EH.es(26, 32, 1, 2, lvl, 13)
 	f.magic_defense = EH.es(40, 46, 2, 3, lvl, 13)
@@ -241,9 +241,9 @@ static func create_stranger_final(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(75, 85, 4, 5, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(103, 111, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(58, 66, 3, 5, lvl, 15)
-	f.magic_attack = EH.es(110, 120, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(111, 121, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(61, 69, 3, 5, lvl, 15)
-	f.speed = EH.es(85, 92, 3, 5, lvl, 15)
+	f.speed = EH.es(86, 93, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 6; f.dodge_chance = 20
 	f.abilities = [EABL.shadow_blast(), EABL.siphon(), EABL.dark_veil(), EABL.unmake(), EABL.entropy()]
 	f.flavor_text = "The Stranger revealed in full, terrible power. Reality itself bends around him as he prepares to unmake everything."

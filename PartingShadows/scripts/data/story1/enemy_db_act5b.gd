@@ -15,7 +15,7 @@ static func create_sigil_colossus(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Sigil Colossus", lvl)
 	f.health = EH.es(580, 640, 7, 9, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 3, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(88, 96, 4, 6, lvl, 14)
+	f.physical_attack = EH.es(89, 97, 4, 6, lvl, 14)
 	f.physical_defense = EH.es(60, 70, 3, 5, lvl, 14)
 	f.magic_attack = EH.es(22, 27, 0, 2, lvl, 14)
 	f.magic_defense = EH.es(37, 45, 2, 4, lvl, 14)
@@ -114,9 +114,9 @@ static func create_stranger_undone(n: String, lvl: int = 15) -> FighterData:
 	f.class_id = "StrangerUndone"
 	f.health = EH.es(810, 900, 10, 14, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(70, 80, 4, 5, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(99, 109, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(100, 110, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(55, 64, 2, 4, lvl, 15)
-	f.magic_attack = EH.es(110, 120, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(111, 121, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(58, 67, 2, 4, lvl, 15)
 	f.speed = EH.es(91, 101, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 7; f.dodge_chance = 20

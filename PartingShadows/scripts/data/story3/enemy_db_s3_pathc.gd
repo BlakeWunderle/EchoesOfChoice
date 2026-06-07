@@ -20,7 +20,7 @@ static func create_abyssal_dreamer(n: String, lvl: int = 15) -> FighterData:
 	f.mana = EH.es(38, 46, 1, 2, lvl, 15); f.max_mana = f.mana
 	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 15)
 	f.physical_defense = EH.es(28, 36, 2, 3, lvl, 15)
-	f.magic_attack = EH.es(135, 146, 3, 5, lvl, 15)
+	f.magic_attack = EH.es(136, 147, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(46, 53, 2, 4, lvl, 15)
 	f.speed = EH.es(44, 50, 2, 3, lvl, 15)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -33,9 +33,9 @@ static func create_thread_devourer(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "Thread Devourer", lvl)
 	f.health = EH.es(430, 489, 5, 8, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(34, 40, 2, 3, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(109, 120, 2, 4, lvl, 15)
+	f.physical_attack = EH.es(110, 121, 2, 4, lvl, 15)
 	f.physical_defense = EH.es(39, 46, 2, 3, lvl, 15)
-	f.magic_attack = EH.es(113, 124, 2, 4, lvl, 15)
+	f.magic_attack = EH.es(114, 125, 2, 4, lvl, 15)
 	f.magic_defense = EH.es(35, 41, 2, 3, lvl, 15)
 	f.speed = EH.es(43, 49, 2, 3, lvl, 15)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -48,7 +48,7 @@ static func create_slumbering_colossus(n: String, lvl: int = 15) -> FighterData:
 	var f := EH.base(n, "Slumbering Colossus", lvl)
 	f.health = EH.es(526, 592, 6, 9, lvl, 15); f.max_health = f.health
 	f.mana = EH.es(24, 33, 1, 1, lvl, 15); f.max_mana = f.mana
-	f.physical_attack = EH.es(114, 126, 3, 5, lvl, 15)
+	f.physical_attack = EH.es(115, 127, 3, 5, lvl, 15)
 	f.physical_defense = EH.es(57, 65, 2, 4, lvl, 15)
 	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 15)
 	f.magic_defense = EH.es(35, 43, 2, 3, lvl, 15)
