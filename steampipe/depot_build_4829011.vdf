@@ -1,0 +1,13 @@
+"DepotBuildConfig"
+{
+	"DepotID" "4829011"
+	"ContentRoot" "C:\Projects\PartingShadows\build\windows-demo"
+	"FileMapping"
+	{
+		"LocalPath" "*"
+		"DepotPath" "."
+		"Recursive" "1"
+	}
+	"FileExclusion" "*.zip"
+	"FileExclusion" "*.pdb"
+}

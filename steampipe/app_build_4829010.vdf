@@ -1,0 +1,12 @@
+"AppBuild"
+{
+	"AppID" "4829010"
+	"Desc" "Parting Shadows Demo build"
+	"BuildOutput" "C:\Projects\PartingShadows\build\steampipe_output"
+	"Depots"
+	{
+		"4829011" "C:\Projects\PartingShadows\steampipe\depot_build_4829011.vdf"
+		"4829012" "C:\Projects\PartingShadows\steampipe\depot_build_4829012.vdf"
+		"4829013" "C:\Projects\PartingShadows\steampipe\depot_build_4829013.vdf"
+	}
+}

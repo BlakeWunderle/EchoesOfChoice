@@ -1,0 +1,12 @@
+"DepotBuildConfig"
+{
+	"DepotID" "4829012"
+	"ContentRoot" "C:\Projects\PartingShadows\build\linux-demo"
+	"FileMapping"
+	{
+		"LocalPath" "*"
+		"DepotPath" "."
+		"Recursive" "1"
+	}
+	"FileExclusion" "*.zip"
+}
