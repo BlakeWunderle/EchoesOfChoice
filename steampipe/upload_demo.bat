@@ -14,8 +14,8 @@ if exist "%~dp0..\build\macos-demo\PartingShadowsDemo.zip" (
     echo Preparing macOS demo build...
     if exist "%~dp0..\build\macos-demo\PartingShadowsDemo.app" rmdir /s /q "%~dp0..\build\macos-demo\PartingShadowsDemo.app"
     powershell -Command "Expand-Archive -Path '%~dp0..\build\macos-demo\PartingShadowsDemo.zip' -DestinationPath '%~dp0..\build\macos-demo' -Force"
-    if exist "%~dp0..\build\macos-demo\Parting Shadows Demo.app" (
-        ren "%~dp0..\build\macos-demo\Parting Shadows Demo.app" "PartingShadowsDemo.app"
+    if exist "%~dp0..\build\macos-demo\Parting Shadows.app" (
+        ren "%~dp0..\build\macos-demo\Parting Shadows.app" "PartingShadowsDemo.app"
         echo   Renamed .app bundle to PartingShadowsDemo.app
     )
 )
