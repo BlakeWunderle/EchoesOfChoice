@@ -171,7 +171,7 @@ static func ninja_vanishing_act() -> UltimateData:
 		"Shroud the entire party in shadow, making everyone nearly impossible to hit.",
 		_make("Vanishing Act",
 			"Shadows swirl and engulf the party. They flicker in and out of sight.",
-			Enums.StatType.DODGE_CHANCE, 15, 3, false, 0, true),
+			Enums.StatType.DODGE_CHANCE, 25, 3, false, 0, true),
 		85)
 
 # Monk -- Fighter / Support / Healer / Mixed
@@ -458,7 +458,7 @@ static func chronomancer_temporal_acceleration() -> UltimateData:
 		"Accelerate time for the party, letting everyone act faster.",
 		_make("Temporal Acceleration",
 			"Time bends. Every ally moves in a blur of accelerated motion.",
-			Enums.StatType.SPEED, 45, 3, false, 0, true),
+			Enums.StatType.SPEED, 60, 3, false, 0, true),
 		55)
 
 # Astronomer -- Burst / Caster / Glass Cannon / AoE / Magical
@@ -591,7 +591,7 @@ static func falconer_death_from_above() -> UltimateData:
 		"Command your raptor to dive with lethal precision on a single target.",
 		_make("Death From Above",
 			"The falcon screams and dives. Talons find their mark with terrible force.",
-			Enums.StatType.PHYSICAL_ATTACK, 38, 0, true, 0, false),
+			Enums.StatType.PHYSICAL_ATTACK, 45, 0, true, 0, false),
 		70)
 
 static func falconer_raptor_storm() -> UltimateData:
@@ -599,7 +599,7 @@ static func falconer_raptor_storm() -> UltimateData:
 		"Call a flock of raptors to assault all enemies.",
 		_make("Raptor Storm",
 			"The sky darkens with wings. Talons and beaks tear at every foe.",
-			Enums.StatType.PHYSICAL_ATTACK, 24, 0, true, 0, true),
+			Enums.StatType.PHYSICAL_ATTACK, 28, 0, true, 0, true),
 		70)
 
 # Shapeshifter -- Hybrid / Tank / Physical
@@ -647,7 +647,7 @@ static func aegis_counter_storm() -> UltimateData:
 		"Release a burst of stored counter-energy in a devastating mixed strike.",
 		_make("Counter Storm",
 			"Every blocked blow returns tenfold in a single explosive release.",
-			Enums.StatType.MIXED_ATTACK, 44, 0, true, 0, false),
+			Enums.StatType.MIXED_ATTACK, 36, 0, true, 0, false),
 		75)
 
 static func aegis_aegis_wall() -> UltimateData:
@@ -655,7 +655,7 @@ static func aegis_aegis_wall() -> UltimateData:
 		"Raise an impenetrable magical barrier around the party.",
 		_make("Aegis Wall",
 			"Runes blaze to life. A shimmering wall surrounds every ally.",
-			Enums.StatType.DEFENSE, 18, 3, false, 0, true),
+			Enums.StatType.DEFENSE, 15, 3, false, 0, true),
 		65)
 
 # Trailblazer -- Fighter / Debuffer / Mixed

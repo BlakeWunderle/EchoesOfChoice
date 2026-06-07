@@ -107,15 +107,15 @@ static func time_freeze() -> AbilityData:
 # Astronomer
 static func starfall() -> AbilityData:
 	return _make("Starfall", "Call down celestial fire.",
-		Enums.StatType.MAGIC_ATTACK, 8, 0, true, 7, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 14, 0, true, 7, false, 0, 0.0)
 
 static func meteor_shower() -> AbilityData:
 	return _make("Meteor Shower", "A rain of cosmic debris.",
-		Enums.StatType.MAGIC_ATTACK, 5, 0, true, 10, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 10, 0, true, 10, true, 0, 0.0)
 
 static func eclipse() -> AbilityData:
 	return _make("Eclipse", "Blot out the enemy's magical senses.",
-		Enums.StatType.MAGIC_DEFENSE, 10, 2, true, 5, false, 0, 0.0)
+		Enums.StatType.MAGIC_DEFENSE, 10, 3, true, 5, false, 0, 0.0)
 
 # Automaton
 static func servo_strike() -> AbilityData:
