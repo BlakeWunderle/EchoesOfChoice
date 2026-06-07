@@ -291,7 +291,7 @@ func _show_main_menu() -> void:
 	options.append({"label": "Compendium"})
 	options.append({"label": "Credits"})
 	if _DemoConfig.is_demo():
-		options.append({"label": "Wishlist on Steam"})
+		options.append({"label": "Buy on Steam"})
 	options.append({"label": "Quit"})
 
 	_menu.show_choices(options)
@@ -323,7 +323,7 @@ func _handle_main_choice(index: int) -> void:
 	labels.append("Compendium")
 	labels.append("Credits")
 	if _DemoConfig.is_demo():
-		labels.append("Wishlist on Steam")
+		labels.append("Buy on Steam")
 	labels.append("Quit")
 
 	if index < 0 or index >= labels.size():
@@ -346,7 +346,7 @@ func _handle_main_choice(index: int) -> void:
 			_show_compendium()
 		"Credits":
 			SceneManager.change_scene("res://scenes/credits/credits.tscn")
-		"Wishlist on Steam":
+		"Buy on Steam":
 			OS.shell_open("https://store.steampowered.com/app/4545380/Parting_Shadows/")
 		"Quit":
 			_confirm_dialog.confirmed.connect(_on_quit_confirmed, CONNECT_ONE_SHOT)

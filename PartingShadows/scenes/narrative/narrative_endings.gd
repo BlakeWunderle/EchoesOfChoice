@@ -313,5 +313,5 @@ static func get_demo_ending_text() -> Array[String]:
 		"You have completed the first chapter of \"The Stranger's Shadow.\"",
 		"The full game features three complete stories with branching paths, dozens of class upgrades, and mysteries to unravel.",
 		"We hope you enjoyed the journey so far. The road ahead holds much more.",
-		"Wishlist Parting Shadows on Steam to follow the adventure.",
+		"Parting Shadows is available now on Steam.",
 	]
