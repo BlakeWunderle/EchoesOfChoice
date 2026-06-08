@@ -278,7 +278,7 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 				if not class_diag.has(ct):
 					class_diag[ct] = {dmg_dealt = 0, dmg_taken = 0,
 						heals = 0, deaths = 0, battles = 0, actions = 0, dmg_mitigated = 0,
-					buffs_applied = 0, debuffs_applied = 0, charge_gained = 0}
+					buffs_applied = 0, debuffs_applied = 0, charge_gained = 0, stalemates = 0}
 				var ss: Dictionary = engine.sim_stats.get(f, {})
 				class_diag[ct].dmg_dealt += ss.get("dmg_dealt", 0)
 				class_diag[ct].dmg_taken += ss.get("dmg_taken", 0)
@@ -290,6 +290,8 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 				class_diag[ct].buffs_applied += ss.get("buffs_applied", 0)
 				class_diag[ct].debuffs_applied += ss.get("debuffs_applied", 0)
 				class_diag[ct].charge_gained += ss.get("charge_gained", 0)
+				if br.get("stalemate", false):
+					class_diag[ct].stalemates += 1
 				# Accumulate per-equipment-piece win rates.
 				for equip: EquipmentData in f.equipment:
 					var eid: String = equip.base_id

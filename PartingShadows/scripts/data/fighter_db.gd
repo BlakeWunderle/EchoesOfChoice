@@ -50,10 +50,10 @@ static func create_mage(fighter_name: String) -> FighterData:
 	f.health = randi_range(42, 48); f.max_health = f.health
 	f.mana = randi_range(8, 10); f.max_mana = f.mana
 	f.physical_attack = randi_range(9, 12)
-	f.physical_defense = randi_range(7, 10)
+	f.physical_defense = randi_range(8, 11)
 	f.magic_attack = randi_range(15, 19)
 	f.magic_defense = randi_range(14, 18)
-	f.speed = randi_range(17, 21)
+	f.speed = randi_range(18, 22)
 	f.crit_chance = 8
 	f.crit_damage = 1
 	f.dodge_chance = 5

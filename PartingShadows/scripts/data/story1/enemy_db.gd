@@ -16,7 +16,7 @@ static func create_thug(n: String, lvl: int = 1) -> FighterData:
 	var f := EH.base(n, "Thug", lvl)
 	f.health = EH.es(50, 58, 3, 6, lvl, 1); f.max_health = f.health
 	f.mana = EH.es(2, 5, 1, 2, lvl, 1); f.max_mana = f.mana
-	f.physical_attack = EH.es(19, 22, 1, 3, lvl, 1)
+	f.physical_attack = EH.es(20, 23, 1, 3, lvl, 1)
 	f.physical_defense = EH.es(9, 12, 1, 2, lvl, 1)
 	f.magic_attack = EH.es(6, 9, 0, 2, lvl, 1)
 	f.magic_defense = EH.es(7, 10, 1, 2, lvl, 1)
@@ -30,7 +30,7 @@ static func create_ruffian(n: String, lvl: int = 1) -> FighterData:
 	var f := EH.base(n, "Ruffian", lvl)
 	f.health = EH.es(47, 56, 3, 5, lvl, 1); f.max_health = f.health
 	f.mana = EH.es(2, 5, 1, 2, lvl, 1); f.max_mana = f.mana
-	f.physical_attack = EH.es(17, 21, 1, 3, lvl, 1)
+	f.physical_attack = EH.es(18, 22, 1, 3, lvl, 1)
 	f.physical_defense = EH.es(7, 10, 1, 2, lvl, 1)
 	f.magic_attack = EH.es(5, 8, 0, 1, lvl, 1)
 	f.magic_defense = EH.es(7, 10, 1, 2, lvl, 1)
@@ -63,7 +63,7 @@ static func create_wolf(n: String, lvl: int = 2) -> FighterData:
 	var f := EH.base(n, "Wolf", lvl)
 	f.health = EH.es(52, 61, 3, 5, lvl, 2); f.max_health = f.health
 	f.mana = EH.es(4, 6, 1, 2, lvl, 2); f.max_mana = f.mana
-	f.physical_attack = EH.es(22, 25, 2, 3, lvl, 2)
+	f.physical_attack = EH.es(21, 24, 2, 3, lvl, 2)
 	f.physical_defense = EH.es(7, 10, 1, 2, lvl, 2)
 	f.magic_attack = EH.es(5, 7, 0, 1, lvl, 2)
 	f.magic_defense = EH.es(7, 10, 1, 2, lvl, 2)

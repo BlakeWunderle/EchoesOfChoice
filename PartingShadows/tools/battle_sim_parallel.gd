@@ -608,7 +608,7 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 				merged.class_diag[cls] = partial.class_diag[cls].duplicate()
 			else:
 				for key: String in ["dmg_dealt", "dmg_taken", "heals", "deaths", "battles",
-					"actions", "dmg_mitigated", "buffs_applied", "debuffs_applied", "charge_gained"]:
+					"actions", "dmg_mitigated", "buffs_applied", "debuffs_applied", "charge_gained", "stalemates"]:
 					merged.class_diag[cls][key] += partial.class_diag[cls].get(key, 0)
 		for eid: String in partial.get("equip_stats", {}):
 			var ps: Dictionary = partial.equip_stats[eid]

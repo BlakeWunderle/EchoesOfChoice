@@ -62,7 +62,7 @@ static func create_sleep_stalker(n: String, lvl: int = 2) -> FighterData:
 	var f := EH.base(n, "Sleep Stalker", lvl)
 	f.health = EH.es(52, 61, 3, 6, lvl, 2); f.max_health = f.health
 	f.mana = EH.es(4, 7, 1, 1, lvl, 2); f.max_mana = f.mana
-	f.physical_attack = EH.es(22, 26, 1, 3, lvl, 2)
+	f.physical_attack = EH.es(23, 27, 1, 3, lvl, 2)
 	f.physical_defense = EH.es(12, 15, 1, 2, lvl, 2)
 	f.magic_attack = EH.es(10, 13, 0, 1, lvl, 2)
 	f.magic_defense = EH.es(5, 8, 0, 1, lvl, 2)
@@ -77,9 +77,9 @@ static func create_mirror_shade(n: String, lvl: int = 2) -> FighterData:
 	var f := EH.base(n, "Mirror Shade", lvl)
 	f.health = EH.es(42, 51, 2, 4, lvl, 2); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 1, lvl, 2); f.max_mana = f.mana
-	f.physical_attack = EH.es(16, 20, 1, 2, lvl, 2)
+	f.physical_attack = EH.es(17, 21, 1, 2, lvl, 2)
 	f.physical_defense = EH.es(10, 13, 1, 2, lvl, 2)
-	f.magic_attack = EH.es(16, 20, 1, 2, lvl, 2)
+	f.magic_attack = EH.es(17, 21, 1, 2, lvl, 2)
 	f.magic_defense = EH.es(7, 10, 1, 2, lvl, 2)
 	f.speed = EH.es(25, 31, 1, 2, lvl, 2)
 	f.crit_chance = 12; f.crit_damage = 1; f.dodge_chance = 6
@@ -93,7 +93,7 @@ static func create_slumber_beast(n: String, lvl: int = 2) -> FighterData:
 	var f := EH.base(n, "Slumber Beast", lvl)
 	f.health = EH.es(55, 66, 3, 6, lvl, 2); f.max_health = f.health
 	f.mana = EH.es(5, 8, 1, 1, lvl, 2); f.max_mana = f.mana
-	f.physical_attack = EH.es(23, 27, 1, 3, lvl, 2)
+	f.physical_attack = EH.es(22, 26, 1, 3, lvl, 2)
 	f.physical_defense = EH.es(12, 16, 1, 2, lvl, 2)
 	f.magic_attack = EH.es(9, 12, 0, 1, lvl, 2)
 	f.magic_defense = EH.es(5, 8, 1, 2, lvl, 2)

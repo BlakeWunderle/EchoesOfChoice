@@ -141,74 +141,55 @@ static func get_base_parties() -> Array:
 
 
 static func get_tier1_parties() -> Array:
+	var classes := []  # Array of [base_type, t1_item]
+	for bt in BASE_TYPES:
+		for t1_item: String in T1_UPGRADES[bt]:
+			classes.append([bt, t1_item])
 	var parties := []
-	var n: int = BASE_TYPES.size()
+	var n: int = classes.size()
 	for i in n:
 		for j in range(i, n):
 			for k in range(j, n):
-				var arch := [BASE_TYPES[i], BASE_TYPES[j], BASE_TYPES[k]]
-				var u_a: Array = T1_UPGRADES[arch[0]]
-				var u_b: Array = T1_UPGRADES[arch[1]]
-				var u_c: Array = T1_UPGRADES[arch[2]]
-				for ai in u_a.size():
-					for bi in u_b.size():
-						for ci in u_c.size():
-							if i == j and ai >= bi:
-								continue
-							if j == k and bi >= ci:
-								continue
-							parties.append({
-								"base_types": arch,
-								"t1_items": [u_a[ai], u_b[bi], u_c[ci]],
-								"t2_items": ["", "", ""],
-							})
-	# Filter parties with 2+ low-offense (pure support/tank) classes.
+				parties.append({
+					"base_types": [classes[i][0], classes[j][0], classes[k][0]],
+					"t1_items": [classes[i][1], classes[j][1], classes[k][1]],
+					"t2_items": ["", "", ""],
+				})
+	# Filter parties with 3 low-offense classes (no damage dealer at all).
 	return parties.filter(func(p: Dictionary) -> bool:
 		var c := 0
 		for i in 3:
 			var cid := resolve_class_id(p.base_types[i], p.t1_items[i], "")
 			if FighterDBRoles.is_low_offense_expected(cid):
 				c += 1
-		return c < 2)
+		return c < 3)
 
 
 static func get_tier2_parties() -> Array:
 	if not _cached_t2_parties.is_empty():
 		return _cached_t2_parties
 
-	var chains := {}
+	var classes := []  # Array of [base_type, t1_item, t2_item]
 	for bt in BASE_TYPES:
-		chains[bt] = []
 		for t1_item: String in T1_UPGRADES[bt]:
 			var t1_fighter := create_fighter(bt, t1_item, "", 0)
 			var t1_cid: String = t1_fighter.class_id
 			if T2_UPGRADES.has(t1_cid):
 				for t2_item: String in T2_UPGRADES[t1_cid]:
-					chains[bt].append([t1_item, t2_item])
+					classes.append([bt, t1_item, t2_item])
 
 	var parties := []
-	var n: int = BASE_TYPES.size()
+	var n: int = classes.size()
 	for i in n:
 		for j in range(i, n):
 			for k in range(j, n):
-				var arch := [BASE_TYPES[i], BASE_TYPES[j], BASE_TYPES[k]]
-				var c_a: Array = chains[arch[0]]
-				var c_b: Array = chains[arch[1]]
-				var c_c: Array = chains[arch[2]]
-				for ai in c_a.size():
-					for bi in c_b.size():
-						for ci in c_c.size():
-							if i == j and ai >= bi:
-								continue
-							if j == k and bi >= ci:
-								continue
-							parties.append({
-								"base_types": arch,
-								"t1_items": [c_a[ai][0], c_b[bi][0], c_c[ci][0]],
-								"t2_items": [c_a[ai][1], c_b[bi][1], c_c[ci][1]],
-							})
+				parties.append({
+					"base_types": [classes[i][0], classes[j][0], classes[k][0]],
+					"t1_items": [classes[i][1], classes[j][1], classes[k][1]],
+					"t2_items": [classes[i][2], classes[j][2], classes[k][2]],
+				})
 
-	# Filter parties with 2+ low-offense (pure support/tank) classes.
+	# Filter parties with 3 low-offense classes (no damage dealer at all).
 	parties = parties.filter(func(p: Dictionary) -> bool:
 		var c := 0
 		for i in 3:
@@ -216,7 +197,7 @@ static func get_tier2_parties() -> Array:
 				p.base_types[i], p.t1_items[i], p.t2_items[i])
 			if FighterDBRoles.is_low_offense_expected(cid):
 				c += 1
-		return c < 2)
+		return c < 3)
 	_cached_t2_parties = parties
 	return parties
 
