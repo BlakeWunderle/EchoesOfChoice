@@ -30,7 +30,7 @@ static func create_saltrunner_smuggler(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Saltrunner Smuggler", lvl)
 	f.health = EH.es(142, 164, 3, 5, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(6, 8, 1, 2, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(31, 43, 2, 3, lvl, 5)
+	f.physical_attack = EH.es(30, 42, 2, 3, lvl, 5)
 	f.physical_defense = EH.es(15, 18, 1, 2, lvl, 5)
 	f.magic_attack = EH.es(6, 9, 0, 1, lvl, 5)
 	f.magic_defense = EH.es(9, 12, 1, 2, lvl, 5)
@@ -77,7 +77,7 @@ static func create_reef_shaman(n: String, lvl: int = 5) -> FighterData:
 	f.mana = EH.es(10, 13, 1, 2, lvl, 5); f.max_mana = f.mana
 	f.physical_attack = EH.es(5, 8, 0, 1, lvl, 5)
 	f.physical_defense = EH.es(13, 17, 1, 2, lvl, 5)
-	f.magic_attack = EH.es(35, 41, 2, 3, lvl, 5)
+	f.magic_attack = EH.es(34, 40, 2, 3, lvl, 5)
 	f.magic_defense = EH.es(14, 18, 1, 2, lvl, 5)
 	f.speed = EH.es(29, 35, 2, 3, lvl, 5)
 	f.crit_chance = 14; f.crit_damage = 2; f.dodge_chance = 14

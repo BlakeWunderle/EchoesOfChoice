@@ -31,7 +31,7 @@ static func create_orc(n: String, lvl: int = 4) -> FighterData:
 	var f := EH.base(n, "Orc", lvl)
 	f.health = EH.es(170, 198, 5, 8, lvl, 4); f.max_health = f.health
 	f.mana = EH.es(5, 7, 1, 2, lvl, 4); f.max_mana = f.mana
-	f.physical_attack = EH.es(26, 34, 2, 4, lvl, 4)
+	f.physical_attack = EH.es(25, 33, 2, 4, lvl, 4)
 	f.physical_defense = EH.es(14, 18, 1, 3, lvl, 4)
 	f.magic_attack = EH.es(4, 7, 0, 1, lvl, 4)
 	f.magic_defense = EH.es(13, 17, 1, 2, lvl, 4)
@@ -45,7 +45,7 @@ static func create_troll(n: String, lvl: int = 5) -> FighterData:
 	var f := EH.base(n, "Troll", lvl)
 	f.health = EH.es(170, 195, 6, 10, lvl, 5); f.max_health = f.health
 	f.mana = EH.es(16, 19, 1, 2, lvl, 5); f.max_mana = f.mana
-	f.physical_attack = EH.es(37, 46, 2, 3, lvl, 5)
+	f.physical_attack = EH.es(36, 45, 2, 3, lvl, 5)
 	f.physical_defense = EH.es(12, 16, 1, 3, lvl, 5)
 	f.magic_attack = EH.es(5, 9, 0, 1, lvl, 5)
 	f.magic_defense = EH.es(10, 14, 1, 2, lvl, 5)
@@ -75,7 +75,7 @@ static func create_witch(n: String, lvl: int = 4) -> FighterData:
 	f.mana = EH.es(14, 20, 2, 4, lvl, 4); f.max_mana = f.mana
 	f.physical_attack = EH.es(16, 21, 1, 2, lvl, 4)
 	f.physical_defense = EH.es(8, 12, 1, 2, lvl, 4)
-	f.magic_attack = EH.es(34, 43, 3, 6, lvl, 4)
+	f.magic_attack = EH.es(33, 42, 3, 6, lvl, 4)
 	f.magic_defense = EH.es(18, 26, 2, 4, lvl, 4)
 	f.speed = EH.es(26, 32, 1, 2, lvl, 4)
 	f.crit_chance = 13; f.crit_damage = 2; f.dodge_chance = 10
@@ -89,7 +89,7 @@ static func create_wisp(n: String, lvl: int = 4) -> FighterData:
 	f.mana = EH.es(10, 17, 1, 3, lvl, 4); f.max_mana = f.mana
 	f.physical_attack = EH.es(13, 18, 1, 2, lvl, 4)
 	f.physical_defense = EH.es(6, 10, 1, 2, lvl, 4)
-	f.magic_attack = EH.es(35, 41, 3, 5, lvl, 4)
+	f.magic_attack = EH.es(34, 40, 3, 5, lvl, 4)
 	f.magic_defense = EH.es(14, 20, 1, 3, lvl, 4)
 	f.speed = EH.es(28, 38, 2, 3, lvl, 4)
 	f.crit_chance = 10; f.crit_damage = 1; f.dodge_chance = 11
@@ -117,7 +117,7 @@ static func create_siren(n: String, lvl: int = 4) -> FighterData:
 	f.mana = EH.es(12, 21, 1, 3, lvl, 3); f.max_mana = f.mana
 	f.physical_attack = EH.es(15, 22, 1, 3, lvl, 4)
 	f.physical_defense = EH.es(11, 18, 1, 3, lvl, 4)
-	f.magic_attack = EH.es(32, 45, 3, 6, lvl, 4)
+	f.magic_attack = EH.es(31, 44, 3, 6, lvl, 4)
 	f.magic_defense = EH.es(16, 25, 2, 4, lvl, 4)
 	f.speed = EH.es(25, 32, 1, 2, lvl, 3)
 	f.crit_chance = 11; f.crit_damage = 2; f.dodge_chance = 11
@@ -269,7 +269,7 @@ static func create_commander(n: String) -> FighterData:
 	var f := EH.base(n, "Commander", 6)
 	f.health = EH.fixed(148, 165); f.max_health = f.health
 	f.mana = EH.fixed(11, 15); f.max_mana = f.mana
-	f.physical_attack = EH.fixed(29, 41); f.physical_defense = EH.fixed(23, 27)
+	f.physical_attack = EH.fixed(28, 40); f.physical_defense = EH.fixed(23, 27)
 	f.magic_attack = EH.fixed(12, 16); f.magic_defense = EH.fixed(22, 27)
 	f.speed = EH.fixed(29, 37)
 	f.crit_chance = 12; f.crit_damage = 2; f.dodge_chance = 6
@@ -281,7 +281,7 @@ static func create_draconian(n: String) -> FighterData:
 	var f := EH.base(n, "Draconian", 6)
 	f.health = EH.fixed(114, 126); f.max_health = f.health
 	f.mana = EH.fixed(11, 14); f.max_mana = f.mana
-	f.physical_attack = EH.fixed(31, 43); f.physical_defense = EH.fixed(20, 24)
+	f.physical_attack = EH.fixed(30, 42); f.physical_defense = EH.fixed(20, 24)
 	f.magic_attack = EH.fixed(27, 37); f.magic_defense = EH.fixed(23, 28)
 	f.speed = EH.fixed(26, 33)
 	f.crit_chance = 12; f.crit_damage = 2; f.dodge_chance = 10
@@ -335,7 +335,7 @@ static func create_shade(n: String, lvl: int = 7) -> FighterData:
 	f.mana = EH.es(13, 16, 1, 2, lvl, 7); f.max_mana = f.mana
 	f.physical_attack = EH.es(21, 27, 1, 3, lvl, 7)
 	f.physical_defense = EH.es(11, 15, 1, 2, lvl, 7)
-	f.magic_attack = EH.es(36, 47, 3, 5, lvl, 7)
+	f.magic_attack = EH.es(35, 46, 3, 5, lvl, 7)
 	f.magic_defense = EH.es(19, 25, 2, 4, lvl, 7)
 	f.speed = EH.es(33, 41, 2, 4, lvl, 7)
 	f.crit_chance = 12; f.crit_damage = 2; f.dodge_chance = 23
@@ -349,7 +349,7 @@ static func create_wraith(n: String, lvl: int = 7) -> FighterData:
 	f.mana = EH.es(14, 17, 1, 2, lvl, 7); f.max_mana = f.mana
 	f.physical_attack = EH.es(21, 26, 0, 2, lvl, 7)
 	f.physical_defense = EH.es(9, 13, 1, 2, lvl, 7)
-	f.magic_attack = EH.es(32, 45, 3, 5, lvl, 7)
+	f.magic_attack = EH.es(31, 44, 3, 5, lvl, 7)
 	f.magic_defense = EH.es(18, 24, 2, 3, lvl, 7)
 	f.speed = EH.es(29, 37, 2, 4, lvl, 7)
 	f.crit_chance = 14; f.crit_damage = 2; f.dodge_chance = 20
