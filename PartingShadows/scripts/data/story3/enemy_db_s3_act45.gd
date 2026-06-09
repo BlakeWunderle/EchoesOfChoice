@@ -25,7 +25,7 @@ static func create_cult_acolyte(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(38, 47, 2, 3, lvl, 15)
 	f.magic_attack = EH.es(144, 158, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(47, 57, 2, 4, lvl, 15)
-	f.speed = EH.es(36, 43, 2, 3, lvl, 15)
+	f.speed = EH.es(37, 44, 2, 3, lvl, 15)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 25
 	f.abilities = [EAB.thread_sear(), EAB.zealots_fervor()]
 	f.flavor_text = "A junior member of the Thread cult, burning with fanatical devotion. Their searing thread-magic is crude but powerful, fueled by unshakable belief in the Threadmaster's vision."
@@ -41,7 +41,7 @@ static func create_cult_enforcer(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(59, 67, 2, 4, lvl, 15)
 	f.magic_attack = EH.es(20, 24, 0, 1, lvl, 15)
 	f.magic_defense = EH.es(37, 45, 2, 3, lvl, 15)
-	f.speed = EH.es(28, 34, 2, 3, lvl, 15)
+	f.speed = EH.es(29, 35, 2, 3, lvl, 15)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.thread_laced_fist(), EAB.threaded_sinew()]
 	f.flavor_text = "A heavily muscled enforcer whose body is laced with dream-threads that harden like steel beneath the skin. The cult sends them to silence anyone who asks too many questions."
@@ -73,7 +73,7 @@ static func create_thread_guard(n: String, lvl: int = 16) -> FighterData:
 	f.physical_defense = EH.es(28, 36, 2, 3, lvl, 16)
 	f.magic_attack = EH.es(20, 24, 0, 1, lvl, 16)
 	f.magic_defense = EH.es(48, 56, 2, 4, lvl, 16)
-	f.speed = EH.es(34, 40, 1, 2, lvl, 16)
+	f.speed = EH.es(35, 41, 1, 2, lvl, 16)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 10
 	f.abilities = [EAB.rending_weave(), EAB.thread_impale()]
 	f.flavor_text = "A hulking enforcer who channels the Loom's power into single, devastating strikes. What it lacks in resilience it makes up for in the sheer ruin of each blow."
@@ -137,7 +137,7 @@ static func create_high_weaver(n: String, lvl: int = 17) -> FighterData:
 	f.physical_defense = EH.es(38, 46, 2, 3, lvl, 17)
 	f.magic_attack = EH.es(153, 170, 3, 6, lvl, 17)
 	f.magic_defense = EH.es(54, 62, 2, 4, lvl, 17)
-	f.speed = EH.es(39, 45, 2, 3, lvl, 17)
+	f.speed = EH.es(40, 46, 2, 3, lvl, 17)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 20
 	f.abilities = [EAB.loom_blast(), EAB.unweave()]
 	f.flavor_text = "One of the Threadmaster's inner circle, a master of the loom's destructive potential. They can unweave the protections of their enemies with a gesture and blast them with raw dream-force."
@@ -192,7 +192,7 @@ static func create_loom_crusher(n: String, lvl: int = 17) -> FighterData:
 	f.physical_defense = EH.es(47, 55, 2, 4, lvl, 17)
 	f.magic_attack = EH.es(23, 27, 0, 1, lvl, 17)
 	f.magic_defense = EH.es(75, 86, 3, 5, lvl, 17)
-	f.speed = EH.es(23, 29, 1, 2, lvl, 17)
+	f.speed = EH.es(24, 30, 1, 2, lvl, 17)
 	f.crit_chance = 10; f.crit_damage = 4; f.dodge_chance = 10
 	f.abilities = [EAB.thread_crush(), EAB.weave_brace()]
 	f.flavor_text = "An enormous dream-construct whose body is formed from thousands of threads compressed so tightly they became solid matter. Magic passes through the weave harmlessly. It moves with ponderous, inevitable force."
@@ -208,7 +208,7 @@ static func create_thread_stitcher(n: String, lvl: int = 16) -> FighterData:
 	f.physical_defense = EH.es(45, 52, 2, 3, lvl, 16)
 	f.magic_attack = EH.es(104, 117, 3, 5, lvl, 16)
 	f.magic_defense = EH.es(52, 60, 2, 4, lvl, 16)
-	f.speed = EH.es(42, 48, 2, 3, lvl, 16)
+	f.speed = EH.es(43, 49, 2, 3, lvl, 16)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.thread_mend(), EAB.lacerating_thread()]
 	f.flavor_text = "A cult mender who stitches torn dream-threads back together. In battle, those same mending skills sustain wounded allies — or lash out at those who threaten the weave."
@@ -224,7 +224,7 @@ static func create_shadow_fragment(n: String, lvl: int = 18) -> FighterData:
 	f.physical_defense = EH.es(31, 39, 2, 3, lvl, 18)
 	f.magic_attack = EH.es(136, 149, 3, 6, lvl, 18)
 	f.magic_defense = EH.es(51, 60, 2, 4, lvl, 18)
-	f.speed = EH.es(38, 44, 3, 4, lvl, 18)
+	f.speed = EH.es(39, 45, 3, 4, lvl, 18)
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 30
 	f.abilities = [EAB.shadow_lash(), EAB.consume_light()]
 	f.flavor_text = "A splinter of the Threadmaster's own shadow, given independent will. It devours light and hope in equal measure, weakening enemies before the final confrontation."

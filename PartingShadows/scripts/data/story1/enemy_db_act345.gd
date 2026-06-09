@@ -110,7 +110,7 @@ static func create_demon(n: String, lvl: int = 12) -> FighterData:
 	f.physical_defense = EH.es(22, 28, 1, 3, lvl, 12)
 	f.magic_attack = EH.es(91, 100, 4, 6, lvl, 12)
 	f.magic_defense = EH.es(38, 44, 2, 4, lvl, 12)
-	f.speed = EH.es(30, 36, 1, 3, lvl, 12)
+	f.speed = EH.es(31, 37, 1, 3, lvl, 12)
 	f.crit_chance = 25; f.crit_damage = 5; f.dodge_chance = 17
 	f.abilities = [EABL.balefire(), EABL.hellfire_nova()]
 	f.flavor_text = "A fiend born from brimstone and fury. Its mere presence fills the air with dread."
@@ -186,7 +186,7 @@ static func create_dark_knight(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(40, 49, 3, 5, lvl, 14)
 	f.magic_attack = EH.es(53, 62, 2, 4, lvl, 14)
 	f.magic_defense = EH.es(40, 48, 2, 4, lvl, 14)
-	f.speed = EH.es(51, 58, 2, 4, lvl, 14)
+	f.speed = EH.es(52, 59, 2, 4, lvl, 14)
 	f.crit_chance = 30; f.crit_damage = 5; f.dodge_chance = 17
 	f.abilities = [EABL.dark_blade(), EABL.shadow_guard(), EAB.cleave()]
 	f.flavor_text = "A fallen champion clad in shadowed plate. Dark magic courses through every strike of his blade."
@@ -228,7 +228,7 @@ static func create_tunnel_lurker(n: String, lvl: int = 13) -> FighterData:
 	f.physical_defense = EH.es(38, 44, 2, 4, lvl, 13)
 	f.magic_attack = EH.es(27, 33, 1, 2, lvl, 13)
 	f.magic_defense = EH.es(40, 46, 2, 3, lvl, 13)
-	f.speed = EH.es(48, 55, 3, 5, lvl, 13)
+	f.speed = EH.es(49, 56, 3, 5, lvl, 13)
 	f.crit_chance = 25; f.crit_damage = 5; f.dodge_chance = 20
 	f.abilities = [EABL.venomous_bite(), EABL.web(), EABL.poison_cloud()]
 	f.flavor_text = "Massive burrowing predators that ambush from below, ensnaring prey in venomous webs."

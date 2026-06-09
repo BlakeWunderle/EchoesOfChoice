@@ -19,7 +19,7 @@ static func create_pupil_leech(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(48, 57, 2, 4, lvl, 14)
 	f.magic_attack = EH.es(123, 135, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(46, 55, 2, 3, lvl, 14)
-	f.speed = EH.es(39, 46, 1, 3, lvl, 14)
+	f.speed = EH.es(40, 47, 1, 3, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EABL.memory_siphon(), EABL.festering_gaze()]
 	f.flavor_text = "A bloated parasite that clings to the Eye's victims, feeding on their drained memories. A single stolen eye stares from its translucent body."
@@ -49,7 +49,7 @@ static func create_memory_harvester(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(31, 40, 2, 3, lvl, 14)
 	f.magic_attack = EH.es(125, 138, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(49, 57, 2, 4, lvl, 14)
-	f.speed = EH.es(48, 55, 2, 3, lvl, 14)
+	f.speed = EH.es(49, 56, 2, 3, lvl, 14)
 	f.crit_chance = 20; f.crit_damage = 4; f.dodge_chance = 17
 	f.abilities = [EABL.harvest_thought(), EABL.mass_extraction()]
 	f.flavor_text = "A grotesque collector that reaps thoughts like grain. The memories it steals are fed directly to the Eye, fueling its terrible awareness."
@@ -79,7 +79,7 @@ static func create_memory_reaper(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(28, 37, 2, 3, lvl, 14)
 	f.magic_attack = EH.es(135, 150, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(52, 60, 2, 4, lvl, 14)
-	f.speed = EH.es(43, 50, 2, 3, lvl, 14)
+	f.speed = EH.es(44, 51, 2, 3, lvl, 14)
 	f.crit_chance = 20; f.crit_damage = 4; f.dodge_chance = 17
 	f.abilities = [EABL.harvesting_scythe(), EABL.accumulated_toll()]
 	f.flavor_text = "A harvester that has gorged on the Eye's overflow of stolen memories. It reaps with terrible efficiency, each thought it claims adding to the Eye's power."
@@ -94,7 +94,7 @@ static func create_void_iris(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(38, 48, 1, 3, lvl, 14)
 	f.magic_attack = EH.es(140, 154, 3, 4, lvl, 14)
 	f.magic_defense = EH.es(65, 75, 2, 4, lvl, 14)
-	f.speed = EH.es(63, 70, 2, 4, lvl, 14)
+	f.speed = EH.es(64, 71, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EABL.void_lash(), EABL.refraction_link(), EABL.dispel_will(), EABL.null_mending()]
 	f.flavor_text = "A fragment of the Eye itself, torn loose and given independent hunger. It amplifies its master's power and scatters void light across all who stand before the Eye."
@@ -109,7 +109,7 @@ static func create_thoughtform_knight(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(64, 75, 3, 5, lvl, 14)
 	f.magic_attack = EH.es(28, 35, 1, 2, lvl, 14)
 	f.magic_defense = EH.es(52, 61, 2, 4, lvl, 14)
-	f.speed = EH.es(49, 57, 2, 4, lvl, 14)
+	f.speed = EH.es(50, 58, 2, 4, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 4; f.dodge_chance = 10
 	f.abilities = [EABL.memory_blade(), EABL.ironclad_will()]
 	f.flavor_text = "A warrior conjured from stolen memories of great knights. It fights with borrowed valor and an unshakable conviction that it is real."
@@ -143,7 +143,7 @@ static func create_the_lidless_eye(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(64, 76, 3, 5, lvl, 15)
 	f.magic_attack = EH.es(63, 73, 1, 3, lvl, 15)
 	f.magic_defense = EH.es(82, 96, 4, 6, lvl, 15)
-	f.speed = EH.es(63, 69, 2, 3, lvl, 15)
+	f.speed = EH.es(64, 70, 2, 3, lvl, 15)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 17
 	f.abilities = [EABL.crushing_gaze(), EABL.desperate_lunge(), EABL.death_throes(), EABL.collapse(), EABL.last_tremor()]
 	f.flavor_text = "The Eye of Oblivion, stripped bare by Sera's sacrifice. Its armor is gone, its reserves burned away. What remains is pure, desperate hunger. It has nothing left but the will to take everything with it."

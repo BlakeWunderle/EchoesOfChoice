@@ -56,7 +56,7 @@ static func create_loom_sentinel(n: String, lvl: int = 13) -> FighterData:
 	f.physical_defense = EH.es(54, 63, 2, 3, lvl, 13)
 	f.magic_attack = EH.es(20, 24, 0, 1, lvl, 13)
 	f.magic_defense = EH.es(33, 40, 2, 3, lvl, 13)
-	f.speed = EH.es(22, 28, 1, 2, lvl, 13)
+	f.speed = EH.es(23, 29, 1, 2, lvl, 13)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.loom_strike(), EAB.woven_armor()]
 	f.flavor_text = "A towering automaton built around the skeleton of a great loom. Its strikes carry the weight of compacted dream-thread, and its woven armor turns aside all but the strongest blows."
@@ -105,7 +105,7 @@ static func create_thought_leech(n: String, lvl: int = 13) -> FighterData:
 	f.physical_defense = EH.es(25, 33, 1, 3, lvl, 13)
 	f.magic_attack = EH.es(108, 118, 3, 5, lvl, 13)
 	f.magic_defense = EH.es(44, 51, 2, 3, lvl, 13)
-	f.speed = EH.es(30, 36, 2, 3, lvl, 13)
+	f.speed = EH.es(31, 37, 2, 3, lvl, 13)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 10
 	f.abilities = [EAB.psychic_siphon(), EAB.mind_fog()]
 	f.flavor_text = "A parasitic entity that attaches to the psyche and drains thought and willpower. Its victims stumble in a fog of confusion, unable to think clearly or act decisively."
@@ -122,7 +122,7 @@ static func create_void_spinner(n: String, lvl: int = 13) -> FighterData:
 	f.physical_defense = EH.es(29, 37, 2, 3, lvl, 13)
 	f.magic_attack = EH.es(117, 129, 3, 5, lvl, 13)
 	f.magic_defense = EH.es(48, 56, 2, 4, lvl, 13)
-	f.speed = EH.es(42, 48, 2, 3, lvl, 13)
+	f.speed = EH.es(43, 49, 2, 3, lvl, 13)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 10
 	f.abilities = [EAB.void_thread(), EAB.nullify()]
 	f.flavor_text = "A caster that draws power from the void between dreams, where nothing exists and all things unravel. Its threads nullify magic and dissolve protections on contact."
@@ -142,7 +142,7 @@ static func create_void_phantom(n: String, lvl: int = 12) -> FighterData:
 	f.physical_defense = EH.es(28, 36, 2, 3, lvl, 12)
 	f.magic_attack = EH.es(106, 115, 3, 5, lvl, 12)
 	f.magic_defense = EH.es(39, 47, 2, 3, lvl, 12)
-	f.speed = EH.es(38, 44, 2, 3, lvl, 12)
+	f.speed = EH.es(39, 45, 2, 3, lvl, 12)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 10
 	f.abilities = [EAB.void_siphon(), EAB.phase_shift()]
 	f.flavor_text = "A phantom that has slipped into the void between dreams and returned changed. It drains vitality through rifts in the weave and phases through attacks with unsettling ease."

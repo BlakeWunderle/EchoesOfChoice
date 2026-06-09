@@ -19,7 +19,7 @@ static func create_memory_wisp(n: String, lvl: int = 10) -> FighterData:
 	f.physical_defense = EH.es(19, 26, 1, 3, lvl, 10)
 	f.magic_attack = EH.es(74, 84, 2, 4, lvl, 10)
 	f.magic_defense = EH.es(34, 41, 2, 3, lvl, 10)
-	f.speed = EH.es(39, 45, 2, 3, lvl, 10)
+	f.speed = EH.es(40, 46, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
 	f.abilities = [EABL.recall_bolt(), EABL.memory_drain()]
 	f.flavor_text = "A shimmering fragment of someone's forgotten recollection, given form and hunger. It feeds on the memories of the living."
@@ -34,7 +34,7 @@ static func create_shattered_frame(n: String, lvl: int = 10) -> FighterData:
 	f.physical_defense = EH.es(21, 28, 1, 3, lvl, 10)
 	f.magic_attack = EH.es(97, 107, 2, 4, lvl, 10)
 	f.magic_defense = EH.es(32, 39, 2, 3, lvl, 10)
-	f.speed = EH.es(50, 56, 2, 3, lvl, 10)
+	f.speed = EH.es(51, 57, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
 	f.abilities = [EABL.mirror_shard(), EABL.dissonant_echo()]
 	f.flavor_text = "An ornate mirror frame that has torn itself from the echo gallery's walls and learned to hunt. Its cracked glass shows scenes that never happened, or perhaps already did."
@@ -64,7 +64,7 @@ static func create_thought_eater(n: String, lvl: int = 11) -> FighterData:
 	f.physical_defense = EH.es(24, 30, 1, 3, lvl, 11)
 	f.magic_attack = EH.es(94, 106, 2, 5, lvl, 11)
 	f.magic_defense = EH.es(40, 47, 2, 3, lvl, 11)
-	f.speed = EH.es(43, 49, 2, 3, lvl, 11)
+	f.speed = EH.es(44, 50, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
 	f.abilities = [EABL.mind_rend(), EABL.psychic_leech()]
 	f.flavor_text = "A formless psychic predator that burrows into the mind to consume thoughts whole. Victims feel their knowledge dissolving like mist."
@@ -79,7 +79,7 @@ static func create_grief_shade(n: String, lvl: int = 11) -> FighterData:
 	f.physical_defense = EH.es(21, 28, 1, 2, lvl, 11)
 	f.magic_attack = EH.es(87, 97, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(34, 41, 2, 3, lvl, 11)
-	f.speed = EH.es(44, 50, 2, 3, lvl, 11)
+	f.speed = EH.es(45, 51, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 20
 	f.abilities = [EABL.sorrows_touch(), EABL.wail_of_loss()]
 	f.flavor_text = "A weeping shadow born from concentrated sorrow. Its touch carries the weight of every loss ever felt in this place."

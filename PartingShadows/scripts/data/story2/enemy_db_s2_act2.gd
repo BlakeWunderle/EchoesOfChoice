@@ -218,7 +218,7 @@ static func create_tidecaller_revenant(n: String, lvl: int = 10) -> FighterData:
 	f.physical_defense = EH.es(31, 37, 2, 3, lvl, 10)
 	f.magic_attack = EH.es(97, 105, 4, 6, lvl, 10)
 	f.magic_defense = EH.es(43, 50, 3, 5, lvl, 10)
-	f.speed = EH.es(45, 51, 2, 3, lvl, 10)
+	f.speed = EH.es(46, 52, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EAB.storm_surge(), EAB.drowning_grasp(), EAB.mist_veil()]
 	f.flavor_text = "The restless spirit of a drowned tidecaller, still commanding the waves in death. Storm and sea answer its hollow voice."
@@ -233,7 +233,7 @@ static func create_salt_phantom(n: String, lvl: int = 9) -> FighterData:
 	f.physical_defense = EH.es(18, 23, 1, 2, lvl, 9)
 	f.magic_attack = EH.es(81, 88, 3, 5, lvl, 9)
 	f.magic_defense = EH.es(32, 39, 2, 4, lvl, 9)
-	f.speed = EH.es(43, 49, 2, 3, lvl, 9)
+	f.speed = EH.es(44, 50, 2, 3, lvl, 9)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 25
 	f.abilities = [EAB.spectral_chill(), EAB.memory_fog()]
 	f.flavor_text = "A translucent specter formed from crystallized sea salt and lost grief. It drifts through fog, erasing the memories of those it touches."

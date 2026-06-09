@@ -138,7 +138,7 @@ static func create_memory_eater(n: String, lvl: int = 17) -> FighterData:
 	f.physical_defense = EH.es(37, 45, 2, 4, lvl, 17)
 	f.magic_attack = EH.es(140, 154, 3, 6, lvl, 17)
 	f.magic_defense = EH.es(58, 66, 2, 4, lvl, 17)
-	f.speed = EH.es(41, 47, 2, 3, lvl, 17)
+	f.speed = EH.es(42, 48, 2, 3, lvl, 17)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 25
 	f.abilities = [EAB.devour_memory(), EAB.amnesia_fog()]
 	f.flavor_text = "A predator that feeds on memories, leaving its victims hollow and disoriented. It breathes a fog of amnesia that strips away skills, names, and the will to resist."
@@ -153,7 +153,7 @@ static func create_nightmare_sentinel(n: String, lvl: int = 17) -> FighterData:
 	f.physical_defense = EH.es(66, 74, 2, 4, lvl, 17)
 	f.magic_attack = EH.es(23, 27, 0, 1, lvl, 17)
 	f.magic_defense = EH.es(41, 50, 2, 3, lvl, 17)
-	f.speed = EH.es(34, 40, 2, 3, lvl, 17)
+	f.speed = EH.es(35, 41, 2, 3, lvl, 17)
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 17
 	f.abilities = [EAB.nightmare_blade(), EAB.terror_ward()]
 	f.flavor_text = "An armored sentinel forged from concentrated nightmare, standing guard at the Threadmaster's threshold. Its blade is edged with terror, and its ward repels all but the most resolute attackers."
@@ -188,7 +188,7 @@ static func create_ancient_threadmaster(n: String, lvl: int = 18) -> FighterData
 	f.physical_defense = EH.es(53, 61, 2, 4, lvl, 18)
 	f.magic_attack = EH.es(130, 143, 4, 6, lvl, 18)
 	f.magic_defense = EH.es(55, 63, 2, 4, lvl, 18)
-	f.speed = EH.es(44, 50, 3, 4, lvl, 18)
+	f.speed = EH.es(45, 51, 3, 4, lvl, 18)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 22
 	f.abilities = [EAB.primordial_weave(), EAB.reality_tear(), EAB.ancient_lash(), EAB.forgotten_curse(), EAB.ageless_hunger()]
 	f.flavor_text = "The original weaver, ancient beyond reckoning, who first discovered how to shape reality through dreams. Their power predates the cult itself, and their dominion over the loom is absolute."
@@ -203,7 +203,7 @@ static func create_dream_shackle(n: String, lvl: int = 18) -> FighterData:
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 18)
 	f.magic_attack = EH.es(135, 148, 3, 6, lvl, 18)
 	f.magic_defense = EH.es(50, 59, 2, 4, lvl, 18)
-	f.speed = EH.es(41, 47, 3, 4, lvl, 18)
+	f.speed = EH.es(42, 48, 3, 4, lvl, 18)
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 25
 	f.abilities = [EAB.binding_lash(), EAB.reclaim()]
 	f.flavor_text = "A living restraint conjured by the Ancient Threadmaster, designed to bind intruders in place. It lashes out with threads that reclaim stolen dream-energy and return it to the loom."

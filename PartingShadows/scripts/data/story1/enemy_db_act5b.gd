@@ -68,7 +68,7 @@ static func create_void_horror(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(35, 43, 2, 4, lvl, 15)
 	f.magic_attack = EH.es(107, 117, 4, 7, lvl, 15)
 	f.magic_defense = EH.es(50, 58, 3, 5, lvl, 15)
-	f.speed = EH.es(52, 58, 2, 4, lvl, 15)
+	f.speed = EH.es(53, 59, 2, 4, lvl, 15)
 	f.crit_chance = 20; f.crit_damage = 5; f.dodge_chance = 15
 	f.abilities = [EAB.void_eruption(), EAB.terror_gaze()]
 	f.flavor_text = "A howling mass of void energy given terrible form. Its eruptions leave nothing but silence."
@@ -83,7 +83,7 @@ static func create_fractured_shadow(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(29, 36, 2, 3, lvl, 15)
 	f.magic_attack = EH.es(25, 29, 0, 2, lvl, 15)
 	f.magic_defense = EH.es(32, 40, 2, 3, lvl, 15)
-	f.speed = EH.es(61, 69, 3, 5, lvl, 15)
+	f.speed = EH.es(62, 70, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 5; f.dodge_chance = 30
 	f.abilities = [EAB.shadow_rend(), EAB.flickerstrike(), EAB.speed_siphon()]
 	f.flavor_text = "A splintering fragment of the Stranger's essence. It moves faster than sight, striking from every angle."
@@ -118,7 +118,7 @@ static func create_stranger_undone(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(55, 64, 2, 4, lvl, 15)
 	f.magic_attack = EH.es(115, 125, 3, 5, lvl, 15)
 	f.magic_defense = EH.es(58, 67, 2, 4, lvl, 15)
-	f.speed = EH.es(91, 101, 3, 5, lvl, 15)
+	f.speed = EH.es(92, 102, 3, 5, lvl, 15)
 	f.crit_chance = 25; f.crit_damage = 7; f.dodge_chance = 20
 	f.abilities = [EAB.shadow_remnant_strike(), EAB.void_drain(), EAB.crumbling_shield(), EAB.final_echo(), EAB.desperation()]
 	f.flavor_text = "The Stranger, stripped of ritual power, smaller and more human than ever before. Desperate, fast, and unpredictable."

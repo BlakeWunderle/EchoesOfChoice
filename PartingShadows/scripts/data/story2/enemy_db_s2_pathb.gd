@@ -19,7 +19,7 @@ static func create_fractured_scholar(n: String, lvl: int = 13) -> FighterData:
 	f.physical_defense = EH.es(43, 52, 2, 3, lvl, 13)
 	f.magic_attack = EH.es(97, 109, 2, 4, lvl, 13)
 	f.magic_defense = EH.es(47, 55, 2, 3, lvl, 13)
-	f.speed = EH.es(51, 57, 2, 3, lvl, 13)
+	f.speed = EH.es(52, 58, 2, 3, lvl, 13)
 	f.crit_chance = 20; f.crit_damage = 4; f.dodge_chance = 20
 	f.abilities = [EAB.scholar_strike(), EAB.forgotten_knowledge(), EAB.archive_ward()]
 	f.flavor_text = "Sera, driven by instincts she cannot name. She guards the archive's deepest secrets with desperate ferocity, unaware of why they matter."
@@ -34,7 +34,7 @@ static func create_archive_sentinel(n: String, lvl: int = 13) -> FighterData:
 	f.physical_defense = EH.es(53, 62, 2, 4, lvl, 13)
 	f.magic_attack = EH.es(25, 29, 0, 2, lvl, 13)
 	f.magic_defense = EH.es(46, 54, 2, 3, lvl, 13)
-	f.speed = EH.es(42, 49, 1, 3, lvl, 13)
+	f.speed = EH.es(43, 50, 1, 3, lvl, 13)
 	f.crit_chance = 10; f.crit_damage = 4; f.dodge_chance = 10
 	f.abilities = [EAB.tome_crush(), EAB.index_lock()]
 	f.flavor_text = "A massive automaton built from bound volumes and filing cabinets. It enforces the archive's silence with mechanical precision."
@@ -53,7 +53,7 @@ static func create_pipeline_warden(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(66, 77, 3, 4, lvl, 14)
 	f.magic_attack = EH.es(24, 29, 0, 2, lvl, 14)
 	f.magic_defense = EH.es(42, 52, 2, 3, lvl, 14)
-	f.speed = EH.es(39, 45, 1, 3, lvl, 14)
+	f.speed = EH.es(40, 46, 1, 3, lvl, 14)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.pipe_smash(), EAB.pressure_seal(), EAB.steam_burst()]
 	f.flavor_text = "A hulking construct of iron pipes and crystalline conduits. It patrols the lighthouse's deep machinery with tireless vigilance."
@@ -83,7 +83,7 @@ static func create_resonance_node(n: String, lvl: int = 14) -> FighterData:
 	f.physical_defense = EH.es(33, 41, 2, 3, lvl, 14)
 	f.magic_attack = EH.es(120, 132, 3, 5, lvl, 14)
 	f.magic_defense = EH.es(53, 63, 2, 4, lvl, 14)
-	f.speed = EH.es(44, 51, 2, 3, lvl, 14)
+	f.speed = EH.es(45, 52, 2, 3, lvl, 14)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.resonance_bolt(), EAB.harmonic_disrupt()]
 	f.flavor_text = "A crystal amplifier that channels the lighthouse's resonance frequencies. It hums with barely contained power."
@@ -200,7 +200,7 @@ static func create_the_unblinking_eye(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(56, 66, 3, 5, lvl, 15)
 	f.magic_attack = EH.es(175, 193, 5, 8, lvl, 15)
 	f.magic_defense = EH.es(70, 79, 4, 6, lvl, 15)
-	f.speed = EH.es(69, 75, 2, 4, lvl, 15)
+	f.speed = EH.es(70, 76, 2, 4, lvl, 15)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 17
 	f.abilities = [EAB.gaze_of_annihilation(), EAB.memory_maelstrom(), EAB.ancient_fury(), EAB.devour_identity(), EAB.unblinking_focus()]
 	f.flavor_text = "The Eye of Oblivion at full, terrible power. Not weakened by sacrifice, not diminished by poison. It sees everything and forgets nothing."
@@ -238,7 +238,7 @@ static func create_void_lens(n: String, lvl: int = 15) -> FighterData:
 	f.physical_defense = EH.es(16, 22, 1, 2, lvl, 15)
 	f.magic_attack = EH.es(71, 80, 2, 3, lvl, 15)
 	f.magic_defense = EH.es(32, 40, 2, 3, lvl, 15)
-	f.speed = EH.es(64, 71, 3, 4, lvl, 15)
+	f.speed = EH.es(65, 72, 3, 4, lvl, 15)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 8
 	f.abilities = [EAB.refracted_gaze(), EAB.null_pulse(), EAB.void_shimmer()]
 	f.flavor_text = "A lens of concentrated void light, broken free from the Eye's corona. It bends perception and strips away the will to resist."
