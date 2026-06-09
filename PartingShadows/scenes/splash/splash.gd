@@ -76,7 +76,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		_go_to_title()
-	elif event is InputEventMouseButton and event.pressed:
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_go_to_title()
 	elif event is InputEventJoypadButton and event.pressed:
 		_go_to_title()

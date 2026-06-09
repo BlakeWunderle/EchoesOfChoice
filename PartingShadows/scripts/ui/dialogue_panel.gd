@@ -153,6 +153,17 @@ func _input(event: InputEvent) -> void:
 	if LocalCoop.is_event_gated(event):
 		return
 
+	# Route mouse wheel to text scrolling instead of advancing dialog
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_scroll_history(-1)
+			get_viewport().set_input_as_handled()
+			return
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_scroll_history(1)
+			get_viewport().set_input_as_handled()
+			return
+
 	# Scroll history when continue prompt is showing and no choices yet
 	if _continue_label.modulate.a > 0 and not _typing:
 		if event.is_action_pressed("move_up") or event.is_action_pressed("ui_up"):
@@ -167,7 +178,7 @@ func _input(event: InputEvent) -> void:
 	var pressed: bool = false
 	if event.is_action_pressed("confirm"):
 		pressed = true
-	elif event is InputEventMouseButton and event.pressed:
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		pressed = true
 
 	if not pressed:

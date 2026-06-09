@@ -417,12 +417,12 @@ func _on_auto_button_pressed() -> void:
 
 func _input(event: InputEvent) -> void:
 	if _summary_waiting:
-		if event.is_action_pressed("confirm") or (event is InputEventMouseButton and event.pressed):
+		if event.is_action_pressed("confirm") or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
 			_summary_waiting = false
 			get_viewport().set_input_as_handled()
 			return
 	if _loot_waiting:
-		if event.is_action_pressed("confirm") or (event is InputEventMouseButton and event.pressed):
+		if event.is_action_pressed("confirm") or (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
 			_loot_waiting = false
 			get_viewport().set_input_as_handled()
 			return
@@ -557,6 +557,7 @@ func _show_action_menu(actor: FighterData) -> void:
 		"Attack, Block, and Rest all restore MP based on your Magic Attack.\n\n" +
 		"Attack deals damage. Block raises defenses for one turn. " +
 		"Rest restores double MP and a little HP, but leaves you exposed.\n\n" +
+		"Select Ability to use special moves that cost MP. " +
 		"Use basic actions to recharge between abilities.")
 
 
