@@ -201,7 +201,7 @@ static func create_dream_shackle(n: String, lvl: int = 18) -> FighterData:
 	f.mana = EH.es(36, 44, 1, 2, lvl, 18); f.max_mana = f.mana
 	f.physical_attack = EH.es(21, 25, 0, 2, lvl, 18)
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 18)
-	f.magic_attack = EH.es(134, 147, 3, 6, lvl, 18)
+	f.magic_attack = EH.es(135, 148, 3, 6, lvl, 18)
 	f.magic_defense = EH.es(50, 59, 2, 4, lvl, 18)
 	f.speed = EH.es(41, 47, 3, 4, lvl, 18)
 	f.crit_chance = 25; f.crit_damage = 3; f.dodge_chance = 25
@@ -216,7 +216,7 @@ static func create_loom_heart(n: String, lvl: int = 18) -> FighterData:
 	f.mana = EH.es(40, 48, 2, 3, lvl, 18); f.max_mana = f.mana
 	f.physical_attack = EH.es(21, 25, 0, 2, lvl, 18)
 	f.physical_defense = EH.es(48, 57, 2, 4, lvl, 18)
-	f.magic_attack = EH.es(120, 133, 3, 5, lvl, 18)
+	f.magic_attack = EH.es(121, 134, 3, 5, lvl, 18)
 	f.magic_defense = EH.es(53, 61, 2, 4, lvl, 18)
 	f.speed = EH.es(32, 38, 2, 3, lvl, 18)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 10

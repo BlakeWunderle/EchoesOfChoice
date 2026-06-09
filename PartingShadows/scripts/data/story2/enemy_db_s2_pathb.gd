@@ -98,7 +98,7 @@ static func create_eyes_fist(n: String, lvl: int = 14) -> FighterData:
 	var f := EH.base(n, "Eye's Fist", lvl)
 	f.health = EH.es(647, 734, 5, 7, lvl, 14); f.max_health = f.health
 	f.mana = EH.es(33, 42, 3, 4, lvl, 14); f.max_mana = f.mana
-	f.physical_attack = EH.es(136, 153, 3, 5, lvl, 14)
+	f.physical_attack = EH.es(137, 154, 3, 5, lvl, 14)
 	f.physical_defense = EH.es(65, 76, 3, 5, lvl, 14)
 	f.magic_attack = EH.es(26, 32, 1, 2, lvl, 14)
 	f.magic_defense = EH.es(52, 61, 2, 4, lvl, 14)
