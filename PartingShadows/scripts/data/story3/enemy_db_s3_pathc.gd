@@ -134,9 +134,9 @@ static func create_memory_eater(n: String, lvl: int = 17) -> FighterData:
 	var f := EH.base(n, "Memory Eater", lvl)
 	f.health = EH.es(456, 525, 5, 8, lvl, 17); f.max_health = f.health
 	f.mana = EH.es(40, 48, 1, 2, lvl, 17); f.max_mana = f.mana
-	f.physical_attack = EH.es(23, 27, 0, 2, lvl, 17)
+	f.physical_attack = EH.es(24, 28, 0, 2, lvl, 17)
 	f.physical_defense = EH.es(37, 45, 2, 4, lvl, 17)
-	f.magic_attack = EH.es(139, 153, 3, 6, lvl, 17)
+	f.magic_attack = EH.es(140, 154, 3, 6, lvl, 17)
 	f.magic_defense = EH.es(58, 66, 2, 4, lvl, 17)
 	f.speed = EH.es(41, 47, 2, 3, lvl, 17)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 25
@@ -184,9 +184,9 @@ static func create_ancient_threadmaster(n: String, lvl: int = 18) -> FighterData
 	var f := EH.base(n, "The Ancient Threadmaster", lvl)
 	f.health = EH.es(1404, 1584, 16, 24, lvl, 18); f.max_health = f.health
 	f.mana = EH.es(50, 60, 2, 3, lvl, 18); f.max_mana = f.mana
-	f.physical_attack = EH.es(141, 156, 3, 5, lvl, 18)
+	f.physical_attack = EH.es(142, 157, 3, 5, lvl, 18)
 	f.physical_defense = EH.es(53, 61, 2, 4, lvl, 18)
-	f.magic_attack = EH.es(129, 142, 4, 6, lvl, 18)
+	f.magic_attack = EH.es(130, 143, 4, 6, lvl, 18)
 	f.magic_defense = EH.es(55, 63, 2, 4, lvl, 18)
 	f.speed = EH.es(44, 50, 3, 4, lvl, 18)
 	f.crit_chance = 22; f.crit_damage = 4; f.dodge_chance = 22

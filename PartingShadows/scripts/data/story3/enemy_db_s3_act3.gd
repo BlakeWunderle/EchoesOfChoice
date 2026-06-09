@@ -20,9 +20,9 @@ static func create_lucid_phantom(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Lucid Phantom", lvl)
 	f.health = EH.es(355, 409, 5, 8, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(36, 44, 1, 2, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 12)
+	f.physical_attack = EH.es(21, 25, 0, 2, lvl, 12)
 	f.physical_defense = EH.es(25, 33, 2, 3, lvl, 12)
-	f.magic_attack = EH.es(111, 121, 3, 5, lvl, 12)
+	f.magic_attack = EH.es(112, 122, 3, 5, lvl, 12)
 	f.magic_defense = EH.es(42, 50, 2, 3, lvl, 12)
 	f.speed = EH.es(40, 46, 2, 3, lvl, 12)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17

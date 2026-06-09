@@ -15,9 +15,9 @@ static func create_memory_wisp(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Memory Wisp", lvl)
 	f.health = EH.es(314, 369, 3, 6, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(17, 21, 0, 2, lvl, 10)
+	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 10)
 	f.physical_defense = EH.es(19, 26, 1, 3, lvl, 10)
-	f.magic_attack = EH.es(73, 83, 2, 4, lvl, 10)
+	f.magic_attack = EH.es(74, 84, 2, 4, lvl, 10)
 	f.magic_defense = EH.es(34, 41, 2, 3, lvl, 10)
 	f.speed = EH.es(39, 45, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
@@ -30,9 +30,9 @@ static func create_shattered_frame(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Shattered Frame", lvl)
 	f.health = EH.es(294, 346, 2, 5, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(17, 21, 0, 2, lvl, 10)
+	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 10)
 	f.physical_defense = EH.es(21, 28, 1, 3, lvl, 10)
-	f.magic_attack = EH.es(96, 106, 2, 4, lvl, 10)
+	f.magic_attack = EH.es(97, 107, 2, 4, lvl, 10)
 	f.magic_defense = EH.es(32, 39, 2, 3, lvl, 10)
 	f.speed = EH.es(50, 56, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
@@ -45,9 +45,9 @@ static func create_echo_sentinel(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Echo Sentinel", lvl)
 	f.health = EH.es(419, 478, 4, 6, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(21, 30, 3, 3, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(67, 76, 2, 4, lvl, 10)
+	f.physical_attack = EH.es(68, 77, 2, 4, lvl, 10)
 	f.physical_defense = EH.es(47, 54, 2, 3, lvl, 10)
-	f.magic_attack = EH.es(15, 19, 0, 1, lvl, 10)
+	f.magic_attack = EH.es(16, 20, 0, 1, lvl, 10)
 	f.magic_defense = EH.es(29, 37, 1, 3, lvl, 10)
 	f.speed = EH.es(36, 42, 1, 2, lvl, 10)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 10
@@ -60,9 +60,9 @@ static func create_thought_eater(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Thought Eater", lvl)
 	f.health = EH.es(374, 430, 3, 6, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(34, 40, 2, 4, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(17, 21, 0, 2, lvl, 11)
+	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(24, 30, 1, 3, lvl, 11)
-	f.magic_attack = EH.es(92, 104, 2, 5, lvl, 11)
+	f.magic_attack = EH.es(94, 106, 2, 5, lvl, 11)
 	f.magic_defense = EH.es(40, 47, 2, 3, lvl, 11)
 	f.speed = EH.es(43, 49, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
@@ -75,9 +75,9 @@ static func create_grief_shade(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Grief Shade", lvl)
 	f.health = EH.es(361, 414, 3, 5, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 4, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 11)
+	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(21, 28, 1, 2, lvl, 11)
-	f.magic_attack = EH.es(86, 96, 2, 4, lvl, 11)
+	f.magic_attack = EH.es(87, 97, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(34, 41, 2, 3, lvl, 11)
 	f.speed = EH.es(44, 50, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 20
@@ -90,9 +90,9 @@ static func create_sorrow_shade(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Sorrow Shade", lvl)
 	f.health = EH.es(342, 394, 3, 4, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(38, 44, 2, 4, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 11)
+	f.physical_attack = EH.es(21, 25, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(21, 28, 1, 2, lvl, 11)
-	f.magic_attack = EH.es(97, 106, 2, 4, lvl, 11)
+	f.magic_attack = EH.es(98, 107, 2, 4, lvl, 11)
 	f.magic_defense = EH.es(34, 41, 2, 3, lvl, 11)
 	f.speed = EH.es(43, 49, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 20
@@ -105,9 +105,9 @@ static func create_hollow_watcher(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Hollow Watcher", lvl)
 	f.health = EH.es(346, 394, 4, 6, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(24, 33, 3, 3, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(66, 73, 2, 4, lvl, 11)
+	f.physical_attack = EH.es(68, 75, 2, 4, lvl, 11)
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 11)
-	f.magic_attack = EH.es(19, 23, 0, 2, lvl, 11)
+	f.magic_attack = EH.es(21, 25, 0, 2, lvl, 11)
 	f.magic_defense = EH.es(29, 36, 1, 3, lvl, 11)
 	f.speed = EH.es(44, 50, 1, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
@@ -124,9 +124,9 @@ static func create_mirror_self(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Mirror Self", lvl)
 	f.health = EH.es(334, 382, 3, 6, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(38, 44, 2, 4, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(89, 99, 2, 4, lvl, 12)
+	f.physical_attack = EH.es(91, 101, 2, 4, lvl, 12)
 	f.physical_defense = EH.es(34, 42, 2, 3, lvl, 12)
-	f.magic_attack = EH.es(89, 99, 2, 4, lvl, 12)
+	f.magic_attack = EH.es(91, 101, 2, 4, lvl, 12)
 	f.magic_defense = EH.es(34, 42, 2, 3, lvl, 12)
 	f.speed = EH.es(45, 51, 2, 3, lvl, 12)
 	f.crit_chance = 25; f.crit_damage = 5; f.dodge_chance = 20
@@ -139,9 +139,9 @@ static func create_void_weaver(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Void Weaver", lvl)
 	f.health = EH.es(370, 419, 3, 5, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(46, 54, 2, 4, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 12)
+	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 12)
 	f.physical_defense = EH.es(27, 34, 1, 3, lvl, 12)
-	f.magic_attack = EH.es(99, 112, 3, 5, lvl, 12)
+	f.magic_attack = EH.es(100, 113, 3, 5, lvl, 12)
 	f.magic_defense = EH.es(35, 42, 2, 4, lvl, 12)
 	f.speed = EH.es(42, 48, 2, 3, lvl, 12)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 17
@@ -154,9 +154,9 @@ static func create_mnemonic_golem(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Mnemonic Golem", lvl)
 	f.health = EH.es(466, 533, 5, 7, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(21, 30, 3, 3, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(94, 107, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(95, 108, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(53, 62, 2, 4, lvl, 12)
-	f.magic_attack = EH.es(16, 20, 0, 1, lvl, 12)
+	f.magic_attack = EH.es(17, 21, 0, 1, lvl, 12)
 	f.magic_defense = EH.es(42, 49, 2, 3, lvl, 12)
 	f.speed = EH.es(27, 33, 1, 2, lvl, 12)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
@@ -173,9 +173,9 @@ static func create_the_warden(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "The Warden", lvl)
 	f.health = EH.es(886, 1001, 9, 12, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(36, 44, 2, 4, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 13)
+	f.physical_attack = EH.es(23, 27, 0, 2, lvl, 13)
 	f.physical_defense = EH.es(38, 44, 2, 3, lvl, 13)
-	f.magic_attack = EH.es(119, 131, 3, 5, lvl, 13)
+	f.magic_attack = EH.es(122, 134, 3, 5, lvl, 13)
 	f.magic_defense = EH.es(47, 53, 2, 4, lvl, 13)
 	f.speed = EH.es(51, 57, 2, 3, lvl, 13)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
@@ -188,9 +188,9 @@ static func create_fractured_protector(n: String, lvl: int = 13) -> FighterData:
 	var f := EH.base(n, "Fractured Protector", lvl)
 	f.health = EH.es(831, 937, 7, 11, lvl, 13); f.max_health = f.health
 	f.mana = EH.es(34, 40, 2, 4, lvl, 13); f.max_mana = f.mana
-	f.physical_attack = EH.es(102, 112, 2, 4, lvl, 13)
+	f.physical_attack = EH.es(104, 114, 2, 4, lvl, 13)
 	f.physical_defense = EH.es(32, 39, 2, 3, lvl, 13)
-	f.magic_attack = EH.es(89, 100, 2, 4, lvl, 13)
+	f.magic_attack = EH.es(91, 102, 2, 4, lvl, 13)
 	f.magic_defense = EH.es(35, 41, 2, 3, lvl, 13)
 	f.speed = EH.es(53, 59, 2, 3, lvl, 13)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 17
@@ -208,9 +208,9 @@ static func create_fading_wisp(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Fading Wisp", lvl)
 	f.health = EH.es(286, 326, 3, 6, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(61, 68, 2, 3, lvl, 10)
+	f.physical_attack = EH.es(62, 69, 2, 3, lvl, 10)
 	f.physical_defense = EH.es(25, 31, 1, 3, lvl, 10)
-	f.magic_attack = EH.es(64, 73, 2, 3, lvl, 10)
+	f.magic_attack = EH.es(65, 74, 2, 3, lvl, 10)
 	f.magic_defense = EH.es(36, 43, 2, 3, lvl, 10)
 	f.speed = EH.es(41, 47, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
@@ -223,9 +223,9 @@ static func create_dim_guardian(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Dim Guardian", lvl)
 	f.health = EH.es(315, 363, 3, 5, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(21, 30, 3, 3, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(80, 90, 2, 4, lvl, 10)
+	f.physical_attack = EH.es(81, 91, 2, 4, lvl, 10)
 	f.physical_defense = EH.es(33, 39, 1, 3, lvl, 10)
-	f.magic_attack = EH.es(16, 20, 0, 1, lvl, 10)
+	f.magic_attack = EH.es(17, 21, 0, 1, lvl, 10)
 	f.magic_defense = EH.es(29, 35, 1, 3, lvl, 10)
 	f.speed = EH.es(36, 43, 1, 2, lvl, 10)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 10
@@ -243,9 +243,9 @@ static func create_ward_construct(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Ward Construct", lvl)
 	f.health = EH.es(427, 493, 5, 7, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(21, 30, 3, 3, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(118, 132, 3, 5, lvl, 12)
+	f.physical_attack = EH.es(120, 134, 3, 5, lvl, 12)
 	f.physical_defense = EH.es(57, 66, 2, 4, lvl, 12)
-	f.magic_attack = EH.es(20, 24, 0, 1, lvl, 12)
+	f.magic_attack = EH.es(22, 26, 0, 1, lvl, 12)
 	f.magic_defense = EH.es(46, 54, 2, 3, lvl, 12)
 	f.speed = EH.es(33, 40, 1, 2, lvl, 12)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
@@ -258,9 +258,9 @@ static func create_null_phantom(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Null Phantom", lvl)
 	f.health = EH.es(322, 370, 3, 6, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(40, 46, 2, 4, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(22, 26, 0, 2, lvl, 12)
+	f.physical_attack = EH.es(23, 27, 0, 2, lvl, 12)
 	f.physical_defense = EH.es(29, 36, 1, 3, lvl, 12)
-	f.magic_attack = EH.es(96, 107, 3, 5, lvl, 12)
+	f.magic_attack = EH.es(97, 108, 3, 5, lvl, 12)
 	f.magic_defense = EH.es(51, 60, 2, 4, lvl, 12)
 	f.speed = EH.es(42, 49, 2, 3, lvl, 12)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
@@ -273,9 +273,9 @@ static func create_threshold_echo(n: String, lvl: int = 12) -> FighterData:
 	var f := EH.base(n, "Threshold Echo", lvl)
 	f.health = EH.es(348, 398, 4, 6, lvl, 12); f.max_health = f.health
 	f.mana = EH.es(32, 40, 2, 4, lvl, 12); f.max_mana = f.mana
-	f.physical_attack = EH.es(85, 96, 2, 4, lvl, 12)
+	f.physical_attack = EH.es(86, 97, 2, 4, lvl, 12)
 	f.physical_defense = EH.es(35, 44, 2, 3, lvl, 12)
-	f.magic_attack = EH.es(83, 94, 2, 4, lvl, 12)
+	f.magic_attack = EH.es(84, 95, 2, 4, lvl, 12)
 	f.magic_defense = EH.es(35, 44, 2, 3, lvl, 12)
 	f.speed = EH.es(43, 50, 2, 3, lvl, 12)
 	f.crit_chance = 20; f.crit_damage = 3; f.dodge_chance = 20
@@ -293,9 +293,9 @@ static func create_ink_devourer(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Ink Devourer", lvl)
 	f.health = EH.es(336, 392, 3, 5, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(32, 38, 2, 4, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 11)
+	f.physical_attack = EH.es(20, 24, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(22, 28, 1, 2, lvl, 11)
-	f.magic_attack = EH.es(111, 122, 2, 5, lvl, 11)
+	f.magic_attack = EH.es(112, 123, 2, 5, lvl, 11)
 	f.magic_defense = EH.es(32, 40, 2, 3, lvl, 11)
 	f.speed = EH.es(50, 56, 2, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 25
@@ -308,9 +308,9 @@ static func create_silent_archivist(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Silent Archivist", lvl)
 	f.health = EH.es(375, 427, 4, 6, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(24, 28, 2, 4, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(23, 27, 0, 2, lvl, 11)
+	f.physical_attack = EH.es(24, 28, 0, 2, lvl, 11)
 	f.physical_defense = EH.es(32, 40, 2, 3, lvl, 11)
-	f.magic_attack = EH.es(100, 110, 3, 5, lvl, 11)
+	f.magic_attack = EH.es(101, 111, 3, 5, lvl, 11)
 	f.magic_defense = EH.es(39, 46, 2, 3, lvl, 11)
 	f.speed = EH.es(43, 49, 1, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 17
@@ -323,9 +323,9 @@ static func create_lost_record(n: String, lvl: int = 10) -> FighterData:
 	var f := EH.base(n, "Lost Record", lvl)
 	f.health = EH.es(291, 339, 4, 6, lvl, 10); f.max_health = f.health
 	f.mana = EH.es(32, 40, 2, 4, lvl, 10); f.max_mana = f.mana
-	f.physical_attack = EH.es(18, 22, 0, 2, lvl, 10)
+	f.physical_attack = EH.es(19, 23, 0, 2, lvl, 10)
 	f.physical_defense = EH.es(24, 30, 1, 3, lvl, 10)
-	f.magic_attack = EH.es(81, 93, 2, 5, lvl, 10)
+	f.magic_attack = EH.es(82, 94, 2, 5, lvl, 10)
 	f.magic_defense = EH.es(34, 42, 2, 3, lvl, 10)
 	f.speed = EH.es(44, 51, 2, 3, lvl, 10)
 	f.crit_chance = 17; f.crit_damage = 2; f.dodge_chance = 20
@@ -338,9 +338,9 @@ static func create_maw_codex(n: String, lvl: int = 11) -> FighterData:
 	var f := EH.base(n, "Maw Codex", lvl)
 	f.health = EH.es(392, 448, 4, 6, lvl, 11); f.max_health = f.health
 	f.mana = EH.es(21, 30, 3, 3, lvl, 11); f.max_mana = f.mana
-	f.physical_attack = EH.es(98, 108, 2, 4, lvl, 11)
+	f.physical_attack = EH.es(99, 109, 2, 4, lvl, 11)
 	f.physical_defense = EH.es(30, 37, 2, 3, lvl, 11)
-	f.magic_attack = EH.es(17, 21, 0, 1, lvl, 11)
+	f.magic_attack = EH.es(18, 22, 0, 1, lvl, 11)
 	f.magic_defense = EH.es(28, 35, 1, 3, lvl, 11)
 	f.speed = EH.es(41, 47, 1, 3, lvl, 11)
 	f.crit_chance = 17; f.crit_damage = 3; f.dodge_chance = 10
