@@ -55,6 +55,8 @@ func _build_save_data() -> Dictionary:
 		"story_id": GameState.current_story_id,
 		"party": party_data,
 		"play_seconds": GameState.play_seconds,
+		"difficulty": GameState.difficulty,
+		"inventory": GameState.inventory.to_save_data(),
 		"is_multiplayer": NetManager.is_multiplayer_active,
 		"is_local_coop": LocalCoop.is_active,
 		"player_count": LocalCoop.player_count if LocalCoop.is_active \
@@ -99,6 +101,11 @@ func load_from_slot(slot: int) -> bool:
 	GameState.party = party
 	GameState.current_story_id = data.get("story_id", "story_1")
 	GameState.play_seconds = data.get("play_seconds", 0.0)
+	GameState.difficulty = int(data.get("difficulty", 1))
+	# Restore inventory (old saves gracefully get empty inventory + 0 gold)
+	var inv_data: Dictionary = data.get("inventory", {})
+	if not inv_data.is_empty():
+		GameState.inventory.apply_save_data(inv_data)
 	GameState.advance_to_battle(data["current_battle_id"])
 	# advance_to_battle sets narrative_mode=PRE_BATTLE, game_phase=NARRATIVE
 
@@ -174,6 +181,7 @@ func get_save_summary(slot: int) -> Dictionary:
 		"party_size": party.size(),
 		"battle_id": data.get("current_battle_id", ""),
 		"story_id": data.get("story_id", "story_1"),
+		"timestamp": data.get("timestamp", ""),
 		"play_seconds": data.get("play_seconds", 0.0),
 		"is_multiplayer": data.get("is_multiplayer", false),
 		"is_local_coop": data.get("is_local_coop", false),

@@ -1,7 +1,7 @@
 class_name BattleDBAct45
 
 ## Act IV-V battle configurations. Chaos and The Reckoning.
-## Flow: CopperMugStop → [CorruptedCity | CorruptedWilds] → Depths → Gate → StrangerFinal
+## Flow: CopperMugStop → [CorruptedCity | CorruptedWilds] → Depths → TunnelCamp → Gate → StrangerFinal
 
 const BattleData := preload("res://scripts/data/battle_data.gd")
 const EnemyDB := preload("res://scripts/data/story1/enemy_db_act345.gd")
@@ -128,9 +128,37 @@ static func depths_battle() -> BattleData:
 		"Something moves on the other side. The sound of metal on stone. A low growl.",
 		"The gate is guarded.",
 	]
-	b.next_battle_id = "GateBattle"
+	b.next_battle_id = "TunnelCampStop"
 	b.music_track = "res://assets/audio/music/battle_dark/MUSC_Secret_Garden_76BPM_Eminor_1644_Full_Loop.wav"
 	b.cutscene_track = "res://assets/audio/music/cutscene/#12 Cave Horn.wav"
+	return b
+
+
+# =============================================================================
+# Tunnel Camp (town stop 4, ultimates -- barkeep sends a runner with supplies)
+# =============================================================================
+
+static func tunnel_camp_stop() -> BattleData:
+	var b := BattleData.new()
+	b.battle_id = "TunnelCampStop"
+	b.scene_image = "res://assets/art/battles/tunnels.png"
+	b.is_town_stop = true
+	b.pre_battle_text = [
+		"Past the webs and the silence, the tunnel opens into a junction where three old cisterns meet. Dry stone, a high ceiling, breathable air. The first safe ground since the party went below.",
+		"Footsteps echo from the passage behind them. Not the skittering of lurkers. Human footsteps, quick and deliberate.",
+		"A young woman rounds the corner, out of breath, carrying a pack almost as big as she is. She sees the party and nearly collapses with relief.",
+		"'The barkeep sent me. He said you would need these and that I should not take no for an answer.'",
+		"She drops the pack and opens it. Weapons, supplies, and a sealed note in the barkeep's cramped handwriting: 'You came back for us. Now we are sending what we can after you. Give that thing in the dark something to remember.'",
+	]
+	b.post_battle_text = [
+		"The runner watches the party check their new gear with the critical eye of someone who has catalogued every item twice.",
+		"'He also said to tell you the survivors are holding the Copper Mug. The wards you cleared bought them time. They are scared but they are not running.'",
+		"She stands, brushes dust from her knees, and looks toward the passage ahead. 'The gate is that way. I could hear something moving behind it when I passed.'",
+		"She offers a small, fierce smile. 'Good luck. I will tell him you looked ready.'",
+		"The tunnel ahead narrows. The air grows colder. The stranger's sigils pulse on the walls, guiding the way to whatever waits behind the gate.",
+	]
+	b.next_battle_id = "GateBattle"
+	b.music_track = "res://assets/audio/music/town/Medieval Tavern 03.wav"
 	return b
 
 

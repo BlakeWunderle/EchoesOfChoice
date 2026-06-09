@@ -47,7 +47,7 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 			has_boss = true
 	var enemy_profile := EnemyRoles.get_battle_profile(enemy_ids)
 
-	return {
+	var entry := {
 		"stage_name": result.stage_name,
 		"story": stage.get("story", 1),
 		"progression_stage": result.progression_stage,
@@ -61,12 +61,51 @@ static func build_entry(result: Dictionary, stage: Dictionary) -> Dictionary:
 		"enemy_roles": enemy_profile,
 		"class_breakdown": breakdown,
 		"combat_stats": combat_stats,
+		"class_diag": diag_raw,
 		"spread": spread,
 		"best_combos": best_entries,
 		"worst_combos": worst_entries,
 		"turn_stats": result.get("turn_stats", {}),
 		"diagnostics": SD.to_json(SD.analyze(result, stage)),
+		"equip_stats": _build_equip_json(result),
+		"ult_stats": _build_ult_json(result),
+		"ult_breakdown": SR.get_ultimate_breakdown(result),
 	}
+	if result.has("action_counts"):
+		entry["action_counts"] = result["action_counts"]
+	if result.has("player_item"):
+		entry["player_item"] = result["player_item"]
+		entry["item_usage"] = result.get("item_usage", {})
+	return entry
+
+
+static func _build_equip_json(result: Dictionary) -> Dictionary:
+	var es: Dictionary = result.get("equip_stats", {})
+	var out := {}
+	for eid: String in es:
+		var s: Dictionary = es[eid]
+		out[eid] = {
+			"wins": s.wins,
+			"total": s.total,
+			"win_rate": float(s.wins) / s.total if s.total > 0 else 0.0,
+		}
+	return out
+
+
+static func _build_ult_json(result: Dictionary) -> Dictionary:
+	var us: Dictionary = result.get("ult_stats", {})
+	var cm: Dictionary = result.get("ult_class_map", {})
+	var out := {}
+	for uid: String in us:
+		var s: Dictionary = us[uid]
+		out[uid] = {
+			"wins": s.wins,
+			"total": s.total,
+			"uses": s.get("uses", 0),
+			"win_rate": float(s.wins) / s.total if s.total > 0 else 0.0,
+			"class": cm.get(uid, "Unknown"),
+		}
+	return out
 
 
 ## Write an array of report entries to a JSON file.

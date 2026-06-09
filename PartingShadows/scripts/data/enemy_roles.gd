@@ -36,8 +36,8 @@ const _DATA: Dictionary = {
 	"Treant": { "s": [S.GLASS_CANNON] },
 	"Siren": { "s": [S.GLASS_CANNON], "d": D.MAGICAL },
 	"Merfolk": { "s": [S.AOE, S.GLASS_CANNON], "d": D.MIXED },
-	"Captain": { "r": [R.SUPPORT, R.TANK, R.FIGHTER], "s": [S.BUFFER, S.AOE, S.CRIT, S.EVASION], "t": T.LEADER },
-	"Pirate": { "s": [S.EVASION, S.CRIT] },
+	"Captain": { "r": [R.SUPPORT, R.TANK, R.FIGHTER], "s": [S.BUFFER, S.AOE, S.CRIT], "t": T.LEADER },
+	"Pirate": { "s": [S.CRIT] },
 	"Fire Wyrmling": { "d": D.MAGICAL },
 	"Frost Wyrmling": {},
 	"Ringmaster": { "r": [R.SUPPORT, R.FIGHTER], "s": [S.BUFFER, S.DEBUFFER, S.GLASS_CANNON, S.EVASION], "d": D.MIXED, "t": T.LEADER },
@@ -210,7 +210,7 @@ const _DATA: Dictionary = {
 	# ==========================================================================
 	# Story 3 - Act II expansion
 	# ==========================================================================
-	"Thread Lurker": { "r": [R.DPS], "s": [S.CRIT, S.EVASION] },
+	"Thread Lurker": { "r": [R.DPS], "s": [S.CRIT] },
 	"Dream Sentinel": { "r": [R.TANK, R.FIGHTER] },
 	"Gloom Spinner": { "s": [S.AOE], "d": D.MAGICAL },
 	"Drowned Reverie": { "s": [S.DRAIN, S.AOE], "d": D.MAGICAL },

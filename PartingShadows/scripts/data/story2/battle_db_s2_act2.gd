@@ -3,7 +3,7 @@ class_name BattleDBS2Act2
 ## Story 2 Act II battle configurations: "The Shore"
 ## Structure: CoastalDescent -> (FishingVillage | SmugglersBluff)
 ##   -> HarborTown -> (WreckersCove | CoastalRuins) -> BlackwaterBay
-##   -> LighthouseStorm
+##   -> LighthouseStorm -> LighthouseRest (town stop 3)
 
 const BattleData := preload("res://scripts/data/battle_data.gd")
 const EnemyDBS2Act2 := preload("res://scripts/data/story2/enemy_db_s2_act2.gd")
@@ -19,6 +19,7 @@ static func create_battle(battle_id: String) -> BattleData:
 		"S2_CoastalRuins": return s2_coastal_ruins()
 		"S2_BlackwaterBay": return s2_blackwater_bay()
 		"S2_LighthouseStorm": return s2_lighthouse_storm()
+		"S2_LighthouseRest": return s2_lighthouse_rest()
 		_:
 			push_error("Unknown Story 2 Act II battle: %s" % battle_id)
 			return s2_coastal_descent()
@@ -271,7 +272,33 @@ static func s2_lighthouse_storm() -> BattleData:
 		"The revenant's last whisper, barely audible: 'She will know you're coming. She always does. I think... I think she was afraid of you.'",
 		"A name surfaces at last. Not theirs. The person who took their memories. A face, a voice, and the sickening certainty that they once trusted this person completely.",
 	]
-	b.next_battle_id = "S2_BeneathTheLighthouse"
+	b.next_battle_id = "S2_LighthouseRest"
 	b.music_track = "res://assets/audio/music/battle/Fantasy Tension - The Last Crusade.ogg"
 	b.cutscene_track = "res://assets/audio/music/cutscene/Sad Despair 15.wav"
+	return b
+
+
+# =============================================================================
+# Lighthouse Rest (town stop 3, equip 3/3 -- Sera's hidden stash + survivor)
+# =============================================================================
+
+static func s2_lighthouse_rest() -> BattleData:
+	var b := BattleData.new()
+	b.battle_id = "S2_LighthouseRest"
+	b.scene_image = "res://assets/art/battles/lighthouse_storm.png"
+	b.is_town_stop = true
+	b.pre_battle_text = [
+		"The lamp chamber is quiet now. Wind pushes through the broken windows. Below, the sea is calm for the first time since the party arrived on this coast.",
+		"Behind a false panel in the keeper's quarters, a cache. Not hidden by the revenant. The supplies are too carefully chosen, too deliberately placed. Someone who knew this day would come left them here.",
+		"A woman's handwriting on a scrap of paper pinned inside the lid: 'For whoever opens this door again. You will need these more than I did.'",
+		"The handwriting matches the journals. The schematics. Every note they have found since the cave. Whoever erased their memories also prepared for the possibility that the erasure would fail.",
+	]
+	b.post_battle_text = [
+		"A sound from the floor below. Not a threat. A man, gaunt and salt-crusted, emerges from behind a stack of crates. He flinches when he sees the party.",
+		"'The keeper is gone?' He exhales. 'I've been hiding here for weeks. Trapped when the lighthouse went dark. The keeper let me live as long as I stayed out of the lamp room.'",
+		"He looks at the key in the party's hands. 'There's a door below. I heard sounds coming through it at night. Voices. Machinery. Something breathing that shouldn't be.'",
+		"He straightens. 'If you're going down there, you'll need more than courage. I was a trader before all this. I still have stock.'",
+	]
+	b.next_battle_id = "S2_BeneathTheLighthouse"
+	b.music_track = "res://assets/audio/music/town/Medieval Celtic 07(L).wav"
 	return b

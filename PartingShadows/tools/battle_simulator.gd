@@ -24,6 +24,8 @@ var _all_results: Array = []
 var _all_stages: Array = []
 var _exclude_combos: Array[String] = []
 var _difficulty_level: int = -1  ## -1 = auto (derive from stage tier)
+var _party_filter: PackedStringArray = []  ## Force specific party comp (class names)
+var _trace_mode: bool = false  ## Log per-action AI decisions
 
 
 func _init() -> void:
@@ -147,6 +149,21 @@ func _init() -> void:
 						"hard": _difficulty_level = 2
 						_: _difficulty_level = 1
 					i += 1
+			"--items":
+				SR.enable_enemy_items = true
+			"--player-item":
+				if i + 1 < args.size():
+					SR.player_item_id = args[i + 1]
+					i += 1
+			"--party":
+				if i + 1 < args.size():
+					for cname: String in args[i + 1].split(","):
+						var trimmed := cname.strip_edges()
+						if trimmed != "":
+							_party_filter.append(trimmed)
+					i += 1
+			"--trace":
+				_trace_mode = true
 			"--diagnostics":
 				_diagnostics = true
 			"--compact":
@@ -218,13 +235,22 @@ func _init() -> void:
 	if not _worker_mode:
 		print("=== Parting Shadows Battle Simulator ===\n")
 
+	if not _party_filter.is_empty():
+		SR.party_filter = _party_filter
+	if _trace_mode:
+		SR.trace_mode = true
+
 	if _difficulty_level >= 0:
 		SR._get_sim_engine().difficulty_level = _difficulty_level
 		if not _worker_mode:
 			var diff_names: Array[String] = ["Easy", "Normal", "Hard"]
-			print("  Difficulty: %s (override)\n" % diff_names[_difficulty_level])
+			print("  Difficulty: %s (override)" % diff_names[_difficulty_level])
 	elif not _worker_mode:
-		print("  Difficulty: auto (T0=easy, T1=normal, T2=hard)\n")
+		print("  Difficulty: auto (T0=easy, T1=normal, T2=hard)")
+	if SR.enable_enemy_items and not _worker_mode:
+		print("  Enemy items: ENABLED")
+	if not _worker_mode:
+		print()
 
 	if run_progressive:
 		SP.run(stages, sims_per_combo, auto_sims, sample_size,
@@ -311,6 +337,12 @@ func _run_single(stage: Dictionary, sims_per_combo: int,
 		_combo_worker_index, _combo_worker_count, _exclude_combos)
 	var elapsed := (Time.get_ticks_msec() - sw) / 1000.0
 
+	if result.is_empty():
+		if not quiet:
+			print("  %s: SKIPPED (item not available at P%d)" % [
+				stage.name, stage.progression_stage])
+		return
+
 	_all_results.append(result)
 	_all_stages.append(stage)
 	if _use_cache:
@@ -384,6 +416,11 @@ func _run_stages(stages: Array, sims_per_combo: int,
 		else:
 			result = SR.simulate_stage(stage, sims, sample_size,
 				_combo_worker_index, _combo_worker_count, _exclude_combos)
+			if result.is_empty():
+				if not quiet:
+					print("  %s: SKIPPED (item not available at P%d)" % [
+						stage.name, stage.progression_stage])
+				continue
 			if _use_cache:
 				SC.store(stage.name, stage.get("story", 1),
 					sims, sample_size, result, stage)
@@ -484,7 +521,10 @@ func _print_help() -> void:
 	print("  --worker <N/M>       Worker mode: run stage slice N of M (used by parallel coordinator)")
 	print("  --combo-worker <N/M> Combo-worker mode: run 1/M of party combos per stage (used by parallel coordinator)")
 	print("  --compact            Minimal output (1 line/PASS, details to file)")
+	print("  --party <a,b,c>      Force specific party (comma-separated T2 class names)")
+	print("  --trace              Log per-action AI decisions (use with --party + small --sims)")
 	print("  --difficulty <mode>   AI difficulty: easy, normal, hard (default: auto by tier)")
+	print("  --items              Enable enemy battle items (compare baseline vs items)")
 	print("  --diagnostics        Show detailed analysis of WEAK classes")
 	print("  --no-cache           Skip cache lookups, force re-simulation")
 	print("  --clear-cache        Delete cached results and exit")

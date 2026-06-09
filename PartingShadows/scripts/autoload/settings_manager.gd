@@ -132,7 +132,6 @@ var reduced_motion: bool = DEFAULT_REDUCED_MOTION:
 		_save()
 
 
-
 # -- Color Blind Palettes ---------------------------------------------------
 
 # Each palette: { hp_high, hp_mid, hp_low, mp, buff, debuff }

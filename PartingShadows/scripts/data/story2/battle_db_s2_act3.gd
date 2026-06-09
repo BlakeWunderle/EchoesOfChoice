@@ -253,7 +253,7 @@ static func s2_the_reveal() -> BattleData:
 		"'Then we finish what we started. All four of us, this time.'",
 		"A door opens behind the machinery, leading up and out into grey daylight. The truth is theirs again. But so is the danger.",
 	]
-	b.next_battle_id = "S2_DepthsOfRemembrance"
+	b.next_battle_id = "S2_CoastalCamp"
 	b.music_track = "res://assets/audio/music/boss/Impending Terror_FULL.wav"
 	b.cutscene_track = "res://assets/audio/music/cutscene/#15 Dark Strings Swell.wav"
 	return b

@@ -6,15 +6,21 @@ extends RefCounted
 ## performing the save, and navigating back to the main pause menu.
 
 const StoryDB := preload("res://scripts/data/story_db.gd")
-const _SLOTS_PER_PAGE: int = 5
+const PaginationControls := preload("res://scripts/ui/compendium/pagination_controls.gd")
+const _SLOTS_PER_PAGE: int = 3
+const _TOTAL_PAGES: int = ceili(float(SaveManager.MAX_SAVE_SLOTS) / _SLOTS_PER_PAGE)
 
 var _overlay: CanvasLayer  # The PauseOverlay instance
 var _delete_mode: bool = false
 var _page: int = 0
+var _pagination: PaginationControls
 
 
 func _init(overlay: CanvasLayer) -> void:
 	_overlay = overlay
+	_pagination = PaginationControls.new()
+	_pagination.visible = false
+	_pagination.page_changed.connect(_on_page_changed)
 
 
 # =============================================================================
@@ -31,15 +37,20 @@ func _build_slot_menu() -> void:
 	_overlay._mode = _overlay.Mode.SAVE_SLOTS
 	_overlay._main_vbox.visible = false
 
+	# Remove pagination before clearing so it isn't freed
+	if _pagination.get_parent() == _overlay._save_vbox:
+		_overlay._save_vbox.remove_child(_pagination)
+
 	# Clear old slot buttons
 	for child: Node in _overlay._save_vbox.get_children():
 		child.queue_free()
 
 	var has_any_save: bool = false
-	var total_pages: int = ceili(float(SaveManager.MAX_SAVE_SLOTS) / _SLOTS_PER_PAGE)
-	_page = clampi(_page, 0, total_pages - 1)
+	_page = clampi(_page, 0, _TOTAL_PAGES - 1)
 	var page_start: int = _page * _SLOTS_PER_PAGE
 	var page_end: int = mini(page_start + _SLOTS_PER_PAGE, SaveManager.MAX_SAVE_SLOTS)
+
+	_overlay._pause_title.text = "Save"
 
 	# Check if any saves exist
 	for i: int in SaveManager.MAX_SAVE_SLOTS:
@@ -50,25 +61,23 @@ func _build_slot_menu() -> void:
 	# Build slot buttons for current page
 	for i: int in range(page_start, page_end):
 		var summary: Dictionary = SaveManager.get_save_summary(i)
-		var label: String
+		var btn: Button
 		if summary.get("exists", false):
 			var story_title: String = StoryDB.get_story(
 				summary.get("story_id", "story_1")).get("title", "")
-			var secs: float = summary.get("play_seconds", 0.0)
-			var h: int = int(secs) / 3600
-			var m: int = (int(secs) % 3600) / 60
-			label = "Slot %d: %s the %s - Lv %d (%s) [%dh %dm]" % [
-				i + 1,
-				summary.get("lead_name", "???"),
-				summary.get("lead_class", "???"),
-				summary.get("level", 1),
+			var lines: Array[String] = [
+				"Slot %d" % [i + 1],
+				"%s the %s  |  Lvl %d" % [
+					summary.get("lead_name", "???"),
+					summary.get("lead_class", "???"),
+					summary.get("level", 1)],
 				story_title,
-				h, m,
 			]
+			btn = _make_slot_button(lines)
 		else:
-			label = "Slot %d: Empty" % [i + 1]
-		var btn: Button = _overlay._make_button(label)
-		var slot: int = i  # Capture for lambda
+			btn = _overlay._make_button("Slot %d: Empty" % [i + 1])
+			btn.custom_minimum_size.y = 64
+		var slot: int = i
 		if _delete_mode:
 			if summary.get("exists", false):
 				btn.pressed.connect(on_delete_slot_selected.bind(slot))
@@ -77,17 +86,6 @@ func _build_slot_menu() -> void:
 		else:
 			btn.pressed.connect(on_save_slot_selected.bind(slot))
 		_overlay._save_vbox.add_child(btn)
-
-	# Page navigation
-	if total_pages > 1:
-		if _page > 0:
-			var prev_btn: Button = _overlay._make_button("< Prev Page")
-			prev_btn.pressed.connect(_on_prev_page)
-			_overlay._save_vbox.add_child(prev_btn)
-		if _page < total_pages - 1:
-			var next_btn: Button = _overlay._make_button("Next Page >")
-			next_btn.pressed.connect(_on_next_page)
-			_overlay._save_vbox.add_child(next_btn)
 
 	# Mode toggle — Save / Delete
 	if has_any_save:
@@ -104,6 +102,12 @@ func _build_slot_menu() -> void:
 	back_btn.pressed.connect(_overlay._back_to_main)
 	_overlay._save_vbox.add_child(back_btn)
 
+	# Pagination controls
+	_pagination.total_pages = _TOTAL_PAGES
+	_pagination.current_page = _page + 1
+	_pagination.visible = _TOTAL_PAGES > 1
+	_overlay._save_vbox.add_child(_pagination)
+
 	_overlay._save_vbox.visible = true
 
 	# Focus first slot after frame so buttons are ready
@@ -114,13 +118,39 @@ func _build_slot_menu() -> void:
 			first.grab_focus()
 
 
-func _on_prev_page() -> void:
-	_page -= 1
-	_build_slot_menu()
+func _make_slot_button(lines: Array[String]) -> Button:
+	var btn: Button = _overlay._make_button("")
+	btn.custom_minimum_size.y = 96
+	btn.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	var margin := MarginContainer.new()
+	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 8)
+	margin.add_theme_constant_override("margin_right", 8)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var vbox := VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 2)
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for i: int in lines.size():
+		var lbl := Label.new()
+		lbl.text = lines[i]
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.clip_text = true
+		lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if i == 0:
+			lbl.add_theme_font_size_override("font_size", SettingsManager.font_size)
+		else:
+			lbl.add_theme_font_size_override("font_size", maxi(SettingsManager.font_size - 4, 12))
+			lbl.add_theme_color_override("font_color", Color(0.7, 0.75, 0.8))
+		vbox.add_child(lbl)
+	margin.add_child(vbox)
+	btn.add_child(margin)
+	return btn
 
 
-func _on_next_page() -> void:
-	_page += 1
+func _on_page_changed(new_page: int) -> void:
+	_page = new_page - 1
 	_build_slot_menu()
 
 
@@ -165,6 +195,8 @@ func do_save(slot: int) -> void:
 	if btn_index >= 0 and btn_index < _overlay._save_vbox.get_child_count():
 		var btn: Button = _overlay._save_vbox.get_child(btn_index) as Button
 		if btn:
+			for child: Node in btn.get_children():
+				child.queue_free()
 			btn.text = "Slot %d: Saved!" % [slot + 1]
 	await _overlay.get_tree().create_timer(0.6).timeout
 	if _overlay._mode == _overlay.Mode.SAVE_SLOTS:

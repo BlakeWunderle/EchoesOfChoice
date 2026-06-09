@@ -29,11 +29,18 @@ const IMPORT_SENTINEL_TIMEOUT_MS: int = 90000    ## max ms to wait for a worker 
 
 var _json_path := ""
 var _markdown_path := ""
+var _from_json_path := ""
 var _sim_mode := "quick"
 var _progressive := false
 var _from_prog := 0
 var _compact := false
+var _quiet := false
 var _run_id: int = 0  ## unique per coordinator invocation — prevents file collisions when two sims run simultaneously
+
+
+func _log(msg: String) -> void:
+	if not _quiet:
+		print(msg)
 
 
 func _init() -> void:
@@ -69,11 +76,17 @@ func _init() -> void:
 				if i + 1 < args.size():
 					_markdown_path = args[i + 1]
 					i += 1
+			"--from-json":
+				if i + 1 < args.size():
+					_from_json_path = args[i + 1]
+					i += 1
 			"--progressive":
 				_progressive = true
 			"--compact":
 				_compact = true
 				passthrough.append("--compact")
+			"--quiet":
+				_quiet = true
 			"--from":
 				if i + 1 < args.size():
 					_from_prog = int(args[i + 1])
@@ -82,10 +95,18 @@ func _init() -> void:
 				passthrough.append(args[i])
 				# Forward the value of flags that take an argument.
 				if args[i] in ["--sims", "--sample", "--progression",
-						"--story", "--tier", "--difficulty"] and i + 1 < args.size():
+						"--story", "--tier", "--difficulty",
+						"--player-item", "--party"] and i + 1 < args.size():
 					i += 1
 					passthrough.append(args[i])
 		i += 1
+
+	# Handle --clear-cache directly (utility command, no workers needed).
+	if "--clear-cache" in args:
+		SC.clear()
+		_log("Sim cache cleared.")
+		quit()
+		return
 
 	if "--auto" in passthrough:
 		_sim_mode = "full"
@@ -100,6 +121,15 @@ func _init() -> void:
 	if timeout_sec < 0:
 		timeout_sec = PER_BATTLE_TIMEOUT_SEC
 
+	# Convert existing JSON to markdown without simulating.
+	if _from_json_path != "":
+		if _markdown_path == "":
+			_log("ERROR: --from-json requires --markdown <path>")
+		else:
+			_generate_from_json()
+		quit()
+		return
+
 	if _progressive:
 		_run_progressive(jobs, passthrough, stagger_ms, timeout_sec)
 		return
@@ -111,21 +141,21 @@ func _init() -> void:
 
 	var effective_stages := _get_effective_stages(passthrough)
 	if effective_stages.is_empty():
-		print("ERROR: No stages matched the given filters.")
+		_log("ERROR: No stages matched the given filters.")
 		quit(1)
 		return
 
-	print("=== Parallel Battle Simulator ===")
-	print("  Workers: %d/battle  Stagger: %dms  Timeout/battle: %ds  Stages: %d" % [
+	_log("=== Parallel Battle Simulator ===")
+	_log("  Workers: %d/battle  Stagger: %dms  Timeout/battle: %ds  Stages: %d" % [
 		jobs, stagger_ms, timeout_sec, effective_stages.size()])
-	print("  Args: %s\n" % " ".join(passthrough))
+	_log("  Args: %s\n" % " ".join(passthrough))
 
 	var sw := Time.get_ticks_msec()
 	var all_stages := _run_all_per_battle(jobs, effective_stages, passthrough, stagger_ms, timeout_sec)
 	var elapsed := (Time.get_ticks_msec() - sw) / 1000.0
 
 	if all_stages.is_empty():
-		print("ERROR: No results collected.")
+		_log("ERROR: No results collected.")
 		quit(1)
 		return
 
@@ -135,7 +165,7 @@ func _init() -> void:
 			return a.story < b.story
 		return a.progression_stage < b.progression_stage)
 
-	print("  Workers finished in %.1fs\n" % elapsed)
+	_log("  Workers finished in %.1fs\n" % elapsed)
 
 	var pass_count := 0
 	var fail_count := 0
@@ -151,17 +181,17 @@ func _init() -> void:
 			var line := "  %s: %.1f%% (target %d%%) %s" % [
 				s.stage_name, s.overall_win_rate * 100,
 				int(s.target_win_rate * 100), s.status]
-			print(line)
-		print("\n  Results: %d PASS, %d FAIL" % [pass_count, fail_count])
+			_log(line)
+		_log("\n  Results: %d PASS, %d FAIL" % [pass_count, fail_count])
 	else:
 		# Verbose summary table.
-		print("=" .repeat(80))
-		print("  PARALLEL SIMULATION SUMMARY (%d workers, %d stages)" % [
+		_log("=" .repeat(80))
+		_log("  PARALLEL SIMULATION SUMMARY (%d workers, %d stages)" % [
 			jobs, all_stages.size()])
-		print("=" .repeat(80))
-		print("  %-25s %10s %10s %14s %12s" % [
+		_log("=" .repeat(80))
+		_log("  %-25s %10s %10s %14s %12s" % [
 			"Battle", "Win Rate", "Target", "Range", "Status"])
-		print("  " + "-".repeat(71))
+		_log("  " + "-".repeat(71))
 
 		var total_wr := 0.0
 		var total_ms := 0
@@ -169,44 +199,46 @@ func _init() -> void:
 			var low: float = s.target_win_rate - 0.03
 			var high: float = s.target_win_rate + 0.03
 			var range_str := "%d%% - %d%%" % [int(low * 100), int(high * 100)]
-			print("  %-25s %9.1f%% %9d%% %14s %12s" % [
+			_log("  %-25s %9.1f%% %9d%% %14s %12s" % [
 				s.stage_name, s.overall_win_rate * 100,
 				int(s.target_win_rate * 100), range_str, s.status])
 			total_wr += s.overall_win_rate
 			total_ms += int(s.get("elapsed_ms", 0))
 
-		print("\n  Passed: %d/%d" % [pass_count, all_stages.size()])
-		print("  Average win rate: %.1f%%" % [total_wr / all_stages.size() * 100])
-		print("  Worker sim time: %.1fs (sum of all workers)" % [total_ms / 1000.0])
-		print("  Wall clock time: %.1fs" % elapsed)
-		print("  Speedup: %.1fx" % [total_ms / 1000.0 / maxf(elapsed, 0.001)])
+		_log("\n  Passed: %d/%d" % [pass_count, all_stages.size()])
+		_log("  Average win rate: %.1f%%" % [total_wr / all_stages.size() * 100])
+		_log("  Worker sim time: %.1fs (sum of all workers)" % [total_ms / 1000.0])
+		_log("  Wall clock time: %.1fs" % elapsed)
+		_log("  Speedup: %.1fx" % [total_ms / 1000.0 / maxf(elapsed, 0.001)])
 
-		# Print class breakdown and weak-class diagnostics when --diagnostics requested.
-		if passthrough.has("--diagnostics"):
-			for s: Dictionary in all_stages:
-				print("\n--- %s ---" % s.stage_name)
-				# Use pre-computed class_breakdown (build_entry format) rather than
-				# SR.print_class_breakdown which requires combo_results.
-				var breakdown: Dictionary = s.get("class_breakdown", {})
-				if not breakdown.is_empty():
-					var entries := []
-					for cname: String in breakdown:
-						entries.append({
-							"class": cname,
-							"win_rate": breakdown[cname].get("win_rate", 0.0),
-							"count": breakdown[cname].get("combo_count", 0),
-						})
-					entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-						return a.win_rate > b.win_rate)
-					var warn_thr: float = s.get("target_win_rate", 0.0) * 0.60
-					print("\n  CLASS BREAKDOWN:")
-					print("    %-22s %10s %8s  %s" % ["Class", "Win Rate", "Combos", "Note"])
-					print("    " + "-".repeat(54))
-					for e: Dictionary in entries:
-						var note: String = "** WEAK **" if e.win_rate < warn_thr else ""
-						print("    %-22s %9.1f%% %8d  %s" % [
-							e["class"], e.win_rate * 100, e.count, note])
-				# build_entry pre-computes diagnostics — use it directly.
+		# Print per-stage class breakdown and equipment breakdown.
+		for s: Dictionary in all_stages:
+			_log("\n--- %s ---" % s.stage_name)
+			var breakdown: Dictionary = s.get("class_breakdown", {})
+			if not breakdown.is_empty():
+				var entries := []
+				for cname: String in breakdown:
+					entries.append({
+						"class": cname,
+						"win_rate": breakdown[cname].get("win_rate", 0.0),
+						"count": breakdown[cname].get("combo_count", 0),
+					})
+				entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+					return a.win_rate > b.win_rate)
+				var warn_thr: float = s.get("target_win_rate", 0.0) * 0.60
+				_log("\n  CLASS BREAKDOWN:")
+				_log("    %-22s %10s %8s  %s" % ["Class", "Win Rate", "Combos", "Note"])
+				_log("    " + "-".repeat(54))
+				for e: Dictionary in entries:
+					var note: String = "** WEAK **" if e.win_rate < warn_thr else ""
+					_log("    %-22s %9.1f%% %8d  %s" % [
+						e["class"], e.win_rate * 100, e.count, note])
+			SR.print_action_breakdown(s)
+			SR.print_equipment_breakdown(s)
+			SR.print_ultimate_breakdown(s)
+			SR.print_charge_analysis(s)
+			# Print detailed diagnostics when --diagnostics requested.
+			if passthrough.has("--diagnostics"):
 				SD.print_diagnostics(s.get("diagnostics", []), s.stage_name)
 
 	_write_outputs(all_stages)
@@ -242,10 +274,10 @@ func _run_all_per_battle(jobs: int, stages: Array, passthrough: Array[String],
 		printraw("  [%d/%d] %-28s" % [si + 1, stages.size(), stage.name])
 		var stage_results := _spawn_and_collect(jobs, stage_args, stagger_ms, timeout_sec)
 		if stage_results.is_empty():
-			print("  FAIL (timeout or no workers)")
+			_log("  FAIL (timeout or no workers)")
 			continue
 		var r: Dictionary = stage_results[0]
-		print("  %.1f%%  target %d%%  %s" % [
+		_log("  %.1f%%  target %d%%  %s" % [
 			r.overall_win_rate * 100,
 			int(r.get("target_win_rate", 0.0) * 100),
 			r.get("status", "?")])
@@ -284,17 +316,17 @@ func _run_progressive(jobs: int, passthrough: Array[String],
 	var prog_keys: Array = by_prog.keys()
 	prog_keys.sort()
 
-	print("=== Parallel Progressive Simulator ===")
-	print("  Workers: %d  Stagger: %dms  Timeout: %ds | Progressions: %s\n" % [
+	_log("=== Parallel Progressive Simulator ===")
+	_log("  Workers: %d  Stagger: %dms  Timeout: %ds | Progressions: %s\n" % [
 		jobs, stagger_ms, timeout_sec, prog_keys])
 
 	var grand_sw := Time.get_ticks_msec()
 	var all_stages: Array = []
 
 	for prog: int in prog_keys:
-		print("\n" + "=".repeat(60))
-		print("  PROGRESSION %d  (%d battles)" % [prog, by_prog[prog].size()])
-		print("=".repeat(60))
+		_log("\n" + "=".repeat(60))
+		_log("  PROGRESSION %d  (%d battles)" % [prog, by_prog[prog].size()])
+		_log("=".repeat(60))
 
 		# Build worker args for this progression only.
 		var prog_args: Array[String] = []
@@ -304,8 +336,8 @@ func _run_progressive(jobs: int, passthrough: Array[String],
 
 		var prog_stages := _spawn_and_collect(jobs, prog_args, stagger_ms, timeout_sec)
 		if prog_stages.is_empty():
-			print("  ERROR: No results for progression %d." % prog)
-			print("  Workers likely timed out. Try --stagger 4000 or --jobs 1.")
+			_log("  ERROR: No results for progression %d." % prog)
+			_log("  Workers likely timed out. Try --stagger 4000 or --jobs 1.")
 			break
 
 		all_stages.append_array(prog_stages)
@@ -313,21 +345,21 @@ func _run_progressive(jobs: int, passthrough: Array[String],
 		# Check for failures.
 		var failed := []
 		for s: Dictionary in prog_stages:
-			print("  %s: %.1f%% (%s)" % [
+			_log("  %s: %.1f%% (%s)" % [
 				s.stage_name, s.overall_win_rate * 100, s.status])
 			if s.status != "PASS":
 				failed.append(s)
 
 		if not failed.is_empty():
-			print("\n  PROGRESSION %d FAILED (%d/%d):" % [
+			_log("\n  PROGRESSION %d FAILED (%d/%d):" % [
 				prog, failed.size(), prog_stages.size()])
 			for f: Dictionary in failed:
-				print("    %s: %.1f%% (target %d%%)" % [
+				_log("    %s: %.1f%% (target %d%%)" % [
 					f.stage_name, f.overall_win_rate * 100,
 					int(f.target_win_rate * 100)])
 			break
 		else:
-			print("  PROGRESSION %d: ALL PASS" % prog)
+			_log("  PROGRESSION %d: ALL PASS" % prog)
 
 	var elapsed := (Time.get_ticks_msec() - grand_sw) / 1000.0
 	_print_progressive_summary(all_stages, elapsed)
@@ -362,10 +394,10 @@ func _spawn_and_collect(jobs: int, passthrough: Array[String],
 	var effective_stages := _get_effective_stages(passthrough)
 	var use_combo_split: bool = effective_stages.size() > 0 and effective_stages.size() < jobs
 	if use_combo_split:
-		print("  Mode: combo-split (%d stage(s) across %d workers)" % [
+		_log("  Mode: combo-split (%d stage(s) across %d workers)" % [
 			effective_stages.size(), jobs])
 	else:
-		print("  Mode: stage-split (%d stages, %d workers)" % [
+		_log("  Mode: stage-split (%d stages, %d workers)" % [
 			effective_stages.size(), jobs])
 
 	var pids: Array[int] = []
@@ -409,10 +441,10 @@ func _spawn_and_collect(jobs: int, passthrough: Array[String],
 			# Serializes .godot/ write locks so workers don't deadlock on Windows.
 			if wi < jobs - 1:
 				if not _wait_for_import_sentinel(sentinel_path, pid):
-					print("  WARNING: Worker %d import sentinel not received — using stagger fallback" % wi)
+					_log("  WARNING: Worker %d import sentinel not received — using stagger fallback" % wi)
 					OS.delay_msec(stagger_ms)
 		else:
-			print("  ERROR: Failed to spawn worker %d" % wi)
+			_log("  ERROR: Failed to spawn worker %d" % wi)
 
 	# Wait for all workers with timeout and progress dots.
 	var deadline_msec: int = Time.get_ticks_msec() + timeout_sec * 1000
@@ -429,10 +461,10 @@ func _spawn_and_collect(jobs: int, passthrough: Array[String],
 				still_running = true
 				break
 		if not still_running:
-			print("")
+			_log("")
 			break
 		if now >= deadline_msec:
-			print("\n  TIMEOUT: Workers did not finish within %ds." % timeout_sec)
+			_log("\n  TIMEOUT: Workers did not finish within %ds." % timeout_sec)
 			for pid: int in pids:
 				if OS.is_process_running(pid):
 					OS.kill(pid)
@@ -457,11 +489,11 @@ func _spawn_and_collect(jobs: int, passthrough: Array[String],
 	for wi in jobs:
 		var worker_json := "user://sim_temp/sim_worker_%d_%d.json" % [_run_id, wi]
 		if not FileAccess.file_exists(worker_json):
-			print("  WARNING: Worker %d did not produce output (file missing)" % wi)
+			_log("  WARNING: Worker %d did not produce output (file missing)" % wi)
 			continue
 		var file := FileAccess.open(worker_json, FileAccess.READ)
 		if file == null:
-			print("  WARNING: Worker %d output unreadable" % wi)
+			_log("  WARNING: Worker %d output unreadable" % wi)
 			continue
 		var json := JSON.new()
 		if json.parse(file.get_as_text()) == OK and json.data is Dictionary:
@@ -477,9 +509,9 @@ func _spawn_and_collect(jobs: int, passthrough: Array[String],
 						partials_by_stage[sname] = []
 					partials_by_stage[sname].append(partial)
 			else:
-				print("  WARNING: Worker %d JSON missing 'stages' or 'partial_stages' key" % wi)
+				_log("  WARNING: Worker %d JSON missing 'stages' or 'partial_stages' key" % wi)
 		else:
-			print("  WARNING: Worker %d JSON parse failed" % wi)
+			_log("  WARNING: Worker %d JSON parse failed" % wi)
 		file.close()
 		DirAccess.remove_absolute(
 			ProjectSettings.globalize_path(worker_json))
@@ -497,13 +529,13 @@ func _spawn_and_collect(jobs: int, passthrough: Array[String],
 					stage_cfg = s
 					break
 			if stage_cfg.is_empty():
-				print("  WARNING: No stage config found for merged result '%s'" % sname)
+				_log("  WARNING: No stage config found for merged result '%s'" % sname)
 				continue
 			results.append(SRep.build_entry(merged, stage_cfg))
 
 	if results.is_empty() and jobs > 0:
-		print("  ERROR: All %d workers produced no results." % jobs)
-		print("  Godot exe: %s" % godot_exe)
+		_log("  ERROR: All %d workers produced no results." % jobs)
+		_log("  Godot exe: %s" % godot_exe)
 
 	results.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return a.get("stage_name", "") < b.get("stage_name", ""))
@@ -572,6 +604,9 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 	var merged: Dictionary = (partials[0] as Dictionary).duplicate(true)
 	merged["combo_results"] = []
 	merged["class_diag"] = {}
+	merged["equip_stats"] = {}
+	merged["ult_stats"] = {}
+	merged["ult_class_map"] = {}
 	merged["elapsed_ms"] = 0
 	for partial: Dictionary in partials:
 		merged.combo_results.append_array(partial.get("combo_results", []))
@@ -580,8 +615,23 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 			if not merged.class_diag.has(cls):
 				merged.class_diag[cls] = partial.class_diag[cls].duplicate()
 			else:
-				for key: String in ["dmg_dealt", "dmg_taken", "heals", "deaths", "battles"]:
+				for key: String in ["dmg_dealt", "dmg_taken", "heals", "deaths", "battles",
+					"actions", "dmg_mitigated", "buffs_applied", "debuffs_applied", "charge_gained", "stalemates"]:
 					merged.class_diag[cls][key] += partial.class_diag[cls].get(key, 0)
+		for eid: String in partial.get("equip_stats", {}):
+			var ps: Dictionary = partial.equip_stats[eid]
+			if not merged.equip_stats.has(eid):
+				merged.equip_stats[eid] = {wins = 0, total = 0}
+			merged.equip_stats[eid].wins += ps.get("wins", 0)
+			merged.equip_stats[eid].total += ps.get("total", 0)
+		for uid: String in partial.get("ult_stats", {}):
+			var ps: Dictionary = partial.ult_stats[uid]
+			if not merged.ult_stats.has(uid):
+				merged.ult_stats[uid] = {wins = 0, total = 0, uses = 0}
+			merged.ult_stats[uid].wins += ps.get("wins", 0)
+			merged.ult_stats[uid].total += ps.get("total", 0)
+			merged.ult_stats[uid].uses += ps.get("uses", 0)
+		merged.ult_class_map.merge(partial.get("ult_class_map", {}))
 	## Merge turn_stats from all partials.
 	var ts_all_sum := 0
 	var ts_player_sum := 0
@@ -590,6 +640,16 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 	var ts_min := 999999
 	var ts_max := 0
 	var ts_party_size := 3
+	var ts_all_sum_w := 0
+	var ts_player_sum_w := 0
+	var ts_count_w := 0
+	var ts_min_w := 999999
+	var ts_max_w := 0
+	var ts_all_sum_l := 0
+	var ts_player_sum_l := 0
+	var ts_count_l := 0
+	var ts_min_l := 999999
+	var ts_max_l := 0
 	for partial: Dictionary in partials:
 		var ts: Dictionary = partial.get("turn_stats", {})
 		ts_all_sum += int(ts.get("_total_all_actions", 0))
@@ -603,6 +663,26 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 		if pmax > ts_max:
 			ts_max = pmax
 		ts_party_size = int(ts.get("_party_size", 3))
+		var tw: Dictionary = ts.get("wins", {})
+		ts_all_sum_w += int(tw.get("_total_all_actions", 0))
+		ts_player_sum_w += int(tw.get("_total_player_actions", 0))
+		ts_count_w += int(tw.get("_total_battle_count", 0))
+		var wmin: int = int(tw.get("min_all_actions", 999999))
+		var wmax: int = int(tw.get("max_all_actions", 0))
+		if wmin < ts_min_w:
+			ts_min_w = wmin
+		if wmax > ts_max_w:
+			ts_max_w = wmax
+		var tl: Dictionary = ts.get("losses", {})
+		ts_all_sum_l += int(tl.get("_total_all_actions", 0))
+		ts_player_sum_l += int(tl.get("_total_player_actions", 0))
+		ts_count_l += int(tl.get("_total_battle_count", 0))
+		var lmin: int = int(tl.get("min_all_actions", 999999))
+		var lmax: int = int(tl.get("max_all_actions", 0))
+		if lmin < ts_min_l:
+			ts_min_l = lmin
+		if lmax > ts_max_l:
+			ts_max_l = lmax
 	merged["turn_stats"] = {
 		"avg_player_per_char": float(ts_player_sum) / (ts_party_size * ts_battle_count) if ts_battle_count > 0 else 0.0,
 		"avg_all_actions": float(ts_all_sum) / ts_battle_count if ts_battle_count > 0 else 0.0,
@@ -614,7 +694,50 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 		"_total_player_actions": ts_player_sum,
 		"_total_battle_count": ts_battle_count,
 		"_party_size": ts_party_size,
+		"wins": {
+			"avg_player_per_char": float(ts_player_sum_w) / (ts_party_size * ts_count_w) if ts_count_w > 0 else 0.0,
+			"avg_all_actions": float(ts_all_sum_w) / ts_count_w if ts_count_w > 0 else 0.0,
+			"min_all_actions": ts_min_w if ts_count_w > 0 else 0,
+			"max_all_actions": ts_max_w if ts_count_w > 0 else 0,
+			"_total_all_actions": ts_all_sum_w,
+			"_total_player_actions": ts_player_sum_w,
+			"_total_battle_count": ts_count_w,
+		},
+		"losses": {
+			"avg_player_per_char": float(ts_player_sum_l) / (ts_party_size * ts_count_l) if ts_count_l > 0 else 0.0,
+			"avg_all_actions": float(ts_all_sum_l) / ts_count_l if ts_count_l > 0 else 0.0,
+			"min_all_actions": ts_min_l if ts_count_l > 0 else 0,
+			"max_all_actions": ts_max_l if ts_count_l > 0 else 0,
+			"_total_all_actions": ts_all_sum_l,
+			"_total_player_actions": ts_player_sum_l,
+			"_total_battle_count": ts_count_l,
+		},
 	}
+
+	## Merge player item usage stats if present.
+	if partials[0].has("player_item"):
+		merged["player_item"] = partials[0]["player_item"]
+		var item_uses := 0
+		var item_battles := 0
+		for partial: Dictionary in partials:
+			var iu: Dictionary = partial.get("item_usage", {})
+			item_uses += int(iu.get("uses", 0))
+			item_battles += int(iu.get("total_battles", 0))
+		merged["item_usage"] = {
+			"uses": item_uses,
+			"total_battles": item_battles,
+			"use_rate": float(item_uses) / item_battles if item_battles > 0 else 0.0,
+		}
+
+	## Merge action counts.
+	var agg_ac := {"player": {}, "enemy": {}}
+	for partial: Dictionary in partials:
+		var pac: Dictionary = partial.get("action_counts", {})
+		for side: String in ["player", "enemy"]:
+			var src: Dictionary = pac.get(side, {})
+			for act: String in src:
+				agg_ac[side][act] = agg_ac[side].get(act, 0) + int(src[act])
+	merged["action_counts"] = agg_ac
 
 	## Recalculate overall_win_rate as average of combo win_rates (matches simulate_stage).
 	var total_wr := 0.0
@@ -630,20 +753,20 @@ func _merge_partial_results(partials: Array) -> Dictionary:
 func _print_progressive_summary(all_stages: Array, elapsed: float) -> void:
 	if all_stages.is_empty():
 		return
-	print("\n" + "=".repeat(60))
-	print("  PROGRESSIVE SUMMARY (%d stages, %.1fs)" % [
+	_log("\n" + "=".repeat(60))
+	_log("  PROGRESSIVE SUMMARY (%d stages, %.1fs)" % [
 		all_stages.size(), elapsed])
-	print("=".repeat(60))
-	print("  %-25s %10s %10s %12s" % ["Battle", "Win Rate", "Target", "Status"])
-	print("  " + "-".repeat(57))
+	_log("=".repeat(60))
+	_log("  %-25s %10s %10s %12s" % ["Battle", "Win Rate", "Target", "Status"])
+	_log("  " + "-".repeat(57))
 	var pass_count := 0
 	for s: Dictionary in all_stages:
-		print("  %-25s %9.1f%% %9d%% %12s" % [
+		_log("  %-25s %9.1f%% %9d%% %12s" % [
 			s.stage_name, s.overall_win_rate * 100,
 			int(s.target_win_rate * 100), s.status])
 		if s.status == "PASS":
 			pass_count += 1
-	print("\n  Passed: %d/%d" % [pass_count, all_stages.size()])
+	_log("\n  Passed: %d/%d" % [pass_count, all_stages.size()])
 
 
 func _write_outputs(all_stages: Array) -> void:
@@ -672,8 +795,21 @@ func _write_outputs(all_stages: Array) -> void:
 		if out_file:
 			out_file.store_string(json_str)
 			out_file.close()
-			print("\n  JSON report written to: %s" % _json_path)
+			_log("\n  JSON report written to: %s" % _json_path)
 		else:
-			print("\n  ERROR: Could not write JSON report to: %s" % _json_path)
+			_log("\n  ERROR: Could not write JSON report to: %s" % _json_path)
 	if _markdown_path != "":
 		SRepMD.write_markdown(_markdown_path, all_stages, _sim_mode)
+
+
+func _generate_from_json() -> void:
+	var file := FileAccess.open(_from_json_path, FileAccess.READ)
+	if file == null:
+		_log("ERROR: Could not read: %s" % _from_json_path)
+		return
+	var json := JSON.new()
+	if json.parse(file.get_as_text()) != OK or not json.data is Dictionary:
+		_log("ERROR: Invalid JSON in: %s" % _from_json_path)
+		return
+	file.close()
+	SRepMD.write_markdown(_markdown_path, json.data.get("stages", []), "cached")

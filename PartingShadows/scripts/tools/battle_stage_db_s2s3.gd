@@ -47,28 +47,28 @@ static func get_story2_stages() -> Array:
 		# Prog 10: Tier 2, -2pp (branch pair)
 		_s("S2_MemoryVault", 12, "tier2", 0.71, 10, 2),
 		_s("S2_EchoGallery", 12, "tier2", 0.71, 10, 2),
-		# Prog 11: Tier 2, -1pp (convergence + reveal)
-		_s("S2_ShatteredSanctum", 13, "tier2", 0.70, 11, 2),
+		# Prog 11: Tier 2, -1pp (convergence + reveal, 3 equipment upgrades)
+		_s("S2_ShatteredSanctum", 13, "tier2", 0.70, 11, 2, "", 3),
 		# Prog 12: Tier 2, -2pp (branch pair — Path A vs Path B)
-		_s("S2_GuardiansThreshold", 14, "tier2", 0.68, 12, 2, "a"),
-		_s("S2_ForgottenArchive", 14, "tier2", 0.68, 12, 2, "b"),
+		_s("S2_GuardiansThreshold", 14, "tier2", 0.68, 12, 2, "a", 3),
+		_s("S2_ForgottenArchive", 14, "tier2", 0.68, 12, 2, "b", 3),
 		# Prog 13: Tier 2, -1pp (Act III boss)
-		_s("S2_TheReveal", 15, "tier2", 0.67, 13, 2, "a"),
+		_s("S2_TheReveal", 15, "tier2", 0.67, 13, 2, "a", 3),
 		# --- Story 2 Act IV: The Reckoning (Path A continues) ---
 		# Prog 14: Tier 2, -1pp
-		_s("S2_DepthsOfRemembrance", 16, "tier2", 0.66, 14, 2, "a"),
+		_s("S2_DepthsOfRemembrance", 16, "tier2", 0.66, 14, 2, "a", 3, true),
 		# Prog 15: Tier 2, -1pp
-		_s("S2_MawOfTheEye", 17, "tier2", 0.65, 15, 2, "a"),
+		_s("S2_MawOfTheEye", 17, "tier2", 0.65, 15, 2, "a", 3, true),
 		# Prog 16: Tier 2, -2pp (Phase 1 boss)
-		_s("S2_EyeAwakening", 18, "tier2", 0.63, 16, 2, "a"),
+		_s("S2_EyeAwakening", 18, "tier2", 0.63, 16, 2, "a", 3, true),
 		# Prog 17: Tier 2, -1pp (final boss)
-		_s("S2_EyeOfOblivion", 19, "tier2", 0.62, 17, 2, "a"),
+		_s("S2_EyeOfOblivion", 19, "tier2", 0.62, 17, 2, "a", 3, true),
 		# --- Story 2 Path B: Save Sera (branches from ShatteredSanctum, same progs) ---
-		_s("S2_B_ArchiveAwakening", 15, "tier2", 0.67, 13, 2, "b"),
-		_s("S2_B_LighthouseCore", 16, "tier2", 0.66, 14, 2, "b"),
-		_s("S2_B_ResonanceChamber", 17, "tier2", 0.65, 15, 2, "b"),
-		_s("S2_B_MemoryFlood", 18, "tier2", 0.63, 16, 2, "b"),
-		_s("S2_B_EyeUnblinking", 19, "tier2", 0.62, 17, 2, "b"),
+		_s("S2_B_ArchiveAwakening", 15, "tier2", 0.67, 13, 2, "b", 3),
+		_s("S2_B_LighthouseCore", 16, "tier2", 0.66, 14, 2, "b", 3, true),
+		_s("S2_B_ResonanceChamber", 17, "tier2", 0.65, 15, 2, "b", 3, true),
+		_s("S2_B_MemoryFlood", 18, "tier2", 0.63, 16, 2, "b", 3, true),
+		_s("S2_B_EyeUnblinking", 19, "tier2", 0.62, 17, 2, "b", 3, true),
 	]
 
 
@@ -102,42 +102,50 @@ static func get_story3_stages() -> Array:
 		_s("S3_CellarDiscovery", 11, "tier2", 0.70, 10, 3),
 		# --- TownRealization: Lira reveal, rest only ---
 		# Prog 11: Tier 2, -1pp (lucid dream — shared by Path A and C)
-		_s("S3_LucidDream", 12, "tier2", 0.69, 11, 3, "ac"),
-		# Prog 12: Tier 2, -1pp (branch pair — shared by Path A and C)
-		_s("S3_DreamTemple", 13, "tier2", 0.68, 12, 3, "ac"),
-		_s("S3_DreamVoid", 13, "tier2", 0.68, 12, 3, "ac"),
+		_s("S3_LucidDream", 12, "tier2", 0.69, 11, 3, "ac", -1, true),
+		# Prog 12: Tier 2, -1pp (branch pair — shared by Path A and C, 3 equipment upgrades)
+		_s("S3_DreamTemple", 13, "tier2", 0.68, 12, 3, "ac", 3, true),
+		_s("S3_DreamVoid", 13, "tier2", 0.68, 12, 3, "ac", 3, true),
 		# Prog 13: Tier 2, -1pp (Act III boss — shared by Path A and C)
-		_s("S3_DreamSanctum", 14, "tier2", 0.67, 13, 3, "ac"),
+		_s("S3_DreamSanctum", 14, "tier2", 0.67, 13, 3, "ac", 3, true),
 		# Prog 14: Tier 2, -1pp (cult investigation — Path A only, Path C diverges)
-		_s("S3_CultUnderbelly", 15, "tier2", 0.66, 14, 3, "a"),
+		_s("S3_CultUnderbelly", 15, "tier2", 0.66, 14, 3, "a", 3, true),
 		# Prog 15: Tier 2, -1pp
-		_s("S3_CultCatacombs", 16, "tier2", 0.65, 15, 3, "a"),
+		_s("S3_CultCatacombs", 16, "tier2", 0.65, 15, 3, "a", 3, true),
 		# Prog 16: Tier 2, -2pp
-		_s("S3_CultRitualChamber", 17, "tier2", 0.63, 16, 3, "a"),
+		_s("S3_CultRitualChamber", 17, "tier2", 0.63, 16, 3, "a", 3, true),
 		# Prog 17: Tier 2, -1pp (final boss)
-		_s("S3_DreamNexus", 18, "tier2", 0.62, 17, 3, "a"),
+		_s("S3_DreamNexus", 18, "tier2", 0.62, 17, 3, "a", 3, true),
 		# --- Story 3 Path B: Suspicion route (branches at prog 11, same progs) ---
 		_s("S3_B_InnSearch", 12, "tier2", 0.69, 11, 3, "b"),
-		_s("S3_B_CultConfrontation", 13, "tier2", 0.68, 12, 3, "b"),
-		_s("S3_B_TunnelBreach", 14, "tier2", 0.67, 13, 3, "b"),
-		_s("S3_B_ThornesWard", 15, "tier2", 0.66, 14, 3, "b"),
-		_s("S3_B_LoomHeart", 16, "tier2", 0.65, 15, 3, "b"),
-		_s("S3_B_DreamInvasion", 17, "tier2", 0.63, 16, 3, "b"),
-		_s("S3_B_DreamNexus", 18, "tier2", 0.62, 17, 3, "b"),
+		_s("S3_B_CultConfrontation", 13, "tier2", 0.68, 12, 3, "b", 3),
+		_s("S3_B_TunnelBreach", 14, "tier2", 0.67, 13, 3, "b", 3, true),
+		_s("S3_B_ThornesWard", 15, "tier2", 0.66, 14, 3, "b", 3, true),
+		_s("S3_B_LoomHeart", 16, "tier2", 0.65, 15, 3, "b", 3, true),
+		_s("S3_B_DreamInvasion", 17, "tier2", 0.63, 16, 3, "b", 3, true),
+		_s("S3_B_DreamNexus", 18, "tier2", 0.62, 17, 3, "b", 3, true),
 		# --- Story 3 Path C: Lira's confession route (branches at prog 14) ---
-		_s("S3_C_DreamDescent", 15, "tier2", 0.66, 14, 3, "c"),
-		_s("S3_C_CultInterception", 16, "tier2", 0.65, 15, 3, "c"),
-		_s("S3_C_ThreadmasterLair", 17, "tier2", 0.63, 16, 3, "c"),
-		_s("S3_C_DreamNexus", 18, "tier2", 0.62, 17, 3, "c"),
+		_s("S3_C_DreamDescent", 15, "tier2", 0.66, 14, 3, "c", 3, true),
+		_s("S3_C_CultInterception", 16, "tier2", 0.65, 15, 3, "c", 3, true),
+		_s("S3_C_ThreadmasterLair", 17, "tier2", 0.63, 16, 3, "c", 3, true),
+		_s("S3_C_DreamNexus", 18, "tier2", 0.62, 17, 3, "c", 3, true),
 	]
 
 
 static func _s(n: String, lu: int, tier: String, target: float,
-		prog: int, story: int = 1, path: String = "") -> Dictionary:
+		prog: int, story: int = 1, path: String = "",
+		eu: int = -1, ult: bool = false) -> Dictionary:
+	var equip_ups := eu
+	if eu == -1:
+		match tier:
+			"base": equip_ups = 0
+			"tier1": equip_ups = 1
+			"tier2": equip_ups = 2
 	return {
 		"name": n, "level_ups": lu, "tier": tier,
 		"target_win_rate": target, "progression_stage": prog,
-		"story": story, "path": path,
+		"story": story, "path": path, "equip_upgrades": equip_ups,
+		"has_ultimate": ult,
 	}
 
 

@@ -5,6 +5,7 @@ class_name BattleEngine extends RefCounted
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityData := preload("res://scripts/data/ability_data.gd")
+const ItemData := preload("res://scripts/data/item_data.gd")
 const Enums := preload("res://scripts/data/enums.gd")
 
 signal combat_message(text: String)
@@ -16,11 +17,17 @@ signal battle_lost
 var units: Array = []      ## Player party (alive)
 var enemies: Array = []    ## Enemy team (alive)
 var dead_units: Array = [] ## Dead party members (revived at end)
+var enemy_shared_items: Array = []  ## Shared enemy item pool (like player inventory)
+var player_shared_items: Array = []  ## Shared player item pool for sim testing
+var player_items_used: int = 0  ## Counter for sim tracking
 
 var sim_mode: bool = false  ## Skip signal emissions for headless simulation
-var difficulty_level: int = 1  ## 0=easy, 1=normal, 2=hard. Set by caller.
-var _eff_diff: int = 1  ## Effective difficulty for current turn (player always 2)
+var difficulty_level: int = 1  ## Vestigial; AI is unified (score-based for all units).
+var _eff_diff: int = 1  ## Vestigial; only referenced in unused legacy AI path.
 var sim_stats: Dictionary = {}  ## Per-fighter combat stats (sim mode only)
+var trace_log: Array[String] = []  ## Per-action trace when trace_mode is on
+var trace_mode: bool = false
+var action_counts: Dictionary = {}  ## Action type tallies per side (sim mode)
 var _acting_units: Array = []
 
 
@@ -45,10 +52,11 @@ func start_battle_sim(party: Array, enemy_list: Array) -> void:
 	for f: FighterData in enemies:
 		f.reset_for_battle()
 	sim_stats.clear()
+	action_counts = {"player": {}, "enemy": {}}
 	for f: FighterData in units:
-		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0}
+		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0, ultimates_used = 0, charge_gained = 0}
 	for f: FighterData in enemies:
-		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0}
+		sim_stats[f] = {dmg_dealt = 0, dmg_taken = 0, heals = 0, died = false, dmg_mitigated = 0, buffs_applied = 0, debuffs_applied = 0, ultimates_used = 0, charge_gained = 0}
 
 
 ## Advance ATB timers by one tick. Returns true if any units can act.
@@ -162,9 +170,13 @@ func physical_attack(attacker: FighterData, defender: FighterData) -> void:
 	if not sim_mode:
 		combat_event.emit(attacker, mp_restore, "mp_restore")
 
+	# Ultimate charge: Attack grants 15
+	_add_ultimate_charge(attacker, 15)
+
 
 func use_ability_on_enemy(attacker: FighterData, defender: FighterData,
-		ability: AbilityData, skip_flavor: bool = false) -> void:
+		ability: AbilityData, skip_flavor: bool = false,
+		aoe_targets: int = 1) -> void:
 	if _check_for_ability_dodge(defender):
 		if not sim_mode:
 			combat_message.emit("[color=#b3b3b3]%s dodged %s's ability![/color]" % [
@@ -175,6 +187,8 @@ func use_ability_on_enemy(attacker: FighterData, defender: FighterData,
 	if ability.impacted_turns == 0:
 		# Instant damage
 		var damage: int = _calc_ability_damage(attacker, defender, ability)
+		if aoe_targets > 1:
+			damage = ceili(float(damage) / aoe_targets)
 		if damage < 0:
 			damage = 0
 		var is_crit: bool = _check_for_critical(attacker)
@@ -246,6 +260,9 @@ func use_ability_on_enemy(attacker: FighterData, defender: FighterData,
 				combat_message.emit("[color=#cc4dcc]%s was hit with this ability.[/color]" % defender.character_name)
 				combat_event.emit(defender, delta, "debuff")
 
+	# Ultimate charge: Offensive ability grants 5
+	_add_ultimate_charge(attacker, 5)
+
 
 func use_ability_on_teammate(caster: FighterData, target: FighterData,
 		ability: AbilityData, skip_flavor: bool = false) -> void:
@@ -271,24 +288,47 @@ func use_ability_on_teammate(caster: FighterData, target: FighterData,
 				target.character_name, heal_amount])
 			combat_event.emit(target, heal_amount, "heal")
 	else:
-		# Buff
-		var delta: int = _compute_buff_delta(
-			target, ability.modified_stat, ability.modifier)
-		target.modified_stats.append({
-			"stat": ability.modified_stat,
-			"modifier": delta,
-			"turns": ability.impacted_turns,
-			"is_negative": false,
-			"damage_per_turn": 0,
-		})
-		_modify_stats(target, ability.modified_stat, delta, false)
-		if sim_mode:
-			sim_stats[caster].buffs_applied += 1
-		if not sim_mode:
-			if not skip_flavor:
-				combat_message.emit(ability.flavor_text)
-			combat_message.emit("[color=#66ccff]%s was impacted by the ability.[/color]" % target.character_name)
-			combat_event.emit(target, delta, "buff")
+		if ability.damage_per_turn > 0:
+			# Regen (heal over time)
+			var hot_flat: int = maxi(1, floori(
+				float(target.max_health) * float(ability.damage_per_turn) / 100.0))
+			target.modified_stats.append({
+				"stat": ability.modified_stat,
+				"modifier": 0,
+				"turns": ability.impacted_turns,
+				"is_negative": false,
+				"damage_per_turn": hot_flat,
+			})
+			if sim_mode:
+				sim_stats[caster].buffs_applied += 1
+			else:
+				if not skip_flavor:
+					combat_message.emit(ability.flavor_text)
+				combat_message.emit("[color=#4dff66]%s will recover %d health per turn for %d turns.[/color]" % [
+					target.character_name, hot_flat, ability.impacted_turns])
+				combat_event.emit(target, hot_flat, "buff")
+		else:
+			# Stat buff
+			var delta: int = _compute_buff_delta(
+				target, ability.modified_stat, ability.modifier)
+			target.modified_stats.append({
+				"stat": ability.modified_stat,
+				"modifier": delta,
+				"turns": ability.impacted_turns,
+				"is_negative": false,
+				"damage_per_turn": 0,
+			})
+			_modify_stats(target, ability.modified_stat, delta, false)
+			if sim_mode:
+				sim_stats[caster].buffs_applied += 1
+			if not sim_mode:
+				if not skip_flavor:
+					combat_message.emit(ability.flavor_text)
+				combat_message.emit("[color=#66ccff]%s was impacted by the ability.[/color]" % target.character_name)
+				combat_event.emit(target, delta, "buff")
+
+	# Ultimate charge: Supportive ability grants 5
+	_add_ultimate_charge(caster, 5)
 
 
 func _calc_ability_damage(attacker: FighterData, defender: FighterData,
@@ -344,6 +384,9 @@ func perform_block(blocker: FighterData) -> void:
 		combat_message.emit("[color=#66b3ff]%s braces for impact.[/color]" % blocker.character_name)
 		combat_event.emit(blocker, mp_restore, "block")
 
+	# Ultimate charge: Block grants 10
+	_add_ultimate_charge(blocker, 10)
+
 
 func perform_rest(unit: FighterData) -> void:
 	var mp_restore: int = maxi(2, floori(unit.magic_attack / 7) * 2)
@@ -355,6 +398,156 @@ func perform_rest(unit: FighterData) -> void:
 	else:
 		combat_message.emit("[color=#80cc66]%s takes a moment to rest.[/color]" % unit.character_name)
 		combat_event.emit(unit, mp_restore, "rest")
+
+	# Ultimate charge: Rest grants 20
+	_add_ultimate_charge(unit, 20)
+
+
+func use_item(user: FighterData, target: FighterData, item: ItemData) -> void:
+	match item.effect_type:
+		Enums.ItemEffect.HEAL_HP:
+			var heal_amount: int = int(target.max_health * item.magnitude / 100.0)
+			var healed: int = mini(heal_amount, target.max_health - target.health)
+			target.health += healed
+			if sim_mode:
+				sim_stats[user].heals += healed
+			else:
+				combat_message.emit("[color=#4dff66]%s used %s on %s, restoring %d HP.[/color]" % [
+					user.character_name, item.item_name, target.character_name, healed])
+				combat_event.emit(target, healed, "heal")
+		Enums.ItemEffect.HEAL_MP:
+			var restored: int = mini(item.magnitude, target.max_mana - target.mana)
+			target.mana += restored
+			if not sim_mode:
+				combat_message.emit("[color=#66b3ff]%s used %s on %s, restoring %d MP.[/color]" % [
+					user.character_name, item.item_name, target.character_name, restored])
+				combat_event.emit(target, restored, "rest")
+		Enums.ItemEffect.CURE_DEBUFF:
+			var removed: int = 0
+			var max_remove: int = item.magnitude if item.magnitude > 0 else 999
+			var to_remove: Array[int] = []
+			for i: int in target.modified_stats.size():
+				if target.modified_stats[i]["is_negative"]:
+					to_remove.append(i)
+					if to_remove.size() >= max_remove:
+						break
+			for i: int in range(to_remove.size() - 1, -1, -1):
+				target._revert_mod(target.modified_stats[to_remove[i]])
+				target.modified_stats.remove_at(to_remove[i])
+				removed += 1
+			if not sim_mode:
+				combat_message.emit("[color=#4dff66]%s used %s on %s, clearing %d debuff(s).[/color]" % [
+					user.character_name, item.item_name, target.character_name, removed])
+				combat_event.emit(target, removed, "cure")
+		Enums.ItemEffect.BUFF:
+			var is_debuff := not item.target_ally
+			var targets: Array = [target]
+			if item.target_all:
+				if is_debuff:
+					var user_opponents: Array = enemies if user in units else units
+					targets = user_opponents.duplicate()
+				else:
+					var user_allies: Array = units if user in units else enemies
+					targets = user_allies.duplicate()
+			for t: FighterData in targets:
+				var delta: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
+				t.modified_stats.append({
+					"stat": item.stat_type,
+					"modifier": delta,
+					"turns": item.duration,
+					"is_negative": is_debuff,
+					"damage_per_turn": 0,
+				})
+				_modify_stats(t, item.stat_type, delta, is_debuff)
+			if not sim_mode:
+				if is_debuff:
+					combat_message.emit("[color=#cc4dcc]%s used %s![/color]" % [
+						user.character_name, item.item_name])
+					combat_event.emit(target, abs(item.magnitude), "debuff")
+				else:
+					combat_message.emit("[color=#66ccff]%s used %s![/color]" % [
+						user.character_name, item.item_name])
+					combat_event.emit(target, abs(item.magnitude), "buff")
+		Enums.ItemEffect.DAMAGE:
+			var targets: Array = [target]
+			if item.target_all:
+				var user_opponents: Array = enemies if user in units else units
+				targets = user_opponents.duplicate()
+			for t: FighterData in targets:
+				t.health = maxi(0, t.health - item.magnitude)
+				if sim_mode:
+					sim_stats[user].dmg_dealt += item.magnitude
+				else:
+					combat_event.emit(t, item.magnitude, "spell_damage")
+			if not sim_mode:
+				combat_message.emit("[color=#ff6666]%s used %s![/color]" % [
+					user.character_name, item.item_name])
+
+
+## Add ultimate charge to a fighter (player-controlled only).
+func _add_ultimate_charge(fighter: FighterData, amount: int) -> void:
+	if fighter.ultimate == null:
+		return
+	if not fighter.is_user_controlled and not sim_mode:
+		return
+	var old_charge: int = fighter.ultimate_charge
+	fighter.ultimate_charge = mini(fighter.ultimate_charge + amount, fighter.ultimate.charge_cost)
+	if sim_mode:
+		sim_stats[fighter].charge_gained += fighter.ultimate_charge - old_charge
+	elif fighter.ultimate_charge > old_charge:
+		combat_event.emit(fighter, fighter.ultimate_charge - old_charge, "charge_gain")
+
+
+## Execute a fighter's ultimate ability. Resets charge to 0.
+func use_ultimate(user: FighterData, target: FighterData) -> void:
+	var ult: RefCounted = user.ultimate
+	if ult == null:
+		return
+	user.ultimate_charge = 0
+	if sim_mode:
+		sim_stats[user].ultimates_used += 1
+	else:
+		combat_message.emit("[color=#ffc822]%s unleashes %s![/color]" % [
+			user.character_name, ult.ultimate_name])
+
+	var abil: AbilityData = ult.ability
+	if abil.use_on_enemy:
+		if abil.target_all:
+			var targets: Array = enemies if user in units else units
+			var alive_count: int = targets.size()
+			for t: FighterData in targets.duplicate():
+				if t.health > 0:
+					use_ability_on_enemy(user, t, abil, true, alive_count)
+		else:
+			use_ability_on_enemy(user, target, abil, true)
+	else:
+		if abil.target_all:
+			var allies: Array = units if user in units else enemies
+			for ally: FighterData in allies.duplicate():
+				if ally.health > 0:
+					use_ability_on_teammate(user, ally, abil, true)
+		else:
+			use_ability_on_teammate(user, target, abil, true)
+
+
+func _pick_ultimate_target(user: FighterData, targets: Array,
+		allies: Array) -> FighterData:
+	## Choose a target for AI ultimate usage. For offensive ultimates, pick the
+	## lowest-HP enemy. For supportive ultimates, pick the most wounded ally.
+	## AoE ultimates ignore the target in use_ultimate, so any valid pick works.
+	var abil: AbilityData = user.ultimate.ability
+	if abil.use_on_enemy:
+		var best: FighterData = targets[0]
+		for t: FighterData in targets:
+			if t.health < best.health:
+				best = t
+		return best
+	else:
+		var best: FighterData = user
+		for ally: FighterData in allies:
+			if ally.health > 0 and ally.health < best.health:
+				best = ally
+		return best
 
 
 func _has_defense_buff(fighter: FighterData) -> bool:
@@ -372,7 +565,8 @@ func _has_defense_buff(fighter: FighterData) -> bool:
 ## DODGE_CHANCE and TAUNT stay flat -- their modifiers are already absolute values.
 func _compute_buff_delta(fighter: FighterData, stat: Enums.StatType,
 		percent: int) -> int:
-	if stat == Enums.StatType.DODGE_CHANCE or stat == Enums.StatType.TAUNT:
+	if stat == Enums.StatType.DODGE_CHANCE or stat == Enums.StatType.TAUNT \
+			or stat == Enums.StatType.CRIT_CHANCE or stat == Enums.StatType.CRIT:
 		return percent
 	var base_stat: int
 	match stat:
@@ -402,18 +596,29 @@ func _modify_stats(fighter: FighterData, stat: Enums.StatType,
 
 func reset_modified_stat(fighter: FighterData) -> void:
 	var to_remove: Array[int] = []
+	var total_dot_damage: int = 0
+	var total_hot_heal: int = 0
 
 	for i: int in fighter.modified_stats.size():
 		var mod: Dictionary = fighter.modified_stats[i]
 
 		if mod.get("damage_per_turn", 0) > 0:
-			fighter.health -= mod["damage_per_turn"]
-			if sim_mode:
-				sim_stats[fighter].dmg_taken += mod["damage_per_turn"]
+			if mod["is_negative"]:
+				fighter.health -= mod["damage_per_turn"]
+				if sim_mode:
+					sim_stats[fighter].dmg_taken += mod["damage_per_turn"]
+				else:
+					total_dot_damage += mod["damage_per_turn"]
+					combat_event.emit(fighter, mod["damage_per_turn"], "damage")
 			else:
-				combat_message.emit("[color=#cc4dcc]%s takes %d damage from a lingering effect.[/color]" % [
-					fighter.character_name, mod["damage_per_turn"]])
-				combat_event.emit(fighter, mod["damage_per_turn"], "damage")
+				var heal: int = mini(mod["damage_per_turn"],
+					fighter.max_health - fighter.health)
+				fighter.health += heal
+				if sim_mode:
+					sim_stats[fighter].heals += heal
+				else:
+					total_hot_heal += heal
+					combat_event.emit(fighter, heal, "heal")
 
 		if mod["turns"] == 0:
 			if mod.get("damage_per_turn", 0) == 0:
@@ -421,6 +626,14 @@ func reset_modified_stat(fighter: FighterData) -> void:
 			to_remove.append(i)
 		else:
 			mod["turns"] -= 1
+
+	if not sim_mode:
+		if total_dot_damage > 0:
+			combat_message.emit("[color=#cc4dcc]%s takes %d damage from lingering effects.[/color]" % [
+				fighter.character_name, total_dot_damage])
+		if total_hot_heal > 0:
+			combat_message.emit("[color=#4dff66]%s recovers %d health from lingering effects.[/color]" % [
+				fighter.character_name, total_hot_heal])
 
 	for offset: int in to_remove.size():
 		fighter.modified_stats.remove_at(to_remove[offset] - offset)
@@ -517,18 +730,221 @@ func _has_modifier(fighter: FighterData, stat: Enums.StatType,
 
 
 # =============================================================================
+# AI: Enemy Item Usage
+# =============================================================================
+
+func _try_enemy_item(unit: FighterData, targets: Array,
+		allies: Array) -> bool:
+	## Try using a shared enemy item. Returns true if an item was consumed.
+	## Only the lowest-offense enemy uses items (support role).
+	if enemy_shared_items.is_empty():
+		return false
+	var unit_offense := unit.physical_attack + unit.magic_attack
+	for ally: FighterData in allies:
+		if ally.health > 0 and (ally.physical_attack + ally.magic_attack) < unit_offense:
+			return false
+
+	# Priority 1: Cure debuffs if 2+ debuffs (25% chance)
+	if randf() < 0.25:
+		var debuff_count: int = 0
+		for mod: Dictionary in unit.modified_stats:
+			if mod["is_negative"]:
+				debuff_count += 1
+		if debuff_count >= 2:
+			var idx: int = _find_shared_item(Enums.ItemEffect.CURE_DEBUFF)
+			if idx >= 0:
+				return _consume_shared_item(unit, unit, idx)
+
+	# Priority 2: Buff best ally if unbuffed (25% chance)
+	if randf() < 0.25:
+		for i: int in enemy_shared_items.size():
+			var item: ItemData = enemy_shared_items[i]
+			if item.effect_type == Enums.ItemEffect.BUFF and item.target_ally \
+					and item.magnitude > 0:
+				if item.target_all:
+					var any_unbuffed: bool = false
+					for ally: FighterData in allies:
+						if ally.health > 0 and not _has_modifier(ally, item.stat_type, false):
+							any_unbuffed = true
+							break
+					if any_unbuffed:
+						return _consume_shared_item(unit, unit, i)
+				else:
+					var best: FighterData = _best_item_buff_target(allies, item)
+					if best != null:
+						return _consume_shared_item(unit, best, i)
+
+	# Priority 3: Debuff strongest enemy (25% chance)
+	if randf() < 0.25:
+		for i: int in enemy_shared_items.size():
+			var item: ItemData = enemy_shared_items[i]
+			if item.effect_type == Enums.ItemEffect.BUFF and not item.target_ally:
+				var target_list: Array = units if unit in enemies else enemies
+				if not target_list.is_empty():
+					if item.target_all:
+						return _consume_shared_item(unit, target_list[0], i)
+					var best: FighterData = _best_debuff_item_target(target_list, item)
+					if best != null and not _has_modifier(best, item.stat_type, true):
+						return _consume_shared_item(unit, best, i)
+
+	# Priority 4: Use damage item on enemy (25% chance)
+	if randf() < 0.25:
+		for i: int in enemy_shared_items.size():
+			var item: ItemData = enemy_shared_items[i]
+			if item.effect_type == Enums.ItemEffect.DAMAGE and not item.target_ally:
+				var target_list: Array = units if unit in enemies else enemies
+				if not target_list.is_empty():
+					var target: FighterData = target_list[randi() % target_list.size()]
+					return _consume_shared_item(unit, target, i)
+
+	return false
+
+
+func _best_item_buff_target(allies: Array, item: ItemData) -> FighterData:
+	var best: FighterData = null
+	var best_score := -1.0
+	for ally: FighterData in allies:
+		if ally.health <= 0 or _has_modifier(ally, item.stat_type, false):
+			continue
+		var score := _stat_relevance(ally, item.stat_type, true)
+		if score > best_score:
+			best_score = score
+			best = ally
+	return best
+
+
+func _best_debuff_item_target(targets: Array, item: ItemData) -> FighterData:
+	var best: FighterData = null
+	var best_score := -1.0
+	for t: FighterData in targets:
+		if t.health <= 0:
+			continue
+		var score := _stat_relevance(t, item.stat_type, false)
+		if score > best_score:
+			best_score = score
+			best = t
+	return best
+
+
+func _find_shared_item(effect: Enums.ItemEffect) -> int:
+	for i: int in enemy_shared_items.size():
+		var item: ItemData = enemy_shared_items[i]
+		if item.target_ally and item.effect_type == effect:
+			return i
+	return -1
+
+
+func _consume_shared_item(unit: FighterData, target: FighterData, index: int) -> bool:
+	var item: ItemData = enemy_shared_items[index]
+	enemy_shared_items.remove_at(index)
+	use_item(unit, target, item)
+	return true
+
+
+# =============================================================================
+# Player Item AI (deterministic, for sim power-level testing)
+# =============================================================================
+
+func _try_player_item(unit: FighterData, targets: Array,
+		allies: Array) -> bool:
+	if player_shared_items.is_empty():
+		return false
+	var unit_offense := unit.physical_attack + unit.magic_attack
+	for ally: FighterData in allies:
+		if ally.health > 0 and (ally.physical_attack + ally.magic_attack) < unit_offense:
+			return false
+
+	# Priority 1: Cure debuffs if 2+
+	var debuff_count: int = 0
+	for mod: Dictionary in unit.modified_stats:
+		if mod["is_negative"]:
+			debuff_count += 1
+	if debuff_count >= 2:
+		var idx: int = _find_player_item(Enums.ItemEffect.CURE_DEBUFF)
+		if idx >= 0:
+			return _consume_player_item(unit, unit, idx)
+
+	# Priority 2: Buff best ally if unbuffed
+	for i: int in player_shared_items.size():
+		var item: ItemData = player_shared_items[i]
+		if item.effect_type == Enums.ItemEffect.BUFF and item.target_ally \
+				and item.magnitude > 0:
+			if item.target_all:
+				var any_unbuffed: bool = false
+				for ally: FighterData in allies:
+					if ally.health > 0 and not _has_modifier(ally, item.stat_type, false):
+						any_unbuffed = true
+						break
+				if any_unbuffed:
+					return _consume_player_item(unit, unit, i)
+			else:
+				var best: FighterData = _best_item_buff_target(allies, item)
+				if best != null:
+					return _consume_player_item(unit, best, i)
+
+	# Priority 3: Debuff strongest enemy
+	for i: int in player_shared_items.size():
+		var item: ItemData = player_shared_items[i]
+		if item.effect_type == Enums.ItemEffect.BUFF and not item.target_ally:
+			if not targets.is_empty():
+				if item.target_all:
+					return _consume_player_item(unit, targets[0], i)
+				var best: FighterData = _best_debuff_item_target(targets, item)
+				if best != null and not _has_modifier(best, item.stat_type, true):
+					return _consume_player_item(unit, best, i)
+
+	# Priority 4: Use damage item on enemy
+	for i: int in player_shared_items.size():
+		var item: ItemData = player_shared_items[i]
+		if item.effect_type == Enums.ItemEffect.DAMAGE and not item.target_ally:
+			if not targets.is_empty():
+				var target: FighterData = targets[randi() % targets.size()]
+				return _consume_player_item(unit, target, i)
+
+	return false
+
+
+func _find_player_item(effect: Enums.ItemEffect) -> int:
+	for i: int in player_shared_items.size():
+		var item: ItemData = player_shared_items[i]
+		if item.target_ally and item.effect_type == effect:
+			return i
+	return -1
+
+
+func _consume_player_item(unit: FighterData, target: FighterData, index: int) -> bool:
+	var item: ItemData = player_shared_items[index]
+	player_shared_items.remove_at(index)
+	use_item(unit, target, item)
+	player_items_used += 1
+	return true
+
+
+# =============================================================================
 # AI: port of C# ExecuteAITurn
 # =============================================================================
+
+func _trace(msg: String) -> void:
+	if trace_mode:
+		trace_log.append(msg)
+
+
+func _count_action(unit: FighterData, action_type: String) -> void:
+	if not sim_mode:
+		return
+	var side: String = "player" if unit in units else "enemy"
+	var bucket: Dictionary = action_counts.get(side, {})
+	bucket[action_type] = bucket.get(action_type, 0) + 1
+	action_counts[side] = bucket
+
 
 func execute_ai_turn(unit: FighterData, targets: Array,
 		allies: Array) -> void:
 	if targets.is_empty():
 		return
-	# Player auto-battle always uses full smart AI; enemies use difficulty setting
-	_eff_diff = 2 if unit.is_user_controlled else difficulty_level
-	if _eff_diff > 0:
-		_execute_smart_ai_turn(unit, targets, allies)
-		return
+	_execute_smart_ai_turn(unit, targets, allies)
+	return
+
 	var affordable: Array[AbilityData] = []
 	var heal_abilities: Array[AbilityData] = []
 	var buff_abilities: Array[AbilityData] = []
@@ -645,7 +1061,11 @@ func execute_ai_turn(unit: FighterData, targets: Array,
 				perform_rest(unit)
 				return
 
-	# Priority 2.75: Prefer life steal when wounded
+	# Priority 2.75: Battle items (alongside block/rest)
+	if _try_enemy_item(unit, targets, allies):
+		return
+
+	# Priority 2.8: Prefer life steal when wounded
 	if hp_pct < 0.7 and not offensive_abilities.is_empty():
 		var steal_abilities: Array[AbilityData] = []
 		for a: AbilityData in offensive_abilities:
@@ -677,7 +1097,7 @@ func execute_ai_turn(unit: FighterData, targets: Array,
 			if not sim_mode:
 				combat_message.emit(ability.flavor_text)
 			for target: FighterData in targets:
-				use_ability_on_enemy(unit, target, ability, true)
+				use_ability_on_enemy(unit, target, ability, true, targets.size())
 		else:
 			var target: FighterData
 			if ability.impacted_turns > 0:
@@ -762,6 +1182,42 @@ func _stat_relevance(fighter: FighterData, stat: Enums.StatType,
 			return float(fighter.physical_attack + fighter.magic_attack)
 
 
+func _damage_magic_ratio(fighter: FighterData) -> float:
+	var phys: int = 1
+	var magic: int = 0
+	for a: AbilityData in fighter.abilities:
+		if not a.use_on_enemy or a.impacted_turns > 0:
+			continue
+		match a.modified_stat:
+			Enums.StatType.PHYSICAL_ATTACK:
+				phys += 1
+			Enums.StatType.MAGIC_ATTACK:
+				magic += 1
+			Enums.StatType.MIXED_ATTACK:
+				phys += 1; magic += 1
+	return float(magic) / float(maxi(1, phys + magic))
+
+
+func _team_damage_magic_ratio(fighters: Array) -> float:
+	var total: float = 0.0
+	var count: int = 0
+	for f: FighterData in fighters:
+		if f.health > 0:
+			total += _damage_magic_ratio(f)
+			count += 1
+	return total / float(maxi(1, count))
+
+
+func _dmg_type_relevance(stat: Enums.StatType, magic_ratio: float) -> float:
+	match stat:
+		Enums.StatType.PHYSICAL_DEFENSE, Enums.StatType.PHYSICAL_ATTACK:
+			return 1.0 - magic_ratio
+		Enums.StatType.MAGIC_DEFENSE, Enums.StatType.MAGIC_ATTACK:
+			return magic_ratio
+		_:
+			return 1.0
+
+
 func _find_min_health(targets: Array) -> FighterData:
 	if targets.is_empty():
 		return null
@@ -795,8 +1251,19 @@ func _weighted_pick(abilities: Array[AbilityData]) -> AbilityData:
 	return abilities[abilities.size() - 1]
 
 
+func _has_affordable_aoe(offensive_abilities: Array[AbilityData],
+		target_count: int) -> bool:
+	if target_count < 2:
+		return false
+	for a: AbilityData in offensive_abilities:
+		if a.target_all:
+			return true
+	return false
+
+
 func _choose_offensive_ability(unit: FighterData,
-		offensive_abilities: Array[AbilityData], magic_ratio: float) -> AbilityData:
+		offensive_abilities: Array[AbilityData], magic_ratio: float,
+		target_count: int = 1) -> AbilityData:
 	var preferred: Enums.StatType = Enums.StatType.MAGIC_ATTACK \
 		if magic_ratio > 0.5 else Enums.StatType.PHYSICAL_ATTACK
 	var preferred_list: Array[AbilityData] = []
@@ -805,9 +1272,16 @@ func _choose_offensive_ability(unit: FighterData,
 		if a.modified_stat == preferred or a.modified_stat == Enums.StatType.MIXED_ATTACK:
 			preferred_list.append(a)
 
-	if not preferred_list.is_empty():
-		return _weighted_pick(preferred_list)
-	return _weighted_pick(offensive_abilities)
+	var pool: Array[AbilityData] = preferred_list if not preferred_list.is_empty() \
+		else offensive_abilities
+	if target_count >= 2:
+		var aoe_pool: Array[AbilityData] = []
+		for a: AbilityData in pool:
+			if a.target_all:
+				aoe_pool.append(a)
+		if not aoe_pool.is_empty() and randf() < 0.8:
+			return _weighted_pick(aoe_pool)
+	return _weighted_pick(pool)
 
 
 # =============================================================================
@@ -816,6 +1290,24 @@ func _choose_offensive_ability(unit: FighterData,
 
 func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		allies: Array) -> void:
+	var _tu: String = unit.character_name if trace_mode else ""
+	var _tc: String = unit.character_type if trace_mode else ""
+	# Priority 0: Use ultimate if charged
+	if unit.ultimate and unit.ultimate_charge >= unit.ultimate.charge_cost:
+		var best: FighterData = _pick_ultimate_target(unit, targets, allies)
+		_trace("%s (%s): ULTIMATE -> %s" % [_tu, _tc, best.character_name])
+		use_ultimate(unit, best)
+		return
+
+	# Score-based AI for all smart units (T1/T2 enemies + player auto-battle)
+	_execute_score_ai_turn(unit, targets, allies)
+
+
+func _execute_old_priority_ai(unit: FighterData, targets: Array,
+		allies: Array) -> void:
+	# Legacy priority system preserved below but no longer called.
+	var _tu: String = unit.character_name if trace_mode else ""
+	var _tc: String = unit.character_type if trace_mode else ""
 	# -- Classify abilities --
 	var heal_abilities: Array[AbilityData] = []
 	var buff_abilities: Array[AbilityData] = []
@@ -869,6 +1361,9 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 			if not eligible.is_empty():
 				var heal: AbilityData = _weighted_pick(eligible)
 				unit.mana -= heal.mana_cost
+				var _ht: String = "ALL" if heal.target_all else wounded.character_name
+				_trace("%s (%s): HEAL %s -> %s (HP %d/%d)" % [
+					_tu, _tc, heal.ability_name, _ht, wounded.health, wounded.max_health])
 				if heal.target_all:
 					if not sim_mode:
 						combat_message.emit(heal.flavor_text)
@@ -887,6 +1382,7 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 		var taunt_chance: float = tank_ratio * (targets.size() / 3.0)
 		if randf() < taunt_chance:
 			unit.mana -= taunt_ability.mana_cost
+			_trace("%s (%s): TAUNT" % [_tu, _tc])
 			use_ability_on_teammate(unit, unit, taunt_ability)
 			return
 
@@ -919,13 +1415,16 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 						best_debuff_score = score
 						best_debuff = d
 						best_debuff_target = t
-		if best_debuff != null and randf() < 0.4:
+		var debuff_chance := 0.1 if _has_affordable_aoe(offensive_abilities, targets.size()) else 0.4
+		if best_debuff != null and randf() < debuff_chance:
 			unit.mana -= best_debuff.mana_cost
+			var _dt: String = "ALL" if best_debuff.target_all else best_debuff_target.character_name
+			_trace("%s (%s): DEBUFF %s -> %s" % [_tu, _tc, best_debuff.ability_name, _dt])
 			if best_debuff.target_all:
 				if not sim_mode:
 					combat_message.emit(best_debuff.flavor_text)
 				for t: FighterData in targets:
-					use_ability_on_enemy(unit, t, best_debuff, true)
+					use_ability_on_enemy(unit, t, best_debuff, true, targets.size())
 			else:
 				use_ability_on_enemy(unit, best_debuff_target, best_debuff)
 			return
@@ -946,6 +1445,7 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 							break
 					if any_unbuffed:
 						unit.mana -= buff.mana_cost
+						_trace("%s (%s): BUFF %s -> ALL" % [_tu, _tc, buff.ability_name])
 						if not sim_mode:
 							combat_message.emit(buff.flavor_text)
 						for ally: FighterData in allies:
@@ -956,6 +1456,7 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 					var buff_target := _best_buff_target(allies, buff)
 					if buff_target != null:
 						unit.mana -= buff.mana_cost
+						_trace("%s (%s): BUFF %s -> %s" % [_tu, _tc, buff.ability_name, buff_target.character_name])
 						use_ability_on_teammate(unit, buff_target, buff)
 						return
 
@@ -965,12 +1466,22 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 
 	if hp_pct < 0.35 and not _has_defense_buff(unit):
 		if randf() < 0.25:
+			_trace("%s (%s): BLOCK (HP %.0f%%)" % [_tu, _tc, hp_pct * 100])
 			perform_block(unit)
 			return
 
 	if mp_pct < 0.3 and hp_pct >= 0.35:
 		if randf() < 0.25:
+			_trace("%s (%s): REST (MP %.0f%%)" % [_tu, _tc, mp_pct * 100])
 			perform_rest(unit)
+			return
+
+	# -- Priority 4.5: Battle items --
+	if unit in units:
+		if _try_player_item(unit, targets, allies):
+			return
+	else:
+		if _try_enemy_item(unit, targets, allies):
 			return
 
 	# -- Priority 5: Life steal when wounded --
@@ -983,12 +1494,15 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 			var ability: AbilityData = _weighted_pick(steal_abilities)
 			unit.mana -= ability.mana_cost
 			var target: FighterData = _smart_choose_target(unit, targets, magic_ratio)
+			_trace("%s (%s): LIFESTEAL %s -> %s" % [_tu, _tc, ability.ability_name, target.character_name])
 			use_ability_on_enemy(unit, target, ability)
 			return
 
 	# -- Priority 6: Offense --
 	var ability_chance: float = magic_ratio
-	if magic_ratio < 0.4 and not offensive_abilities.is_empty():
+	if _has_affordable_aoe(offensive_abilities, targets.size()):
+		ability_chance = maxf(ability_chance, 0.85)
+	elif magic_ratio < 0.4 and not offensive_abilities.is_empty():
 		for a: AbilityData in offensive_abilities:
 			if a.modified_stat == Enums.StatType.PHYSICAL_ATTACK \
 					or a.modified_stat == Enums.StatType.MIXED_ATTACK:
@@ -1003,23 +1517,727 @@ func _execute_smart_ai_turn(unit: FighterData, targets: Array,
 
 	if use_ability:
 		var ability: AbilityData = _choose_offensive_ability(
-			unit, all_offensive, magic_ratio)
+			unit, all_offensive, magic_ratio, targets.size())
 		unit.mana -= ability.mana_cost
 		if ability.target_all:
+			_trace("%s (%s): AOE %s -> ALL (%d targets)" % [_tu, _tc, ability.ability_name, targets.size()])
 			if not sim_mode:
 				combat_message.emit(ability.flavor_text)
 			for target: FighterData in targets:
-				use_ability_on_enemy(unit, target, ability, true)
+				use_ability_on_enemy(unit, target, ability, true, targets.size())
 		else:
 			var target: FighterData
 			if ability.impacted_turns > 0:
 				target = _best_debuff_target(targets, ability)
+				_trace("%s (%s): DEBUFF-ATK %s -> %s" % [_tu, _tc, ability.ability_name, target.character_name])
 			else:
 				target = _smart_choose_target(unit, targets, magic_ratio)
+				_trace("%s (%s): ABILITY %s -> %s (HP %d/%d)" % [_tu, _tc, ability.ability_name, target.character_name, target.health, target.max_health])
 			use_ability_on_enemy(unit, target, ability)
 	else:
 		var target: FighterData = _smart_choose_target(unit, targets, magic_ratio)
+		_trace("%s (%s): PHYS_ATK -> %s (HP %d/%d)" % [_tu, _tc, target.character_name, target.health, target.max_health])
 		physical_attack(unit, target)
+
+
+func _execute_score_ai_turn(unit: FighterData, targets: Array,
+		allies: Array) -> void:
+	var _tu: String = unit.character_name if trace_mode else ""
+	var _tc: String = unit.character_type if trace_mode else ""
+
+	# -- Classify abilities --
+	var heal_abilities: Array[AbilityData] = []
+	var buff_abilities: Array[AbilityData] = []
+	var offensive_abilities: Array[AbilityData] = []
+	var debuff_abilities: Array[AbilityData] = []
+	var taunt_ability: AbilityData = null
+	var cheapest_cost: int = 999
+
+	for a: AbilityData in unit.abilities:
+		if a.mana_cost < cheapest_cost:
+			cheapest_cost = a.mana_cost
+		if a.mana_cost > unit.mana:
+			continue
+		if a.use_on_enemy:
+			if a.impacted_turns > 0:
+				debuff_abilities.append(a)
+			else:
+				offensive_abilities.append(a)
+		elif a.impacted_turns == 0:
+			heal_abilities.append(a)
+		elif a.modified_stat == Enums.StatType.TAUNT:
+			taunt_ability = a
+		else:
+			buff_abilities.append(a)
+
+	var enemy_magic_ratio: float = _team_damage_magic_ratio(targets)
+	var ally_magic_ratio: float = _team_damage_magic_ratio(allies)
+	var alive_allies: int = 0
+	for _a: FighterData in allies:
+		if _a.health > 0:
+			alive_allies += 1
+
+	var buff_outnumber_mult: float = minf(1.5,
+		1.0 + maxf(0.0, float(targets.size() - allies.size())) * 0.25)
+
+	var candidates: Array[Dictionary] = []
+	var best_score: float = -1.0
+	var best_type: String = ""
+	var best_ability: AbilityData = null
+	var best_target: FighterData = null
+	var best_item_idx: int = -1
+
+	# -- Score heals --
+	for heal: AbilityData in heal_abilities:
+		for ally: FighterData in allies:
+			if ally.health <= 0:
+				continue
+			var hp_frac: float = float(ally.health) / float(ally.max_health)
+			if hp_frac >= heal.heal_threshold:
+				continue
+			var heal_amount: int
+			if heal.modified_stat == Enums.StatType.MIXED_ATTACK:
+				heal_amount = heal.modifier + (unit.physical_attack + unit.magic_attack) / 4
+			else:
+				heal_amount = heal.modifier + unit.magic_attack / 2
+			heal_amount = maxi(0, heal_amount)
+			var score: float = float(heal_amount)
+			if hp_frac < 0.25:
+				score *= 2.0
+			if heal.target_all:
+				var total: float = 0.0
+				for a2: FighterData in allies:
+					if a2.health > 0 and a2.health < a2.max_health:
+						var f2: float = float(a2.health) / float(a2.max_health)
+						var s2: float = float(heal_amount)
+						if f2 < 0.25:
+							s2 *= 2.0
+						total += s2
+				score = total
+			if score > 1.0:
+				candidates.append({"score": score, "type": "HEAL",
+					"ability": heal, "target": ally, "item_idx": -1})
+				if score > best_score:
+					best_score = score
+					best_type = "HEAL"
+					best_ability = heal
+					best_target = ally
+
+	# -- Score buffs --
+	var offense_stats: Array = [
+		Enums.StatType.ATTACK, Enums.StatType.PHYSICAL_ATTACK,
+		Enums.StatType.MAGIC_ATTACK, Enums.StatType.MIXED_ATTACK,
+		Enums.StatType.CRIT, Enums.StatType.CRIT_CHANCE,
+	]
+	var defense_stats: Array = [
+		Enums.StatType.DEFENSE, Enums.StatType.PHYSICAL_DEFENSE,
+		Enums.StatType.MAGIC_DEFENSE,
+	]
+	for buff: AbilityData in buff_abilities:
+		if buff.damage_per_turn > 0:
+			# Regen buff: score as heal over time
+			for ally: FighterData in allies:
+				if ally.health <= 0:
+					continue
+				var hp_frac: float = float(ally.health) / float(ally.max_health)
+				var hot_flat: int = maxi(1, floori(
+					float(ally.max_health) * float(buff.damage_per_turn) / 100.0))
+				var score: float = float(hot_flat * buff.impacted_turns)
+				if hp_frac < 0.25:
+					score *= 2.0
+				if buff.target_all:
+					var total: float = 0.0
+					for a2: FighterData in allies:
+						if a2.health > 0:
+							var f2: float = float(a2.health) / float(a2.max_health)
+							var s2: float = float(hot_flat * buff.impacted_turns)
+							if f2 < 0.25:
+								s2 *= 2.0
+							total += s2
+					score = total
+				if score > 1.0:
+					candidates.append({"score": score, "type": "BUFF",
+						"ability": buff, "target": ally, "item_idx": -1})
+					if score > best_score:
+						best_score = score
+						best_type = "BUFF"
+						best_ability = buff
+						best_target = ally
+			continue
+
+		var is_offense: bool = buff.modified_stat in offense_stats
+		var is_defense: bool = buff.modified_stat in defense_stats
+		var is_speed: bool = buff.modified_stat == Enums.StatType.SPEED
+
+		if buff.target_all:
+			var total: float = 0.0
+			for ally: FighterData in allies:
+				if ally.health <= 0:
+					continue
+				var delta: int = _compute_buff_delta(ally, buff.modified_stat, buff.modifier)
+				var s: float = float(delta) * float(buff.impacted_turns)
+				if is_offense:
+					s *= _dmg_type_relevance(buff.modified_stat, _damage_magic_ratio(ally))
+				elif is_defense:
+					s *= buff_outnumber_mult
+					s *= _dmg_type_relevance(buff.modified_stat, enemy_magic_ratio)
+				elif is_speed:
+					s *= 0.5
+				if _has_modifier(ally, buff.modified_stat, false):
+					s *= 0.25
+				total += s
+			if total > 1.0:
+				candidates.append({"score": total, "type": "BUFF",
+					"ability": buff, "target": allies[0], "item_idx": -1})
+				if total > best_score:
+					best_score = total
+					best_type = "BUFF"
+					best_ability = buff
+					best_target = allies[0]
+		else:
+			for ally: FighterData in allies:
+				if ally.health <= 0:
+					continue
+				var delta: int = _compute_buff_delta(ally, buff.modified_stat, buff.modifier)
+				var score: float = float(delta) * float(buff.impacted_turns)
+				if is_offense:
+					score *= _dmg_type_relevance(buff.modified_stat, _damage_magic_ratio(ally))
+				elif is_defense:
+					score *= buff_outnumber_mult
+					score *= _dmg_type_relevance(buff.modified_stat, enemy_magic_ratio)
+				elif is_speed:
+					score *= 0.5
+				if _has_modifier(ally, buff.modified_stat, false):
+					score *= 0.25
+				if score > 1.0:
+					candidates.append({"score": score, "type": "BUFF",
+						"ability": buff, "target": ally, "item_idx": -1})
+					if score > best_score:
+						best_score = score
+						best_type = "BUFF"
+						best_ability = buff
+						best_target = ally
+
+	# -- Score debuffs --
+	for debuff: AbilityData in debuff_abilities:
+		if debuff.damage_per_turn > 0:
+			# DoT debuff: score as total damage over time
+			if debuff.target_all:
+				var total: float = 0.0
+				for t: FighterData in targets:
+					var dot_flat: int = maxi(1, floori(
+						float(t.max_health) * float(debuff.damage_per_turn) / 100.0))
+					total += float(dot_flat * debuff.impacted_turns)
+				if total > 1.0:
+					candidates.append({"score": total, "type": "DEBUFF",
+						"ability": debuff, "target": targets[0], "item_idx": -1})
+					if total > best_score:
+						best_score = total
+						best_type = "DEBUFF"
+						best_ability = debuff
+						best_target = targets[0]
+			else:
+				for t: FighterData in targets:
+					var dot_flat: int = maxi(1, floori(
+						float(t.max_health) * float(debuff.damage_per_turn) / 100.0))
+					var score: float = float(dot_flat * debuff.impacted_turns)
+					if score > 1.0:
+						candidates.append({"score": score, "type": "DEBUFF",
+							"ability": debuff, "target": t, "item_idx": -1})
+						if score > best_score:
+							best_score = score
+							best_type = "DEBUFF"
+							best_ability = debuff
+							best_target = t
+			continue
+
+		var db_is_def: bool = debuff.modified_stat in defense_stats
+		var db_is_off: bool = debuff.modified_stat in offense_stats
+		var db_is_spd: bool = debuff.modified_stat == Enums.StatType.SPEED
+		if debuff.target_all:
+			var total: float = 0.0
+			for t: FighterData in targets:
+				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
+				var s: float = float(delta) * float(debuff.impacted_turns)
+				if db_is_def:
+					s *= _dmg_type_relevance(debuff.modified_stat, ally_magic_ratio)
+					s *= sqrt(float(alive_allies))
+				elif db_is_off:
+					s *= _dmg_type_relevance(debuff.modified_stat, _damage_magic_ratio(t))
+				elif db_is_spd:
+					s *= 0.5
+				total += s
+			if total > 1.0:
+				candidates.append({"score": total, "type": "DEBUFF",
+					"ability": debuff, "target": targets[0], "item_idx": -1})
+				if total > best_score:
+					best_score = total
+					best_type = "DEBUFF"
+					best_ability = debuff
+					best_target = targets[0]
+		else:
+			for t: FighterData in targets:
+				var delta: int = _compute_buff_delta(t, debuff.modified_stat, debuff.modifier)
+				var score: float = float(delta) * float(debuff.impacted_turns)
+				if db_is_def:
+					score *= _dmg_type_relevance(debuff.modified_stat, ally_magic_ratio)
+					score *= sqrt(float(alive_allies))
+				elif db_is_off:
+					score *= _dmg_type_relevance(debuff.modified_stat, _damage_magic_ratio(t))
+				elif db_is_spd:
+					score *= 0.5
+				if score > 1.0:
+					candidates.append({"score": score, "type": "DEBUFF",
+						"ability": debuff, "target": t, "item_idx": -1})
+					if score > best_score:
+						best_score = score
+						best_type = "DEBUFF"
+						best_ability = debuff
+						best_target = t
+
+	# -- Score offensive abilities --
+	for ability: AbilityData in offensive_abilities:
+		if ability.target_all:
+			var total: float = 0.0
+			for t: FighterData in targets:
+				var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, ability)))
+				dmg = dmg / float(maxi(1, targets.size()))
+				var hit: float = (100.0 - float(t.dodge_chance) / 2.0) / 100.0
+				var t_score: float = dmg * hit
+				if ability.life_steal_percent > 0:
+					t_score += floorf(dmg * ability.life_steal_percent) * hit
+					var hp_frac: float = float(unit.health) / float(unit.max_health)
+					if hp_frac < 0.5:
+						t_score *= 1.3
+				if dmg >= float(t.health):
+					t_score *= 3.0
+				total += t_score
+			if total > 1.0:
+				candidates.append({"score": total, "type": "AOE",
+					"ability": ability, "target": targets[0], "item_idx": -1})
+				if total > best_score:
+					best_score = total
+					best_type = "AOE"
+					best_ability = ability
+					best_target = targets[0]
+		else:
+			for t: FighterData in targets:
+				var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, ability)))
+				var hit: float = (100.0 - float(t.dodge_chance) / 2.0) / 100.0
+				var score: float = dmg * hit
+				if ability.life_steal_percent > 0:
+					score += floorf(dmg * ability.life_steal_percent) * hit
+					var hp_frac: float = float(unit.health) / float(unit.max_health)
+					if hp_frac < 0.5:
+						score *= 1.3
+				if dmg >= float(t.health):
+					score *= 3.0
+				elif float(t.health) / float(t.max_health) < 0.25:
+					score *= 1.2
+				if score > 1.0:
+					candidates.append({"score": score, "type": "ABILITY",
+						"ability": ability, "target": t, "item_idx": -1})
+					if score > best_score:
+						best_score = score
+						best_type = "ABILITY"
+						best_ability = ability
+						best_target = t
+
+	# -- Score taunt --
+	if taunt_ability != null and not _has_modifier(unit, Enums.StatType.TAUNT, false):
+		var def_total: float = float(unit.physical_defense + unit.magic_defense)
+		var off_total: float = float(unit.physical_attack + unit.magic_attack)
+		var tank_ratio: float = def_total / (def_total + off_total)
+		var score: float = tank_ratio * 30.0
+		if score > 1.0:
+			candidates.append({"score": score, "type": "TAUNT",
+				"ability": taunt_ability, "target": unit, "item_idx": -1})
+			if score > best_score:
+				best_score = score
+				best_type = "TAUNT"
+				best_ability = taunt_ability
+				best_target = unit
+
+	# -- Score items --
+	var item_pool: Array = player_shared_items if unit in units else enemy_shared_items
+	for idx: int in item_pool.size():
+		var item: ItemData = item_pool[idx]
+		match item.effect_type:
+			Enums.ItemEffect.HEAL_HP:
+				if not item.target_ally:
+					continue
+				for ally: FighterData in allies:
+					if ally.health <= 0 or ally.health >= ally.max_health:
+						continue
+					var heal_amount: int = int(ally.max_health * item.magnitude / 100.0)
+					var actual: int = mini(heal_amount, ally.max_health - ally.health)
+					var score: float = float(actual)
+					var hp_frac: float = float(ally.health) / float(ally.max_health)
+					if hp_frac < 0.25:
+						score *= 2.0
+					if item.target_all:
+						var total: float = 0.0
+						for a2: FighterData in allies:
+							if a2.health > 0 and a2.health < a2.max_health:
+								var a_heal: int = mini(
+									int(a2.max_health * item.magnitude / 100.0),
+									a2.max_health - a2.health)
+								var s2: float = float(a_heal)
+								if float(a2.health) / float(a2.max_health) < 0.25:
+									s2 *= 2.0
+								total += s2
+						score = total
+					if score > 1.0:
+						candidates.append({"score": score, "type": "ITEM",
+							"ability": null, "target": ally, "item_idx": idx})
+						if score > best_score:
+							best_score = score
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = ally
+			Enums.ItemEffect.HEAL_MP:
+				if not item.target_ally:
+					continue
+				for ally: FighterData in allies:
+					if ally.health <= 0 or ally.mana >= ally.max_mana:
+						continue
+					var restored: int = mini(item.magnitude, ally.max_mana - ally.mana)
+					var score: float = 0.0
+					var ally_cheapest: int = 999
+					for a: AbilityData in ally.abilities:
+						if a.mana_cost < ally_cheapest:
+							ally_cheapest = a.mana_cost
+					if ally.mana < ally_cheapest and ally.mana + restored >= ally_cheapest:
+						var best_ev: float = 0.0
+						for a: AbilityData in ally.abilities:
+							if a.mana_cost == ally_cheapest and a.use_on_enemy and a.impacted_turns == 0:
+								for t: FighterData in targets:
+									best_ev = maxf(best_ev, float(maxi(0, _calc_ability_damage(ally, t, a))))
+						score = best_ev * 0.5
+					if score > 1.0:
+						candidates.append({"score": score, "type": "ITEM",
+							"ability": null, "target": ally, "item_idx": idx})
+						if score > best_score:
+							best_score = score
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = ally
+			Enums.ItemEffect.CURE_DEBUFF:
+				if not item.target_ally:
+					continue
+				for ally: FighterData in allies:
+					if ally.health <= 0:
+						continue
+					var debuff_count: int = 0
+					for mod: Dictionary in ally.modified_stats:
+						if mod["is_negative"]:
+							debuff_count += 1
+					if debuff_count == 0:
+						continue
+					var score: float = float(debuff_count) * 15.0
+					if score > 1.0:
+						candidates.append({"score": score, "type": "ITEM",
+							"ability": null, "target": ally, "item_idx": idx})
+						if score > best_score:
+							best_score = score
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = ally
+			Enums.ItemEffect.BUFF:
+				if item.target_ally:
+					var ib_is_off: bool = item.stat_type in offense_stats
+					var ib_is_def: bool = item.stat_type in defense_stats
+					if item.target_all:
+						var total: float = 0.0
+						for ally: FighterData in allies:
+							if ally.health <= 0:
+								continue
+							var d: int = _compute_buff_delta(ally, item.stat_type, item.magnitude)
+							var s: float = float(d) * float(item.duration)
+							if ib_is_off:
+								s *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(ally))
+							elif ib_is_def:
+								s *= _dmg_type_relevance(item.stat_type, enemy_magic_ratio)
+							total += s
+						if total > 1.0:
+							candidates.append({"score": total, "type": "ITEM",
+								"ability": null, "target": allies[0] if not allies.is_empty() else unit, "item_idx": idx})
+							if total > best_score:
+								best_score = total
+								best_type = "ITEM"
+								best_item_idx = idx
+								best_target = allies[0] if not allies.is_empty() else unit
+					else:
+						for ally: FighterData in allies:
+							if ally.health <= 0:
+								continue
+							var d: int = _compute_buff_delta(ally, item.stat_type, item.magnitude)
+							var score: float = float(d) * float(item.duration)
+							if ib_is_off:
+								score *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(ally))
+							elif ib_is_def:
+								score *= _dmg_type_relevance(item.stat_type, enemy_magic_ratio)
+							if score > 1.0:
+								candidates.append({"score": score, "type": "ITEM",
+									"ability": null, "target": ally, "item_idx": idx})
+								if score > best_score:
+									best_score = score
+									best_type = "ITEM"
+									best_item_idx = idx
+									best_target = ally
+				else:
+					if item.target_all:
+						var total: float = 0.0
+						for t: FighterData in targets:
+							var d: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
+							var s: float = float(d) * float(item.duration)
+							if item.stat_type in defense_stats:
+								s *= _dmg_type_relevance(item.stat_type, ally_magic_ratio)
+								s *= sqrt(float(alive_allies))
+							elif item.stat_type in offense_stats:
+								s *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(t))
+							total += s
+						if total > 1.0:
+							candidates.append({"score": total, "type": "ITEM",
+								"ability": null, "target": targets[0] if not targets.is_empty() else null, "item_idx": idx})
+							if total > best_score:
+								best_score = total
+								best_type = "ITEM"
+								best_item_idx = idx
+								best_target = targets[0] if not targets.is_empty() else null
+					else:
+						for t: FighterData in targets:
+							var d: int = _compute_buff_delta(t, item.stat_type, item.magnitude)
+							var score: float = float(d) * float(item.duration)
+							if item.stat_type in defense_stats:
+								score *= _dmg_type_relevance(item.stat_type, ally_magic_ratio)
+								score *= sqrt(float(alive_allies))
+							elif item.stat_type in offense_stats:
+								score *= _dmg_type_relevance(item.stat_type, _damage_magic_ratio(t))
+							if score > 1.0:
+								candidates.append({"score": score, "type": "ITEM",
+									"ability": null, "target": t, "item_idx": idx})
+								if score > best_score:
+									best_score = score
+									best_type = "ITEM"
+									best_item_idx = idx
+									best_target = t
+			Enums.ItemEffect.DAMAGE:
+				if item.target_ally:
+					continue
+				if item.target_all:
+					var total: float = 0.0
+					for t: FighterData in targets:
+						var score: float = float(item.magnitude)
+						if item.magnitude >= t.health:
+							score *= 3.0
+						total += score
+					if total > 1.0:
+						candidates.append({"score": total, "type": "ITEM",
+							"ability": null, "target": targets[0] if not targets.is_empty() else null, "item_idx": idx})
+						if total > best_score:
+							best_score = total
+							best_type = "ITEM"
+							best_item_idx = idx
+							best_target = targets[0] if not targets.is_empty() else null
+				else:
+					for t: FighterData in targets:
+						var score: float = float(item.magnitude)
+						if item.magnitude >= t.health:
+							score *= 3.0
+						elif float(t.health) / float(t.max_health) < 0.25:
+							score *= 1.2
+						if score > 1.0:
+							candidates.append({"score": score, "type": "ITEM",
+								"ability": null, "target": t, "item_idx": idx})
+							if score > best_score:
+								best_score = score
+								best_type = "ITEM"
+								best_item_idx = idx
+								best_target = t
+
+	# -- Score block --
+	if unit.mana < cheapest_cost:
+		var mp_from_block: int = maxi(1, floori(unit.magic_attack / 7))
+		var best_atk_ev: float = 0.0
+		for t: FighterData in targets:
+			var phys_dmg: float = float(maxi(
+				maxi(unit.physical_attack - t.physical_defense, 0),
+				maxi((unit.magic_attack - t.magic_defense) / 2, 0)))
+			var hit: float = (100.0 - float(t.dodge_chance)) / 100.0
+			var ev: float = phys_dmg * hit + float(mp_from_block) * hit
+			best_atk_ev = maxf(best_atk_ev, ev)
+		var phys_boost: float = floorf(unit.physical_defense * 0.5)
+		var mag_boost: float = floorf(unit.magic_defense * 0.5)
+		var avg_boost: float = (phys_boost + mag_boost) / 2.0
+		var attacks_on_me: float = float(targets.size()) / maxf(1.0, float(allies.size()))
+		var block_value: float = avg_boost * attacks_on_me + float(mp_from_block)
+		if block_value > best_atk_ev and block_value > 1.0:
+			candidates.append({"score": block_value, "type": "BLOCK",
+				"ability": null, "target": null, "item_idx": -1})
+			if block_value > best_score:
+				best_score = block_value
+				best_type = "BLOCK"
+				best_ability = null
+				best_target = null
+
+	# -- Score rest --
+	var hp_pct: float = float(unit.health) / float(unit.max_health)
+	var hp_restored: float = float(maxi(1, floori(unit.max_health * 0.1)))
+	var mp_restored: int = maxi(2, floori(unit.magic_attack / 7) * 2)
+	var hp_value: float = hp_restored if hp_pct < 0.5 else hp_restored * 0.3
+	var mp_value: float = 0.0
+	if unit.mana < cheapest_cost and unit.mana + mp_restored >= cheapest_cost:
+		var cheapest_ev: float = 0.0
+		for a: AbilityData in unit.abilities:
+			if a.mana_cost == cheapest_cost and a.use_on_enemy and a.impacted_turns == 0:
+				for t: FighterData in targets:
+					var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, a)))
+					cheapest_ev = maxf(cheapest_ev, dmg)
+		mp_value = cheapest_ev * 0.5
+	var rest_score: float = hp_value + mp_value
+	if hp_pct < 0.3:
+		rest_score *= 1.5
+	if rest_score > 1.0:
+		candidates.append({"score": rest_score, "type": "REST",
+			"ability": null, "target": null, "item_idx": -1})
+		if rest_score > best_score:
+			best_score = rest_score
+			best_type = "REST"
+			best_ability = null
+			best_target = null
+
+	# -- Score physical attack on each target (fallback) --
+	var mp_from_hit: int = maxi(1, floori(unit.magic_attack / 7))
+	var phys_mp_value: float = 0.0
+	if unit.mana < cheapest_cost and unit.mana + mp_from_hit >= cheapest_cost:
+		var cheapest_ev: float = 0.0
+		for a: AbilityData in unit.abilities:
+			if a.mana_cost == cheapest_cost and a.use_on_enemy and a.impacted_turns == 0:
+				for t: FighterData in targets:
+					var dmg: float = float(maxi(0, _calc_ability_damage(unit, t, a)))
+					cheapest_ev = maxf(cheapest_ev, dmg)
+		phys_mp_value = cheapest_ev * 0.5
+	for t: FighterData in targets:
+		var phys_dmg: float = float(maxi(
+			maxi(unit.physical_attack - t.physical_defense, 0),
+			maxi((unit.magic_attack - t.magic_defense) / 2, 0)))
+		var hit: float = (100.0 - float(t.dodge_chance)) / 100.0
+		var score: float = (phys_dmg + phys_mp_value) * hit
+		if phys_dmg >= float(t.health):
+			score *= 3.0
+		elif float(t.health) / float(t.max_health) < 0.25:
+			score *= 1.2
+		if score > 1.0:
+			candidates.append({"score": score, "type": "PHYS_ATK",
+				"ability": null, "target": t, "item_idx": -1})
+			if score > best_score:
+				best_score = score
+				best_type = "PHYS_ATK"
+				best_ability = null
+				best_target = t
+
+	# -- Weighted random selection from candidates --
+	if candidates.size() > 1:
+		var total_weight: float = 0.0
+		for c: Dictionary in candidates:
+			total_weight += c.score
+		var roll: float = randf() * total_weight
+		var running: float = 0.0
+		for c: Dictionary in candidates:
+			running += c.score
+			if roll <= running:
+				best_type = c.type
+				best_ability = c.ability
+				best_target = c.target
+				best_item_idx = c.item_idx
+				best_score = c.score
+				break
+
+	# -- Execute chosen action --
+	_count_action(unit, best_type if best_type != "" else "PHYS_ATK")
+	match best_type:
+		"HEAL":
+			unit.mana -= best_ability.mana_cost
+			if best_ability.target_all:
+				_trace("%s (%s): HEAL %s -> ALL [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_score])
+				if not sim_mode:
+					combat_message.emit(best_ability.flavor_text)
+				for ally: FighterData in allies:
+					if ally.health > 0:
+						use_ability_on_teammate(unit, ally, best_ability, true)
+			else:
+				_trace("%s (%s): HEAL %s -> %s [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_target.character_name, best_score])
+				use_ability_on_teammate(unit, best_target, best_ability)
+		"BUFF":
+			unit.mana -= best_ability.mana_cost
+			if best_ability.target_all:
+				_trace("%s (%s): BUFF %s -> ALL [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_score])
+				if not sim_mode:
+					combat_message.emit(best_ability.flavor_text)
+				for ally: FighterData in allies:
+					if ally.health > 0:
+						use_ability_on_teammate(unit, ally, best_ability, true)
+			else:
+				_trace("%s (%s): BUFF %s -> %s [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_target.character_name, best_score])
+				use_ability_on_teammate(unit, best_target, best_ability)
+		"DEBUFF":
+			unit.mana -= best_ability.mana_cost
+			if best_ability.target_all:
+				_trace("%s (%s): DEBUFF %s -> ALL [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_score])
+				if not sim_mode:
+					combat_message.emit(best_ability.flavor_text)
+				for t: FighterData in targets:
+					use_ability_on_enemy(unit, t, best_ability, true, targets.size())
+			else:
+				_trace("%s (%s): DEBUFF %s -> %s [score: %.1f]" % [
+					_tu, _tc, best_ability.ability_name, best_target.character_name, best_score])
+				use_ability_on_enemy(unit, best_target, best_ability)
+		"AOE":
+			unit.mana -= best_ability.mana_cost
+			_trace("%s (%s): AOE %s -> ALL (%d targets) [score: %.1f]" % [
+				_tu, _tc, best_ability.ability_name, targets.size(), best_score])
+			if not sim_mode:
+				combat_message.emit(best_ability.flavor_text)
+			for t: FighterData in targets:
+				use_ability_on_enemy(unit, t, best_ability, true, targets.size())
+		"ABILITY":
+			unit.mana -= best_ability.mana_cost
+			_trace("%s (%s): ABILITY %s -> %s [score: %.1f]" % [
+				_tu, _tc, best_ability.ability_name, best_target.character_name, best_score])
+			use_ability_on_enemy(unit, best_target, best_ability)
+		"TAUNT":
+			unit.mana -= best_ability.mana_cost
+			_trace("%s (%s): TAUNT [score: %.1f]" % [_tu, _tc, best_score])
+			use_ability_on_teammate(unit, unit, best_ability)
+		"BLOCK":
+			_trace("%s (%s): BLOCK [score: %.1f]" % [_tu, _tc, best_score])
+			perform_block(unit)
+		"REST":
+			_trace("%s (%s): REST [score: %.1f]" % [_tu, _tc, best_score])
+			perform_rest(unit)
+		"ITEM":
+			var item: ItemData = item_pool[best_item_idx]
+			var tgt_name: String = best_target.character_name if best_target else "ALL"
+			_trace("%s (%s): ITEM %s -> %s [score: %.1f]" % [
+				_tu, _tc, item.item_name, tgt_name, best_score])
+			if unit in units:
+				_consume_player_item(unit, best_target, best_item_idx)
+			else:
+				_consume_shared_item(unit, best_target, best_item_idx)
+		"PHYS_ATK":
+			_trace("%s (%s): PHYS_ATK -> %s [score: %.1f]" % [
+				_tu, _tc, best_target.character_name, best_score])
+			physical_attack(unit, best_target)
+		_:
+			var target: FighterData = targets[0]
+			_trace("%s (%s): PHYS_ATK (fallback) -> %s" % [_tu, _tc, target.character_name])
+			physical_attack(unit, target)
 
 
 func _smart_choose_target(unit: FighterData, targets: Array,

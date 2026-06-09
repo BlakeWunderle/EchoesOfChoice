@@ -119,7 +119,7 @@ static func mountain_pass_battle() -> BattleData:
 static func cave_battle() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "CaveBattle"
-	b.scene_image = "res://assets/art/battles/dragons_lair.png"
+	b.scene_image = "res://assets/art/battles/dragons_hoard.png"
 	var leader_name: String = "the adventurer"
 	if not GameState.party.is_empty():
 		leader_name = GameState.party[0].character_name

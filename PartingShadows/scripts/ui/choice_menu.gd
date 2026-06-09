@@ -6,10 +6,13 @@ class_name ChoiceMenu extends VBoxContainer
 ## All players on the same button shows a white combined border.
 
 signal choice_selected(index: int)
+signal option_focused(index: int)
 
-const BUTTON_MIN_SIZE := Vector2(420, 48)
+const _DEFAULT_MIN_SIZE := Vector2(420, 48)
 const GRID_BUTTON_MIN_SIZE := Vector2(200, 64)
 const _DESC_FONT := preload("res://assets/fonts/CormorantGaramond-SemiBold.ttf")
+
+var button_min_size := _DEFAULT_MIN_SIZE
 ## Distinct cursor colors per player slot (P1 blue, P2 orange, P3 green)
 const PLAYER_COLORS: Array[Color] = [
 	Color(0.3, 0.65, 1.0),
@@ -50,16 +53,18 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 		_grid.columns = 2
 		_grid.add_theme_constant_override("h_separation", 12)
 		_grid.add_theme_constant_override("v_separation", 8)
-		# Fixed height for 2 rows so grid never resizes between menus
+		# Fixed height for 3 rows so grid never resizes between menus
 		var row_h: int = maxi(GRID_BUTTON_MIN_SIZE.y, SettingsManager.font_size * 2 + 28)
-		_grid.custom_minimum_size.y = row_h * 2 + 8
+		_grid.custom_minimum_size.y = row_h * 3 + 16
 		add_child(_grid)
 		btn_parent = _grid
+
+	var _desc_pairs: Array[Array] = []
 
 	for i: int in options.size():
 		var opt: Dictionary = options[i]
 		var btn := Button.new()
-		btn.custom_minimum_size = GRID_BUTTON_MIN_SIZE if use_grid else BUTTON_MIN_SIZE
+		btn.custom_minimum_size = GRID_BUTTON_MIN_SIZE if use_grid else button_min_size
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		btn.focus_mode = Control.FOCUS_ALL
 		btn.add_theme_font_size_override("font_size", SettingsManager.font_size)
@@ -69,11 +74,7 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 		var has_desc: bool = opt.has("description") and not opt["description"].is_empty()
 		if has_desc:
 			btn.text = ""
-			var desc_text: String = opt.get("description", "")
-			var desc_lines: int = desc_text.count("\n") + 1
-			var desc_fs: int = maxi(SettingsManager.font_size - 2, 14)
-			var est_h: int = SettingsManager.font_size + desc_fs * desc_lines + 32
-			btn.custom_minimum_size.y = maxi(btn.custom_minimum_size.y, est_h)
+			btn.custom_minimum_size.y = maxi(btn.custom_minimum_size.y, SettingsManager.font_size * 2 + 24)
 			var vbox := VBoxContainer.new()
 			vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 			vbox.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -94,6 +95,7 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 			vbox.add_child(title_lbl)
 			vbox.add_child(desc_lbl)
 			btn.add_child(vbox)
+			_desc_pairs.append([btn, desc_lbl])
 		else:
 			btn.text = opt["label"]
 
@@ -107,10 +109,17 @@ func show_choices(options: Array, use_grid: bool = false) -> void:
 		_apply_focus_style(btn)
 		var idx: int = i
 		btn.pressed.connect(func() -> void: _on_button_pressed(idx))
+		btn.focus_entered.connect(func() -> void: option_focused.emit(idx))
+		btn.mouse_entered.connect(func() -> void: option_focused.emit(idx))
 		btn_parent.add_child(btn)
 		_buttons.append(btn)
 
 	_wire_focus(use_grid)
+
+	if not _desc_pairs.is_empty():
+		await get_tree().process_frame
+		for pair: Array in _desc_pairs:
+			_fix_button_height(pair[0] as Button, pair[1] as Label)
 
 	if LocalCoop.is_active and LocalCoop.player_devices.size() > 1:
 		_setup_coop_cursors()
@@ -129,9 +138,12 @@ func _on_button_pressed(index: int) -> void:
 
 func _clear_buttons() -> void:
 	for btn: Button in _buttons:
+		if btn.get_parent():
+			btn.get_parent().remove_child(btn)
 		btn.queue_free()
 	_buttons.clear()
 	if _grid:
+		remove_child(_grid)
 		_grid.queue_free()
 		_grid = null
 	_coop_mode = false
@@ -142,11 +154,50 @@ func _clear_buttons() -> void:
 	_sp_last_nav_ms = 0
 
 
+func _fix_button_height(btn: Button, desc_lbl: Label) -> void:
+	var avail_w: float = btn.size.x - 12.0
+	if avail_w <= 0:
+		return
+	var desc_font: Font = desc_lbl.get_theme_font("font")
+	var desc_size: int = desc_lbl.get_theme_font_size("font_size")
+	var desc_h: float = desc_font.get_multiline_string_size(
+		desc_lbl.text, HORIZONTAL_ALIGNMENT_CENTER, avail_w, desc_size
+	).y
+	var title_h: float = float(SettingsManager.font_size)
+	var needed: float = title_h + desc_h + 24.0
+	if needed > btn.custom_minimum_size.y:
+		btn.custom_minimum_size.y = ceili(needed)
+
+
 func focus_first() -> void:
 	for btn: Button in _buttons:
 		if not btn.disabled:
 			btn.grab_focus()
 			break
+
+
+func highlight_option(index: int) -> void:
+	for i: int in _buttons.size():
+		if _buttons[i].disabled:
+			if i == index:
+				_buttons[i].modulate.a = 1.0
+				var hl_sb := StyleBoxFlat.new()
+				hl_sb.bg_color = Color(0.2, 0.2, 0.3, 0.9)
+				hl_sb.border_color = Color(0.2, 0.9, 0.8, 0.8)
+				hl_sb.set_border_width_all(2)
+				hl_sb.set_corner_radius_all(4)
+				hl_sb.set_content_margin_all(6)
+				_buttons[i].add_theme_stylebox_override("disabled", hl_sb)
+			else:
+				_buttons[i].modulate.a = 0.4
+				_buttons[i].remove_theme_stylebox_override("disabled")
+
+
+func get_last_button() -> Button:
+	for i: int in range(_buttons.size() - 1, -1, -1):
+		if not _buttons[i].disabled:
+			return _buttons[i]
+	return null
 
 
 func hide_menu() -> void:
@@ -179,38 +230,46 @@ func _wire_list_focus(enabled: Array[Button]) -> void:
 
 
 func _wire_grid_focus(enabled: Array[Button]) -> void:
-	## Wire 2-column grid navigation: up/down between rows, left/right between columns.
+	## Wire 2-column grid navigation using original grid positions so disabled
+	## buttons don't shift the column/row math.
 	var cols: int = 2
-	for i: int in enabled.size():
-		var btn: Button = enabled[i]
-		var col: int = i % cols
+	var total: int = _buttons.size()
+	var rows: int = ceili(float(total) / cols)
 
-		# Left/right within row
-		if col > 0:
-			btn.focus_neighbor_left = enabled[i - 1].get_path()
-		elif enabled.size() > 1:
-			btn.focus_neighbor_left = enabled[mini(i + 1, enabled.size() - 1)].get_path()
+	var enabled_set: Dictionary = {}
+	for btn: Button in enabled:
+		enabled_set[_buttons.find(btn)] = btn
 
-		if col < cols - 1 and i + 1 < enabled.size():
-			btn.focus_neighbor_right = enabled[i + 1].get_path()
-		elif col == cols - 1 or i + 1 >= enabled.size():
-			btn.focus_neighbor_right = enabled[i - col].get_path()
+	for idx: int in enabled_set:
+		var btn: Button = enabled_set[idx]
+		var col: int = idx % cols
+		var row: int = idx / cols
 
-		# Up/down between rows
-		var up_idx: int = i - cols
-		if up_idx >= 0:
-			btn.focus_neighbor_top = enabled[up_idx].get_path()
-		else:
-			var last_row_start: int = (enabled.size() - 1) / cols * cols
-			var wrap_idx: int = mini(last_row_start + col, enabled.size() - 1)
-			btn.focus_neighbor_top = enabled[wrap_idx].get_path()
+		var partner_idx: int = idx + (1 if col == 0 else -1)
+		var partner: Button = enabled_set.get(partner_idx)
+		var target: Button = partner if partner else btn
+		btn.focus_neighbor_left = target.get_path()
+		btn.focus_neighbor_right = target.get_path()
 
-		var down_idx: int = i + cols
-		if down_idx < enabled.size():
-			btn.focus_neighbor_bottom = enabled[down_idx].get_path()
-		else:
-			var wrap_idx: int = mini(col, enabled.size() - 1)
-			btn.focus_neighbor_bottom = enabled[wrap_idx].get_path()
+		btn.focus_neighbor_top = _find_col_neighbor(
+			enabled_set, col, row, -1, rows, cols, total).get_path()
+		btn.focus_neighbor_bottom = _find_col_neighbor(
+			enabled_set, col, row, 1, rows, cols, total).get_path()
+
+
+func _find_col_neighbor(enabled_set: Dictionary, col: int, start_row: int,
+		direction: int, rows: int, cols: int, total: int) -> Button:
+	var r: int = start_row
+	for _i: int in rows - 1:
+		r += direction
+		if r < 0:
+			r = rows - 1
+		elif r >= rows:
+			r = 0
+		var idx: int = r * cols + col
+		if idx < total and idx in enabled_set:
+			return enabled_set[idx]
+	return enabled_set[start_row * cols + col]
 
 
 # =============================================================================

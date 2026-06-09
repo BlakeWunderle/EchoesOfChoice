@@ -3,8 +3,11 @@ extends Node
 ## Global game state that persists across scene transitions.
 
 const _BattleDB := preload("res://scripts/data/battle_db.gd")
+const _DemoConfig := preload("res://scripts/data/demo_config.gd")
 const _FighterDB := preload("res://scripts/data/fighter_db.gd")
 const _StoryDB := preload("res://scripts/data/story_db.gd")
+const _Inventory := preload("res://scripts/data/inventory.gd")
+const _ItemDB := preload("res://scripts/data/item_db.gd")
 
 enum NarrativeMode { PRE_BATTLE, POST_BATTLE }
 enum GamePhase { TITLE, PARTY_CREATION, NARRATIVE, BATTLE, TOWN_STOP, ENDING }
@@ -19,6 +22,8 @@ var game_won: bool = false
 var battles_won: int = 0
 var play_seconds: float = 0.0
 var current_story_id: String = "story_1"
+var difficulty: int = 1  ## 0=Easy, 1=Normal, 2=Hard (set during party creation)
+var inventory: RefCounted = _Inventory.new()  ## Party-shared items + gold
 
 
 func start_new_game(story_id: String = "story_1") -> void:
@@ -33,6 +38,8 @@ func start_new_game(story_id: String = "story_1") -> void:
 	game_won = false
 	battles_won = 0
 	play_seconds = 0.0
+	difficulty = 1
+	inventory = _Inventory.new()
 	_update_presence()
 
 
@@ -101,6 +108,9 @@ func upgrade_party_member(fighter: RefCounted, item: String) -> bool:
 
 
 func advance_to_next_battle() -> void:
+	if _DemoConfig.is_demo() and _DemoConfig.is_demo_final(current_battle_id):
+		game_phase = GamePhase.ENDING
+		return
 	if current_battle.next_battle_id.is_empty() or current_battle.is_final_battle:
 		game_phase = GamePhase.ENDING
 		return

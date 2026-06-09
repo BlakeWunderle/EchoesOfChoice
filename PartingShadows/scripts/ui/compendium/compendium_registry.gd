@@ -15,7 +15,7 @@ static func get_all_class_ids() -> Array:
 		"Duelist", "Ranger", "MartialArtist",
 		"Invoker", "Acolyte",
 		"Bard", "Dervish", "Orator",
-		"Artificer", "Cosmologist", "Arithmancer",
+		"Artificer", "Philosopher", "Arithmancer",
 		"Herbalist", "Shaman", "Beastcaller",
 		"Sentinel", "Pathfinder",
 		# T2 (complete list)

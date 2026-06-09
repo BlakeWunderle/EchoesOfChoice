@@ -305,3 +305,13 @@ static func get_unlock_notification_lines(story_id: String) -> Array[String]:
 			]
 		_:
 			return []
+
+
+static func get_demo_ending_text() -> Array[String]:
+	return [
+		"Thank you for playing the Parting Shadows demo!",
+		"You have completed the first chapter of \"The Stranger's Shadow.\"",
+		"The full game features three complete stories with branching paths, dozens of class upgrades, and mysteries to unravel.",
+		"We hope you enjoyed the journey so far. The road ahead holds much more.",
+		"Parting Shadows is available now on Steam.",
+	]

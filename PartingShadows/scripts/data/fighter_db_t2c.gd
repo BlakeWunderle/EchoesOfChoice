@@ -20,8 +20,8 @@ static func upgrade_to_blighter(f: FighterData) -> void:
 
 static func upgrade_to_grove_keeper(f: FighterData) -> void:
 	f.class_id = "GroveKeeper"; f.character_type = "Grove Keeper"
-	f.health += 18; f.max_health += 18; f.mana += 2; f.max_mana += 2
-	f.physical_attack += 2; f.physical_defense += 5; f.magic_attack += 14; f.magic_defense += 5
+	f.health += 20; f.max_health += 20; f.mana += 2; f.max_mana += 2
+	f.physical_attack += 2; f.physical_defense += 5; f.magic_attack += 16; f.magic_defense += 5
 	f.speed += 3; f.crit_chance += 2; f.crit_damage += 2; f.dodge_chance += 4
 	f.abilities = [PAB_B.thorn_burst(), PAB_B.natures_mend(), PAB_B.vine_wall()]
 	f.upgrade_items = []
@@ -29,7 +29,7 @@ static func upgrade_to_grove_keeper(f: FighterData) -> void:
 static func _lu_blighter(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(12, 15); f.health += hp; f.max_health += hp
-	var mp := randi_range(2, 3); f.mana += mp; f.max_mana += mp
+	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(0, 1); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(6, 8); f.magic_defense += randi_range(4, 5)
 	f.speed += randi_range(3, 4)
@@ -38,9 +38,9 @@ static func _lu_blighter(f: FighterData) -> void:
 
 static func _lu_grove_keeper(f: FighterData) -> void:
 	f.level += 1
-	var hp := randi_range(11, 13); f.health += hp; f.max_health += hp
-	var mp := randi_range(2, 4); f.mana += mp; f.max_mana += mp
-	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(3, 4)
+	var hp := randi_range(13, 15); f.health += hp; f.max_health += hp
+	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
+	f.physical_attack += randi_range(1, 2); f.physical_defense += randi_range(4, 5)
 	f.magic_attack += randi_range(6, 8); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(2, 3)
 	f.crit_chance += randi_range(0, 1)
@@ -60,7 +60,7 @@ static func upgrade_to_witch_doctor(f: FighterData) -> void:
 
 static func upgrade_to_spiritwalker(f: FighterData) -> void:
 	f.class_id = "Spiritwalker"; f.character_type = "Spiritwalker"
-	f.health += 14; f.max_health += 14; f.mana += 4; f.max_mana += 4
+	f.health += 14; f.max_health += 14; f.mana += 2; f.max_mana += 2
 	f.physical_attack += 1; f.physical_defense += 5; f.magic_attack += 11; f.magic_defense += 6
 	f.speed += 6; f.crit_chance += 2; f.crit_damage += 3; f.dodge_chance += 1
 	f.abilities = [PAB_B.soul_strike(), PAB_B.spirit_shield(), PAB_B.spirit_mend()]
@@ -69,20 +69,20 @@ static func upgrade_to_spiritwalker(f: FighterData) -> void:
 static func _lu_witch_doctor(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(12, 14); f.health += hp; f.max_health += hp
-	var mp := randi_range(2, 4); f.mana += mp; f.max_mana += mp
+	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(0, 1); f.physical_defense += randi_range(2, 3)
-	f.magic_attack += randi_range(6, 8); f.magic_defense += randi_range(4, 5)
+	f.magic_attack += randi_range(7, 9); f.magic_defense += randi_range(4, 5)
 	f.speed += randi_range(2, 3)
 	f.dodge_chance += randi_range(0, 1)
 	f.crit_chance += randi_range(0, 1)
 
 static func _lu_spiritwalker(f: FighterData) -> void:
 	f.level += 1
-	var hp := randi_range(10, 12); f.health += hp; f.max_health += hp
-	var mp := randi_range(2, 4); f.mana += mp; f.max_mana += mp
+	var hp := randi_range(12, 14); f.health += hp; f.max_health += hp
+	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
 	f.physical_attack += randi_range(0, 1); f.physical_defense += randi_range(2, 3)
-	f.magic_attack += randi_range(5, 7); f.magic_defense += randi_range(4, 5)
-	f.speed += randi_range(2, 2)
+	f.magic_attack += randi_range(7, 9); f.magic_defense += randi_range(4, 5)
+	f.speed += randi_range(2, 3)
 	f.dodge_chance += randi_range(0, 1)
 
 
@@ -92,15 +92,15 @@ static func _lu_spiritwalker(f: FighterData) -> void:
 
 static func upgrade_to_falconer(f: FighterData) -> void:
 	f.class_id = "Falconer"; f.character_type = "Falconer"
-	f.health += 12; f.max_health += 12; f.mana += 3; f.max_mana += 3
+	f.health += 12; f.max_health += 12; f.mana += 2; f.max_mana += 2
 	f.physical_attack += 17; f.physical_defense += 5; f.magic_attack += 2; f.magic_defense += 4
-	f.speed += 7; f.crit_chance += 5; f.crit_damage += 7; f.dodge_chance += 2
+	f.speed += 7; f.crit_chance += 5; f.crit_damage += 6; f.dodge_chance += 2
 	f.abilities = [PAB_B.falcon_strike(), PAB_B.rending_talon(), PAB_B.aerial_strike()]
 	f.upgrade_items = []
 
 static func upgrade_to_shapeshifter(f: FighterData) -> void:
 	f.class_id = "Shapeshifter"; f.character_type = "Shapeshifter"
-	f.health += 16; f.max_health += 16; f.mana += 3; f.max_mana += 3
+	f.health += 16; f.max_health += 16; f.mana += 2; f.max_mana += 2
 	f.physical_attack += 12; f.physical_defense += 5; f.magic_attack += 10; f.magic_defense += 4
 	f.speed += 6; f.crit_chance += 3; f.crit_damage += 2; f.dodge_chance += 4
 	f.abilities = [PAB_B.savage_maul(), PAB_B.frenzy(), PAB_B.rampage()]
@@ -108,9 +108,9 @@ static func upgrade_to_shapeshifter(f: FighterData) -> void:
 
 static func _lu_falconer(f: FighterData) -> void:
 	f.level += 1
-	var hp := randi_range(11, 13); f.health += hp; f.max_health += hp
+	var hp := randi_range(9, 11); f.health += hp; f.max_health += hp
 	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
-	f.physical_attack += randi_range(8, 10); f.physical_defense += randi_range(3, 4)
+	f.physical_attack += randi_range(8, 10); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(1, 2); f.magic_defense += randi_range(4, 5)
 	f.speed += randi_range(3, 3)
 	f.dodge_chance += randi_range(0, 1)
@@ -120,11 +120,11 @@ static func _lu_shapeshifter(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(14, 16); f.health += hp; f.max_health += hp
 	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
-	f.physical_attack += randi_range(6, 8); f.physical_defense += randi_range(4, 5)
+	f.physical_attack += randi_range(5, 7); f.physical_defense += randi_range(4, 5)
 	f.magic_attack += randi_range(2, 4); f.magic_defense += randi_range(3, 4)
 	f.speed += randi_range(3, 4)
 	f.dodge_chance += randi_range(1, 2)
-	f.crit_chance += randi_range(1, 2)
+	f.crit_chance += randi_range(0, 1)
 
 
 # =============================================================================
@@ -160,10 +160,10 @@ static func _lu_survivalist(f: FighterData) -> void:
 	f.level += 1
 	var hp := randi_range(13, 15); f.health += hp; f.max_health += hp
 	var mp := randi_range(1, 2); f.mana += mp; f.max_mana += mp
-	f.physical_attack += randi_range(5, 6); f.physical_defense += randi_range(2, 3)
+	f.physical_attack += randi_range(3, 5); f.physical_defense += randi_range(2, 3)
 	f.magic_attack += randi_range(3, 5); f.magic_defense += randi_range(4, 6)
 	f.speed += randi_range(2, 2)
-	f.dodge_chance += randi_range(0, 1)
+	f.dodge_chance += randi_range(1, 2)
 	f.crit_chance += randi_range(0, 1)
 
 

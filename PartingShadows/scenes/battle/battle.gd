@@ -15,8 +15,11 @@ const ReadyGate := preload("res://scripts/ui/ready_gate.gd")
 const WaitingOverlay := preload("res://scripts/ui/waiting_overlay.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityData := preload("res://scripts/data/ability_data.gd")
+const ItemData := preload("res://scripts/data/item_data.gd")
 const BattleData := preload("res://scripts/data/battle_data.gd")
 const BattleMultiplayer_C := preload("res://scenes/battle/battle_multiplayer.gd")
+const LootRoller := preload("res://scripts/battle/loot_roller.gd")
+const EnemyItemDB := preload("res://scripts/data/enemy_item_db.gd")
 
 enum Phase {
 	STARTING,
@@ -29,6 +32,10 @@ enum Phase {
 	PLAYER_ABILITY_TARGET_ALLY,
 	SHOWING_STATS,
 	STATS_PICK,
+	PLAYER_ITEM_SELECT,
+	PLAYER_ITEM_TARGET,
+	PLAYER_ULTIMATE_TARGET_ENEMY,
+	PLAYER_ULTIMATE_TARGET_ALLY,
 	AI_ACTING,
 	MESSAGE_DELAY,
 	BATTLE_END,
@@ -40,6 +47,7 @@ var _engine: BattleEngine
 var _phase: Phase = Phase.STARTING
 var _current_actor: FighterData
 var _selected_ability: AbilityData
+var _selected_item: ItemData
 var _message_queue: Array[String] = []
 var _processing_messages: bool = false
 var _escape_hp_pct: float = 0.0  ## Boss escape threshold from BattleData
@@ -48,8 +56,15 @@ var _battle_stats: Dictionary = {}  ## FighterData -> {damage_dealt, damage_take
 var _auto_battle: bool = false
 var _auto_battle_unlocked: bool = false
 var _summary_waiting: bool = false
-var _summary_gate: ReadyGate = null  ## ReadyGate for multiplayer summary sync
-var _pending_summary_ready: Array[int] = []  ## Buffer for RPCs arriving before gate exists
+var _loot_waiting: bool = false
+var _summary_gate: ReadyGate = null
+var _loot_gate: ReadyGate = null
+var _pending_summary_ready: Array[int] = []
+var _pending_loot_ready: Array[int] = []
+var _summary_phase_done: bool = false
+var _combat_event_queue: Array[Dictionary] = []
+var _pending_loot_items: Array = []
+var _pending_loot_gold: int = 0
 var _auto_button: Button
 var _display: BattleDisplay
 var _mp: BattleMultiplayer
@@ -93,7 +108,7 @@ func _ready() -> void:
 	_mp = BattleMultiplayer_C.new(self)
 	_build_ui()
 	if NetManager.is_multiplayer_active:
-		NetManager.peer_scene_ready.connect(_on_summary_peer_ready)
+		NetManager.peer_scene_ready.connect(_on_peer_ready_received)
 	_start_battle()
 
 
@@ -124,12 +139,28 @@ func _is_mp_guest() -> bool:
 
 func _start_battle() -> void:
 	_engine = BattleEngine.new()
-	# Enemy AI scales with party tier: T0=easy, T1=normal, T2=hard
+	var battle: BattleData = GameState.current_battle
+	# Difficulty setting: Story=-10% HP/-15% ATK/-10% SPD, Normal=unchanged, Hard=+10% HP/+15% ATK/+10% SPD
 	var _FighterDB := preload("res://scripts/data/fighter_db.gd")
 	var max_tier: int = 0
 	for f: FighterData in GameState.party:
 		max_tier = maxi(max_tier, _FighterDB.get_class_tier(f.class_id))
 	_engine.difficulty_level = max_tier
+	var player_diff: int = GameState.difficulty
+	if player_diff == 0:
+		for enemy: FighterData in battle.enemies:
+			enemy.max_health = maxi(1, int(enemy.max_health * 0.90))
+			enemy.health = enemy.max_health
+			enemy.physical_attack = maxi(1, int(enemy.physical_attack * 0.85))
+			enemy.magic_attack = maxi(1, int(enemy.magic_attack * 0.85))
+			enemy.speed = maxi(1, int(enemy.speed * 0.90))
+	elif player_diff == 2:
+		for enemy: FighterData in battle.enemies:
+			enemy.max_health = maxi(1, int(enemy.max_health * 1.10))
+			enemy.health = enemy.max_health
+			enemy.physical_attack = maxi(1, int(enemy.physical_attack * 1.15))
+			enemy.magic_attack = maxi(1, int(enemy.magic_attack * 1.15))
+			enemy.speed = maxi(1, int(enemy.speed * 1.10))
 	_engine.combat_message.connect(_on_combat_message)
 	_engine.combat_event.connect(_on_combat_event)
 	_engine.fighter_died.connect(_on_fighter_died)
@@ -138,8 +169,6 @@ func _start_battle() -> void:
 
 	if NetManager.is_multiplayer_active and NetManager.is_host:
 		NetManager.player_left.connect(_on_peer_left_mid_battle)
-
-	var battle: BattleData = GameState.current_battle
 	_escape_hp_pct = battle.escape_hp_pct
 	_boss_escaped = false
 	if not battle.scene_image.is_empty() and ResourceLoader.exists(battle.scene_image):
@@ -148,6 +177,7 @@ func _start_battle() -> void:
 		MusicManager.play_music(battle.music_track)
 	else:
 		MusicManager.play_context(MusicManager.MusicContext.BATTLE)
+	_engine.enemy_shared_items = EnemyItemDB.get_battle_items(GameState.current_battle_id)
 	_engine.start_battle(GameState.party, battle.enemies)
 	for enemy: FighterData in battle.enemies:
 		CompendiumManager.record_enemy(enemy, GameState.current_story_id)
@@ -391,6 +421,11 @@ func _input(event: InputEvent) -> void:
 			_summary_waiting = false
 			get_viewport().set_input_as_handled()
 			return
+	if _loot_waiting:
+		if event.is_action_pressed("confirm") or (event is InputEventMouseButton and event.pressed):
+			_loot_waiting = false
+			get_viewport().set_input_as_handled()
+			return
 	if _auto_battle and (event.is_action_pressed("confirm") or event.is_action_pressed("cancel")):
 		_auto_battle = false
 		_update_auto_button_style()
@@ -452,6 +487,34 @@ func _handle_cancel() -> void:
 			_phase = Phase.PLAYER_ACTION
 			_show_action_menu(_current_actor)
 			get_viewport().set_input_as_handled()
+		Phase.PLAYER_ITEM_SELECT:
+			if _action_menu.choice_selected.is_connected(_on_item_selected):
+				_action_menu.choice_selected.disconnect(_on_item_selected)
+			if not _action_menu.choice_selected.is_connected(_on_action_selected):
+				_action_menu.choice_selected.connect(_on_action_selected)
+			_action_menu.hide_menu()
+			_phase = Phase.PLAYER_ACTION
+			_show_action_menu(_current_actor)
+			get_viewport().set_input_as_handled()
+		Phase.PLAYER_ITEM_TARGET:
+			if _action_menu.choice_selected.is_connected(_on_item_target_selected):
+				_action_menu.choice_selected.disconnect(_on_item_target_selected)
+			if not _action_menu.choice_selected.is_connected(_on_action_selected):
+				_action_menu.choice_selected.connect(_on_action_selected)
+			_action_menu.hide_menu()
+			_phase = Phase.PLAYER_ITEM_SELECT
+			_show_item_menu()
+			get_viewport().set_input_as_handled()
+		Phase.PLAYER_ULTIMATE_TARGET_ENEMY, Phase.PLAYER_ULTIMATE_TARGET_ALLY:
+			# Back to main action menu
+			if _action_menu.choice_selected.is_connected(_on_target_selected):
+				_action_menu.choice_selected.disconnect(_on_target_selected)
+			if not _action_menu.choice_selected.is_connected(_on_action_selected):
+				_action_menu.choice_selected.connect(_on_action_selected)
+			_action_menu.hide_menu()
+			_phase = Phase.PLAYER_ACTION
+			_show_action_menu(_current_actor)
+			get_viewport().set_input_as_handled()
 		Phase.SHOWING_STATS:
 			_stats_panel.visible = false
 			_phase = Phase.STATS_PICK
@@ -471,11 +534,24 @@ func _show_action_menu(actor: FighterData) -> void:
 			break
 
 	var options: Array[Dictionary] = [{"label": "Actions"}]
-	if has_available:
-		options.append({"label": "Ability"})
-	if _auto_battle_unlocked:
-		options.append({"label": "Auto"})
+	options.append({"label": "Ability", "disabled": not has_available})
+	options.append({"label": "Item", "disabled": GameState.inventory.size() == 0})
 	options.append({"label": "Stats"})
+	# Slot 4: Ultimate (shows charge %)
+	var has_ult: bool = actor.ultimate != null
+	var ult_ready: bool = has_ult and actor.ultimate_charge >= actor.ultimate.charge_cost
+	if has_ult:
+		var pct: int = mini(int(float(actor.ultimate_charge) / float(actor.ultimate.charge_cost) * 100), 100)
+		options.append({"label": "Ultimate (%d%%)" % pct, "disabled": not ult_ready})
+		if ult_ready:
+			_tip_overlay.show_tip_once("ultimate_ready",
+				"Your ultimate ability is fully charged! Select Ultimate " +
+				"to unleash a powerful finishing move.\n\n" +
+				"Ultimates charge through basic actions: Attack, Block, " +
+				"and Rest. Charge carries over partially between battles.")
+	else:
+		options.append({"label": "", "disabled": true})
+	options.append({"label": "Auto", "disabled": not _auto_battle_unlocked})
 	_action_menu.show_choices(options, true)
 	_tip_overlay.show_tip_once("combat_actions",
 		"Attack, Block, and Rest all restore MP based on your Magic Attack.\n\n" +
@@ -487,31 +563,23 @@ func _show_action_menu(actor: FighterData) -> void:
 func _on_action_selected(index: int) -> void:
 	_action_menu.hide_menu()
 
-	# Map index accounting for possibly missing Ability/Auto options
-	var has_available: bool = false
-	for a: AbilityData in _current_actor.abilities:
-		if _is_ability_available(_current_actor, a):
-			has_available = true
-			break
-
-	# Rebuild the same label list used in _show_action_menu to find action by index
-	var labels: Array[String] = ["Actions"]
-	if has_available:
-		labels.append("Ability")
-	if _auto_battle_unlocked:
-		labels.append("Auto")
-	labels.append("Stats")
-
-	var action: String = labels[index] if index < labels.size() else "Stats"
-
-	match action:
-		"Actions":
+	# Fixed layout: Actions(0), Ability(1), Item(2), Stats(3), Ultimate(4), Auto(5)
+	match index:
+		0: # Actions
 			_phase = Phase.PLAYER_ACTIONS_SUBMENU
 			_show_actions_submenu()
-		"Ability":
+		1: # Ability
 			_phase = Phase.PLAYER_ABILITY_SELECT
 			_show_ability_menu()
-		"Auto":
+		2: # Item
+			_phase = Phase.PLAYER_ITEM_SELECT
+			_show_item_menu()
+		3: # Stats
+			_phase = Phase.STATS_PICK
+			_show_stats_pick()
+		4: # Ultimate
+			_start_ultimate_targeting()
+		5: # Auto
 			_auto_battle = true
 			_update_auto_button_style()
 			_tip_overlay.show_tip_once("auto_battle",
@@ -520,9 +588,27 @@ func _on_action_selected(index: int) -> void:
 				"Auto-battle speeds up combat but may not always make " +
 				"the best strategic choices.")
 			_execute_auto_turn()
-		"Stats":
-			_phase = Phase.STATS_PICK
-			_show_stats_pick()
+
+
+func _start_ultimate_targeting() -> void:
+	var ult: RefCounted = _current_actor.ultimate
+	if ult == null:
+		return
+	var abil: AbilityData = ult.ability
+	if abil.target_all:
+		# AoE ultimate: execute immediately, no target selection
+		if _is_mp_guest():
+			_rpc_submit_action.rpc_id(1, {"type": "ultimate", "target_index": 0})
+			_player_turn_done.emit()
+			return
+		_engine.use_ultimate(_current_actor, null)
+		_player_turn_done.emit()
+	elif abil.use_on_enemy:
+		_phase = Phase.PLAYER_ULTIMATE_TARGET_ENEMY
+		_show_target_menu(_engine.enemies)
+	else:
+		_phase = Phase.PLAYER_ULTIMATE_TARGET_ALLY
+		_show_target_menu(_engine.units)
 
 
 func _show_actions_submenu() -> void:
@@ -583,9 +669,10 @@ func _on_target_selected(index: int) -> void:
 	# Check for Back option
 	var fighter_count: int
 	match _phase:
-		Phase.PLAYER_TARGET_ATTACK, Phase.PLAYER_ABILITY_TARGET_ENEMY:
+		Phase.PLAYER_TARGET_ATTACK, Phase.PLAYER_ABILITY_TARGET_ENEMY, \
+		Phase.PLAYER_ULTIMATE_TARGET_ENEMY:
 			fighter_count = _engine.enemies.size()
-		Phase.PLAYER_ABILITY_TARGET_ALLY:
+		Phase.PLAYER_ABILITY_TARGET_ALLY, Phase.PLAYER_ULTIMATE_TARGET_ALLY:
 			fighter_count = _engine.units.size()
 		_:
 			fighter_count = 0
@@ -598,6 +685,10 @@ func _on_target_selected(index: int) -> void:
 		if _phase == Phase.PLAYER_TARGET_ATTACK:
 			_phase = Phase.PLAYER_ACTIONS_SUBMENU
 			_show_actions_submenu()
+		elif _phase == Phase.PLAYER_ULTIMATE_TARGET_ENEMY or \
+				_phase == Phase.PLAYER_ULTIMATE_TARGET_ALLY:
+			_phase = Phase.PLAYER_ACTION
+			_show_action_menu(_current_actor)
 		else:
 			# Ability target, go back to ability list
 			_phase = Phase.PLAYER_ABILITY_SELECT
@@ -618,6 +709,8 @@ func _on_target_selected(index: int) -> void:
 				action = {"type": "ability_enemy", "ability_name": _selected_ability.ability_name, "target_index": index}
 			Phase.PLAYER_ABILITY_TARGET_ALLY:
 				action = {"type": "ability_ally", "ability_name": _selected_ability.ability_name, "target_index": index}
+			Phase.PLAYER_ULTIMATE_TARGET_ENEMY, Phase.PLAYER_ULTIMATE_TARGET_ALLY:
+				action = {"type": "ultimate", "target_index": index}
 		_rpc_submit_action.rpc_id(1, action)
 		_player_turn_done.emit()
 		return
@@ -646,6 +739,17 @@ func _on_target_selected(index: int) -> void:
 			_current_actor.mana -= _selected_ability.mana_cost
 			_engine.use_ability_on_teammate(
 				_current_actor, _engine.units[index], _selected_ability)
+		Phase.PLAYER_ULTIMATE_TARGET_ENEMY:
+			var taunter: FighterData = _engine.get_taunt_target(_engine.enemies)
+			var ult_target: FighterData
+			if taunter:
+				ult_target = taunter
+				_add_log("%s has taunted your attention!" % taunter.character_name)
+			else:
+				ult_target = _engine.enemies[index]
+			_engine.use_ultimate(_current_actor, ult_target)
+		Phase.PLAYER_ULTIMATE_TARGET_ALLY:
+			_engine.use_ultimate(_current_actor, _engine.units[index])
 
 	_player_turn_done.emit()
 
@@ -704,8 +808,9 @@ func _on_ability_selected(index: int) -> void:
 		_current_actor.mana -= _selected_ability.mana_cost
 		if _selected_ability.use_on_enemy:
 			_add_log("%s targets all enemies!" % _current_actor.character_name)
+			var _aoe_targets: int = _engine.enemies.size()
 			for enemy: FighterData in _engine.enemies.duplicate():
-				_engine.use_ability_on_enemy(_current_actor, enemy, _selected_ability, true)
+				_engine.use_ability_on_enemy(_current_actor, enemy, _selected_ability, true, _aoe_targets)
 		else:
 			_add_log("%s targets all allies!" % _current_actor.character_name)
 			for ally: FighterData in _engine.units.duplicate():
@@ -718,6 +823,105 @@ func _on_ability_selected(index: int) -> void:
 	else:
 		_phase = Phase.PLAYER_ABILITY_TARGET_ALLY
 		_show_target_menu(_engine.units)
+
+
+# =============================================================================
+# Item usage
+# =============================================================================
+
+func _show_item_menu() -> void:
+	var items: Array = GameState.inventory.get_items()
+	var options: Array[Dictionary] = []
+	for item: ItemData in items:
+		options.append({"label": item.item_name, "description": item.get_use_description()})
+	# Pad to 5 slots so the grid never resizes when items are consumed
+	while options.size() < 5:
+		options.append({"label": "", "disabled": true})
+	options.append({"label": "Back"})
+
+	_action_menu.show_choices(options, true)
+	_action_menu.choice_selected.disconnect(_on_action_selected)
+	_action_menu.choice_selected.connect(_on_item_selected)
+	_tip_overlay.show_tip_once("first_item_use",
+		"Items are consumable and don't cost MP. Using an item takes your turn.\n\n" +
+		"You can find items as loot after battles or buy them at town shops.")
+
+
+func _on_item_selected(index: int) -> void:
+	var items: Array = GameState.inventory.get_items()
+	if index >= items.size():
+		# Back
+		_action_menu.choice_selected.disconnect(_on_item_selected)
+		_action_menu.choice_selected.connect(_on_action_selected)
+		_action_menu.hide_menu()
+		_phase = Phase.PLAYER_ACTION
+		_show_action_menu(_current_actor)
+		return
+
+	_action_menu.choice_selected.disconnect(_on_item_selected)
+	_action_menu.choice_selected.connect(_on_action_selected)
+	_action_menu.hide_menu()
+
+	_selected_item = items[index]
+
+	if _selected_item.target_all:
+		# AoE item, no target selection needed
+		if _is_mp_guest():
+			_rpc_submit_action.rpc_id(1, {"type": "item", "item_index": index, "target_index": 0})
+			_player_turn_done.emit()
+			return
+		GameState.inventory.use_item(index)
+		_engine.use_item(_current_actor, _current_actor, _selected_item)
+		_engine.check_for_death()
+		_player_turn_done.emit()
+	elif _selected_item.target_ally:
+		_phase = Phase.PLAYER_ITEM_TARGET
+		_show_item_target_menu(_engine.units)
+	else:
+		_phase = Phase.PLAYER_ITEM_TARGET
+		_show_item_target_menu(_engine.enemies)
+
+
+func _show_item_target_menu(fighters: Array) -> void:
+	var options: Array[Dictionary] = []
+	for f: FighterData in fighters:
+		options.append({
+			"label": f.character_name,
+			"description": "%s  |  HP: %d/%d" % [f.character_type, f.health, f.max_health],
+		})
+	options.append({"label": "Back"})
+	_action_menu.show_choices(options, true)
+	if not _action_menu.choice_selected.is_connected(_on_item_target_selected):
+		_action_menu.choice_selected.connect(_on_item_target_selected)
+
+
+func _on_item_target_selected(index: int) -> void:
+	var fighters: Array = _engine.units if _selected_item.target_ally else _engine.enemies
+	if index >= fighters.size():
+		# Back to item list
+		_action_menu.choice_selected.disconnect(_on_item_target_selected)
+		_action_menu.choice_selected.connect(_on_action_selected)
+		_action_menu.hide_menu()
+		_phase = Phase.PLAYER_ITEM_SELECT
+		_show_item_menu()
+		return
+
+	_action_menu.choice_selected.disconnect(_on_item_target_selected)
+	_action_menu.choice_selected.connect(_on_action_selected)
+	_action_menu.hide_menu()
+
+	if _is_mp_guest():
+		var item_idx: int = GameState.inventory.get_items().find(_selected_item)
+		_rpc_submit_action.rpc_id(1, {"type": "item", "item_index": item_idx, "target_index": index})
+		_player_turn_done.emit()
+		return
+
+	var item_idx: int = GameState.inventory.get_items().find(_selected_item)
+	var target: FighterData = fighters[index]
+	GameState.inventory.use_item(item_idx)
+	_engine.use_item(_current_actor, target, _selected_item)
+	_engine.check_for_death()
+	_player_turn_done.emit()
 
 
 # =============================================================================
@@ -773,6 +977,16 @@ func _on_combat_message(text: String) -> void:
 
 func _on_combat_event(target: FighterData, amount: int, event_type: String) -> void:
 	_display.on_combat_event(target, amount, event_type)
+	if NetManager.is_multiplayer_active and NetManager.is_host:
+		var idx: int = _all_enemies.find(target)
+		var is_enemy: bool = idx >= 0
+		if not is_enemy:
+			idx = _all_party.find(target)
+		if idx >= 0:
+			_combat_event_queue.append({
+				"idx": idx, "is_enemy": is_enemy,
+				"amount": amount, "type": event_type
+			})
 
 
 func _find_card_for_fighter(fighter: FighterData) -> PortraitCard:
@@ -817,11 +1031,22 @@ func _end_battle() -> void:
 
 	var won: bool = _boss_escaped or _engine.did_player_win()
 
-	# Broadcast battle end to guests
+	# Roll loot drops (host / single-player only)
+	var loot_items: Array = []
+	var loot_gold: int = 0
+	if won:
+		var loot: Dictionary = LootRoller.roll_drops(_all_enemies, GameState.current_story_id)
+		loot_items = loot.items
+		loot_gold = loot.gold
+
+	# Broadcast battle end to guests (include loot in same RPC to avoid race)
 	if NetManager.is_multiplayer_active and NetManager.is_host:
 		_broadcast_state_sync()
 		var stats_data: Array = _serialize_battle_stats()
-		_rpc_battle_ended.rpc(won, stats_data)
+		var item_ids: Array = []
+		for item: ItemData in loot_items:
+			item_ids.append(item.item_id)
+		_rpc_battle_ended.rpc(won, stats_data, item_ids, loot_gold)
 
 	if won:
 		GameLog.info("Battle won: %s" % GameState.current_battle_id)
@@ -833,6 +1058,13 @@ func _end_battle() -> void:
 		_display.show_victory_flash()
 		await get_tree().create_timer(2.0, false).timeout
 		await _show_battle_summary()
+		if loot_items.size() > 0 or loot_gold > 0:
+			if NetManager.is_multiplayer_active:
+				_pre_open_loot_gate()
+			GameState.inventory.add_gold(loot_gold)
+			await _display.show_loot_drops(loot_items, loot_gold)
+			if NetManager.is_multiplayer_active:
+				await _wait_loot_ready()
 		GameState.advance_to_post_battle()
 		if NetManager.is_multiplayer_active and NetManager.is_host:
 			NetManager.change_scene_for_peers("res://scenes/narrative/narrative.tscn")
@@ -849,13 +1081,12 @@ func _end_battle() -> void:
 
 
 func _show_battle_summary() -> void:
-	# Pre-open the ready gate so incoming signals are captured while summary displays
 	if NetManager.is_multiplayer_active:
 		_pre_open_summary_gate()
 	await _display.show_battle_summary()
-	# In online multiplayer, mark self ready and (host only) wait for all
 	if NetManager.is_multiplayer_active:
 		await _wait_summary_ready()
+		_summary_phase_done = true
 
 
 ## Pre-open the summary ready gate so signals arriving while the summary
@@ -883,8 +1114,10 @@ func _wait_summary_ready() -> void:
 	_summary_gate.mark_ready(my_idx)
 	NetManager.notify_scene_ready(my_idx)
 	GameLog.info("Summary gate: marked self ready (idx=%d, is_host=%s)" % [my_idx, NetManager.is_host])
-	# Guests don't wait — host will send change_scene_for_peers
 	if not NetManager.is_host:
+		var g: ReadyGate = _summary_gate
+		_summary_gate = null
+		g.queue_free()
 		return
 	# If all players were already ready, gate hid itself — skip await
 	if not _summary_gate.visible:
@@ -901,13 +1134,50 @@ func _wait_summary_ready() -> void:
 	g2.queue_free()
 
 
-func _on_summary_peer_ready(player_index: int) -> void:
-	GameLog.info("Summary gate: peer_scene_ready(%d), gate_exists=%s" % [player_index, _summary_gate != null])
-	if _summary_gate:
+func _on_peer_ready_received(player_index: int) -> void:
+	if _loot_gate:
+		_loot_gate.mark_ready(player_index)
+	elif _summary_gate:
 		_summary_gate.mark_ready(player_index)
+	elif _summary_phase_done:
+		if player_index not in _pending_loot_ready:
+			_pending_loot_ready.append(player_index)
 	else:
 		if player_index not in _pending_summary_ready:
 			_pending_summary_ready.append(player_index)
+
+
+func _pre_open_loot_gate() -> void:
+	var gate := ReadyGate.new()
+	gate.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	gate.offset_top = -40
+	gate.offset_bottom = -10
+	add_child(gate)
+	_loot_gate = gate
+	gate.start_online(NetManager.get_connected_peer_count())
+	for idx: int in _pending_loot_ready:
+		gate.mark_ready(idx)
+	_pending_loot_ready.clear()
+
+
+func _wait_loot_ready() -> void:
+	var my_idx: int = NetManager.get_my_peer_index()
+	_loot_gate.mark_ready(my_idx)
+	NetManager.notify_scene_ready(my_idx)
+	if not NetManager.is_host:
+		var g: ReadyGate = _loot_gate
+		_loot_gate = null
+		g.queue_free()
+		return
+	if not _loot_gate.visible:
+		var g: ReadyGate = _loot_gate
+		_loot_gate = null
+		g.queue_free()
+		return
+	await _loot_gate.all_ready
+	var g2: ReadyGate = _loot_gate
+	_loot_gate = null
+	g2.queue_free()
 
 
 func _on_fighter_died(fighter: FighterData) -> void:
@@ -946,6 +1216,18 @@ func _highlight_active_card(fighter: FighterData) -> void:
 	_display.highlight_active_card(fighter)
 
 
+func _build_turn_order_text() -> String:
+	var parts: Array[String] = []
+	if _current_actor != null:
+		parts.append("[color=lime]%s[/color]" % _current_actor.character_name)
+	for f: FighterData in _turn_queue:
+		if _engine.units.has(f):
+			parts.append("[color=cyan]%s[/color]" % f.character_name)
+		else:
+			parts.append("[color=salmon]%s[/color]" % f.character_name)
+	return "[color=gray]Turn Order:[/color]  " + "  >  ".join(parts)
+
+
 # =============================================================================
 # Multiplayer RPCs (logic delegated to battle_multiplayer.gd)
 # =============================================================================
@@ -960,8 +1242,11 @@ func _broadcast_state_sync() -> void:
 	_mp.broadcast_state_sync()
 
 @rpc("authority", "call_remote", "reliable")
-func _rpc_state_sync(party_state: Array, enemy_state: Array, alive_party: Array, alive_enemies: Array, log_lines: Array) -> void:
-	_mp.handle_state_sync(party_state, enemy_state, alive_party, alive_enemies, log_lines)
+func _rpc_state_sync(party_state: Array, enemy_state: Array, alive_party: Array,
+		alive_enemies: Array, log_lines: Array, combat_events: Array = [],
+		active_idx: int = -1, active_is_enemy: bool = false, turn_text: String = "") -> void:
+	_mp.handle_state_sync(party_state, enemy_state, alive_party, alive_enemies,
+		log_lines, combat_events, active_idx, active_is_enemy, turn_text)
 
 @rpc("authority", "call_remote", "reliable")
 func _rpc_request_action(actor_party_idx: int) -> void:
@@ -972,7 +1257,8 @@ func _rpc_submit_action(action: Dictionary) -> void:
 	_mp.handle_submit_action(action)
 
 @rpc("authority", "call_remote", "reliable")
-func _rpc_battle_ended(won: bool, stats_data: Array = []) -> void:
+func _rpc_battle_ended(won: bool, stats_data: Array = [], item_ids: Array = [], loot_gold: int = 0) -> void:
+	_mp.handle_loot_dropped(item_ids, loot_gold)
 	_mp.handle_battle_ended(won, stats_data)
 
 
@@ -993,7 +1279,6 @@ func _serialize_battle_stats() -> Array:
 @rpc("authority", "call_remote", "reliable")
 func _rpc_combat_log(text: String) -> void:
 	_mp.handle_combat_log(text)
-
 
 func _on_peer_left_mid_battle(peer_id: int, player_name: String) -> void:
 	_mp.on_peer_left_mid_battle(peer_id, player_name)

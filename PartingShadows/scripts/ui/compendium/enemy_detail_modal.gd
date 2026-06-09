@@ -59,91 +59,119 @@ func build_content(container: VBoxContainer) -> void:
 	story_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	portrait_container.add_child(story_label)
 
-	# Right side: Info panel
-	var info_panel := VBoxContainer.new()
-	info_panel.add_theme_constant_override("separation", 8)
-	info_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	info_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	hbox.add_child(info_panel)
+	# Right side: tabbed panel
+	var right_panel := VBoxContainer.new()
+	right_panel.add_theme_constant_override("separation", 8)
+	right_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	hbox.add_child(right_panel)
 
-	# Name
+	# Name (always visible above tabs)
 	var name_label := Label.new()
 	name_label.text = enemy_data.get("name", "Unknown Enemy")
 	name_label.add_theme_font_size_override("font_size", 20)
 	name_label.add_theme_color_override("font_color", Color(0.9, 0.8, 0.5))
-	info_panel.add_child(name_label)
+	right_panel.add_child(name_label)
 
-	# Separator
 	var sep := HSeparator.new()
-	info_panel.add_child(sep)
+	right_panel.add_child(sep)
 
-	# Flavor text (only if present)
+	# Tab buttons
+	var tab_row := HBoxContainer.new()
+	tab_row.add_theme_constant_override("separation", 8)
+	right_panel.add_child(tab_row)
+
+	var info_btn := Button.new()
+	info_btn.text = "Info"
+	info_btn.custom_minimum_size = Vector2(100, 28)
+	info_btn.add_theme_font_size_override("font_size", SettingsManager.font_size)
+	info_btn.focus_mode = Control.FOCUS_ALL
+	tab_row.add_child(info_btn)
+
+	var abilities_btn := Button.new()
+	abilities_btn.text = "Abilities"
+	abilities_btn.custom_minimum_size = Vector2(100, 28)
+	abilities_btn.add_theme_font_size_override("font_size", SettingsManager.font_size)
+	abilities_btn.focus_mode = Control.FOCUS_ALL
+	tab_row.add_child(abilities_btn)
+
+	info_btn.focus_neighbor_right = abilities_btn.get_path()
+	abilities_btn.focus_neighbor_left = info_btn.get_path()
+
+	# Info tab content
+	var info_content := VBoxContainer.new()
+	info_content.add_theme_constant_override("separation", 8)
+	right_panel.add_child(info_content)
+
 	var flavor: String = enemy_data.get("flavor_text", "")
 	if not flavor.is_empty():
 		var flavor_label := Label.new()
 		flavor_label.text = flavor
 		flavor_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		flavor_label.add_theme_font_size_override("font_size", SettingsManager.font_size)
+		flavor_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 4)
 		flavor_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.8))
-		info_panel.add_child(flavor_label)
+		info_content.add_child(flavor_label)
 		var sep2 := HSeparator.new()
-		info_panel.add_child(sep2)
+		info_content.add_child(sep2)
 
-	# Stats (from base enemy definition)
 	var stats_label := Label.new()
 	stats_label.text = "Base Stats:"
-	stats_label.add_theme_font_size_override("font_size", SettingsManager.font_size + 2)
+	stats_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 4)
 	stats_label.add_theme_color_override("font_color", Color(0.9, 0.8, 0.5))
-	info_panel.add_child(stats_label)
+	info_content.add_child(stats_label)
 
-	var stats_text := _format_stats()
 	var stats_display := Label.new()
-	stats_display.text = stats_text
-	stats_display.add_theme_font_size_override("font_size", SettingsManager.font_size)
-	info_panel.add_child(stats_display)
+	stats_display.text = _format_stats()
+	stats_display.add_theme_font_size_override("font_size", SettingsManager.font_size - 6)
+	info_content.add_child(stats_display)
 
-	# Separator
-	var sep3 := HSeparator.new()
-	info_panel.add_child(sep3)
-
-	# Abilities
-	var abilities_label := Label.new()
-	abilities_label.text = "Abilities:"
-	abilities_label.add_theme_font_size_override("font_size", SettingsManager.font_size + 2)
-	abilities_label.add_theme_color_override("font_color", Color(0.9, 0.8, 0.5))
-	info_panel.add_child(abilities_label)
+	# Abilities tab content
+	var abilities_content := VBoxContainer.new()
+	abilities_content.add_theme_constant_override("separation", 4)
+	abilities_content.visible = false
+	right_panel.add_child(abilities_content)
 
 	var abilities: Array = enemy_data.get("abilities", [])
 	if abilities.is_empty():
 		var none_label := Label.new()
-		none_label.text = "  (No abilities data)"
-		none_label.add_theme_font_size_override("font_size", SettingsManager.font_size)
+		none_label.text = "(No abilities data)"
+		none_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 6)
 		none_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
-		info_panel.add_child(none_label)
+		abilities_content.add_child(none_label)
 	for ability: Variant in abilities:
 		if ability is Dictionary:
-			var name_text: String = "  • " + ability.get("name", "???")
+			var name_text: String = "• " + ability.get("name", "???")
 			var cost: int = ability.get("mana_cost", 0)
 			if cost > 0:
 				name_text += "  (%d MP)" % cost
 			var ability_name_label := Label.new()
 			ability_name_label.text = name_text
-			ability_name_label.add_theme_font_size_override("font_size", SettingsManager.font_size)
+			ability_name_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 6)
 			ability_name_label.add_theme_color_override("font_color", Color.WHITE)
-			info_panel.add_child(ability_name_label)
+			abilities_content.add_child(ability_name_label)
 			var desc: String = ability.get("description", "")
 			if not desc.is_empty():
 				var desc_label := Label.new()
-				desc_label.text = "      " + desc
-				desc_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 1)
+				desc_label.text = "    " + desc
+				desc_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 8)
 				desc_label.add_theme_color_override("font_color", Color(0.7, 0.7, 0.7))
 				desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-				info_panel.add_child(desc_label)
+				abilities_content.add_child(desc_label)
 		elif ability is String:
 			var ability_label := Label.new()
-			ability_label.text = "  • " + ability
-			ability_label.add_theme_font_size_override("font_size", SettingsManager.font_size)
-			info_panel.add_child(ability_label)
+			ability_label.text = "• " + ability
+			ability_label.add_theme_font_size_override("font_size", SettingsManager.font_size - 6)
+			abilities_content.add_child(ability_label)
+
+	# Tab switching
+	var _switch_tab := func(show_info: bool) -> void:
+		info_content.visible = show_info
+		abilities_content.visible = not show_info
+		info_btn.modulate = Color.WHITE if show_info else Color(0.6, 0.6, 0.6)
+		abilities_btn.modulate = Color(0.6, 0.6, 0.6) if show_info else Color.WHITE
+	info_btn.pressed.connect(func() -> void: _switch_tab.call(true))
+	abilities_btn.pressed.connect(func() -> void: _switch_tab.call(false))
+	_switch_tab.call(true)
 
 
 func _format_stats() -> String:

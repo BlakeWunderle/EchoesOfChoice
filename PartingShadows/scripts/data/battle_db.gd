@@ -51,6 +51,7 @@ static func create_battle(battle_id: String) -> BattleData:
 		"CorruptedCityBattle": return Act45.corrupted_city_battle()
 		"CorruptedWildsBattle": return Act45.corrupted_wilds_battle()
 		"DepthsBattle": return Act45.depths_battle()
+		"TunnelCampStop": return Act45.tunnel_camp_stop()
 		"GateBattle": return Act45.gate_battle()
 		"StrangerFinalBattle": return Act45.stranger_final_battle()
 		# Story 1 - Act V Path B (sever the ritual)
@@ -65,7 +66,7 @@ static func create_battle(battle_id: String) -> BattleData:
 		# Story 2 - Act II
 		"S2_CoastalDescent", "S2_FishingVillage", "S2_SmugglersBluff", \
 		"S2_HarborTown", "S2_WreckersCove", "S2_CoastalRuins", \
-		"S2_BlackwaterBay", "S2_LighthouseStorm":
+		"S2_BlackwaterBay", "S2_LighthouseStorm", "S2_LighthouseRest":
 			return S2Act2.create_battle(battle_id)
 		# Story 2 - Act III
 		"S2_BeneathTheLighthouse", "S2_MemoryVault", "S2_EchoGallery", \
@@ -73,13 +74,13 @@ static func create_battle(battle_id: String) -> BattleData:
 		"S2_ForgottenArchive", "S2_TheReveal":
 			return S2Act3.create_battle(battle_id)
 		# Story 2 - Act IV
-		"S2_DepthsOfRemembrance", "S2_MawOfTheEye", \
+		"S2_CoastalCamp", "S2_DepthsOfRemembrance", "S2_MawOfTheEye", \
 		"S2_EyeAwakening", "S2_EyeOfOblivion":
 			return S2Act4.create_battle(battle_id)
 		# Story 2 - Path B (Save Sera)
-		"S2_B_ArchiveAwakening", "S2_B_LighthouseCore", \
-		"S2_B_ResonanceChamber", "S2_B_MemoryFlood", \
-		"S2_B_EyeUnblinking":
+		"S2_B_ArchiveAwakening", "S2_B_SafeHaven", \
+		"S2_B_LighthouseCore", "S2_B_ResonanceChamber", \
+		"S2_B_MemoryFlood", "S2_B_EyeUnblinking":
 			return S2PathB.create_battle(battle_id)
 		# Story 3 - Acts I-II
 		"S3_WearyTraveler", "S3_DreamMeadow", "S3_DreamMirrorHall", \

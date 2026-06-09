@@ -3,6 +3,7 @@ class_name StatsPanel extends PanelContainer
 ## Shows detailed stats for a fighter. Used in battle stats view.
 
 const FighterData := preload("res://scripts/data/fighter_data.gd")
+const EquipmentData := preload("res://scripts/data/equipment_data.gd")
 
 signal closed
 
@@ -53,6 +54,15 @@ func show_fighter(fighter: FighterData) -> void:
 	_add_line("Crit Chance: %d%%" % fighter.crit_chance)
 	_add_line("Crit Damage: %d" % fighter.crit_damage)
 	_add_line("Dodge Chance: %d%%" % fighter.dodge_chance)
+
+	if not fighter.equipment.is_empty():
+		_add_line("")
+		_add_line("Equipment:")
+		for equip: EquipmentData in fighter.equipment:
+			var upgraded: String = " [Upgraded]" if equip.upgrade_level > 0 else ""
+			_add_line("  %s: %s (%s)%s" % [
+				equip.get_slot_name(), equip.display_name,
+				equip.get_bonus_text(), upgraded])
 
 	_vbox.add_child(_close_btn)
 	visible = true
