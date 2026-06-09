@@ -105,7 +105,7 @@ static func create_thought_leech(n: String, lvl: int = 13) -> FighterData:
 	f.physical_defense = EH.es(25, 33, 1, 3, lvl, 13)
 	f.magic_attack = EH.es(108, 118, 3, 5, lvl, 13)
 	f.magic_defense = EH.es(44, 51, 2, 3, lvl, 13)
-	f.speed = EH.es(31, 37, 2, 3, lvl, 13)
+	f.speed = EH.es(30, 36, 2, 3, lvl, 13)
 	f.crit_chance = 10; f.crit_damage = 2; f.dodge_chance = 10
 	f.abilities = [EAB.psychic_siphon(), EAB.mind_fog()]
 	f.flavor_text = "A parasitic entity that attaches to the psyche and drains thought and willpower. Its victims stumble in a fog of confusion, unable to think clearly or act decisively."

@@ -71,7 +71,7 @@ static func create_thread_warden(n: String, lvl: int = 13) -> FighterData:
 	f.physical_defense = EH.es(58, 66, 2, 4, lvl, 13)
 	f.magic_attack = EH.es(22, 26, 0, 1, lvl, 13)
 	f.magic_defense = EH.es(36, 44, 2, 3, lvl, 13)
-	f.speed = EH.es(24, 30, 2, 3, lvl, 13)
+	f.speed = EH.es(23, 29, 2, 3, lvl, 13)
 	f.crit_chance = 10; f.crit_damage = 3; f.dodge_chance = 10
 	f.abilities = [EAB.shielding_blow(), EAB.guardians_oath()]
 	f.flavor_text = "A seasoned warrior sworn to protect the Thread cult's sanctum. Bound by an oath woven into their very being, they fight with unwavering purpose and crushing strength."
