@@ -228,7 +228,7 @@ static func upgrade_to_automaton(f: FighterData) -> void:
 static func upgrade_to_technomancer(f: FighterData) -> void:
 	f.class_id = "Technomancer"; f.character_type = "Technomancer"
 	f.health += 15; f.max_health += 15; f.mana += 2; f.max_mana += 2
-	f.physical_attack += 9; f.physical_defense += 6; f.magic_attack += 10; f.magic_defense += 7
+	f.physical_attack += 9; f.physical_defense += 6; f.magic_attack += 7; f.magic_defense += 7
 	f.speed += 5; f.crit_chance += 3; f.crit_damage += 2; f.dodge_chance += 2
 	f.abilities = [PAB_B.circuit_blast(), PAB_B.techno_drain(), PAB_B.emp_pulse()]
 	f.upgrade_items = []

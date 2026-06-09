@@ -102,7 +102,7 @@ static func suppressing_fire() -> AbilityData:
 # Hunter
 static func triple_arrow() -> AbilityData:
 	return _make("Triple Arrow", "Three arrows fan out to hit all enemies.",
-		Enums.StatType.PHYSICAL_ATTACK, 4, 0, true, 10, true, 0, 0.0)
+		Enums.StatType.PHYSICAL_ATTACK, 16, 0, true, 10, true, 0, 0.0)
 
 static func snare() -> AbilityData:
 	return _make("Snare", "A trap that slows the enemy.",
@@ -184,7 +184,7 @@ static func fire_ball() -> AbilityData:
 
 static func burning_brand() -> AbilityData:
 	return _make("Burning Brand", "Sear the enemy with lasting flames.",
-		Enums.StatType.HEALTH, 0, 3, true, 6, false, 4, 0.0)
+		Enums.StatType.HEALTH, 0, 3, true, 6, false, 6, 0.0)
 
 static func conflagration() -> AbilityData:
 	return _make("Conflagration", "Unleash a wave of fire that engulfs all enemies.",
@@ -323,7 +323,7 @@ static func rally_cry() -> AbilityData:
 # Minstrel
 static func dissonance() -> AbilityData:
 	return _make("Dissonance", "A grating chord that saps the will to fight.",
-		Enums.StatType.ATTACK, 10, 2, true, 5, false, 0, 0.0)
+		Enums.StatType.ATTACK, 10, 2, true, 5, true, 0, 0.0)
 
 static func ballad() -> AbilityData:
 	return _make("Ballad", "A sorrowful melody turned weapon.",

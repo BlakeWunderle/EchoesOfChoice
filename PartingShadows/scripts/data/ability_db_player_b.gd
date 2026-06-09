@@ -94,11 +94,11 @@ static func demolition_charge() -> AbilityData:
 # Chronomancer
 static func temporal_rift() -> AbilityData:
 	return _make("Temporal Rift", "Tear open a rift in time, bombarding all enemies with temporal energy.",
-		Enums.StatType.MAGIC_ATTACK, 10, 0, true, 10, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 13, 0, true, 10, true, 0, 0.0)
 
 static func time_bomb() -> AbilityData:
 	return _make("Time Bomb", "A delayed temporal explosion.",
-		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 7, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 15, 0, true, 7, false, 0, 0.0)
 
 static func time_freeze() -> AbilityData:
 	return _make("Time Freeze", "Stop all enemies in their tracks.",
@@ -107,11 +107,11 @@ static func time_freeze() -> AbilityData:
 # Astronomer
 static func starfall() -> AbilityData:
 	return _make("Starfall", "Call down celestial fire.",
-		Enums.StatType.MAGIC_ATTACK, 14, 0, true, 7, false, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 17, 0, true, 7, false, 0, 0.0)
 
 static func meteor_shower() -> AbilityData:
 	return _make("Meteor Shower", "A rain of cosmic debris.",
-		Enums.StatType.MAGIC_ATTACK, 10, 0, true, 10, true, 0, 0.0)
+		Enums.StatType.MAGIC_ATTACK, 13, 0, true, 10, true, 0, 0.0)
 
 static func eclipse() -> AbilityData:
 	return _make("Eclipse", "Blot out the enemy's magical senses.",
@@ -139,7 +139,7 @@ static func circuit_blast() -> AbilityData:
 
 static func techno_drain() -> AbilityData:
 	return _make("Techno Drain", "Siphon the enemy's energy through crackling circuits.",
-		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 8, false, 0, 0.25)
+		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 8, false, 0, 0.1)
 
 static func emp_pulse() -> AbilityData:
 	return _make("EMP Pulse", "An electromagnetic burst disrupts all enemies' reactions.",
@@ -234,7 +234,7 @@ static func vine_wall() -> AbilityData:
 # Witch Doctor
 static func voodoo_bolt() -> AbilityData:
 	return _make("Voodoo Bolt", "Dark spiritual energy strikes the enemy.",
-		Enums.StatType.MAGIC_ATTACK, 7, 0, true, 8, false, 0, 0.3)
+		Enums.StatType.MAGIC_ATTACK, 12, 0, true, 8, false, 0, 0.3)
 
 static func dark_hex() -> AbilityData:
 	return _make("Dark Hex", "A potent curse that weakens magic resistance.",
