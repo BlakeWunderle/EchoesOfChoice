@@ -7,6 +7,10 @@ const BattleEngine := preload("res://scripts/battle/battle_engine.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const PC := preload("res://scripts/tools/party_composer.gd")
 const BSDB := preload("res://scripts/tools/battle_stage_db.gd")
+const EnemyItemDB := preload("res://scripts/data/enemy_item_db.gd")
+const ItemDB := preload("res://scripts/data/item_db.gd")
+const EquipmentData := preload("res://scripts/data/equipment_data.gd")
+const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
 const MIN_TOTAL_BATTLES := 200_000
 const MIN_SIMS_PER_COMBO := 40
@@ -23,6 +27,20 @@ const STALEMATE_HP_THRESHOLD := 0.03
 const STALEMATE_MAX_PERIODS := 3
 
 static var _sim_engine: BattleEngine = null
+static var enable_enemy_items: bool = false  ## Set via --items flag
+static var player_item_id: String = ""  ## Set via --player-item flag
+static var party_filter: PackedStringArray = []  ## Set via --party flag
+static var trace_mode: bool = false  ## Set via --trace flag
+
+const ITEM_MIN_PROG: Dictionary = {
+	"antidote": 3, "cinder_bomb": 3, "shimmer_oil": 3,
+	"whetstone": 3, "swiftroot": 3, "fire_bomb": 3,
+	"clarity_tonic": 6, "hex_powder": 6, "mind_fog": 6,
+	"war_drum": 6,
+	"keen_edge": 8, "ether_shard": 8, "galeroot": 8,
+	"enfeebling_dust": 8, "void_salt": 8, "smoke_bomb": 8,
+	"spell_prism": 8, "blast_powder": 8,
+}
 
 
 static func _get_sim_engine() -> BattleEngine:
@@ -47,6 +65,8 @@ static func run_single_battle(party: Array, enemies: Array,
 		engine: BattleEngine = null) -> Dictionary:
 	if engine == null:
 		engine = BattleEngine.new()
+	engine.trace_mode = trace_mode
+	engine.trace_log.clear()
 	if engine.sim_mode:
 		engine.start_battle_sim(party, enemies)
 	else:
@@ -99,13 +119,16 @@ static func run_single_battle(party: Array, enemies: Array,
 			stale_hp_snapshot = current_enemy_hp
 
 	var stalemate := not engine.is_battle_over()
-	return {
+	var result := {
 		"won": engine.did_player_win(),
 		"stalemate": stalemate,
 		"player_actions": player_actions,
 		"all_actions": all_actions,
 		"unit_actions": unit_actions,
 	}
+	if engine.trace_mode and not engine.trace_log.is_empty():
+		result["trace"] = engine.trace_log.duplicate()
+	return result
 
 
 # =============================================================================
@@ -147,8 +170,32 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		parties = parties.filter(func(p: Dictionary) -> bool:
 			return not exclude_set.has(PC.get_party_description(p)))
 
+	if not party_filter.is_empty():
+		var filter_set := {}
+		for cname: String in party_filter:
+			filter_set[cname] = true
+		parties = parties.filter(func(p: Dictionary) -> bool:
+			var desc := PC.get_party_description(p)
+			var classes := desc.split(" / ")
+			if classes.size() != filter_set.size():
+				return false
+			for c: String in classes:
+				if not filter_set.has(c):
+					return false
+			return true)
+		if parties.is_empty():
+			print("  WARNING: No party combos match --party filter: %s" % ", ".join(party_filter))
+
+	if player_item_id != "":
+		var min_prog: int = ITEM_MIN_PROG.get(player_item_id, 0)
+		if stage.progression_stage < min_prog:
+			return {}
+
 	var combo_results := []
 	var class_diag := {}
+	var equip_stats := {}  ## { "physical_weapon": {wins: int, total: int}, ... }
+	var ult_stats := {}      ## { "cavalry_thundering_charge": {wins: int, total: int}, ... }
+	var ult_class_map := {}  ## { "cavalry_thundering_charge": "Cavalry", ... }
 	var start_ms := Time.get_ticks_msec()
 	var engine := _get_sim_engine()
 	var turn_all_sum := 0
@@ -156,8 +203,20 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 	var turn_min := 999999
 	var turn_max := 0
 	var turn_battle_count := 0
+	var turn_all_sum_wins := 0
+	var turn_player_sum_wins := 0
+	var turn_min_wins := 999999
+	var turn_max_wins := 0
+	var turn_win_count := 0
+	var turn_all_sum_losses := 0
+	var turn_player_sum_losses := 0
+	var turn_min_losses := 999999
+	var turn_max_losses := 0
+	var turn_loss_count := 0
 	var stalemate_count := 0
+	var item_uses := 0
 	var party_size := 3
+	var agg_action_counts := {"player": {}, "enemy": {}}
 
 	for pi in parties.size():
 		var party_def: Dictionary = parties[pi]
@@ -166,26 +225,60 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		# the full factory dispatch on every iteration.
 		var enemy_template: Array = BSDB.create_enemies(stage.name)
 		for si in sims_per_combo:
-			var party_fighters := PC.create_party(party_def, stage.level_ups)
-			party_size = party_fighters.size()  # capture before run_single_battle mutates via units ref
+			var party_fighters := PC.create_party(party_def, stage.level_ups, stage.get("equip_upgrades", 0), stage.get("has_ultimate", false))
+			var all_party := party_fighters.duplicate()  # snapshot before battle mutates array
+			party_size = party_fighters.size()
 			var enemies: Array = _clone_fighters(enemy_template)
+			if enable_enemy_items:
+				engine.enemy_shared_items = EnemyItemDB.get_battle_items(stage.name)
+			else:
+				engine.enemy_shared_items.clear()
+			if player_item_id != "":
+				engine.player_shared_items = [ItemDB.create_by_id(player_item_id)]
+				engine.player_items_used = 0
+			else:
+				engine.player_shared_items.clear()
 			var br: Dictionary = run_single_battle(party_fighters, enemies, engine)
 			if br.won:
 				wins += 1
 			if br.get("stalemate", false):
 				stalemate_count += 1
+			if br.has("trace"):
+				var outcome: String = "WIN" if br.won else "LOSS"
+				print("\n  --- Sim %d: %s (%s, %d actions) ---" % [
+					si + 1, PC.get_party_description(party_def), outcome, br.all_actions])
+				for line: String in br.trace:
+					print("    %s" % line)
+				print()
+			item_uses += engine.player_items_used
+			for side: String in ["player", "enemy"]:
+				var src: Dictionary = engine.action_counts.get(side, {})
+				for act: String in src:
+					agg_action_counts[side][act] = agg_action_counts[side].get(act, 0) + src[act]
 			turn_all_sum += br.all_actions
 			turn_player_sum += br.player_actions
 			turn_min = mini(turn_min, br.all_actions)
 			turn_max = maxi(turn_max, br.all_actions)
 			turn_battle_count += 1
+			if br.won:
+				turn_all_sum_wins += br.all_actions
+				turn_player_sum_wins += br.player_actions
+				turn_min_wins = mini(turn_min_wins, br.all_actions)
+				turn_max_wins = maxi(turn_max_wins, br.all_actions)
+				turn_win_count += 1
+			else:
+				turn_all_sum_losses += br.all_actions
+				turn_player_sum_losses += br.player_actions
+				turn_min_losses = mini(turn_min_losses, br.all_actions)
+				turn_max_losses = maxi(turn_max_losses, br.all_actions)
+				turn_loss_count += 1
 			# Accumulate per-class combat diagnostics.
-			for f: FighterData in party_fighters:
+			for f: FighterData in all_party:
 				var ct: String = f.character_type
 				if not class_diag.has(ct):
 					class_diag[ct] = {dmg_dealt = 0, dmg_taken = 0,
 						heals = 0, deaths = 0, battles = 0, actions = 0, dmg_mitigated = 0,
-					buffs_applied = 0, debuffs_applied = 0}
+					buffs_applied = 0, debuffs_applied = 0, charge_gained = 0, stalemates = 0}
 				var ss: Dictionary = engine.sim_stats.get(f, {})
 				class_diag[ct].dmg_dealt += ss.get("dmg_dealt", 0)
 				class_diag[ct].dmg_taken += ss.get("dmg_taken", 0)
@@ -196,6 +289,27 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 				class_diag[ct].dmg_mitigated += ss.get("dmg_mitigated", 0)
 				class_diag[ct].buffs_applied += ss.get("buffs_applied", 0)
 				class_diag[ct].debuffs_applied += ss.get("debuffs_applied", 0)
+				class_diag[ct].charge_gained += ss.get("charge_gained", 0)
+				if br.get("stalemate", false):
+					class_diag[ct].stalemates += 1
+				# Accumulate per-equipment-piece win rates.
+				for equip: EquipmentData in f.equipment:
+					var eid: String = equip.base_id
+					if not equip_stats.has(eid):
+						equip_stats[eid] = {wins = 0, total = 0}
+					equip_stats[eid].total += 1
+					if br.won:
+						equip_stats[eid].wins += 1
+				# Accumulate per-ultimate win rates and usage counts.
+				if f.ultimate != null:
+					var uid: String = f.ultimate.ultimate_id
+					if not ult_stats.has(uid):
+						ult_stats[uid] = {wins = 0, total = 0, uses = 0}
+						ult_class_map[uid] = f.character_type
+					ult_stats[uid].total += 1
+					ult_stats[uid].uses += ss.get("ultimates_used", 0)
+					if br.won:
+						ult_stats[uid].wins += 1
 
 		combo_results.append({
 			"description": PC.get_party_description(party_def),
@@ -219,8 +333,14 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 	var avg_player_per_char := (float(turn_player_sum) / (party_size * turn_battle_count)
 		if turn_battle_count > 0 else 0.0)
 	var avg_all := float(turn_all_sum) / turn_battle_count if turn_battle_count > 0 else 0.0
+	var avg_ppc_wins := (float(turn_player_sum_wins) / (party_size * turn_win_count)
+		if turn_win_count > 0 else 0.0)
+	var avg_all_wins := float(turn_all_sum_wins) / turn_win_count if turn_win_count > 0 else 0.0
+	var avg_ppc_losses := (float(turn_player_sum_losses) / (party_size * turn_loss_count)
+		if turn_loss_count > 0 else 0.0)
+	var avg_all_losses := float(turn_all_sum_losses) / turn_loss_count if turn_loss_count > 0 else 0.0
 
-	return {
+	var result := {
 		"stage_name": stage.name,
 		"target_win_rate": stage.target_win_rate,
 		"progression_stage": stage.progression_stage,
@@ -229,6 +349,9 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 		"overall_win_rate": overall_wr,
 		"elapsed_ms": Time.get_ticks_msec() - start_ms,
 		"class_diag": class_diag,
+		"equip_stats": equip_stats,
+		"ult_stats": ult_stats,
+		"ult_class_map": ult_class_map,
 		"turn_stats": {
 			"avg_player_per_char": avg_player_per_char,
 			"avg_all_actions": avg_all,
@@ -240,8 +363,35 @@ static func simulate_stage(stage: Dictionary, sims_per_combo: int,
 			"_total_player_actions": turn_player_sum,
 			"_total_battle_count": turn_battle_count,
 			"_party_size": party_size,
+			"wins": {
+				"avg_player_per_char": avg_ppc_wins,
+				"avg_all_actions": avg_all_wins,
+				"min_all_actions": turn_min_wins if turn_win_count > 0 else 0,
+				"max_all_actions": turn_max_wins if turn_win_count > 0 else 0,
+				"_total_all_actions": turn_all_sum_wins,
+				"_total_player_actions": turn_player_sum_wins,
+				"_total_battle_count": turn_win_count,
+			},
+			"losses": {
+				"avg_player_per_char": avg_ppc_losses,
+				"avg_all_actions": avg_all_losses,
+				"min_all_actions": turn_min_losses if turn_loss_count > 0 else 0,
+				"max_all_actions": turn_max_losses if turn_loss_count > 0 else 0,
+				"_total_all_actions": turn_all_sum_losses,
+				"_total_player_actions": turn_player_sum_losses,
+				"_total_battle_count": turn_loss_count,
+			},
 		},
 	}
+	result["action_counts"] = agg_action_counts
+	if player_item_id != "":
+		result["player_item"] = player_item_id
+		result["item_usage"] = {
+			"uses": item_uses,
+			"total_battles": turn_battle_count,
+			"use_rate": float(item_uses) / turn_battle_count if turn_battle_count > 0 else 0.0,
+		}
+	return result
 
 
 # =============================================================================
@@ -275,6 +425,10 @@ static func print_stage_result(result: Dictionary) -> void:
 			ts.min_all_actions, ts.max_all_actions, stale_str])
 	print_combo_extremes(result)
 	print_class_breakdown(result)
+	print_action_breakdown(result)
+	print_equipment_breakdown(result)
+	print_ultimate_breakdown(result)
+	print_charge_analysis(result)
 	print("\n  STATUS: %s" % get_status(result))
 
 
@@ -394,6 +548,188 @@ static func print_class_breakdown(result: Dictionary) -> void:
 		var avg_heals: float = float(d.get("heals", 0)) / battles
 		print("    %-22s %8.1f %8.1f %10.1f %8.1f" % [
 			e["class"], avg_dealt, avg_taken, avg_mitigated, avg_heals])
+
+
+static func get_equipment_breakdown(result: Dictionary) -> Dictionary:
+	var es: Dictionary = result.get("equip_stats", {})
+	if es.is_empty():
+		return {}
+	var slots := {"Weapon": [], "Armor": [], "Boots": []}
+	for eid: String in es:
+		var s: Dictionary = es[eid]
+		var wr: float = float(s.wins) / s.total if s.total > 0 else 0.0
+		var entry := {"id": eid, "win_rate": wr, "total": s.total}
+		if eid.ends_with("_weapon"):
+			slots["Weapon"].append(entry)
+		elif eid.ends_with("_armor"):
+			slots["Armor"].append(entry)
+		elif eid.ends_with("_boots"):
+			slots["Boots"].append(entry)
+	for slot_entries: Array in slots.values():
+		slot_entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			return a.win_rate > b.win_rate)
+	return slots
+
+
+static func print_action_breakdown(result: Dictionary) -> void:
+	var ac: Dictionary = result.get("action_counts", {})
+	if ac.is_empty():
+		return
+	var order := ["PHYS_ATK", "ABILITY", "AOE", "HEAL", "BUFF", "DEBUFF", "TAUNT", "BLOCK", "REST", "ITEM"]
+	for side: String in ["player", "enemy"]:
+		var counts: Dictionary = ac.get(side, {})
+		if counts.is_empty():
+			continue
+		var total := 0
+		for v: int in counts.values():
+			total += v
+		if total == 0:
+			continue
+		print("\n  ACTION BREAKDOWN (%s, %d total):" % [side.to_upper(), total])
+		for act: String in order:
+			var c: int = counts.get(act, 0)
+			if c == 0:
+				continue
+			print("    %-12s %6d  %5.1f%%" % [act, c, float(c) / total * 100.0])
+		for act: String in counts:
+			if act not in order:
+				var c: int = counts[act]
+				print("    %-12s %6d  %5.1f%%" % [act, c, float(c) / total * 100.0])
+
+
+static func print_equipment_breakdown(result: Dictionary) -> void:
+	var slots := get_equipment_breakdown(result)
+	if slots.is_empty():
+		return
+	print("\n  EQUIPMENT BREAKDOWN:")
+	print("    %-22s %10s %10s  %s" % ["Piece", "Win Rate", "Battles", "Note"])
+	print("    " + "-".repeat(56))
+	for slot_name: String in ["Weapon", "Armor", "Boots"]:
+		var entries: Array = slots[slot_name]
+		if entries.is_empty():
+			continue
+		var slot_avg := 0.0
+		for e: Dictionary in entries:
+			slot_avg += e.win_rate
+		slot_avg /= entries.size()
+		for e: Dictionary in entries:
+			var diff: float = (e.win_rate - slot_avg) * 100
+			var note := ""
+			if absf(diff) > 5.0:
+				note = "** %+.1fpp **" % diff
+			elif absf(diff) > 3.0:
+				note = "(%+.1fpp)" % diff
+			print("    %-22s %9.1f%% %10d  %s" % [
+				e.id, e.win_rate * 100, e.total, note])
+		print("    %-22s %9.1f%% %10s" % [
+			"  [%s avg]" % slot_name, slot_avg * 100, ""])
+
+
+static func get_ultimate_breakdown(result: Dictionary) -> Dictionary:
+	var us: Dictionary = result.get("ult_stats", {})
+	var cm: Dictionary = result.get("ult_class_map", {})
+	if us.is_empty():
+		return {}
+	var by_class := {}  ## { "Cavalry": [{id, name, win_rate, total}, ...] }
+	for uid: String in us:
+		var s: Dictionary = us[uid]
+		var wr: float = s.get("win_rate", float(s.wins) / s.total if s.total > 0 else 0.0)
+		var cname: String = cm.get(uid, s.get("class", "Unknown"))
+		var ult_ref = UltimateDB.get_ultimate_by_id(uid)
+		var display_name: String = ult_ref.ultimate_name if ult_ref != null else uid
+		var uses: int = int(s.get("uses", 0))
+		var avg_uses: float = float(uses) / s.total if s.total > 0 else 0.0
+		if not by_class.has(cname):
+			by_class[cname] = []
+		by_class[cname].append({
+			"id": uid, "name": display_name, "win_rate": wr,
+			"total": s.total, "uses": uses, "avg_uses": avg_uses})
+	for entries: Array in by_class.values():
+		entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+			return a.win_rate > b.win_rate)
+	return by_class
+
+
+static func print_ultimate_breakdown(result: Dictionary) -> void:
+	var by_class := get_ultimate_breakdown(result)
+	if by_class.is_empty():
+		return
+	var class_names: Array = by_class.keys()
+	class_names.sort()
+	print("\n  ULTIMATE BREAKDOWN:")
+	print("    %-22s %-22s %10s %10s %8s  %s" % [
+		"Class", "Ultimate", "Win Rate", "Battles", "AvgUses", "Note"])
+	print("    " + "-".repeat(82))
+	for cname: String in class_names:
+		var entries: Array = by_class[cname]
+		if entries.is_empty():
+			continue
+		var class_avg := 0.0
+		for e: Dictionary in entries:
+			class_avg += e.win_rate
+		class_avg /= entries.size()
+		for e: Dictionary in entries:
+			var diff: float = (e.win_rate - class_avg) * 100
+			var note := ""
+			if absf(diff) > 5.0:
+				note = "** %+.1fpp **" % diff
+			elif absf(diff) > 3.0:
+				note = "(%+.1fpp)" % diff
+			if e.avg_uses < 0.1:
+				note += " [NEVER FIRES]" if note == "" else " [NEVER FIRES]"
+			print("    %-22s %-22s %9.1f%% %10d %8.2f  %s" % [
+				cname, e.name, e.win_rate * 100, e.total, e.avg_uses, note])
+		print("    %-22s %-22s %9.1f%% %10s %8s" % [
+			"", "  [%s avg]" % cname, class_avg * 100, "", ""])
+
+
+static func print_charge_analysis(result: Dictionary) -> void:
+	var diag: Dictionary = result.get("class_diag", {})
+	var cm: Dictionary = result.get("ult_class_map", {})
+	var us: Dictionary = result.get("ult_stats", {})
+	if diag.is_empty() or us.is_empty():
+		return
+	# Build class -> charge_per_action from class_diag
+	var class_cpa := {}  ## { "Cavalry": charge_per_action }
+	for cname: String in diag:
+		var d: Dictionary = diag[cname]
+		var actions: int = d.get("actions", 0)
+		var charge: int = d.get("charge_gained", 0)
+		if actions > 0 and charge > 0:
+			class_cpa[cname] = float(charge) / actions
+	if class_cpa.is_empty():
+		return
+	# Build entries with current cost and recommended costs for 5/6/7 turn targets
+	var entries := []
+	for uid: String in us:
+		var cname: String = cm.get(uid, us[uid].get("class", ""))
+		if cname == "" or not class_cpa.has(cname):
+			continue
+		var cpa: float = class_cpa[cname]
+		var ult_ref = UltimateDB.get_ultimate_by_id(uid)
+		if ult_ref == null:
+			continue
+		entries.append({
+			"class": cname,
+			"name": ult_ref.ultimate_name,
+			"current_cost": ult_ref.charge_cost,
+			"cpa": cpa,
+			"cost_5t": roundi(cpa * 5),
+			"cost_6t": roundi(cpa * 6),
+			"cost_7t": roundi(cpa * 7),
+		})
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if a["class"] != b["class"]:
+			return a["class"] < b["class"]
+		return a.current_cost < b.current_cost)
+	print("\n  CHARGE RATE ANALYSIS (charge per action):")
+	print("    %-22s %-22s %6s %8s %8s %8s %8s" % [
+		"Class", "Ultimate", "Ch/Act", "Current", "5-turn", "6-turn", "7-turn"])
+	print("    " + "-".repeat(88))
+	for e: Dictionary in entries:
+		print("    %-22s %-22s %6.1f %8d %8d %8d %8d" % [
+			e["class"], e.name, e.cpa, e.current_cost,
+			e.cost_5t, e.cost_6t, e.cost_7t])
 
 
 static func print_summary(results: Array) -> void:
@@ -548,6 +884,33 @@ static func format_stage_verbose(result: Dictionary) -> PackedStringArray:
 		var avg_heals: float = float(dc.get("heals", 0)) / battles_c
 		lines.append("    %-22s %8.1f %8.1f %10.1f %8.1f" % [
 			e["class"], avg_dealt, avg_taken, avg_mitigated, avg_heals])
+
+	# Equipment breakdown.
+	var equip_slots := get_equipment_breakdown(result)
+	if not equip_slots.is_empty():
+		lines.append("")
+		lines.append("  EQUIPMENT BREAKDOWN:")
+		lines.append("    %-22s %10s %10s  %s" % ["Piece", "Win Rate", "Battles", "Note"])
+		lines.append("    " + "-".repeat(56))
+		for slot_name: String in ["Weapon", "Armor", "Boots"]:
+			var slot_entries: Array = equip_slots.get(slot_name, [])
+			if slot_entries.is_empty():
+				continue
+			var slot_avg := 0.0
+			for eq: Dictionary in slot_entries:
+				slot_avg += eq.win_rate
+			slot_avg /= slot_entries.size()
+			for eq: Dictionary in slot_entries:
+				var diff: float = (eq.win_rate - slot_avg) * 100
+				var note := ""
+				if absf(diff) > 5.0:
+					note = "** %+.1fpp **" % diff
+				elif absf(diff) > 3.0:
+					note = "(%+.1fpp)" % diff
+				lines.append("    %-22s %9.1f%% %10d  %s" % [
+					eq.id, eq.win_rate * 100, eq.total, note])
+			lines.append("    %-22s %9.1f%% %10s" % [
+				"  [%s avg]" % slot_name, slot_avg * 100, ""])
 
 	lines.append("")
 	lines.append("  STATUS: %s" % get_status(result))

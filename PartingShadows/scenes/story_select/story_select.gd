@@ -57,6 +57,7 @@ func _build_ui() -> void:
 
 	# Menu
 	_menu = ChoiceMenu.new()
+	_menu.button_min_size = Vector2(480, 64)
 	_menu.choice_selected.connect(_on_story_selected)
 	vbox.add_child(_menu)
 

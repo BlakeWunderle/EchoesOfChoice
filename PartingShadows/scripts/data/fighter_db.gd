@@ -11,6 +11,7 @@ const T2 := preload("res://scripts/data/fighter_db_t2.gd")
 const T2B := preload("res://scripts/data/fighter_db_t2b.gd")
 const T2C := preload("res://scripts/data/fighter_db_t2c.gd")
 const Meta := preload("res://scripts/data/fighter_db_meta.gd")
+const Roles := preload("res://scripts/data/fighter_db_roles.gd")
 
 
 # =============================================================================
@@ -46,13 +47,13 @@ static func create_mage(fighter_name: String) -> FighterData:
 	f.class_id = "Mage"
 	f.is_user_controlled = true
 	f.level = 1
-	f.health = randi_range(40, 46); f.max_health = f.health
+	f.health = randi_range(42, 48); f.max_health = f.health
 	f.mana = randi_range(8, 10); f.max_mana = f.mana
 	f.physical_attack = randi_range(9, 12)
-	f.physical_defense = randi_range(7, 10)
+	f.physical_defense = randi_range(8, 11)
 	f.magic_attack = randi_range(15, 19)
 	f.magic_defense = randi_range(14, 18)
-	f.speed = randi_range(17, 21)
+	f.speed = randi_range(18, 22)
 	f.crit_chance = 8
 	f.crit_damage = 1
 	f.dodge_chance = 5
@@ -96,7 +97,7 @@ static func create_scholar(fighter_name: String) -> FighterData:
 	f.physical_defense = randi_range(10, 13)
 	f.magic_attack = randi_range(13, 17)
 	f.magic_defense = randi_range(13, 17)
-	f.speed = randi_range(17, 21)
+	f.speed = randi_range(18, 22)
 	f.crit_chance = 5
 	f.crit_damage = 1
 	f.dodge_chance = 5
@@ -117,7 +118,7 @@ static func create_wildling(fighter_name: String) -> FighterData:
 	f.physical_attack = randi_range(11, 15)
 	f.physical_defense = randi_range(10, 13)
 	f.magic_attack = randi_range(11, 15)
-	f.magic_defense = randi_range(10, 13)
+	f.magic_defense = randi_range(12, 15)
 	f.speed = randi_range(20, 24)
 	f.crit_chance = 5
 	f.crit_damage = 1
@@ -136,10 +137,10 @@ static func create_wanderer(fighter_name: String) -> FighterData:
 	f.level = 1
 	f.health = randi_range(41, 49); f.max_health = f.health
 	f.mana = randi_range(4, 6); f.max_mana = f.mana
-	f.physical_attack = randi_range(14, 18)
+	f.physical_attack = randi_range(13, 17)
 	f.physical_defense = randi_range(8, 11)
 	f.magic_attack = randi_range(6, 9)
-	f.magic_defense = randi_range(14, 18)
+	f.magic_defense = randi_range(13, 17)
 	f.speed = randi_range(21, 25)
 	f.crit_chance = 10
 	f.crit_damage = 1
@@ -168,7 +169,7 @@ static func level_up(fighter: FighterData) -> void:
 const _GROWTH := {
 	#                  hp     mp     patk   pdef   matk   mdef   spd    dodge  crit
 	"Squire":      [[7,9], [1,2], [1,2], [1,2], [1,2], [1,2], [1,2], [0,1], [0,1]],
-	"Mage":        [[5,7], [2,3], [1,2], [1,2], [1,2], [1,2], [1,1], [0,1], [0,1]],
+	"Mage":        [[5,7], [1,2], [1,2], [1,2], [1,2], [1,2], [1,1], [0,1], [0,1]],
 	"Entertainer": [[7,9], [1,2], [2,3], [1,2], [2,3], [1,2], [1,1], [0,1], [0,1]],
 	"Tinker":      [[6,8], [1,2], [1,2], [1,2], [1,2], [1,2], [1,1], [0,1], [0,1]],
 	"Wildling":    [[6,7], [1,2], [1,2], [1,2], [2,3], [1,2], [1,2], [0,1], [0,1]],
@@ -232,7 +233,7 @@ static func get_default_upgrade_items(class_id: String) -> Array[String]:
 		"Dervish": return ["Light", "Paint"]
 		"Orator": return ["Medal", "Pen"]
 		"Artificer": return ["Potion", "Hammer"]
-		"Cosmologist": return ["TimeMachine", "Telescope"]
+		"Philosopher": return ["TimeMachine", "Telescope"]
 		"Arithmancer": return ["ClockworkCore", "Computer"]
 		"Herbalist": return ["Venom", "Seedling"]
 		"Shaman": return ["Shrunkenhead", "SpiritOrb"]
@@ -273,7 +274,7 @@ static func upgrade_class(fighter: FighterData, item: String) -> bool:
 		"Entertainer:Slippers": T1.upgrade_to_dervish(fighter)
 		"Entertainer:Scroll": T1.upgrade_to_orator(fighter)
 		"Tinker:Crystal": T1.upgrade_to_artificer(fighter)
-		"Tinker:Textbook": T1.upgrade_to_cosmologist(fighter)
+		"Tinker:Textbook": T1.upgrade_to_philosopher(fighter)
 		"Tinker:Abacus": T1.upgrade_to_arithmancer(fighter)
 		"Wildling:Herbs": T1.upgrade_to_herbalist(fighter)
 		"Wildling:Totem": T1.upgrade_to_shaman(fighter)
@@ -304,8 +305,8 @@ static func upgrade_class(fighter: FighterData, item: String) -> bool:
 		# T1 → T2 (Tinker tree)
 		"Artificer:Potion": T2B.upgrade_to_alchemist(fighter)
 		"Artificer:Hammer": T2B.upgrade_to_bombardier(fighter)
-		"Cosmologist:TimeMachine": T2B.upgrade_to_chronomancer(fighter)
-		"Cosmologist:Telescope": T2B.upgrade_to_astronomer(fighter)
+		"Philosopher:TimeMachine": T2B.upgrade_to_chronomancer(fighter)
+		"Philosopher:Telescope": T2B.upgrade_to_astronomer(fighter)
 		"Arithmancer:ClockworkCore": T2B.upgrade_to_automaton(fighter)
 		"Arithmancer:Computer": T2B.upgrade_to_technomancer(fighter)
 		# T1 → T2 (Wildling tree)
@@ -342,9 +343,26 @@ static func preview_upgrade(fighter: FighterData, item: String) -> Dictionary:
 		if diff != 0:
 			deltas[key] = diff
 	var ability_names: Array[String] = []
+	var ability_details: Array[Dictionary] = []
 	for a: RefCounted in c.abilities:
 		ability_names.append(a.ability_name)
-	return {"new_class": c.character_type, "deltas": deltas, "abilities": ability_names}
+		ability_details.append({
+			"name": a.ability_name,
+			"description": a.get_compendium_description(),
+			"mana_cost": a.mana_cost,
+		})
+	var role_labels: Array[String] = []
+	for role in Roles.get_roles(c.class_id):
+		match role:
+			Enums.Role.DPS: role_labels.append("Striker")
+			Enums.Role.FIGHTER: role_labels.append("Fighter")
+			Enums.Role.BURST: role_labels.append("Nuker")
+			Enums.Role.TANK: role_labels.append("Tank")
+			Enums.Role.SUPPORT: role_labels.append("Support")
+			Enums.Role.CASTER: role_labels.append("Caster")
+			Enums.Role.HYBRID: role_labels.append("Hybrid")
+	return {"new_class": c.character_type, "new_class_id": c.class_id, "deltas": deltas,
+		"abilities": ability_names, "ability_details": ability_details, "roles": role_labels}
 
 
 static func _snapshot_stats(f: FighterData) -> Dictionary:

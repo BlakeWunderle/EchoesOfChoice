@@ -25,7 +25,7 @@ func _ready() -> void:
 	_scroll = ScrollContainer.new()
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_scroll.custom_minimum_size = Vector2(800, 420)
+	_scroll.custom_minimum_size = Vector2(970, 440)
 	add_child(_scroll)
 
 	# Grid container

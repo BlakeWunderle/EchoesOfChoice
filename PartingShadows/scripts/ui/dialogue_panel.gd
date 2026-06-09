@@ -59,12 +59,24 @@ func _build_ui() -> void:
 	vbox.add_child(_continue_label)
 
 
+func dismiss() -> void:
+	_gen += 1
+	_typing = false
+	_accepting_input = false
+	if _pulse_tween and _pulse_tween.is_valid():
+		_pulse_tween.kill()
+	_continue_label.modulate.a = 0.0
+	visible = false
+
+
 func show_text(lines: Array) -> void:
 	_gen += 1  # Invalidate any running typewriter loop
 	_typing = false
 	_lines = lines
 	_current_line = 0
 	_label.clear()
+	if _pulse_tween and _pulse_tween.is_valid():
+		_pulse_tween.kill()
 	_continue_label.modulate.a = 0.0
 	visible = true
 	_accepting_input = false
@@ -168,6 +180,8 @@ func _input(event: InputEvent) -> void:
 		_typing = false
 	elif _current_line >= _lines.size():
 		# All lines shown and player pressed continue
+		if _pulse_tween and _pulse_tween.is_valid():
+			_pulse_tween.kill()
 		_continue_label.modulate.a = 0.0
 		_accepting_input = false  # Prevent double emissions on rapid clicks
 		all_text_finished.emit()

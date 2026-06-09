@@ -1,0 +1,12 @@
+"DepotBuildConfig"
+{
+	"DepotID" "4829013"
+	"ContentRoot" "C:\Projects\PartingShadows\build\macos-demo"
+	"FileMapping"
+	{
+		"LocalPath" "*"
+		"DepotPath" "."
+		"Recursive" "1"
+	}
+	"FileExclusion" "*.zip"
+}

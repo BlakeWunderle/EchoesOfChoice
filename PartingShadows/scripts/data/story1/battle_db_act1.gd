@@ -96,7 +96,7 @@ static func waypoint_defense_battle() -> BattleData:
 static func forest_waypoint() -> BattleData:
 	var b := BattleData.new()
 	b.battle_id = "ForestWaypoint"
-	b.scene_image = "res://assets/art/battles/forest_waypoint.png"
+	b.scene_image = "res://assets/art/battles/wanderers_rest_interior.png"
 	b.is_town_stop = true
 	b.pre_battle_text = [
 		"The innkeeper unlocks a heavy door behind the bar and pulls it open. The storeroom is larger than it looks from outside.",

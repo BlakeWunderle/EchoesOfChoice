@@ -93,7 +93,7 @@ All paths below are relative to `PartingShadows/`.
 - `pause_overlay.gd` -- CanvasLayer pause menu with save, settings, compendium, key bindings sub-menus, confirmation dialogs, ESC keybinding; multiplayer-aware (no tree pause, hide save, leave session); Open to Multiplayer with fighter picker
 - `pause_save_slots.gd` -- Save slot UI helper: show/select/overwrite/delete save slots, used by pause_overlay
 - `compendium_manager.gd` -- Cross-session enemy/class compendium tracking via user://compendium.json, Steam achievement hooks, Steam Cloud sync
-- `settings_manager.gd` -- Global settings persistence (music/SFX/master volume, text speed, display mode, resolution, color blind mode with HP/MP/buff/debuff palettes, key bindings) via user://settings.json, Steam Cloud sync
+- `settings_manager.gd` -- Global settings persistence (music/SFX/master volume, text speed, difficulty, display mode, resolution, color blind mode with HP/MP/buff/debuff palettes, key bindings) via user://settings.json, Steam Cloud sync
 - `steam_manager.gd` -- Steam SDK initialization, persona name, overlay detection, achievements, Cloud read/write/delete, rich presence
 - `net_manager.gd` -- Multiplayer session manager: lobby create/join, peer tracking, slot assignment, transport abstraction (ENet/Steam), disconnect handling with AI takeover, game state broadcast for mid-game join
 - `local_coop.gd` -- Local co-op manager: device tracking, input gating via _input() filter, slot-to-player mapping, active player control

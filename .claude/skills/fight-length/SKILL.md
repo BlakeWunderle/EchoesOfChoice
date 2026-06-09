@@ -6,7 +6,9 @@ description: Analyze battle fight length from the sim JSON — average actions, 
 # Fight Length Analysis
 
 Reads `turn_stats` from the sim JSON and surfaces battles with slog problems and boss
-fights that are too short. Does **not** run the simulator — reads existing data only.
+fights that are too short. Does **not** run the simulator -- reads existing data only.
+
+**Runs immediately after any `/battle-sim` run** -- the battle-sim skill always persists `turn_stats` to the JSON file. No refresh or re-sim needed.
 
 ## Data Source
 

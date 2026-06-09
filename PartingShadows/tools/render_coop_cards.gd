@@ -2,7 +2,7 @@ extends SceneTree
 
 ## Renders two cards for the co-op trailer:
 ##   1. Title card: "PARTING SHADOWS" + "Local & Online Co-op" (no CTA)
-##   2. End card:   "PARTING SHADOWS" + subtitle + "Wishlist on Steam"
+##   2. End card:   "PARTING SHADOWS" + subtitle + "Available Now on Steam"
 ##
 ## Must run with display server (NOT --headless) since SubViewport needs GPU.
 ##
@@ -125,7 +125,7 @@ func _build_end_card() -> void:
 
 	# CTA
 	var cta := Label.new()
-	cta.text = "Wishlist on Steam"
+	cta.text = "Available Now on Steam"
 	cta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	cta.add_theme_font_size_override("font_size", 40)
 	cta.add_theme_constant_override("outline_size", 2)

@@ -5,6 +5,7 @@ class_name NameInput extends VBoxContainer
 ## Includes a Random button that fills a random fantasy name.
 
 signal name_entered(player_name: String)
+signal text_changed(new_text: String)
 
 const _VirtualKeyboard := preload("res://scripts/ui/virtual_keyboard.gd")
 
@@ -51,6 +52,7 @@ func _build_ui() -> void:
 	_line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_line_edit.max_length = 20
 	_line_edit.text_submitted.connect(_on_text_submitted)
+	_line_edit.text_changed.connect(func(t: String) -> void: text_changed.emit(t))
 	add_child(_line_edit)
 
 	_btn_row = HBoxContainer.new()
@@ -89,10 +91,26 @@ func show_prompt(text: String) -> void:
 	_prompt_label.text = text
 	_line_edit.text = ""
 	_line_edit.editable = true
+	_line_edit.placeholder_text = "Enter name..."
+	_confirm_btn.visible = true
 	_virtual_kb.visible = false
 	_btn_row.visible = true
 	visible = true
 	_line_edit.grab_focus()
+
+
+func show_mirror(prompt: String) -> void:
+	_prompt_label.text = prompt
+	_line_edit.text = ""
+	_line_edit.editable = false
+	_line_edit.placeholder_text = ""
+	_confirm_btn.visible = false
+	_virtual_kb.visible = false
+	visible = true
+
+
+func set_mirror_text(text: String) -> void:
+	_line_edit.text = text
 
 
 func _input(event: InputEvent) -> void:

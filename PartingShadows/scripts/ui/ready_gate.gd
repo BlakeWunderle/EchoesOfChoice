@@ -35,17 +35,11 @@ func start_online(peer_count: int) -> void:
 	_is_online = true
 	_player_count = peer_count
 	_ready_states.clear()
+	_pending_ready.clear()
 	for i: int in peer_count:
 		_ready_states.append(false)
-	# Apply any ready signals that arrived before the gate was started
-	for idx: int in _pending_ready:
-		if idx >= 0 and idx < peer_count:
-			_ready_states[idx] = true
-	_pending_ready.clear()
 	_build_labels()
 	visible = true
-	# If all players were already ready before the gate opened, fire immediately
-	_check_all_ready()
 
 
 func _build_labels() -> void:
@@ -92,6 +86,7 @@ func _check_all_ready() -> void:
 		if not r:
 			return
 	visible = false
+	_ready_states.clear()
 	all_ready.emit()
 
 

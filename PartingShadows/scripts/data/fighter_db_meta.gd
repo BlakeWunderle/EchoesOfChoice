@@ -28,7 +28,7 @@ static func get_display_name(class_id: String) -> String:
 		"Orator": return "Orator"
 		# T1:Tinker
 		"Artificer": return "Artificer"
-		"Cosmologist": return "Philosopher"
+		"Philosopher": return "Philosopher"
 		"Arithmancer": return "Arithmancer"
 		# T1:Wildling
 		"Herbalist": return "Herbalist"
@@ -104,7 +104,7 @@ static func get_abilities_for_class(class_id: String) -> Array:
 		"Orator": return [PAB.oration(), PAB.encourage(), PAB.rebuke()]
 		# T1:Tinker
 		"Artificer": return [PAB_B.volatile_flask(), PAB_B.magical_tinkering(), PAB_B.healing_draught()]
-		"Cosmologist": return [PAB_B.time_warp(), PAB_B.black_hole(), PAB_B.gravity()]
+		"Philosopher": return [PAB_B.time_warp(), PAB_B.black_hole(), PAB_B.gravity()]
 		"Arithmancer": return [PAB_B.theorem(), PAB_B.calculate(), PAB_B.probability()]
 		# T1:Wildling
 		"Herbalist": return [PAB_B.mending_herbs(), PAB_B.sapping_vine(), PAB_B.thorn_spray()]
@@ -180,7 +180,7 @@ static func get_flavor_text(class_id: String) -> String:
 		"Orator": return "A master of rhetoric whose speeches move allies to action and enemies to doubt."
 		# T1: Tinker tree
 		"Artificer": return "A skilled craftsperson who turns raw materials into instruments of war and healing alike."
-		"Cosmologist": return "A philosopher who gazes beyond the stars, seeking the hidden laws that govern all things."
+		"Philosopher": return "A philosopher who gazes beyond the stars, seeking the hidden laws that govern all things."
 		"Arithmancer": return "A scholar who finds power in pure mathematics, solving equations that reshape reality."
 		# T1: Wildling tree
 		"Herbalist": return "A keeper of plant lore who can coax both remedy and ruin from the simplest garden."

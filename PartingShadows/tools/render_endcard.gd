@@ -69,7 +69,7 @@ func _init() -> void:
 
 	# CTA — same style as title
 	var cta := Label.new()
-	cta.text = "Wishlist on Steam"
+	cta.text = "Available Now on Steam"
 	cta.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	cta.add_theme_font_size_override("font_size", 40)
 	cta.add_theme_constant_override("outline_size", 2)

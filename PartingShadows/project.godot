@@ -13,10 +13,14 @@ config_version=5
 config/name="Parting Shadows"
 config/description="A visual RPG of branching paths and shadowed choices."
 config/version="1.0.0"
-config/icon="res://icon.png"
-config/windows_native_icon="res://icon.ico"
 run/main_scene="res://scenes/splash/splash.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
+config/icon="res://icon.png"
+config/windows_native_icon="res://icon.ico"
+
+[audio]
+
+buses/default_bus_layout="res://resources/audio/default_bus_layout.tres"
 
 [autoload]
 
@@ -47,16 +51,12 @@ window/stretch/aspect="expand"
 
 theme/custom="res://resources/gui/game_theme.tres"
 
-[audio]
-
-buses/default_bus_layout="res://resources/audio/default_bus_layout.tres"
-
 [rendering]
 
-textures/vram_compression/import_etc2_astc=true
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.05, 0.05, 0.08, 1)
 
 [steam]
@@ -64,3 +64,4 @@ environment/defaults/default_clear_color=Color(0.05, 0.05, 0.08, 1)
 initialization/app_id=4545380
 initialization/initialize_on_startup=false
 initialization/embed_callbacks=false
+multiplayer_peer/max_channels=4

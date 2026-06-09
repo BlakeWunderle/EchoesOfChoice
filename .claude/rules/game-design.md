@@ -21,9 +21,20 @@ The project is a visual RPG built in Godot 4 with GDScript at `PartingShadows/`.
 - Crit: roll 1-100, crit if <= crit_chance, adds crit_damage
 - Dodge: roll 1-100, dodge if <= dodge_chance
 
+## Difficulty Setting
+
+Selected per-run during party creation (before the narrative intro). Cannot be changed mid-game. Affects enemy stats, not AI (AI is unified score-based for all units).
+
+- **Easy**: Enemy HP -10%, ATK (phys+mag) -15%, SPD -10%. Mirrors Hard in reverse.
+- **Normal**: No stat changes. Default.
+- **Hard**: Enemy HP +10%, ATK (phys+mag) +15%, SPD +10%. Harder across all fights including endgame.
+
+Stored in `GameState.difficulty` (0/1/2), persisted in save files, applied in `battle.gd _start_battle()` before `engine.start_battle()`.
+
 ## Current Battle System
 
 - **ATB turn system**: Speed accumulates to 100 threshold, turn order prediction display
 - **Abilities**: 5 types (damage, heal, buff, debuff, terrain), AoE targeting
 - **Status effects**: Buff/debuff indicators on fighter bars, stat modification tracking
+- **DOT/HOT**: Damage/healing over time ticks are batched into a single message per fighter per turn
 - **Progression**: Level-up after battles, class upgrades at town stops (T0 -> T1 -> T2)

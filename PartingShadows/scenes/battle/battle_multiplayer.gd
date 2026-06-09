@@ -5,8 +5,10 @@ extends RefCounted
 ## @rpc annotations must stay on battle.gd (Node in tree); this class
 ## holds the actual implementation that those thin wrappers delegate to.
 
+const Enums := preload("res://scripts/data/enums.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const AbilityData := preload("res://scripts/data/ability_data.gd")
+const ItemData := preload("res://scripts/data/item_data.gd")
 
 var _battle: Control
 
@@ -43,8 +45,9 @@ func execute_remote_action(actor: FighterData, action: Dictionary) -> void:
 				return
 			actor.mana -= ability.mana_cost
 			if ability.target_all:
+				var _aoe_targets: int = _battle._engine.enemies.size()
 				for enemy: FighterData in _battle._engine.enemies.duplicate():
-					_battle._engine.use_ability_on_enemy(actor, enemy, ability, true)
+					_battle._engine.use_ability_on_enemy(actor, enemy, ability, true, _aoe_targets)
 			else:
 				var taunter: FighterData = _battle._engine.get_taunt_target(_battle._engine.enemies)
 				var target: FighterData
@@ -73,6 +76,40 @@ func execute_remote_action(actor: FighterData, action: Dictionary) -> void:
 
 		"rest":
 			_battle._engine.perform_rest(actor)
+
+		"ultimate":
+			if actor.ultimate and actor.ultimate_charge >= actor.ultimate.charge_cost:
+				var abil: AbilityData = actor.ultimate.ability
+				var target: FighterData
+				if abil.use_on_enemy:
+					if target_index < _battle._engine.enemies.size():
+						target = _battle._engine.enemies[target_index]
+					else:
+						target = _battle._engine.enemies[0]
+				else:
+					if target_index < _battle._engine.units.size():
+						target = _battle._engine.units[target_index]
+					else:
+						target = actor
+				_battle._engine.use_ultimate(actor, target)
+
+		"item":
+			var item_idx: int = action.get("item_index", 0)
+			var item: ItemData = GameState.inventory.use_item(item_idx)
+			if item == null:
+				return
+			var target: FighterData
+			if item.target_all or item.target_ally:
+				if target_index < _battle._engine.units.size():
+					target = _battle._engine.units[target_index]
+				else:
+					target = actor
+			else:
+				if target_index < _battle._engine.enemies.size():
+					target = _battle._engine.enemies[target_index]
+				else:
+					target = _battle._engine.enemies[0]
+			_battle._engine.use_item(actor, target, item)
 
 
 func find_ability(actor: FighterData, ability_name: String) -> AbilityData:
@@ -110,10 +147,35 @@ func broadcast_state_sync() -> void:
 	# Combat log messages accumulated since last sync
 	var log_lines: Array[String] = _battle._message_queue.duplicate()
 
-	_battle._rpc_state_sync.rpc(party_state, enemy_state, alive_party, alive_enemies, log_lines)
+	# Combat events (floating damage, hit flash) accumulated since last sync
+	var combat_events: Array[Dictionary] = _battle._combat_event_queue.duplicate()
+	_battle._combat_event_queue.clear()
+
+	# Active actor + turn order for guest display
+	var active_idx: int = -1
+	var active_is_enemy: bool = false
+	if _battle._current_actor:
+		active_idx = _battle._all_enemies.find(_battle._current_actor)
+		if active_idx >= 0:
+			active_is_enemy = true
+		else:
+			active_idx = _battle._all_party.find(_battle._current_actor)
+	var turn_text: String = _battle._build_turn_order_text()
+
+	_battle._rpc_state_sync.rpc(party_state, enemy_state, alive_party, alive_enemies,
+		log_lines, combat_events, active_idx, active_is_enemy, turn_text)
 
 
 func serialize_fighter_combat(f: FighterData) -> Dictionary:
+	var mods: Array = []
+	for mod: Dictionary in f.modified_stats:
+		mods.append({
+			"stat": mod["stat"] as int,
+			"modifier": mod["modifier"],
+			"turns": mod["turns"],
+			"is_negative": mod["is_negative"],
+			"damage_per_turn": mod.get("damage_per_turn", 0),
+		})
 	return {
 		"hp": f.health,
 		"max_hp": f.max_health,
@@ -127,6 +189,8 @@ func serialize_fighter_combat(f: FighterData) -> Dictionary:
 		"speed": f.speed,
 		"crit": f.crit_chance,
 		"dodge": f.dodge_chance,
+		"ult_charge": f.ultimate_charge,
+		"mods": mods,
 	}
 
 
@@ -143,6 +207,17 @@ func apply_fighter_combat(f: FighterData, data: Dictionary) -> void:
 	f.speed = data.get("speed", f.speed)
 	f.crit_chance = data.get("crit", f.crit_chance)
 	f.dodge_chance = data.get("dodge", f.dodge_chance)
+	f.ultimate_charge = data.get("ult_charge", f.ultimate_charge)
+	var mods: Array = data.get("mods", [])
+	f.modified_stats.clear()
+	for mod in mods:
+		f.modified_stats.append({
+			"stat": mod["stat"] as Enums.StatType,
+			"modifier": int(mod["modifier"]),
+			"turns": int(mod["turns"]),
+			"is_negative": bool(mod["is_negative"]),
+			"damage_per_turn": int(mod.get("damage_per_turn", 0)),
+		})
 
 
 # =============================================================================
@@ -156,6 +231,10 @@ func handle_state_sync(
 	alive_party: Array,
 	alive_enemies: Array,
 	log_lines: Array,
+	combat_events: Array = [],
+	active_idx: int = -1,
+	active_is_enemy: bool = false,
+	turn_text: String = "",
 ) -> void:
 	# Apply combat state to local fighter instances
 	for i: int in mini(party_state.size(), _battle._all_party.size()):
@@ -176,6 +255,34 @@ func handle_state_sync(
 	# Display combat log messages
 	for line: String in log_lines:
 		_battle._add_log(line)
+
+	# Replay combat events (floating damage, hit flash, SFX)
+	for event: Dictionary in combat_events:
+		var target: FighterData
+		if event.get("is_enemy", false):
+			var eidx: int = event.get("idx", -1)
+			if eidx >= 0 and eidx < _battle._all_enemies.size():
+				target = _battle._all_enemies[eidx]
+		else:
+			var pidx: int = event.get("idx", -1)
+			if pidx >= 0 and pidx < _battle._all_party.size():
+				target = _battle._all_party[pidx]
+		if target:
+			_battle._display.on_combat_event(target, event.get("amount", 0), event.get("type", ""))
+
+	# Update turn order and active card highlight
+	if turn_text != "":
+		_battle._turn_order_label.clear()
+		_battle._turn_order_label.append_text(turn_text)
+	var fighter: FighterData = null
+	if active_idx >= 0:
+		if active_is_enemy:
+			if active_idx < _battle._all_enemies.size():
+				fighter = _battle._all_enemies[active_idx]
+		else:
+			if active_idx < _battle._all_party.size():
+				fighter = _battle._all_party[active_idx]
+	_battle._highlight_active_card(fighter)
 
 	# Refresh cards
 	_battle._rebuild_cards_if_needed()
@@ -223,10 +330,14 @@ func handle_battle_ended(won: bool, stats_data: Array = []) -> void:
 		SFXManager.play(SFXManager.Category.UI_FANFARE)
 		await _battle.get_tree().create_timer(1.0).timeout
 		await _battle._show_battle_summary()
+		if _battle._pending_loot_items.size() > 0 or _battle._pending_loot_gold > 0:
+			_battle._pre_open_loot_gate()
+			await _battle._display.show_loot_drops(
+				_battle._pending_loot_items, _battle._pending_loot_gold)
+			_battle._pending_loot_items.clear()
+			_battle._pending_loot_gold = 0
+			await _battle._wait_loot_ready()
 		GameState.advance_to_post_battle()
-		# Guest doesn't change scene — host sends change_scene_for_peers after
-		# its own summary gate resolves. Guest's ready signal was already sent
-		# inside _show_battle_summary() → _wait_summary_ready().
 	else:
 		await _battle.get_tree().create_timer(2.0).timeout
 		GameState.go_to_ending(false)
@@ -244,6 +355,17 @@ func _apply_battle_stats(stats_data: Array) -> void:
 				"healing_done": entry.get("healing_done", 0),
 				"kills": entry.get("kills", 0),
 			}
+
+
+## Host -> All: Loot drops after battle.
+func handle_loot_dropped(item_ids: Array, gold: int) -> void:
+	_battle._pending_loot_gold = gold
+	GameState.inventory.add_gold(gold)
+	_battle._pending_loot_items.clear()
+	for id: String in item_ids:
+		var item: ItemData = ItemData.from_save_id(id)
+		if item:
+			_battle._pending_loot_items.append(item)
 
 
 ## Host -> All: Combat log line (for real-time log display).

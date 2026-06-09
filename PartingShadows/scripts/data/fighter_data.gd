@@ -3,6 +3,8 @@ class_name FighterData extends RefCounted
 ## Mirrors C# BaseFighter. A live fighter instance with mutable combat state.
 
 const Enums := preload("res://scripts/data/enums.gd")
+const _EquipmentData := preload("res://scripts/data/equipment_data.gd")
+const _UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
 var character_name: String
 var character_type: String  ## Class display name (e.g. "Squire", "Thug")
@@ -31,6 +33,10 @@ var turn_calculation: int = 0  ## ATB accumulator
 var abilities: Array = []  ## Array of AbilityData
 var modified_stats: Array[Dictionary] = []  ## {stat, modifier, turns, is_negative, damage_per_turn}
 var upgrade_items: Array[String] = []       ## For class upgrade paths
+var battle_items: Array = []  ## Array of ItemData: consumables available during combat (enemies only)
+var equipment: Array = []    ## Array of EquipmentData: permanent gear (weapon, armor, boots)
+var ultimate: RefCounted = null  ## UltimateData: chosen ultimate ability (null = not unlocked)
+var ultimate_charge: int = 0     ## Current charge (0 to ultimate.charge_cost)
 
 
 func clone() -> FighterData:
@@ -54,6 +60,11 @@ func clone() -> FighterData:
 	c.dodge_chance = dodge_chance
 	c.abilities = abilities.duplicate()
 	c.upgrade_items = upgrade_items.duplicate()
+	c.battle_items = battle_items.duplicate()
+	for equip in equipment:
+		c.equipment.append(equip.clone())
+	c.ultimate = ultimate  # Immutable reference, no deep clone needed
+	c.ultimate_charge = ultimate_charge
 	return c
 
 
@@ -61,6 +72,8 @@ func reset_for_battle() -> void:
 	health = max_health
 	mana = max_mana
 	turn_calculation = 0
+	# Carry over 1/3 of ultimate charge between battles
+	ultimate_charge = ultimate_charge / 3
 	# Revert any lingering stat mods
 	for mod: Dictionary in modified_stats:
 		_revert_mod(mod)
@@ -101,6 +114,11 @@ func _apply_stat_change(stat: Enums.StatType, amount: int, negative: bool) -> vo
 			magic_attack += amount * sign_val
 		Enums.StatType.DODGE_CHANCE:
 			dodge_chance += amount * sign_val
+		Enums.StatType.CRIT_CHANCE:
+			crit_chance += amount * sign_val
+		Enums.StatType.CRIT:
+			crit_chance += amount * sign_val
+			crit_damage += amount * sign_val
 	_clamp_stats()
 
 
@@ -134,6 +152,9 @@ func to_save_data() -> Dictionary:
 		"dodge_chance": dodge_chance,
 		"upgrade_items": upgrade_items,
 		"owner_peer_id": owner_peer_id,
+		"equipment": equipment.map(func(e: RefCounted) -> Dictionary: return e.to_save_data()),
+		"ultimate_id": ultimate.ultimate_id if ultimate else "",
+		"ultimate_charge": ultimate_charge,
 	}
 
 
@@ -164,3 +185,12 @@ func apply_save_data(data: Dictionary) -> void:
 	else:
 		for item in saved_items:
 			upgrade_items.append(item)
+	equipment.clear()
+	for equip_data: Dictionary in data.get("equipment", []):
+		equipment.append(_EquipmentData.from_save_data(equip_data))
+	var ult_id: String = data.get("ultimate_id", "")
+	if not ult_id.is_empty():
+		ultimate = _UltimateDB.get_ultimate_by_id(ult_id)
+	else:
+		ultimate = null
+	ultimate_charge = data.get("ultimate_charge", 0)

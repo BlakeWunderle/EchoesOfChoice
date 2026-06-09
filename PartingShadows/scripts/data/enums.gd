@@ -13,6 +13,8 @@ enum StatType {
 	MIXED_ATTACK, ## Average of physical + magic
 	TAUNT,
 	DODGE_CHANCE,
+	CRIT_CHANCE,
+	CRIT, ## Crit chance + crit damage combined
 }
 
 ## Combat role archetypes for player classes and enemies.
@@ -22,6 +24,8 @@ enum Role {
 	BURST,    ## Slow but massive per-hit damage (nukers)
 	TANK,     ## Absorbs damage, protects allies
 	SUPPORT,  ## Buffs, heals, debuffs
+	CASTER,   ## Magic-focused damage dealer
+	HYBRID,   ## Mixed physical and magical capabilities
 }
 
 ## Mechanical specialization subtypes. A class/enemy can have multiple.
@@ -51,4 +55,20 @@ enum EnemyTier {
 	LEADER,    ## Strongest enemy in a regular pack (captain, commander, troll)
 	UNDERLING, ## Companion/add that appears alongside a boss
 	STANDARD,  ## Regular enemy (default)
+}
+
+## Item effect type for consumable items.
+enum ItemEffect {
+	HEAL_HP,     ## Restore HP (percentage of max HP)
+	HEAL_MP,     ## Restore MP
+	CURE_DEBUFF, ## Remove negative stat modifications
+	BUFF,        ## Temporary stat boost (uses stat_type + magnitude + duration)
+	DAMAGE,      ## Deal flat damage (bypasses defense)
+}
+
+## Item rarity tier for loot and shop pricing.
+enum ItemRarity {
+	COMMON,
+	UNCOMMON,
+	RARE,
 }

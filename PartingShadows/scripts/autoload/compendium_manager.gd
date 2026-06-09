@@ -301,7 +301,7 @@ func get_tier(class_id: String) -> int:
 		"Squire", "Mage", "Entertainer", "Tinker", "Wildling", "Wanderer":
 			return 0
 		"Duelist", "Ranger", "MartialArtist", "Invoker", "Acolyte", \
-		"Bard", "Dervish", "Orator", "Artificer", "Cosmologist", "Arithmancer", \
+		"Bard", "Dervish", "Orator", "Artificer", "Philosopher", "Arithmancer", \
 		"Herbalist", "Shaman", "Beastcaller", "Sentinel", "Pathfinder":
 			return 1
 	return 2

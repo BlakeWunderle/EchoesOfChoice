@@ -6,6 +6,8 @@ class_name PartyComposer
 const FighterDB := preload("res://scripts/data/fighter_db.gd")
 const FighterData := preload("res://scripts/data/fighter_data.gd")
 const FighterDBRoles := preload("res://scripts/data/fighter_db_roles.gd")
+const EquipmentDB := preload("res://scripts/data/equipment_db.gd")
+const UltimateDB := preload("res://scripts/data/ultimate_db.gd")
 
 const LEVELS_AS_BASE := 3
 const LEVELS_AS_TIER1 := 5
@@ -32,7 +34,7 @@ const T2_UPGRADES := {
 	"Dervish": ["Light", "Paint"],
 	"Orator": ["Pen", "Medal"],
 	"Artificer": ["Potion", "Hammer"],
-	"Cosmologist": ["TimeMachine", "Telescope"],
+	"Philosopher": ["TimeMachine", "Telescope"],
 	"Arithmancer": ["ClockworkCore", "Computer"],
 	"Herbalist": ["Venom", "Seedling"],
 	"Shaman": ["Shrunkenhead", "SpiritOrb"],
@@ -47,9 +49,9 @@ static var _cached_t2_parties: Array = []
 
 
 static func create_fighter(base_type: String, t1_item: String,
-		t2_item: String, total_level_ups: int) -> FighterData:
+		t2_item: String, total_level_ups: int,
+		equip_upgrades: int = 0, has_ultimate: bool = false) -> FighterData:
 	var fighter := FighterDB.create_player(base_type, base_type)
-	fighter.is_user_controlled = false
 	var remaining := total_level_ups
 
 	var base_levels: int = mini(remaining, LEVELS_AS_BASE) if t1_item != "" else remaining
@@ -59,7 +61,6 @@ static func create_fighter(base_type: String, t1_item: String,
 
 	if t1_item != "":
 		FighterDB.upgrade_class(fighter, t1_item)
-		fighter.is_user_controlled = false
 
 		var t1_levels: int = mini(remaining, LEVELS_AS_TIER1) if t2_item != "" else remaining
 		for i in t1_levels:
@@ -68,9 +69,15 @@ static func create_fighter(base_type: String, t1_item: String,
 
 	if t2_item != "":
 		FighterDB.upgrade_class(fighter, t2_item)
-		fighter.is_user_controlled = false
 		for i in remaining:
 			FighterDB.level_up(fighter)
+
+	EquipmentDB.apply_random_equipment(fighter, equip_upgrades)
+
+	if has_ultimate and t2_item != "":
+		var ults: Array = UltimateDB.get_ultimates_for_class(fighter.class_id)
+		if not ults.is_empty():
+			fighter.ultimate = ults[randi() % ults.size()]
 
 	return fighter
 
@@ -103,12 +110,13 @@ static func get_party_description(party: Dictionary) -> String:
 	return " / ".join(parts)
 
 
-static func create_party(party: Dictionary, level_ups: int) -> Array:
+static func create_party(party: Dictionary, level_ups: int,
+		equip_upgrades: int = 0, has_ultimate: bool = false) -> Array:
 	var fighters := []
 	for i in 3:
 		var f := create_fighter(
 			party.base_types[i], party.t1_items[i],
-			party.t2_items[i], level_ups)
+			party.t2_items[i], level_ups, equip_upgrades, has_ultimate)
 		f.character_name = "Hero" + str(i + 1)
 		fighters.append(f)
 	return fighters
@@ -133,74 +141,55 @@ static func get_base_parties() -> Array:
 
 
 static func get_tier1_parties() -> Array:
+	var classes := []  # Array of [base_type, t1_item]
+	for bt in BASE_TYPES:
+		for t1_item: String in T1_UPGRADES[bt]:
+			classes.append([bt, t1_item])
 	var parties := []
-	var n: int = BASE_TYPES.size()
+	var n: int = classes.size()
 	for i in n:
 		for j in range(i, n):
 			for k in range(j, n):
-				var arch := [BASE_TYPES[i], BASE_TYPES[j], BASE_TYPES[k]]
-				var u_a: Array = T1_UPGRADES[arch[0]]
-				var u_b: Array = T1_UPGRADES[arch[1]]
-				var u_c: Array = T1_UPGRADES[arch[2]]
-				for ai in u_a.size():
-					for bi in u_b.size():
-						for ci in u_c.size():
-							if i == j and ai >= bi:
-								continue
-							if j == k and bi >= ci:
-								continue
-							parties.append({
-								"base_types": arch,
-								"t1_items": [u_a[ai], u_b[bi], u_c[ci]],
-								"t2_items": ["", "", ""],
-							})
-	# Filter parties with 2+ low-offense (pure support/tank) classes.
+				parties.append({
+					"base_types": [classes[i][0], classes[j][0], classes[k][0]],
+					"t1_items": [classes[i][1], classes[j][1], classes[k][1]],
+					"t2_items": ["", "", ""],
+				})
+	# Filter parties with 3 low-offense classes (no damage dealer at all).
 	return parties.filter(func(p: Dictionary) -> bool:
 		var c := 0
 		for i in 3:
 			var cid := resolve_class_id(p.base_types[i], p.t1_items[i], "")
 			if FighterDBRoles.is_low_offense_expected(cid):
 				c += 1
-		return c < 2)
+		return c < 3)
 
 
 static func get_tier2_parties() -> Array:
 	if not _cached_t2_parties.is_empty():
 		return _cached_t2_parties
 
-	var chains := {}
+	var classes := []  # Array of [base_type, t1_item, t2_item]
 	for bt in BASE_TYPES:
-		chains[bt] = []
 		for t1_item: String in T1_UPGRADES[bt]:
 			var t1_fighter := create_fighter(bt, t1_item, "", 0)
 			var t1_cid: String = t1_fighter.class_id
 			if T2_UPGRADES.has(t1_cid):
 				for t2_item: String in T2_UPGRADES[t1_cid]:
-					chains[bt].append([t1_item, t2_item])
+					classes.append([bt, t1_item, t2_item])
 
 	var parties := []
-	var n: int = BASE_TYPES.size()
+	var n: int = classes.size()
 	for i in n:
 		for j in range(i, n):
 			for k in range(j, n):
-				var arch := [BASE_TYPES[i], BASE_TYPES[j], BASE_TYPES[k]]
-				var c_a: Array = chains[arch[0]]
-				var c_b: Array = chains[arch[1]]
-				var c_c: Array = chains[arch[2]]
-				for ai in c_a.size():
-					for bi in c_b.size():
-						for ci in c_c.size():
-							if i == j and ai >= bi:
-								continue
-							if j == k and bi >= ci:
-								continue
-							parties.append({
-								"base_types": arch,
-								"t1_items": [c_a[ai][0], c_b[bi][0], c_c[ci][0]],
-								"t2_items": [c_a[ai][1], c_b[bi][1], c_c[ci][1]],
-							})
+				parties.append({
+					"base_types": [classes[i][0], classes[j][0], classes[k][0]],
+					"t1_items": [classes[i][1], classes[j][1], classes[k][1]],
+					"t2_items": [classes[i][2], classes[j][2], classes[k][2]],
+				})
 
-	# Filter parties with 2+ low-offense (pure support/tank) classes.
+	# Filter parties with 3 low-offense classes (no damage dealer at all).
 	parties = parties.filter(func(p: Dictionary) -> bool:
 		var c := 0
 		for i in 3:
@@ -208,7 +197,7 @@ static func get_tier2_parties() -> Array:
 				p.base_types[i], p.t1_items[i], p.t2_items[i])
 			if FighterDBRoles.is_low_offense_expected(cid):
 				c += 1
-		return c < 2)
+		return c < 3)
 	_cached_t2_parties = parties
 	return parties
 

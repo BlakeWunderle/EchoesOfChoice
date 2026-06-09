@@ -58,6 +58,26 @@ func _ready() -> void:
 	_turn_timeout_timer.wait_time = 60.0
 	add_child(_turn_timeout_timer)
 
+	# Dev-only: --host auto-hosts, --connect <ip> auto-joins (ENet, no Steam)
+	if OS.is_debug_build():
+		var args := OS.get_cmdline_user_args()
+		if "--host" in args:
+			call_deferred("_dev_auto_host")
+		elif "--connect" in args:
+			var idx := args.find("--connect")
+			var addr := args[idx + 1] if idx + 1 < args.size() else "127.0.0.1"
+			call_deferred("_dev_auto_connect", addr)
+
+
+func _dev_auto_host() -> void:
+	GameLog.info("NetManager: [DEV] Auto-hosting on port %d" % DEFAULT_PORT)
+	host_game()
+
+
+func _dev_auto_connect(address: String) -> void:
+	GameLog.info("NetManager: [DEV] Auto-connecting to %s:%d" % [address, DEFAULT_PORT])
+	join_game(address)
+
 
 # =============================================================================
 # Transport setup
@@ -412,18 +432,23 @@ func broadcast_game_state() -> void:
 	var party_data: Array[Dictionary] = []
 	for fighter: FighterData in GameState.party:
 		party_data.append(fighter.to_save_data())
+	var inv_data: Dictionary = GameState.inventory.to_save_data()
 	_rpc_sync_game_state.rpc(party_data, GameState.current_battle_id,
-		GameState.current_story_id)
+		GameState.current_story_id, inv_data, GameState.difficulty)
 
 
 @rpc("authority", "call_remote", "reliable")
-func _rpc_sync_game_state(party_data: Array, battle_id: String, story_id: String) -> void:
+func _rpc_sync_game_state(party_data: Array, battle_id: String, story_id: String,
+		inv_data: Dictionary = {}, difficulty: int = 1) -> void:
 	GameState.party.clear()
 	for data: Dictionary in party_data:
 		var fighter := FighterData.new()
 		fighter.apply_save_data(data)
 		fighter.abilities = FighterDB.get_abilities_for_class(fighter.class_id)
 		GameState.party.append(fighter)
+	if not inv_data.is_empty():
+		GameState.inventory.apply_save_data(inv_data)
+	GameState.difficulty = difficulty
 	GameState.current_story_id = story_id
 	GameState.advance_to_battle(battle_id)
 

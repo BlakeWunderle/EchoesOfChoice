@@ -56,25 +56,33 @@ static func _get_story1_stages() -> Array:
 		# Prog 10: Tier 2, -2pp
 		_s("CorruptedCityBattle", 12, "tier2", 0.69, 10),
 		_s("CorruptedWildsBattle", 12, "tier2", 0.69, 10),
-		# Prog 11: Tier 2, -1pp
-		_s("DepthsBattle", 13, "tier2", 0.68, 11),
-		# Prog 12: Tier 2, -1pp
-		_s("GateBattle", 14, "tier2", 0.67, 12, 1, "a"),
+		# Prog 11: Tier 2, -1pp (3 equipment upgrades, no ultimates yet)
+		_s("DepthsBattle", 13, "tier2", 0.68, 11, 1, "", 3),
+		# Prog 12: Tier 2, -1pp (ultimates unlocked at TunnelCampStop)
+		_s("GateBattle", 14, "tier2", 0.67, 12, 1, "a", 3, true),
 		# Prog 13: Tier 2, -2pp (final boss)
-		_s("StrangerFinalBattle", 15, "tier2", 0.65, 13, 1, "a"),
+		_s("StrangerFinalBattle", 15, "tier2", 0.65, 13, 1, "a", 3, true),
 		# Path B: Sever the Ritual (branches from GateBattle, same progs)
-		_s("RitualAnchorBattle", 14, "tier2", 0.67, 12, 1, "b"),
-		_s("SanctumCollapseBattle", 15, "tier2", 0.65, 13, 1, "b"),
-		_s("StrangerUndoneBattle", 15, "tier2", 0.65, 13, 1, "b"),
+		_s("RitualAnchorBattle", 14, "tier2", 0.67, 12, 1, "b", 3, true),
+		_s("SanctumCollapseBattle", 15, "tier2", 0.65, 13, 1, "b", 3, true),
+		_s("StrangerUndoneBattle", 15, "tier2", 0.65, 13, 1, "b", 3, true),
 	]
 
 
 static func _s(n: String, lu: int, tier: String, target: float,
-		prog: int, story: int = 1, path: String = "") -> Dictionary:
+		prog: int, story: int = 1, path: String = "",
+		eu: int = -1, ult: bool = false) -> Dictionary:
+	var equip_ups := eu
+	if eu == -1:
+		match tier:
+			"base": equip_ups = 0
+			"tier1": equip_ups = 1
+			"tier2": equip_ups = 2
 	return {
 		"name": n, "level_ups": lu, "tier": tier,
 		"target_win_rate": target, "progression_stage": prog,
-		"story": story, "path": path,
+		"story": story, "path": path, "equip_upgrades": equip_ups,
+		"has_ultimate": ult,
 	}
 
 

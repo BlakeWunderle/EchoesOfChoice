@@ -24,6 +24,8 @@ const GLOBAL_FILES: Array[String] = [
 	"res://scripts/tools/battle_stage_db.gd",
 	"res://scripts/tools/battle_stage_db_s2s3.gd",
 	"res://scripts/battle/battle_engine.gd",
+	"res://scripts/data/equipment_db.gd",
+	"res://scripts/data/equipment_data.gd",
 ]
 
 const STORY_FILES := {
